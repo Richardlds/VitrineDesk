@@ -1,5 +1,6 @@
 import { Router } from './Router.js';
 import { supabase } from './supabaseClient.js';
+import { requireAuth } from '../admingod-auth.js';
 
 class SuperAdminApp {
     constructor() {
@@ -26,6 +27,10 @@ class SuperAdminApp {
         if (!nameEl) return false;
 
         try {
+            // Verifica a role de superadmin centralizada
+            const isGod = await requireAuth();
+            if (!isGod) return false;
+
             const { data: authData } = await supabase.auth.getUser();
 
             if (!authData?.user) {
@@ -33,8 +38,7 @@ class SuperAdminApp {
                 return false;
             }
 
-            // A role ou claim que define se o usuário é superadmin.
-            // Aqui estamos assumindo que o login foi validado pelo Supabase.
+            // A role já foi validada no requireAuth
             const userEmail = authData.user.email;
 
             if (nameEl) nameEl.textContent = 'Master Admin';
