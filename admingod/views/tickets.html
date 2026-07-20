@@ -1,0 +1,112 @@
+<div class="admin-section fade-in p-0 m-0">
+    <!-- WAPP CONTAINER -->
+    <div class="wapp-container mx-4 mt-2">
+        
+        <!-- SIDEBAR -->
+        <div class="wapp-sidebar">
+            <div class="wapp-sidebar-header">
+                <div class="flex align-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-light flex align-center justify-center text-primary">
+                        <i data-lucide="headphones" class="icon-sm"></i>
+                    </div>
+                    <span class="text-primary font-bold">Suporte VitrineDesk</span>
+                </div>
+            </div>
+
+            <!-- Pesquisa -->
+            <div class="wapp-search-bar">
+                <div class="wapp-search-input-wrapper">
+                    <i data-lucide="search" class="icon-sm text-secondary"></i>
+                    <input type="text" id="tk-search" class="wapp-search-input" placeholder="Pesquisar loja ou chamado...">
+                </div>
+            </div>
+
+            <!-- Catalogação (Filtros) -->
+            <div class="wapp-catalog custom-scrollbar">
+                <button class="wapp-cat-btn active" data-cat="todos">Todos</button>
+                <button class="wapp-cat-btn" data-cat="pendente">Pendentes</button>
+                <button class="wapp-cat-btn" data-cat="financeiro">Financeiro</button>
+                <button class="wapp-cat-btn" data-cat="nova_loja">Novas Lojas</button>
+                <button class="wapp-cat-btn" data-cat="resolvido">Resolvidos</button>
+            </div>
+
+            <!-- Lista de Chats -->
+            <div id="tk-list" class="wapp-chat-list custom-scrollbar">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+
+        <!-- MAIN CHAT AREA -->
+        <div class="wapp-main" id="tk-main-area" style="display: none;">
+            
+            <!-- Header -->
+            <div class="wapp-main-header p-2 md:p-3">
+                <div class="flex align-center gap-2 md:gap-3">
+                    <button id="btn-tk-back" class="wapp-back-btn">
+                        <i data-lucide="arrow-left" class="icon-sm m-0"></i>
+                    </button>
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-placeholder flex align-center justify-center text-secondary flex-shrink-0">
+                        <i data-lucide="store" class="icon-sm"></i>
+                    </div>
+                    <div class="wapp-main-header-info">
+                        <span id="tk-chat-tenant" class="wapp-header-name">Nome da Loja</span>
+                        <span id="tk-chat-subject" class="wapp-header-status">Assunto do Chamado</span>
+                    </div>
+                </div>
+                
+                <div class="flex align-center gap-2">
+                    <span id="tk-chat-status"></span>
+                    
+                    <select id="tk-action-category" class="bg-placeholder border-dashed border-placeholder text-secondary rounded py-1 px-2 text-xs outline-none focus:border-primary transition-colors cursor-pointer ml-2">
+                        <option value="duvida">Dúvida</option>
+                        <option value="erro">Erro</option>
+                        <option value="financeiro">Financeiro</option>
+                        <option value="sugestao">Sugestão</option>
+                        <option value="nova_loja">Nova Loja</option>
+                    </select>
+
+                    <select id="tk-action-status" class="bg-placeholder border-dashed border-placeholder text-secondary rounded py-1 px-2 text-xs outline-none focus:border-primary transition-colors cursor-pointer">
+                        <option value="open">Aberto</option>
+                        <option value="in_progress">Em Andamento</option>
+                        <option value="resolved">Resolvido</option>
+                        <option value="closed">Fechado</option>
+                    </select>
+
+                    <button id="btn-resolve-ticket" class="btn bg-success-light text-success border-none rounded py-1 px-2 text-xs cursor-pointer hover:bg-success hover:text-white transition-colors" title="Resolver Rápido">
+                        <i data-lucide="check" class="icon-sm m-0"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div id="tk-chat-messages" class="wapp-messages-area custom-scrollbar">
+                <!-- Preenchido via JS -->
+            </div>
+
+            <!-- Input Box -->
+            <div class="wapp-input-area" id="tk-chat-input-area">
+                <div class="text-secondary cursor-pointer hover:text-primary"><i data-lucide="paperclip" class="icon-sm"></i></div>
+                <div class="wapp-input-wrapper">
+                    <input type="text" id="tk-chat-input" class="wapp-input" placeholder="Digite uma mensagem" autocomplete="off">
+                </div>
+                <button id="btn-send-ticket-message" class="wapp-send-btn">
+                    <i data-lucide="send" class="icon-sm" style="margin-left: -2px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Placeholder (Quando não tem chat aberto) -->
+        <div class="wapp-main" id="tk-chat-placeholder" style="align-items: center; justify-content: center; background-color: #222e35;">
+            <div class="flex flex-col align-center text-center">
+                <div class="w-24 h-24 mb-4 opacity-50 flex align-center justify-center rounded-full bg-placeholder">
+                    <i data-lucide="message-circle" class="w-12 h-12 text-secondary"></i>
+                </div>
+                <h2 class="text-primary font-light text-2xl mb-2">VitrineDesk Suporte</h2>
+                <p class="text-secondary max-w-md">Envie e receba mensagens dos lojistas sem precisar atualizar a página. Tudo sincronizado em tempo real.</p>
+                <div class="mt-8 flex align-center gap-2 text-xs text-tertiary">
+                    <i data-lucide="lock" class="icon-sm"></i> Protegido com criptografia end-to-end
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

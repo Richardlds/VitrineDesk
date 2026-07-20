@@ -1,0 +1,277 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="mb-1 text-primary">Configurações Gerais</h2>
+        <p class="text-secondary text-sm">Gerencie o seu negócio, os horários e o que deve aparecer para seus clientes.
+        </p>
+    </div>
+
+    <form id="form-configuracoes-loja" novalidate>
+        <div class="grid grid-md-2 gap-4 align-start">
+
+            <!-- Esquerda: Formulários -->
+            <div class="flex flex-column gap-4">
+
+                <!-- 1: IDENTIDADE -->
+                <details class="config-accordion config-card mb-0 p-4" open>
+                    <summary class="flex align-center justify-between transition-colors">
+                        <div class="flex align-center gap-2">
+                            <i data-lucide="building" class="text-primary"></i>
+                            <h3 class="m-0 text-primary">1. Identidade do Negócio</h3>
+                        </div>
+                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                    </summary>
+
+                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                        <p class="text-sm text-secondary mb-4 mt-0">Defina o nome da sua vitrine pública e URL
+                            personalizada.</p>
+
+                        <div class="mb-3">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome da Vitrine</label>
+                            <input type="text" id="input-config-nome"
+                                class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
+                                placeholder="Sua Empresa">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">URL (Link da
+                                Loja)</label>
+                            <div class="flex">
+                                <span
+                                    class="bg-placeholder border-dashed border-r-0 rounded-l-md px-3 py-2 text-secondary flex align-center text-sm">vitrinedesk.com/</span>
+                                <input type="text" id="input-config-slug"
+                                    class="w-100 bg-placeholder border-dashed rounded-r-md px-3 py-2 text-primary outline-none focus:border-primary font-bold text-sm"
+                                    placeholder="sua-loja">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Título SEO (Aparece no
+                                Google e no Whatsapp)</label>
+                            <input type="text" id="input-config-title"
+                                class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
+                                placeholder="Studio VIP - Agendamentos">
+                        </div>
+
+                        <h4 class="text-primary font-bold mb-3 flex align-center gap-2 border-bottom-dashed pb-2">
+                            <i data-lucide="file-text" class="text-secondary icon-sm"></i> Dados Fiscais (Opcional)
+                        </h4>
+                        <div class="grid grid-md-2 gap-3 mb-0">
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">Razão Social</label>
+                                <input type="text" id="input-config-razao"
+                                    class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
+                                    placeholder="Empresa LTDA">
+                            </div>
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">CNPJ</label>
+                                <input type="text" id="input-config-cnpj"
+                                    class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
+                                    placeholder="00.000.000/0001-00">
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 2: LINKS -->
+                <details class="config-accordion config-card mb-0 p-4">
+                    <summary class="flex align-center justify-between transition-colors">
+                        <div class="flex align-center gap-2">
+                            <i data-lucide="link" class="text-primary"></i>
+                            <h3 class="m-0 text-primary">2. Canais de Contato</h3>
+                        </div>
+                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                    </summary>
+
+                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                        <p class="text-sm text-secondary mb-4 mt-0">Adicione o Instagram, Facebook e os links onde os
+                            clientes te encontram.</p>
+
+                        <div class="grid grid-md-2 gap-3 mb-4">
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">E-mail
+                                    Comercial</label>
+                                <div
+                                    class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 border-dashed transition-colors focus-within:border-primary">
+                                    <i data-lucide="mail" class="text-secondary mr-2 icon-sm"></i>
+                                    <input type="email" id="input-config-email"
+                                        class="bg-transparent border-none text-primary outline-none text-sm w-100"
+                                        placeholder="contato@empresa.com">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">Site
+                                    Exclusivo</label>
+                                <div
+                                    class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 border-dashed transition-colors focus-within:border-primary">
+                                    <i data-lucide="globe" class="text-secondary mr-2 icon-sm"></i>
+                                    <input type="url" id="input-social-website"
+                                        class="bg-transparent border-none text-primary outline-none text-sm w-100"
+                                        placeholder="https://seusite.com.br">
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="text-primary font-bold mb-3 flex align-center gap-2 border-bottom-dashed pb-2">
+                            <i data-lucide="smartphone" class="text-secondary icon-sm"></i> Redes Sociais
+                        </h4>
+                        <div class="grid grid-md-3 gap-3 mb-0">
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">Instagram</label>
+                                <div
+                                    class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 border-dashed transition-colors focus-within:border-primary">
+                                    <i data-lucide="camera" class="text-secondary mr-2 icon-sm"></i>
+                                    <input type="text" id="input-social-instagram"
+                                        class="bg-transparent border-none text-primary outline-none text-sm w-100"
+                                        placeholder="@seuperfil">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">Facebook</label>
+                                <div
+                                    class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 border-dashed transition-colors focus-within:border-primary">
+                                    <i data-lucide="users" class="text-secondary mr-2 icon-sm"></i>
+                                    <input type="text" id="input-social-facebook"
+                                        class="bg-transparent border-none text-primary outline-none text-sm w-100"
+                                        placeholder="fb.com/seuperfil">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">TikTok</label>
+                                <div
+                                    class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 border-dashed transition-colors focus-within:border-primary">
+                                    <i data-lucide="video" class="text-secondary mr-2 icon-sm"></i>
+                                    <input type="text" id="input-social-tiktok"
+                                        class="bg-transparent border-none text-primary outline-none text-sm w-100"
+                                        placeholder="@seutiktok">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 3: VISIBILIDADE -->
+                <details class="config-accordion config-card mb-0 p-4">
+                    <summary class="flex align-center justify-between transition-colors">
+                        <div class="flex align-center gap-2">
+                            <i data-lucide="eye" class="text-primary"></i>
+                            <h3 class="m-0 text-primary">3. Controle de Visibilidade</h3>
+                        </div>
+                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                    </summary>
+
+                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                        <p class="text-sm text-secondary mb-4 mt-0">Defina o endereço e ative as travas de visibilidade
+                            da loja pública.</p>
+
+                        <h4 class="text-primary font-bold mb-3 flex align-center gap-2 border-bottom-dashed pb-2">
+                            <i data-lucide="map-pin" class="text-secondary icon-sm"></i> Endereço
+                        </h4>
+                        <div class="mb-3">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Endereço
+                                Completo</label>
+                            <input type="text" id="input-config-endereco"
+                                class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
+                                placeholder="Rua das Flores, 123 - Centro">
+                        </div>
+                        <div class="mb-4">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Link do Google
+                                Maps</label>
+                            <input type="url" id="input-config-mapa"
+                                class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
+                                placeholder="https://maps.google.com/...">
+                        </div>
+
+                        <h4 class="text-primary font-bold mb-3 flex align-center gap-2 border-bottom-dashed pb-2">
+                            <i data-lucide="eye-off" class="text-secondary icon-sm"></i> Ocultar Elementos
+                        </h4>
+                        <div class="grid grid-md-2 gap-3 mb-0">
+                            <label
+                                class="flex align-center gap-3 cursor-pointer p-3 rounded-md border-dashed bg-placeholder transition-colors hover:bg-hover">
+                                <input type="checkbox" id="toggle-hide-prices" class="custom-checkbox">
+                                <div><span class="text-sm font-bold text-primary block">Preços</span><small
+                                        class="text-xs text-secondary opacity-70 block">Ocultar valores.</small></div>
+                            </label>
+                            <label
+                                class="flex align-center gap-3 cursor-pointer p-3 rounded-md border-dashed bg-placeholder transition-colors hover:bg-hover">
+                                <input type="checkbox" id="toggle-hide-equipe" class="custom-checkbox">
+                                <div><span class="text-sm font-bold text-primary block">Equipe</span><small
+                                        class="text-xs text-secondary opacity-70 block">Ocultar equipe.</small></div>
+                            </label>
+                            <label
+                                class="flex align-center gap-3 cursor-pointer p-3 rounded-md border-dashed bg-placeholder transition-colors hover:bg-hover">
+                                <input type="checkbox" id="toggle-hide-depoimentos" class="custom-checkbox">
+                                <div><span class="text-sm font-bold text-primary block">Depoimentos</span><small
+                                        class="text-xs text-secondary opacity-70 block">Ocultar reviews.</small></div>
+                            </label>
+                            <label
+                                class="flex align-center gap-3 cursor-pointer p-3 rounded-md border-dashed bg-placeholder transition-colors hover:bg-hover">
+                                <input type="checkbox" id="toggle-hide-galeria" class="custom-checkbox">
+                                <div><span class="text-sm font-bold text-primary block">Galeria</span><small
+                                        class="text-xs text-secondary opacity-70 block">Ocultar portfólio.</small></div>
+                            </label>
+                            <label
+                                class="flex align-center gap-3 cursor-pointer p-3 rounded-md border-dashed bg-placeholder transition-colors hover:bg-hover">
+                                <input type="checkbox" id="toggle-hide-mapa" class="custom-checkbox">
+                                <div><span class="text-sm font-bold text-primary block">Endereço</span><small
+                                        class="text-xs text-secondary opacity-70 block">Ocultar o mapa.</small></div>
+                            </label>
+                            <label
+                                class="flex align-center gap-3 cursor-pointer p-3 rounded-md border-dashed bg-placeholder transition-colors hover:bg-hover">
+                                <input type="checkbox" id="toggle-hide-horarios" class="custom-checkbox">
+                                <div><span class="text-sm font-bold text-primary block">Horários</span><small
+                                        class="text-xs text-secondary opacity-70 block">Ocultar horas.</small></div>
+                            </label>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 4: HORÁRIOS -->
+                <details class="config-accordion config-card mb-0 p-4">
+                    <summary class="flex align-center justify-between transition-colors">
+                        <div class="flex align-center gap-2">
+                            <i data-lucide="clock" class="text-primary"></i>
+                            <h3 class="m-0 text-primary">4. Dias e Horários</h3>
+                        </div>
+                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                    </summary>
+
+                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                        <p class="text-sm text-secondary mb-4 mt-0">Defina o horário exato de expediente de Segunda a
+                            Domingo.</p>
+                        <div id="horarios-container" class="flex flex-col gap-3">
+                            <!-- Gerado via JS no Controller -->
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Botão Salvar -->
+                <button type="submit" id="btn-salvar-configuracoes"
+                    class="btn btn-primary py-3 rounded-lg cursor-pointer w-100 mb-4 font-bold flex align-center justify-center gap-2 shadow-sm transition-all">
+                    <i data-lucide="save"></i> Salvar Configurações
+                </button>
+
+            </div>
+
+            <!-- Direita: Dicas -->
+            <div class="sticky-top">
+                <div
+                    class="config-card mb-0 flex flex-column align-center justify-center bg-placeholder border-dashed text-center min-h-400px h-100">
+                    <i data-lucide="settings" class="text-secondary mb-2 w-48px h-48px"></i>
+                    <h3 class="text-secondary mb-1">Painel de Negócios</h3>
+                    <p class="text-secondary text-sm px-3">As alterações feitas aqui refletem nas regras e funcionamento
+                        geral da sua Vitrine.</p>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+<style>
+    .custom-checkbox {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--color-primary);
+        flex-shrink: 0;
+    }
+</style>

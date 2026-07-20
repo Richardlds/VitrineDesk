@@ -1,0 +1,97 @@
+<div class="admin-section fade-in">
+    <div class="flex justify-between align-center mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Relatórios Globais</h2>
+            <p class="text-secondary text-sm">Painel executivo de faturamento e desempenho da plataforma.</p>
+        </div>
+        <button id="btn-export-reports" class="btn bg-placeholder text-primary border-none rounded-md px-4 py-2 font-bold cursor-pointer hover:bg-hover transition-colors flex align-center gap-2">
+            <i data-lucide="download" class="icon-sm"></i> Exportar
+        </button>
+    </div>
+
+    <!-- KPIs Executivos -->
+    <div class="grid grid-md-3 gap-4 mb-4">
+        <!-- Receita Bruta Anualizada (Gross Revenue) -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-success-light flex align-center justify-center">
+                    <i data-lucide="trending-up" class="text-success"></i>
+                </div>
+                <span class="badge bg-success-light text-success text-xs font-bold px-2 py-1 rounded">+15% vs mês ant.</span>
+            </div>
+            <h3 class="text-2xl font-bold text-success mb-1" id="kpi-gross-revenue">R$ 0,00</h3>
+            <p class="text-secondary text-sm m-0">Gross Revenue (Anualizado)</p>
+        </div>
+
+        <!-- Tíquete Médio -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-primary-light flex align-center justify-center">
+                    <i data-lucide="credit-card" class="text-primary"></i>
+                </div>
+                <span class="badge bg-placeholder text-secondary text-xs font-bold px-2 py-1 rounded">Média/Lojista</span>
+            </div>
+            <h3 class="text-2xl font-bold text-primary mb-1" id="kpi-arpu">R$ 0,00</h3>
+            <p class="text-secondary text-sm m-0">Tíquete Médio (ARPU)</p>
+        </div>
+
+        <!-- Churn Rate -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-danger-light flex align-center justify-center">
+                    <i data-lucide="user-minus" class="text-danger"></i>
+                </div>
+                <span class="badge bg-danger-light text-danger text-xs font-bold px-2 py-1 rounded">Atenção</span>
+            </div>
+            <h3 class="text-2xl font-bold text-danger mb-1" id="kpi-churn">0%</h3>
+            <p class="text-secondary text-sm m-0">Taxa de Churn (Inativas/Banned)</p>
+        </div>
+    </div>
+
+    <!-- Área de Gráficos -->
+    <div class="grid grid-md-2 gap-4 mb-4">
+        
+        <!-- Gráfico MRR Crescimento -->
+        <div class="config-card p-4">
+            <h3 class="text-primary text-md m-0 mb-4 flex align-center gap-2"><i data-lucide="bar-chart-2" class="text-primary icon-sm"></i> Crescimento do MRR</h3>
+            <div class="chart-container chart-container-pos">
+                <canvas id="chart-mrr-growth"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfico Pizza Planos -->
+        <div class="config-card p-4">
+            <h3 class="text-primary text-md m-0 mb-4 flex align-center gap-2"><i data-lucide="pie-chart" class="text-accent icon-sm"></i> Distribuição de Planos</h3>
+            <div class="chart-container chart-container-pos">
+                <canvas id="chart-plan-distribution"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Conversões Recentes -->
+    <div class="config-card p-0 overflow-hidden">
+        <div class="p-4 border-bottom-dashed">
+            <h3 class="text-primary text-md m-0 flex align-center gap-2"><i data-lucide="activity" class="text-secondary icon-sm"></i> Lojas Recentes (Últimos 30 dias)</h3>
+        </div>
+        <div class="table-responsive w-100 overflow-x-auto">
+            <table class="w-100 text-left border-collapse min-w-600">
+                <thead>
+                    <tr class="bg-placeholder text-secondary text-xs uppercase tracking-wider">
+                        <th class="py-3 px-4 font-medium">Loja</th>
+                        <th class="py-3 px-4 font-medium text-center">Data de Criação</th>
+                        <th class="py-3 px-4 font-medium text-center">Plano Escolhido</th>
+                        <th class="py-3 px-4 font-medium text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-recent-tenants" class="text-sm">
+                    <tr>
+                        <td colspan="4" class="py-8 text-center text-secondary">
+                            <i data-lucide="loader" class="animate-spin mb-2 w-6 h-6"></i>
+                            <p>Carregando dados recentes...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

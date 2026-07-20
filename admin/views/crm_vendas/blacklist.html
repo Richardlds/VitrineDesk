@@ -1,0 +1,84 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Blacklist de Clientes</h2>
+            <p class="text-secondary text-sm">Controle de clientes bloqueados por faltas ou comportamento indevido.</p>
+        </div>
+        <button id="btn-adicionar-blacklist" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="shield-ban"></i> Bloquear Cliente
+        </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="flex align-center gap-3 mb-4">
+        <div class="w-100 flex align-center bg-placeholder border-dashed rounded-md px-3 py-2">
+            <i data-lucide="search" class="text-secondary mr-2 icon-sm"></i>
+            <input type="text" id="input-busca-blacklist" class="bg-transparent border-none w-100 text-primary outline-none text-sm" placeholder="Buscar por nome ou telefone...">
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="blacklist-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Cliente</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Motivo do Bloqueio</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Data do Bloqueio</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="blacklist-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Paginação -->
+        <div class="flex flex-wrap justify-between align-center border-top-dashed p-3 mt-0 gap-3">
+            <div class="text-sm text-secondary">
+                Mostrando <span id="pag-inicio-blacklist" class="font-bold text-primary">0</span> a <span id="pag-fim-blacklist" class="font-bold text-primary">0</span> de <span id="pag-total-blacklist" class="font-bold text-primary">0</span>
+            </div>
+            <div class="flex gap-2 align-center">
+                <button id="btn-prev-page-blacklist" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-left" class="icon-sm"></i>
+                </button>
+                <span id="pag-atual-blacklist" class="text-sm font-medium text-primary px-2">Pág. 1 de 1</span>
+                <button id="btn-next-page-blacklist" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Bloqueio -->
+    <div id="modal-blacklist" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-blacklist-title">Bloquear Cliente</h3>
+                <button id="btn-close-modal-blacklist" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-blacklist">
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Selecionar Cliente</label>
+                    <select id="input-blacklist-cliente-id" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer" required>
+                        <option value="">Carregando clientes...</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Motivo do Bloqueio</label>
+                    <textarea id="input-blacklist-motivo" rows="3" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm resize-none" placeholder="Ex: Faltou 3 vezes seguidas sem avisar..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary bg-danger w-100 py-3 rounded-lg cursor-pointer">
+                    Confirmar Bloqueio
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

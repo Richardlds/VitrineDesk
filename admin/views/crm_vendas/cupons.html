@@ -1,0 +1,108 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Cupons de Desconto</h2>
+            <p class="text-secondary text-sm">Crie e gerencie cupons promocionais para atrair e fidelizar clientes.</p>
+        </div>
+        <button id="btn-novo-cupom" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="plus"></i> Novo Cupom
+        </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="flex align-center gap-3 mb-4">
+        <div class="w-100 flex align-center bg-placeholder border-dashed rounded-md px-3 py-2">
+            <i data-lucide="search" class="text-secondary mr-2 icon-sm"></i>
+            <input type="text" id="input-busca-cupom" class="bg-transparent border-none w-100 text-primary outline-none text-sm" placeholder="Buscar por código do cupom...">
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="cupons-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Código</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Desconto</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Validade</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Uso</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="cupons-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Paginação -->
+        <div class="flex flex-wrap justify-between align-center border-top-dashed p-3 mt-0 gap-3">
+            <div class="text-sm text-secondary">
+                Mostrando <span id="pag-inicio-cupom" class="font-bold text-primary">0</span> a <span id="pag-fim-cupom" class="font-bold text-primary">0</span> de <span id="pag-total-cupom" class="font-bold text-primary">0</span>
+            </div>
+            <div class="flex gap-2 align-center">
+                <button id="btn-prev-page-cupom" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-left" class="icon-sm"></i>
+                </button>
+                <span id="pag-atual-cupom" class="text-sm font-medium text-primary px-2">Pág. 1 de 1</span>
+                <button id="btn-next-page-cupom" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro / Edição -->
+    <div id="modal-cupom" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-cupom-title">Criar Cupom</h3>
+                <button id="btn-close-modal-cupom" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-cupom">
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 flex justify-between align-center">
+                        <span>Código Promocional</span>
+                        <button type="button" id="btn-gerar-codigo" class="btn bg-transparent border-none text-xs text-primary cursor-pointer hover:underline">
+                            Gerar Aleatório
+                        </button>
+                    </label>
+                    <input type="text" id="input-cupom-codigo" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm font-mono uppercase" placeholder="Ex: VERAO20" required>
+                </div>
+                
+                <div class="grid grid-md-2 mb-3">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Tipo de Desconto</label>
+                        <select id="input-cupom-tipo" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                            <option value="porcentagem">Porcentagem (%)</option>
+                            <option value="fixo">Valor Fixo (R$)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Valor</label>
+                        <input type="number" id="input-cupom-valor" step="0.01" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="20" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Data de Expiração (Opcional)</label>
+                    <input type="date" id="input-cupom-validade" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm text-secondary">
+                </div>
+
+                <div class="flex gap-2">
+                    <button type="button" id="btn-excluir-cupom" class="btn bg-danger-light text-danger w-100 py-3 rounded-lg cursor-pointer d-none border-none">
+                        Excluir
+                    </button>
+                    <button type="submit" id="btn-salvar-cupom" class="btn btn-primary w-100 py-3 rounded-lg cursor-pointer">
+                        Salvar Cupom
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

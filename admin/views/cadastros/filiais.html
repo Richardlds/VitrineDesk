@@ -1,0 +1,49 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Minhas Filiais</h2>
+            <p class="text-secondary text-sm">Gerencie suas lojas. Acesse uma filial para ver sua agenda, equipe e serviços isolados.</p>
+        </div>
+        <button id="btn-nova-filial" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="store"></i> Nova Filial
+        </button>
+    </div>
+
+    <!-- Grid de Filiais -->
+    <div class="grid grid-md-2 grid-lg-3 gap-4" id="filiais-grid">
+        <!-- Renderizado via JS -->
+        <div class="config-card flex align-center justify-center py-5">
+            <div class="flex flex-column align-center gap-2 text-secondary">
+                <i data-lucide="loader-2" class="icon-md animate-spin"></i>
+                <span class="text-sm">Carregando filiais...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Nova Filial -->
+    <div id="modal-filial" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-filial-title">Cadastrar Nova Filial</h3>
+                <button id="btn-close-modal-filial" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-filial">
+                <div class="mb-4">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome da Filial / Loja</label>
+                    <input type="text" id="input-nome-filial" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Unidade Centro" required>
+                    <p class="text-xs text-secondary mt-1">Sua nova filial terá sua própria agenda, equipe e serviços independentes.</p>
+                </div>
+                
+                <div class="flex justify-end gap-3 mt-4">
+                    <button type="submit" id="btn-salvar-filial" class="btn btn-primary flex-1 py-3 rounded-lg cursor-pointer flex align-center justify-center gap-2">
+                        Criar Filial
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

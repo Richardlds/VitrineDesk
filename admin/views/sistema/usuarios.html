@@ -1,0 +1,82 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Gestão de Usuários</h2>
+            <p class="text-secondary text-sm">Gerencie o acesso da sua equipe ao painel VitrineDesk.</p>
+        </div>
+        <button id="btn-novo-usuario" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="user-plus"></i> Novo Usuário
+        </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="flex align-center gap-3 mb-4">
+        <div class="w-100 flex align-center bg-placeholder border-dashed rounded-md px-3 py-2">
+            <i data-lucide="search" class="text-secondary mr-2 icon-sm"></i>
+            <input type="text" id="input-busca-usuario" class="bg-transparent border-none w-100 text-primary outline-none text-sm" placeholder="Buscar por nome ou email...">
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="usuarios-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Nome / Email</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Perfil de Acesso</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="usuarios-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro / Edição -->
+    <div id="modal-usuario" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-usuario-title">Cadastrar Usuário</h3>
+                <button id="btn-close-modal-usuario" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-usuario">
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome Completo</label>
+                    <input type="text" id="input-usuario-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: João da Silva" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">E-mail de Acesso</label>
+                    <input type="email" id="input-usuario-email" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="acesso@email.com" autocomplete="email" required>
+                </div>
+
+                <div class="grid grid-md-2 mb-4">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Perfil de Acesso</label>
+                        <select id="input-usuario-perfil" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                            <option value="admin">Administrador Geral</option>
+                            <option value="gerente">Gerente (S/ Financeiro)</option>
+                            <option value="recepcao">Recepção (Apenas Agenda)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Senha Provisória</label>
+                        <input type="password" id="input-usuario-senha" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="******" autocomplete="new-password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-lg cursor-pointer">
+                    Criar Conta
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

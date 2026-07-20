@@ -1,0 +1,346 @@
+/* ==============================================
+   TICKETS DE SUPORTE - WHATSAPP STYLE (DARK)
+   ============================================== */
+.wapp-container {
+    display: flex;
+    height: calc(100vh - 120px);
+    background-color: #111b21;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    position: relative;
+}
+
+/* SIDEBAR (Esquerda) - Mobile First */
+.wapp-sidebar {
+    width: 100%;
+    background-color: #111b21;
+    display: flex;
+    flex-direction: column;
+}
+
+.wapp-sidebar-header {
+    background-color: #202c33;
+    padding: 10px 16px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.wapp-search-bar {
+    padding: 8px 12px;
+    background-color: #111b21;
+    border-bottom: 1px solid #222d34;
+}
+
+.wapp-search-input-wrapper {
+    background-color: #202c33;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+}
+
+.wapp-search-input {
+    background: transparent;
+    border: none;
+    color: #d1d7db;
+    padding: 8px;
+    width: 100%;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+/* Catalogação (Tabs) */
+.wapp-catalog {
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: #111b21;
+    overflow-x: auto;
+    border-bottom: 1px solid #222d34;
+}
+.wapp-catalog::-webkit-scrollbar { height: 2px; }
+
+.wapp-cat-btn {
+    background-color: #202c33;
+    color: #aebac1;
+    border: none;
+    border-radius: 16px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.wapp-cat-btn.active {
+    background-color: #00a884;
+    color: #111b21;
+    font-weight: 600;
+}
+
+/* Chat List */
+.wapp-chat-list {
+    flex: 1;
+    overflow-y: auto;
+    background-color: #111b21;
+}
+
+.wapp-chat-item {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.wapp-chat-item:hover { background-color: #202c33; }
+.wapp-chat-item.active { background-color: #2a3942; }
+
+.wapp-chat-item-content {
+    flex: 1;
+    padding: 12px 0;
+    border-bottom: 1px solid #222d34;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+.wapp-chat-item:last-child .wapp-chat-item-content { border-bottom: none; }
+
+.wapp-chat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.wapp-chat-name {
+    color: #e9edef;
+    font-size: 1.05rem;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wapp-chat-time {
+    color: #8696a0;
+    font-size: 0.75rem;
+}
+
+.wapp-chat-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wapp-chat-preview {
+    color: #8696a0;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* MAIN AREA (Direita) - Mobile First */
+.wapp-main {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    background-color: #222e35;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 20;
+}
+
+/* Modo Mobile quando abre um chat */
+.wapp-container.mobile-show-chat .wapp-sidebar {
+    display: none;
+}
+.wapp-container.mobile-show-chat .wapp-main {
+    display: flex;
+}
+
+.wapp-back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #aebac1;
+    cursor: pointer;
+    padding: 5px;
+    margin-right: 5px;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+.wapp-back-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* Breakpoints Responsivos (Mobile First) */
+@media (min-width: 768px) {
+    .wapp-sidebar {
+        width: 350px;
+        border-right: 1px solid #222d34;
+        display: flex !important;
+    }
+
+    .wapp-main {
+        position: static;
+        width: auto;
+        flex: 1;
+        display: none; /* Controlled by JS inline style on desktop */
+    }
+
+    /* Force show if selected on desktop, or show placeholder */
+    .wapp-container.mobile-show-chat .wapp-sidebar {
+        display: flex; /* Sidebar never hides on desktop */
+    }
+    
+    .wapp-back-btn {
+        display: none !important;
+    }
+}
+
+.wapp-main-header {
+    background-color: #202c33;
+    padding: 10px 16px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+.wapp-main-header-info {
+    display: flex;
+    flex-direction: column;
+}
+.wapp-header-name {
+    color: #e9edef;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.wapp-header-status {
+    color: #8696a0;
+    font-size: 0.8rem;
+}
+
+/* Background com pattern estilo whatsapp */
+.wapp-messages-area {
+    flex: 1;
+    background-color: #0b141a;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    overflow-y: auto;
+    padding: 20px 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Bolhas de Chat */
+.wapp-msg {
+    max-width: 65%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 6px 7px 8px 9px;
+    border-radius: 7.5px;
+    box-shadow: 0 1px 0.5px rgba(11,20,26,.13);
+    color: #e9edef;
+    font-size: 0.9rem;
+    line-height: 19px;
+}
+
+.wapp-msg-left {
+    align-self: flex-start;
+    background-color: #202c33;
+    border-top-left-radius: 0;
+}
+
+.wapp-msg-right {
+    align-self: flex-end;
+    background-color: #005c4b;
+    border-top-right-radius: 0;
+}
+
+/* Caudinha da bolha */
+.wapp-msg-left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -8px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid #202c33;
+    border-left: 8px solid transparent;
+}
+
+.wapp-msg-right::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -8px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid #005c4b;
+    border-right: 8px solid transparent;
+}
+
+.wapp-msg-time {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.6);
+    align-self: flex-end;
+    margin-top: 4px;
+    margin-left: 10px;
+}
+
+/* Chat Input Area */
+.wapp-input-area {
+    background-color: #202c33;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wapp-input-wrapper {
+    flex: 1;
+    background-color: #2a3942;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 9px 12px;
+}
+
+.wapp-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #d1d7db;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.wapp-send-btn {
+    background-color: #00a884;
+    color: #111b21;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.wapp-send-btn:hover {
+    background-color: #029475;
+}

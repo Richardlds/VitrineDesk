@@ -1,0 +1,62 @@
+<div class="page-header mb-6 fade-in">
+    <div>
+        <h1 class="page-title text-primary font-bold text-2xl flex align-center gap-2">
+            <i data-lucide="bell-ring" class="text-danger"></i> Disparar Notificações
+        </h1>
+        <p class="text-secondary mt-1 text-sm">Crie e envie comunicados oficiais para os Lojistas.</p>
+    </div>
+</div>
+
+<div class="grid grid-md-2 gap-6 fade-in" style="animation-delay: 0.1s;">
+    <!-- Formulário de Disparo -->
+    <div class="card p-6" style="background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: 12px;">
+        <h2 class="text-md font-bold text-primary mb-4 border-bottom-dashed pb-2">Nova Notificação</h2>
+        
+        <form id="form-send-notification">
+            <div class="mb-4">
+                <label class="font-medium text-sm text-secondary mb-1 inline-block">Destinatário</label>
+                <select id="select-notif-tenant" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" required>
+                    <option value="ALL">Todos os Lojistas</option>
+                    <option value="GOD">Master (Testar Notificação de Sistema)</option>
+                    <!-- Preenchido via JS -->
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="font-medium text-sm text-secondary mb-1 inline-block">Categoria</label>
+                <select id="select-notif-type" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" required>
+                    <option value="info">Informação Geral</option>
+                    <option value="system">Aviso do Sistema</option>
+                    <option value="update">Atualização Importante (⚡)</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="font-medium text-sm text-secondary mb-1 inline-block">Mensagem</label>
+                <textarea id="input-notif-message" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" rows="5" placeholder="Digite o comunicado oficial que será lido pelo lojista..." required></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit-notif" class="btn btn-primary w-100 py-2 rounded-lg font-bold flex align-center justify-center gap-2" style="background: var(--color-primary); color: #fff; border: none; cursor: pointer;">
+                <i data-lucide="send" class="icon-sm"></i> Disparar Notificação
+            </button>
+        </form>
+    </div>
+
+    <!-- Histórico Recente -->
+    <div class="card p-6" style="background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: 12px;">
+        <h2 class="text-md font-bold text-primary mb-4 border-bottom-dashed pb-2">Últimos Disparos</h2>
+        
+        <select id="notif-category-select" class="mb-4 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer filter-select" style="max-width: 200px;">
+            <option value="all">Todas Categorias</option>
+            <option value="update">Atualizações</option>
+            <option value="system">Sistema</option>
+            <option value="info">Gerais</option>
+            <option value="read">Lidas</option>
+            <option value="unread">Não Lidas</option>
+        </select>
+
+        <div id="sent-notifications-list" class="flex-col gap-3 max-h-400px overflow-y-auto custom-scrollbar pr-2">
+            <div class="text-center text-secondary text-sm p-4"><i data-lucide="loader" class="animate-spin icon-sm"></i> Carregando...</div>
+        </div>
+    </div>
+</div>

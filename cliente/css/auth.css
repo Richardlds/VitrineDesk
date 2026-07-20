@@ -1,0 +1,343 @@
+/* ============================================================
+   AUTH.CSS — VitrineDesk Cliente
+   Modal de autenticação, abas login/cadastro, inputs flutuantes,
+   validação visual
+   ============================================================ */
+
+/* ────────────────────────── Container do Auth ────────────────────────── */
+.modal-auth-width {
+  max-width: 440px !important;
+  padding: 32px 28px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  background: linear-gradient(145deg, rgba(30, 30, 40, 0.95), rgba(15, 15, 20, 0.98)) !important;
+  border-radius: 24px !important;
+  position: relative; /* Para o botão fechar absoluto */
+}
+
+@media (max-width: 576px) {
+  .modal-auth-width {
+    padding: 24px 20px !important;
+    max-width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin-top: auto !important;
+    border-bottom: none;
+  }
+}
+
+/* ────────────────────────── Toggle Login / Cadastro (Pill) ────────────────────────── */
+.auth-toggle-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 24px;
+}
+
+.auth-toggle {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  position: relative;
+}
+
+.auth-tab:hover {
+  color: #fff;
+}
+
+.auth-tab.active {
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+.auth-toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%;
+  background: var(--primary);
+  opacity: 0.85;
+  border-radius: 10px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+  box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+/* Quando a segunda aba está ativa (Criar Conta) */
+.auth-toggle:has(.auth-tab[data-tab="register"].active) .auth-toggle-slider {
+  transform: translateX(100%);
+}
+
+/* Painéis de formulário */
+.auth-form-panel {
+  display: none;
+}
+
+.auth-form-panel.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ────────────────────────── Input Group (Floating Label) ────────────────────────── */
+.input-group {
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 52px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.input-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 40px;
+  /* Seta customizada */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+/* Label flutuante */
+.input-group label {
+  position: absolute;
+  left: 18px;
+  top: 16px;
+  color: var(--text-muted);
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animação label quando tem valor ou foco */
+.input-group.has-value label,
+.input-group input:focus + label,
+.input-group select:focus + label,
+.input-group textarea:focus + label,
+.input-group input:valid + label {
+  top: -10px;
+  left: 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: rgba(14, 14, 20, 0.98);
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Foco no input */
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15), inset 0 0 0 1px var(--primary);
+  background: rgba(255, 255, 255, 0.06);
+  outline: none;
+}
+
+/* Placeholders inteligentes (escondidos até ter foco) */
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: transparent;
+  transition: color 0.3s ease;
+}
+.input-group input:focus::placeholder,
+.input-group textarea:focus::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* Validação — inválido */
+.input-group.invalid input,
+.input-group.invalid select {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.input-group.invalid label {
+  color: var(--danger) !important;
+}
+
+/* Validação — válido */
+.input-group.valid input {
+  border-color: var(--success);
+}
+
+/* Ícone de validação */
+.validation-icon {
+  position: absolute;
+  right: 18px;
+  top: 17px;
+  font-size: 1.1rem;
+  pointer-events: none;
+  display: none;
+}
+
+.input-group.valid .validation-icon.success-icon {
+  display: block;
+  color: var(--success);
+}
+
+.input-group.invalid .validation-icon.error-icon {
+  display: block;
+  color: var(--danger);
+}
+
+/* ────────────────────────── Custom Checkbox Moderno ────────────────────────── */
+.checkbox-modern {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.checkbox-modern:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.4);
+}
+
+.checkbox-modern:checked::after {
+  content: '';
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+}
+
+.checkbox-modern:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+}
+
+/* Texto de erro */
+.error-text {
+  font-size: 0.72rem;
+  color: var(--danger);
+  margin-top: 4px;
+  padding-left: 4px;
+  display: none;
+}
+
+.input-group.invalid .error-text {
+  display: block;
+}
+
+/* ────────────────────────── Links auxiliares ────────────────────────── */
+.helper-link {
+  display: block;
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--primary);
+  margin-top: -12px;
+  margin-bottom: 20px;
+}
+
+.helper-link:hover {
+  text-decoration: underline;
+}
+
+/* ────────────────────────── Separador social ────────────────────────── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ────────────────────────── Perfil (seção Meus Dados) ────────────────────────── */
+.profile-panel {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+/* Input readonly */
+.input-readonly input {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Botão Fechar Absoluto (Correção para o X fora do lugar) */
+.btn-close-absolute {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.btn-close-absolute:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: rotate(90deg);
+}

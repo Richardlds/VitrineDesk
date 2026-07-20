@@ -1,0 +1,329 @@
+<div class="admin-section">
+    <div class="flex flex-column flex-md-row justify-between align-start align-md-center mb-4 gap-3">
+        <div>
+            <h2 class="mb-1">Agendamentos</h2>
+            <p class="text-secondary text-sm">Gerencie todos os horários e sessões dos seus clientes.</p>
+        </div>
+        <button
+            class="btn btn-primary flex align-center gap-2 cursor-pointer w-100 w-md-auto flex-md-row justify-center">
+            <i data-lucide="plus"></i> Novo Agendamento
+        </button>
+    </div>
+
+    <!-- Filtros e Controles -->
+    <div class="config-card flex flex-column flex-md-row justify-between align-start align-md-center mb-4 gap-3">
+        <div class="flex flex-column flex-md-row gap-3 align-start align-md-center w-100">
+            <div class="view-toggle bg-placeholder rounded-lg flex p-1 w-100 w-md-auto flex-md-row">
+                <button id="btn-view-list"
+                    class="btn btn-toggle active flex align-center gap-2 cursor-pointer border-none bg-transparent py-1 px-3 rounded-md font-medium">
+                    <i data-lucide="list"></i> Lista
+                </button>
+                <button id="btn-view-calendar"
+                    class="btn btn-toggle flex align-center gap-2 cursor-pointer border-none bg-transparent py-1 px-3 rounded-md font-medium text-secondary">
+                    <i data-lucide="calendar"></i> Calendário
+                </button>
+            </div>
+
+            <div class="filter-group flex flex-wrap gap-2 w-100 w-md-auto">
+                <select id="filter-date"
+                    class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100 w-md-auto">
+                    <option value="todos">Todas as Datas</option>
+                    <option value="hoje">Hoje</option>
+                    <option value="amanha">Amanhã</option>
+                    <option value="semana">Esta Semana</option>
+                    <option value="mes">Este Mês</option>
+                    <option value="especifica">Data Específica...</option>
+                </select>
+                <input type="date" id="filter-date-custom"
+                    class="form-input bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm outline-none w-100 w-md-auto d-none">
+
+                <select id="filter-status"
+                    class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100 w-md-auto">
+                    <option value="todos">Todos os Status</option>
+                    <option value="pending">Pendente</option>
+                    <option value="confirmed">Confirmado</option>
+                    <option value="completed">Concluído</option>
+                    <option value="cancelled">Cancelado</option>
+                </select>
+
+                <select id="filter-professional"
+                    class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100 w-md-auto">
+                    <option value="todos">Qualquer Profissional</option>
+                </select>
+
+                <select id="filter-service"
+                    class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100 w-md-auto">
+                    <option value="todos">Qualquer Serviço</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="search-bar w-100 w-md-auto">
+            <div class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 w-100">
+                <i data-lucide="search" class="text-secondary mr-2 w-24px h-24px"></i>
+                <input type="text" id="search-client" placeholder="Buscar cliente..."
+                    class="bg-transparent border-none text-primary outline-none text-sm w-100">
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Agendamentos (View Lista) -->
+    <div id="view-list-container" class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="appointments-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Cliente</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Serviço</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Profissional</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Data/Hora</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="appointments-table-body">
+                    <!-- Skeletons injetados via JS enquanto carrega -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Rodapé de Paginação -->
+        <div class="flex flex-column flex-md-row justify-between align-center mt-3 pt-3 border-top-dashed gap-3">
+            <div class="text-sm text-secondary" id="pagination-info">
+                Carregando...
+            </div>
+            <div class="flex gap-2">
+                <button id="btn-prev-page"
+                    class="btn bg-placeholder border-none text-primary cursor-pointer rounded-md px-3 py-2 text-sm flex align-center gap-1 hover:bg-placeholder-dark disabled:opacity-50"
+                    disabled>
+                    <i data-lucide="chevron-left" class="icon-sm"></i> Anterior
+                </button>
+                <button id="btn-next-page"
+                    class="btn bg-placeholder border-none text-primary cursor-pointer rounded-md px-3 py-2 text-sm flex align-center gap-1 hover:bg-placeholder-dark disabled:opacity-50"
+                    disabled>
+                    Próxima <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visão Calendário (Oculta por Padrão) -->
+    <div id="view-calendar-container" class="config-card mb-0 d-none">
+
+        <!-- Grade Mensal -->
+        <div id="calendar-month-view">
+            <div class="calendar-header flex justify-between align-center mb-3">
+                <button class="btn btn-outline flex align-center gap-1 cursor-pointer border-none bg-placeholder"
+                    id="btn-cal-prev">
+                    <i data-lucide="chevron-left" class="icon-sm"></i> Anterior
+                </button>
+                <h3 class="text-primary font-bold m-0" id="calendar-month-year">Mês Ano</h3>
+                <button class="btn btn-outline flex align-center gap-1 cursor-pointer border-none bg-placeholder"
+                    id="btn-cal-next">
+                    Próximo <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+            </div>
+            <div class="table-responsive">
+                <div id="calendar-grid"
+                    style="display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: 8px;">
+                    <!-- Dias gerados pelo JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Diária (Oculta por Padrão) -->
+        <div id="calendar-daily-view" class="d-none">
+            <div class="flex align-center gap-3 mb-4 border-bottom-dashed pb-3">
+                <button id="btn-back-month"
+                    class="btn bg-placeholder border-none cursor-pointer flex align-center justify-center rounded-full w-40px h-40px text-secondary hover:text-primary">
+                    <i data-lucide="arrow-left"></i>
+                </button>
+                <div>
+                    <h3 class="m-0 text-primary" id="daily-view-title">Detalhes do Dia</h3>
+                    <p class="text-sm text-secondary m-0">Visualize os agendamentos hora a hora.</p>
+                </div>
+            </div>
+
+            <div class="timeline-container mt-4" id="daily-timeline-container">
+                <!-- Timeline gerada pelo JS -->
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal de Detalhes do Agendamento (Read-Only) -->
+<div id="view-apt-modal" class="modal-overlay d-none">
+    <div class="modal-content config-card">
+        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+            <h2 class="text-primary" id="modal-view-title">Detalhes do Agendamento</h2>
+            <button type="button" id="btn-close-view-modal" class="btn bg-transparent border-none cursor-pointer text-secondary">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <div>
+            <!-- Sessão: Dados do Cliente -->
+            <div class="grid grid-md-2 gap-3 mb-3">
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Nome do Cliente</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px gap-2">
+                        <div class="bg-primary text-white rounded-full w-24px h-24px flex align-center justify-center text-xs font-bold" id="view-client-initial">C</div>
+                        <span id="view-client-name">---</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Telefone</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px" id="view-client-phone">---</div>
+                </div>
+            </div>
+
+            <div id="view-client-extra-info" class="d-none">
+                <div class="grid grid-md-2 gap-3 mb-3">
+                    <div class="form-group">
+                        <label class="text-sm text-secondary font-medium block mb-1">CPF</label>
+                        <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px" id="view-client-cpf">---</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-sm text-secondary font-medium block mb-1">Data de Nascimento</label>
+                        <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px" id="view-client-dob">---</div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="text-sm text-secondary font-medium block mb-1">Observações do Cliente</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary" id="view-client-notes">---</div>
+                </div>
+            </div>
+
+            <!-- Sessão: Dados do Serviço -->
+            <div class="grid grid-md-2 gap-3 mb-3">
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Serviço</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px" id="view-service">---</div>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Profissional</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px" id="view-professional">---</div>
+                </div>
+            </div>
+
+            <div class="grid grid-md-3 gap-3 mb-4">
+                <div class="form-group grid-column-md-2">
+                    <label class="text-sm text-secondary font-medium block mb-1">Data e Hora</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px" id="view-datetime">---</div>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Status</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 flex align-center min-h-40px" id="view-status-badge-container">
+                        <span class="status-badge bg-warning-light text-warning" id="view-status">Pendente</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="flex justify-end gap-2 border-top-dashed pt-3 mt-2">
+                <button type="button" id="btn-edit-from-view" class="btn btn-outline border-none bg-placeholder text-primary cursor-pointer px-4 flex align-center gap-2 hover:bg-placeholder-dark transition">
+                    <i data-lucide="edit" class="icon-sm"></i> Editar Sessão
+                </button>
+                <button type="button" id="btn-ok-view" class="btn btn-primary cursor-pointer px-4 flex align-center justify-center transition">
+                    Concluir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Novo / Editar Agendamento -->
+<div id="appointment-modal" class="modal-overlay d-none">
+    <div class="modal-content config-card">
+        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+            <h2 class="text-primary" id="modal-apt-title">Novo Agendamento</h2>
+            <button type="button" id="btn-close-apt-modal"
+                class="btn bg-transparent border-none cursor-pointer text-secondary">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+
+        <form id="appointment-form">
+            <input type="hidden" id="apt-id">
+
+            <div class="grid grid-md-2 gap-3 mb-3">
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Nome do Cliente</label>
+                    <input type="text" id="apt-client-name"
+                        class="form-input w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none"
+                        placeholder="Ex: João Silva" required>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Telefone (Opcional)</label>
+                    <input type="text" id="apt-client-phone"
+                        class="form-input w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none"
+                        placeholder="(11) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">CPF (Opcional)</label>
+                    <input type="text" id="apt-client-cpf"
+                        class="form-input w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none"
+                        placeholder="000.000.000-00">
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Data de Nascimento (Opcional)</label>
+                    <input type="date" id="apt-client-dob"
+                        class="form-input w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none">
+                </div>
+            </div>
+
+            <div class="grid grid-md-2 gap-3 mb-3">
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Serviço</label>
+                    <select id="apt-service-id"
+                        class="form-select w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none"
+                        required>
+                        <option value="">Carregando serviços...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Profissional</label>
+                    <select id="apt-professional-id"
+                        class="form-select w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none">
+                        <option value="">Qualquer Profissional</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-md-3 gap-3 mb-4">
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Data</label>
+                    <input type="date" id="apt-date"
+                        class="form-input w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Hora</label>
+                    <input type="time" id="apt-time"
+                        class="form-input w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Status</label>
+                    <select id="apt-status"
+                        class="form-select w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none">
+                        <option value="pending">Pendente</option>
+                        <option value="confirmed">Confirmado</option>
+                        <option value="completed">Concluído</option>
+                        <option value="cancelled">Cancelado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 border-top-dashed pt-3 mt-2">
+                <button type="button" id="btn-cancel-apt"
+                    class="btn btn-outline border-none bg-placeholder text-primary cursor-pointer px-4">Cancelar</button>
+                <button type="submit" id="btn-save-apt"
+                    class="btn btn-primary cursor-pointer px-4 flex align-center gap-2">
+                    <i data-lucide="save" class="icon-sm"></i> Salvar Agendamento
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

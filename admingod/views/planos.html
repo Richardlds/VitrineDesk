@@ -1,0 +1,75 @@
+<div class="admin-section fade-in">
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Gestão de Planos</h2>
+            <p class="text-secondary text-sm">Crie e edite planos de assinatura e defina quais módulos do sistema cada plano terá acesso.</p>
+        </div>
+        <button id="btn-novo-plano" class="btn btn-primary px-3 py-2 rounded-md font-medium flex align-center gap-2">
+            <i data-lucide="plus" class="icon-sm"></i> Novo Plano
+        </button>
+    </div>
+
+    <!-- Tabela de Planos -->
+    <div class="config-card overflow-hidden">
+        <div class="table-responsive custom-scrollbar">
+            <table class="data-table w-100">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Nome do Plano</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Preço Mensal</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Recursos (Menus Liberados)</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-planos">
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-secondary">
+                            <i data-lucide="loader" class="animate-spin mb-2 mx-auto"></i> Carregando planos...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Plano -->
+<div id="modal-plano" class="modal-overlay d-none">
+    <div class="modal-content config-card modal-card-lg" style="max-height: 90vh; overflow-y: auto; width: 90%; max-width: 800px;">
+        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+            <h3 id="modal-plano-title" class="text-primary m-0">Novo Plano</h3>
+            <button id="btn-close-modal-plano" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <input type="hidden" id="plano-id">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome do Plano</label>
+                <input type="text" id="plano-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: Pro, Premium, Grátis">
+            </div>
+            <div>
+                <label class="font-medium text-sm text-secondary mb-1 inline-block">Preço Mensal (R$)</label>
+                <input type="number" step="0.01" id="plano-preco" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: 99.90">
+            </div>
+        </div>
+        
+        <div class="mb-4 flex align-center gap-2">
+            <input type="checkbox" id="plano-default" class="cursor-pointer">
+            <label for="plano-default" class="text-sm text-secondary cursor-pointer">Definir como plano padrão para novos lojistas</label>
+        </div>
+
+        <h4 class="text-primary mb-3 mt-4 border-bottom-dashed pb-2">Módulos & Permissões do Lojista</h4>
+        <p class="text-xs text-secondary mb-3">Marque as telas (menus) que os lojistas deste plano terão acesso. O que estiver desmarcado ficará invisível no painel deles.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5" id="plano-features-container">
+            <!-- Renderizado via JS -->
+        </div>
+        
+        <button id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-md font-bold flex align-center justify-center gap-2">
+            <i data-lucide="save"></i> Salvar Plano
+        </button>
+    </div>
+</div>

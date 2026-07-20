@@ -1,0 +1,82 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Metas de Faturamento</h2>
+            <p class="text-secondary text-sm">Defina e acompanhe as metas mensais para engajar o crescimento da sua loja.</p>
+        </div>
+        <button id="btn-configurar-meta" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="target"></i> Configurar Meta
+        </button>
+    </div>
+
+    <!-- Progresso Atual -->
+    <div class="config-card mb-4" id="metas-progresso-card">
+        <!-- Injetado via JS -->
+    </div>
+
+    <!-- Histórico de Metas -->
+    <div class="config-card mb-0">
+        <h3 class="mb-3 text-primary text-md">Histórico</h3>
+        <div class="table-responsive">
+            <table class="data-table w-100" id="metas-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Mês/Ano</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Meta (R$)</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Atingido (R$)</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="metas-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Paginação -->
+        <div class="flex flex-wrap justify-between align-center border-top-dashed p-3 mt-0 gap-3">
+            <div class="text-sm text-secondary">
+                Mostrando <span id="pag-inicio-meta" class="font-bold text-primary">0</span> a <span id="pag-fim-meta" class="font-bold text-primary">0</span> de <span id="pag-total-meta" class="font-bold text-primary">0</span>
+            </div>
+            <div class="flex gap-2 align-center">
+                <button id="btn-prev-page-meta" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-left" class="icon-sm"></i>
+                </button>
+                <span id="pag-atual-meta" class="text-sm font-medium text-primary px-2">Pág. 1 de 1</span>
+                <button id="btn-next-page-meta" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Configuração -->
+    <div id="modal-meta" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-meta-title">Configurar Meta Mensal</h3>
+                <button id="btn-close-modal-meta" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-meta">
+                <div class="grid grid-md-2 mb-4">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Mês de Referência</label>
+                        <input type="month" id="input-meta-mes" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" required>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Valor da Meta (R$)</label>
+                        <input type="number" step="0.01" id="input-meta-valor" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 5000.00" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-lg cursor-pointer">
+                    Salvar Meta
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Relatórios de Desempenho</h2>
+            <p class="text-secondary text-sm">Acompanhe as métricas e o faturamento do seu negócio.</p>
+        </div>
+        <div class="flex align-center gap-2">
+            <select id="filtro-periodo" class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                <option value="hoje">Hoje</option>
+                <option value="semana">Esta Semana</option>
+                <option value="mes" selected>Este Mês</option>
+                <option value="ano">Este Ano</option>
+            </select>
+            <button class="btn btn-outline flex align-center gap-2" id="btn-export-relatorio">
+                <i data-lucide="download"></i> Exportar
+            </button>
+        </div>
+    </div>
+
+    <!-- Cards de Métricas -->
+    <div class="grid grid-md-2 gap-4 mb-5" id="relatorios-cards">
+        <!-- Injetados via JS -->
+    </div>
+
+    <!-- Tabela de Top Serviços -->
+    <div class="config-card mb-0">
+        <h3 class="mb-3 text-primary text-md">Serviços Mais Agendados</h3>
+        <div class="table-responsive">
+            <table class="data-table w-100" id="relatorios-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Serviço</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Quantidade de Agendamentos</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Receita Gerada</th>
+                    </tr>
+                </thead>
+                <tbody id="relatorios-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,543 @@
+/* ============================================================
+   BOOKING.CSS — VitrineDesk Cliente (Premium Redesign)
+   ============================================================ */
+
+/* ────────────────────────── Modal Overlay ────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 8, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 16px;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ────────────────────────── Modal Content (Glass) ────────────────────────── */
+.glass-modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(18, 18, 24, 0.85);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(20px) scale(0.98);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.modal-overlay.active .glass-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* ────────────────────────── Top Nav (Header) ────────────────────────── */
+.booking-top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-icon-circular {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-icon-circular:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.booking-progress-pill {
+  background: rgba(var(--primary-rgb), 0.15);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  color: var(--primary);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--primary);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0% { box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.6); }
+  70% { box-shadow: 0 0 0 6px rgba(var(--primary-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0); }
+}
+
+/* ────────────────────────── Service Hero ────────────────────────── */
+.booking-service-hero {
+  padding: 20px 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+  text-align: center;
+}
+
+.bsh-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.bsh-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.bsh-price {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.bsh-dot {
+  opacity: 0.5;
+}
+
+.bsh-duration {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.bsh-duration svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ────────────────────────── Steps Body ────────────────────────── */
+.booking-body-container {
+  padding: 0 24px 24px 24px;
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+.booking-step {
+  display: none;
+  animation: fadeSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.booking-step.active {
+  display: block;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.step-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.premium-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.premium-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* ────────────────────────── Profissionais (Step 1) ────────────────────────── */
+.prof-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 12px;
+}
+
+.prof-select-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.prof-select-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-4px);
+  border-color: rgba(var(--primary-rgb), 0.5);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.prof-select-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.prof-select-card:hover .prof-select-avatar {
+  border-color: var(--primary);
+}
+
+.prof-select-avatar-placeholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  border: 2px solid transparent;
+}
+
+.prof-select-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+}
+
+/* ────────────────────────── Calendário (Step 2) ────────────────────────── */
+.modern-calendar {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.calendar-month-year {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.calendar-days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.calendar-day:hover:not(.disabled):not(.empty) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.calendar-day.today {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.calendar-day.disabled {
+  color: rgba(255,255,255,0.2);
+  cursor: not-allowed;
+}
+
+/* ────────────────────────── Horários (Step 3) ────────────────────────── */
+.modern-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  max-height: 250px;
+}
+
+.time-slot {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.time-slot.free:hover {
+  background: rgba(var(--primary-rgb), 0.2);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: scale(0.95);
+}
+
+.time-slot.occupied {
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255,255,255,0.2);
+  text-decoration: line-through;
+  cursor: not-allowed;
+  border-color: transparent;
+}
+
+.time-slot.past {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Extras */
+.extras-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.extra-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.extra-checkbox {
+  accent-color: var(--primary);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.extra-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.extra-name {
+  font-weight: 500;
+  color: #fff;
+}
+.extra-price {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ────────────────────────── Resumo (Step 4) ────────────────────────── */
+.booking-summary-ticket {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Serrilhado estilo ticket */
+.booking-summary-ticket::before, .booking-summary-ticket::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background: rgba(18, 18, 24, 0.95);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+  transform: translateY(-50%);
+}
+.booking-summary-ticket::before {
+  left: -12px;
+}
+.booking-summary-ticket::after {
+  right: -12px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+.summary-row:last-child {
+  margin-bottom: 0;
+}
+.summary-row span:first-child {
+  color: var(--text-muted);
+}
+.summary-row span:last-child {
+  color: #fff;
+  font-weight: 600;
+  text-align: right;
+}
+.summary-row.total {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255,255,255,0.1);
+  font-size: 1.2rem;
+}
+.summary-row.total span:last-child {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Inputs Modernos */
+.modern-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.modern-input-group:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+}
+.input-icon {
+  padding: 0 16px;
+  color: var(--text-muted);
+  width: 20px;
+  height: 20px;
+}
+.modern-input-group input, .modern-input-group textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 14px 16px 14px 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+.modern-input-group textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+
+.btn-apply-coupon {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0 20px;
+  height: 100%;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-apply-coupon:hover {
+  background: var(--primary-hover);
+}
+.coupon-msg {
+  font-size: 0.85rem;
+  margin-top: 6px;
+  padding-left: 12px;
+  font-weight: 500;
+}
+
+/* ────────────────────────── Modern Footer ────────────────────────── */
+.modern-footer {
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(var(--primary-rgb), 0.3);
+}
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite linear;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+

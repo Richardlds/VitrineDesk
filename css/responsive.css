@@ -1,0 +1,54 @@
+/* ==========================================================================
+   GLOBAL RESPONSIVENESS SYSTEM - MOBILE FIRST (MIN-WIDTH ONLY)
+   ========================================================================== */
+
+/* Preventing horizontal scroll globally */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Base accessibility: buttons and touch inputs min-height 44px */
+button, 
+.btn, 
+.nav-item, 
+.bottom-nav-item, 
+input, 
+select, 
+textarea {
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Base Mobile-First Styles for components that need to scale up */
+.hero h1 {
+  font-size: clamp(32px, 8vw, 76px);
+}
+
+.section-title {
+  font-size: clamp(24px, 5vw, 42px);
+}
+
+.hero-buttons {
+  flex-direction: column;
+  width: 100%;
+}
+
+.hero-buttons .btn {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .hero-buttons {
+    flex-direction: row;
+  }
+  .hero-buttons .btn {
+    width: auto;
+  }
+}

@@ -1,0 +1,137 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Equipe</h2>
+            <p class="text-secondary text-sm">Gerencie os profissionais da sua barbearia e permissões de acesso.</p>
+        </div>
+        <div class="flex align-center gap-2">
+            <button id="btn-importar-equipe" class="btn btn-outline border-dashed text-secondary flex align-center gap-2 cursor-pointer">
+                <i data-lucide="download"></i> Importar da Rede
+            </button>
+            <button id="btn-novo-profissional" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+                <i data-lucide="user-plus"></i> Novo Profissional
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="equipe-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Profissional</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Especialidade</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Comissão</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Telefone</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="equipe-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div id="modal-equipe" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-equipe-title">Cadastrar Profissional</h3>
+                <button id="btn-close-modal-equipe" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-equipe">
+                <!-- Foto (Upload) -->
+                <div class="flex justify-center mb-4 relative">
+                    <label for="input-foto-equipe" class="cursor-pointer relative group" style="width: 80px; height: 80px; display: block;">
+                        <input type="file" id="input-foto-equipe" accept="image/*" class="d-none">
+                        
+                        <!-- Preview da Foto -->
+                        <div id="preview-foto-equipe" class="bg-placeholder border-dashed flex justify-center align-center rounded-full overflow-hidden relative" style="width: 100%; height: 100%;">
+                            <i data-lucide="camera" class="text-secondary" id="icon-camera-equipe"></i>
+                            <!-- Imagem será injetada aqui via JS -->
+                        </div>
+                        
+                        <!-- Overlay Hover -->
+                        <div class="absolute top-0 left-0 w-100 h-100 bg-primary-dark opacity-0 group-hover:opacity-70 rounded-full flex align-center justify-center transition-all duration-300 pointer-events-none">
+                            <i data-lucide="upload" class="text-white icon-sm"></i>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome Completo</label>
+                    <input type="text" id="input-nome-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Lucas Barbosa" required>
+                </div>
+                
+                <div class="grid grid-md-3 mb-3 gap-3">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Especialidade</label>
+                        <input type="text" id="input-especialidade-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Barbeiro" required>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Telefone (Opcional)</label>
+                        <input type="text" id="input-telefone-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="(11) 90000-0000">
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Comissão (%)</label>
+                        <input type="number" id="input-comissao-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 50" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="grid grid-md-2 mb-4">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Permissão de Acesso</label>
+                        <select id="input-permissao-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                            <option value="profissional">Profissional (Acesso Restrito)</option>
+                            <option value="admin">Administrador (Acesso Total)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Status</label>
+                        <select id="input-status-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                            <option value="ferias">Férias</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-between gap-3 mt-4">
+                    <button type="button" id="btn-excluir-equipe" class="btn bg-error-light text-error border-none rounded-lg px-4 py-2 cursor-pointer d-none" title="Excluir Permanentemente">
+                        <i data-lucide="trash-2"></i> Excluir
+                    </button>
+                    <button type="button" id="btn-desativar-equipe" class="btn bg-placeholder text-secondary border-none rounded-lg px-4 py-2 cursor-pointer d-none" title="Inativar Profissional">
+                        Desativar
+                    </button>
+                    <button type="submit" id="btn-salvar-equipe" class="btn btn-primary flex-1 py-3 rounded-lg cursor-pointer flex align-center justify-center gap-2">
+                        Salvar Profissional
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Importação -->
+    <div id="modal-importar-equipe" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-importar-equipe-title">Importar da Rede</h3>
+                <button id="btn-close-modal-importar-equipe" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <p class="text-sm text-secondary mb-3">Selecione um profissional de outra filial sua para copiar para cá.</p>
+            
+            <div id="importar-equipe-lista" class="flex flex-column gap-2 max-h-300px overflow-y-auto pr-2">
+                <!-- Injetado via JS -->
+            </div>
+        </div>
+    </div>
+</div>

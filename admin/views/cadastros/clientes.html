@@ -1,0 +1,156 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Meus Clientes</h2>
+            <p class="text-secondary text-sm">Gerencie o cadastro, histórico e dados de contato dos seus clientes.</p>
+        </div>
+        <button id="btn-novo-cliente" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="plus"></i> Novo Cliente
+        </button>
+    </div>
+
+    <!-- Filtros e Busca -->
+    <div class="flex flex-wrap align-center gap-3 mb-4">
+        <div class="flex-1 flex align-center bg-placeholder border-dashed rounded-md px-3 py-2"
+            style="min-width: 250px;">
+            <i data-lucide="search" class="text-secondary mr-2 icon-sm"></i>
+            <input type="text" id="input-busca-cliente"
+                class="bg-transparent border-none w-100 text-primary outline-none text-sm"
+                placeholder="Buscar por nome, email ou telefone...">
+        </div>
+        <select id="filtro-status-cliente"
+            class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer"
+            style="min-width: 150px;">
+            <option value="todos">Todos</option>
+            <option value="ativos">Ativos</option>
+            <option value="blacklist">Blacklist</option>
+        </select>
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="clientes-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Nome</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Telefone (WhatsApp)</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Email</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Agendamentos</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="clientes-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        <div class="flex flex-wrap justify-between align-center border-top-dashed p-3 mt-0 gap-3">
+            <div class="text-sm text-secondary">
+                Mostrando <span id="pag-inicio" class="font-bold text-primary">0</span> a <span id="pag-fim"
+                    class="font-bold text-primary">0</span> de <span id="pag-total"
+                    class="font-bold text-primary">0</span>
+            </div>
+            <div class="flex gap-2 align-center">
+                <button id="btn-prev-page"
+                    class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors"
+                    disabled>
+                    <i data-lucide="chevron-left" class="icon-sm"></i>
+                </button>
+                <span id="pag-atual" class="text-sm font-medium text-primary px-2">Pág. 1 de 1</span>
+                <button id="btn-next-page"
+                    class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors"
+                    disabled>
+                    <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro / Edição -->
+    <div id="modal-cliente" class="modal-overlay d-none">
+        <div class="modal-content config-card custom-scrollbar" style="max-width: 900px; width: 95%; max-height: 85vh; overflow-y: auto;">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3 sticky top-0 bg-dark z-10">
+                <h3 id="modal-cliente-title">Cadastrar Cliente</h3>
+                <button id="btn-close-modal-cliente"
+                    class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-md-2 gap-4" id="modal-cliente-grid">
+                <!-- Coluna: Formulário -->
+                <div>
+                    <h4 class="text-sm font-medium text-primary mb-3">Dados Cadastrais</h4>
+                    <form id="form-cliente">
+                        <div class="mb-3">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome Completo</label>
+                            <input type="text" id="input-cliente-nome"
+                                class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                                placeholder="Ex: João da Silva" required>
+                        </div>
+
+                        <div class="grid grid-md-2 gap-3 mb-3">
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">Telefone (WhatsApp)</label>
+                                <input type="tel" id="input-cliente-telefone"
+                                    class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                                    placeholder="(11) 99999-9999" required>
+                            </div>
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">E-mail</label>
+                                <input type="email" id="input-cliente-email"
+                                    class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                                    placeholder="cliente@email.com">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Observações Gerais</label>
+                            <textarea id="input-cliente-obs" rows="3"
+                                class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm resize-none"
+                                placeholder="Alergias, preferências, etc..."></textarea>
+                        </div>
+
+                        <div class="flex flex-wrap justify-between gap-3 mt-4">
+                            <button type="button" id="btn-excluir-cliente"
+                                class="btn bg-error-light text-error border-none rounded-lg px-4 py-2 cursor-pointer d-none"
+                                title="Excluir Permanentemente">
+                                <i data-lucide="trash-2" class="icon-sm"></i> Excluir
+                            </button>
+                            <button type="button" id="btn-desativar-cliente"
+                                class="btn bg-placeholder text-secondary border-none rounded-lg px-4 py-2 cursor-pointer d-none"
+                                title="Adicionar à Blacklist / Desativar">
+                                Desativar
+                            </button>
+                            <button type="submit" id="btn-salvar-cliente"
+                                class="btn btn-primary flex-1 py-2 rounded-lg cursor-pointer flex align-center justify-center gap-2">
+                                Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Coluna: Histórico de Agendamentos -->
+                <div id="cliente-history-section" class="border-left-dashed pl-4 d-none" style="display: flex; flex-direction: column; min-height: 400px;">
+                    <div class="flex justify-between align-center mb-3">
+                        <h4 class="text-sm font-medium text-primary m-0">Histórico de Agendamentos</h4>
+                        <span id="cliente-history-count" class="badge bg-primary-light text-primary text-xs font-medium">0</span>
+                    </div>
+                    
+                    <!-- Próximo Agendamento Destaque -->
+                    <div id="cliente-next-appointment" class="mb-3 d-none">
+                        <!-- Injetado via JS -->
+                    </div>
+
+                    <div class="custom-scrollbar pr-2" id="cliente-history-list" style="overflow-y: auto; max-height: 400px;">
+                        <!-- Injetado via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

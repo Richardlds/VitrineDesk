@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * https: wss:; style-src * 'unsafe-inline'; img-src * data: https:; font-src * data:;">
+  <title>Entrar - VitrineDesk</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  
+  <!-- PWA & Mobile -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="apple-touch-icon" href="/assets/icon-192.png">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Background particles -->
+  <div class="bg-particles" id="bg-particles"></div>
+  
+  <!-- Main container -->
+  <main class="auth-container">
+    <div class="auth-card reveal active">
+      <!-- Logo -->
+      <a href="/" class="auth-logo extracted-style-357"><i data-lucide="zap" class="w-8 h-8 text-primary"></i> VitrineDesk</a>
+      
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Entrar</button>
+        <button class="auth-tab" data-tab="register">Criar Conta</button>
+      </div>
+      
+      <!-- Form Login -->
+      <form id="form-login" class="auth-form active">
+        <div class="input-group">
+          <input type="text" id="login-email" required placeholder=" " autocomplete="username">
+          <label class="extracted-style-1" for="login-email"><i class="extracted-style-401" data-lucide="mail"></i> Email, CPF ou CNPJ</label>
+          <span class="error-msg" id="login-email-err"></span>
+        </div>
+        <div class="input-group">
+          <input type="password" id="login-password" required placeholder=" " autocomplete="current-password">
+          <label class="extracted-style-1" for="login-password"><i class="extracted-style-401" data-lucide="lock"></i> Senha</label>
+          <button type="button" class="toggle-password extracted-style-402" tabindex="-1"><i class="extracted-style-403" data-lucide="eye"></i></button>
+          <span class="error-msg" id="login-password-err"></span>
+        </div>
+        <a href="#" class="forgot-link">Esqueceu a senha?</a>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login-submit">Entrar</button>
+      </form>
+      
+      <!-- Form Register -->
+      <form id="form-register" class="auth-form">
+        <div class="input-group">
+          <input type="text" id="reg-name" required placeholder=" ">
+          <label class="extracted-style-1" for="reg-name"><i class="extracted-style-401" data-lucide="store"></i> Nome da Loja (Nome Fantasia)</label>
+          <span class="error-msg" id="reg-name-err"></span>
+        </div>
+        <div class="input-group extracted-style-4" id="reg-razao-social-group">
+          <input type="text" id="reg-razao-social" placeholder=" ">
+          <label class="extracted-style-1" for="reg-razao-social"><i class="extracted-style-401" data-lucide="building"></i> Razão Social</label>
+          <span class="error-msg" id="reg-razao-social-err"></span>
+        </div>
+        <div class="input-group">
+          <input type="text" id="reg-document" required placeholder=" ">
+          <label class="extracted-style-1" for="reg-document"><i class="extracted-style-401" data-lucide="file-text"></i> CPF ou CNPJ</label>
+          <span class="error-msg" id="reg-document-err"></span>
+        </div>
+        <div class="input-group">
+          <input type="email" id="reg-email" required placeholder=" " autocomplete="username">
+          <label class="extracted-style-1" for="reg-email"><i class="extracted-style-401" data-lucide="mail"></i> Email</label>
+          <span class="error-msg" id="reg-email-err"></span>
+        </div>
+        <div class="input-group">
+          <input type="password" id="reg-password" required placeholder=" " minlength="6" autocomplete="new-password">
+          <label class="extracted-style-1" for="reg-password"><i class="extracted-style-401" data-lucide="lock"></i> Senha</label>
+          <button type="button" class="toggle-password extracted-style-402" tabindex="-1"><i class="extracted-style-403" data-lucide="eye"></i></button>
+          <div class="password-strength">
+            <div class="strength-bar"></div>
+            <div class="strength-bar"></div>
+            <div class="strength-bar"></div>
+          </div>
+          <span class="error-msg" id="reg-password-err"></span>
+        </div>
+        <p class="terms-text">Ao criar uma conta, você concorda com os <a href="#">Termos de Uso</a></p>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-register-submit">Criar Conta</button>
+      </form>
+      
+      <a href="/" class="back-link">← Voltar para home</a>
+      
+      <!-- Link for Support -->
+      <a class="extracted-style-404" href="#" id="link-support">Precisando de ajuda? Fale com o Suporte</a>
+
+      <!-- Container do Toast específico para o Login (posicionado abaixo do card) -->
+      <div class="extracted-style-405" id="toast-container"></div>
+    </div>
+  </main>
+
+  <!-- Modal de Suporte -->
+  <div class="modal" id="modal-support">
+    <div class="modal-content extracted-style-406">
+      <div class="modal-header">
+        <h3>Abrir Chamado de Suporte</h3>
+        <button class="close-btn" data-close-modal>×</button>
+      </div>
+      <div class="modal-body">
+        <p class="extracted-style-407">Está com problemas para acessar ou criar sua loja? Preencha os campos abaixo e entraremos em contato.</p>
+        <form class="extracted-style-23" id="form-support">
+          <div class="input-group">
+            <input type="email" id="support-email" required placeholder=" ">
+            <label class="extracted-style-1" for="support-email"><i class="extracted-style-401" data-lucide="mail"></i> Seu E-mail</label>
+          </div>
+          <div class="input-group">
+            <input type="text" id="support-subject" required placeholder=" ">
+            <label class="extracted-style-1" for="support-subject"><i class="extracted-style-401" data-lucide="edit-3"></i> Assunto</label>
+          </div>
+          <div class="input-group">
+            <textarea id="support-msg" rows="4" required placeholder=" "></textarea>
+            <label for="support-msg">Mensagem detalhada</label>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block extracted-style-408" id="btn-support-submit">Enviar Mensagem</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="/js/login.js"></script>
+</body>
+</html>

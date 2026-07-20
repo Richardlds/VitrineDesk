@@ -1,0 +1,593 @@
+/* ============================================================
+   HEADER.CSS — VitrineDesk Cliente
+   Topbar, logo, status, redes sociais, banner, nav desktop,
+   footer, botão WhatsApp flutuante
+   ============================================================ */
+
+/* ────────────────────────── Topbar (Mobile First) ────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
+  background: var(--header-bg, rgba(10, 10, 15, 0.65)); /* Glassmorphism base */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.topbar-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ── Brand (logo + info) ── */
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 4px;
+  transition: background 0.3s ease;
+}
+
+.brand-wrapper:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.logo-container {
+  position: relative;
+  width: var(--logo-size, 40px);
+  height: var(--logo-size, 40px);
+  border-radius: var(--logo-format, 12px);
+  padding: 2px;
+  border: 1px solid rgba(var(--primary-rgb), 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.2), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.15);
+}
+
+.logo-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: var(--primary);
+  filter: blur(8px);
+  opacity: 0.3;
+  z-index: -1;
+}
+
+.logo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--logo-format, 10px);
+  background: var(--bg-dark);
+}
+
+.shop-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  justify-content: center;
+}
+
+.shop-name {
+  font-family: var(--font-title);
+  font-size: 0.95rem; /* Menor no mobile para não quebrar layout */
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+  background: linear-gradient(to right, #fff, rgba(255,255,255,0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.shop-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-open {
+  color: var(--success);
+}
+
+.status-open .status-dot {
+  background-color: var(--success);
+  box-shadow: 0 0 8px var(--success);
+  animation: pulse 2s infinite;
+}
+
+.status-closed {
+  color: var(--danger);
+}
+
+.status-closed .status-dot {
+  background-color: var(--danger);
+  box-shadow: 0 0 8px var(--danger);
+}
+
+/* ── Ações do header (Auth / Nav) ── */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Desktop Nav — Oculta no mobile first */
+.desktop-nav {
+  display: none;
+}
+
+/* Auth / Entrar */
+.btn-auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: rgba(var(--primary-rgb), 0.15);
+  color: var(--primary);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-auth i {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-auth .auth-text {
+  display: none; /* Oculta o texto no mobile, mostra apenas ícone, ou mostra ambos se couber. Vamos ocultar e deixar só o ícone minimalista */
+}
+
+.btn-auth:active {
+  transform: scale(0.96);
+  background: rgba(var(--primary-rgb), 0.25);
+}
+
+/* User Avatar Logado */
+.user-menu-wrapper {
+  position: relative;
+}
+
+.btn-user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px; /* squircle */
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.3), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(var(--primary-rgb), 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.btn-user-avatar:active {
+  transform: scale(0.95);
+}
+
+/* Ajustes Media Queries para Desktop */
+@media (min-width: 768px) {
+  .topbar {
+    height: 72px;
+  }
+  
+  .logo-container {
+    width: 44px;
+    height: 44px;
+  }
+
+  .shop-name {
+    font-size: 1.2rem;
+  }
+
+  .btn-auth .auth-text {
+    display: inline-block;
+  }
+
+  .btn-auth {
+    padding: 0 20px;
+  }
+  
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-right: 16px;
+  }
+  
+  .desktop-nav-link {
+    color: var(--header-text, var(--text-muted));
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .desktop-nav-link:hover,
+  .desktop-nav-link.active {
+    color: #fff;
+    background: rgba(var(--primary-rgb), 0.15);
+  }
+}
+
+/* ────────────────────────── Banner Promo ────────────────────────── */
+.banner-promo {
+  margin: 20px auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  padding: 32px 24px;
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.25) 0%, rgba(10, 10, 15, 0.9) 100%);
+  border: 1px solid rgba(var(--primary-rgb), 0.2);
+  box-shadow: var(--neon-glow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.banner-promo::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(var(--primary-rgb), 0.35) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+
+.banner-badge {
+  display: inline-block;
+  background: rgba(var(--primary-rgb), 0.2);
+  border: 1px solid var(--primary);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  box-shadow: var(--neon-glow);
+}
+
+.banner-title {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #fff 30%, rgba(255, 255, 255, 0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.banner-text {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+/* ────────────────────────── Atalho Agendar ────────────────────────── */
+.quick-booking {
+  margin: 24px auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  border: 1px solid rgba(var(--primary-rgb), 0.2);
+  background: rgba(var(--primary-rgb), 0.05);
+}
+
+.quick-booking:hover {
+  border-color: var(--primary);
+  box-shadow: var(--neon-glow);
+  transform: translateY(-2px);
+}
+
+.quick-booking-text h3 {
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.quick-booking-text p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.quick-booking-icon {
+  font-size: 1.8rem;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* ────────────────────────── Footer ────────────────────────── */
+.footer-custom {
+  background: linear-gradient(to top, rgba(var(--primary-rgb), 0.15) 0%, var(--bg-dark) 100%);
+  border-top: 1px solid rgba(var(--primary-rgb), 0.2);
+  padding: 32px 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--footer-text);
+}
+
+.footer-logo {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.footer-copyright {
+  margin-bottom: 0;
+  opacity: 0.7;
+}
+
+/* ────────────────────────── WhatsApp Float ────────────────────────── */
+.whatsapp-float-btn {
+  position: fixed;
+  bottom: 90px;
+  /* acima da nav mobile */
+  right: 20px;
+  width: var(--whatsapp-size);
+  height: var(--whatsapp-size);
+  background-color: var(--whatsapp-bg);
+  color: #fff !important;
+  border-radius: 50%;
+  display: none;
+  /* exibido via JS se tenant tiver whatsapp */
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 997;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.whatsapp-float-btn:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Animação bounce para o WhatsApp */
+.whatsapp-float-btn.bounce {
+  animation: whatsappBounce 2s infinite;
+}
+
+@keyframes whatsappBounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-12px);
+  }
+
+  60% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Animação pulse para o WhatsApp */
+.whatsapp-float-btn.pulse-anim {
+  animation: neonPulse 2s infinite;
+}
+
+/* Posicionamento alternativo (esquerda) */
+.whatsapp-float-btn.pos-left {
+  right: auto;
+  left: 20px;
+}
+
+
+
+/* ========================================== HERO SECTION ========================================== */
+.hero-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 32px;
+  background: var(--bg-dark);
+}
+
+/* Sem banner: colapsar altura para não deixar espaço vazio */
+.hero-wrapper.no-banner {
+  min-height: auto;
+  margin-bottom: 0;
+}
+
+.store-cover-wrapper {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+}
+
+.hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(var(--primary-rgb), 0.7) 0%, rgba(0,0,0,0.4) 50%, var(--bg-dark) 100%);
+}
+
+.hero-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 16px 0;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.hero-brand-container {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.hero-brand-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 48px;
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: fadeUp 0.8s ease-out;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-brand-card .logo-container {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.hero-brand-card .shop-name {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(to right, #fff, rgba(255,255,255,0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-brand-card .shop-status-badge {
+  font-size: 0.9rem;
+  padding: 6px 16px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.section-glass {
+  padding: 32px 24px;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 576px) {
+  .hero-brand-card {
+    padding: 24px;
+    width: 90%;
+  }
+  .hero-brand-card .shop-name {
+    font-size: 1.5rem;
+  }
+  .hero-wrapper {
+    min-height: 350px;
+  }
+}
+
+/* ────────────────────────── User Menu (Area Cliente) ────────────────────────── */
+.user-menu {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  padding: 2px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+
+.user-menu:hover {
+  background: rgba(var(--primary-rgb), 0.15);
+  border-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.3);
+}
+
+.user-avatar-small {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}

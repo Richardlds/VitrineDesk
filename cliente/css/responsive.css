@@ -1,0 +1,282 @@
+/* ============================================================
+   RESPONSIVE.CSS — VitrineDesk Cliente
+   Mobile First — breakpoints progressivos + bottom nav
+   ============================================================ */
+
+/* ══════════════════════════════════════════════════════════════
+   BASE = MOBILE (< 576px)
+   Estilos base (sem media query) cobrem o layout mobile
+   ══════════════════════════════════════════════════════════════ */
+
+/* ────────────────────────── Barra Navegação Inferior (Mobile) ────────────────────────── */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 998;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.68rem;
+  font-weight: 500;
+  transition: var(--transition);
+  opacity: 0.7;
+  flex: 1;
+  height: 100%;
+  gap: 2px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.mobile-nav-icon {
+  font-size: 1.2rem;
+  transition: var(--transition);
+}
+
+.mobile-nav-item.active {
+  color: var(--primary) !important;
+  opacity: 1;
+}
+
+.mobile-nav-item.active .mobile-nav-icon,
+.mobile-nav-item.active svg {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 4px 6px rgba(var(--primary-rgb), 0.4));
+  stroke: var(--primary) !important;
+}
+
+body {
+  padding-bottom: calc(var(--nav-height) + 10px);
+}
+
+/* Modais: No mobile assumem gaveta (drawer) do fundo */
+.modal-content {
+  width: 100%;
+  max-width: 100%;
+  border-radius: var(--radius) var(--radius) 0 0;
+  max-height: 95vh;
+  margin-top: auto; /* Força pra baixo no flex-end */
+}
+
+.modal-overlay {
+  align-items: flex-end;
+  padding: 0;
+}
+
+.prof-grid {
+  grid-template-columns: 1fr;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   SMALL (sm) — min-width: 576px
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 576px) {
+  .logo-container {
+    width: 40px;
+    height: 40px;
+  }
+
+  .shop-name {
+    font-size: 1rem;
+  }
+
+
+
+  .time-slots {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MEDIUM (md) — min-width: 768px (Tablets)
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+
+  body {
+    padding-bottom: 0;
+  }
+
+  .whatsapp-float-btn {
+    bottom: 24px;
+  }
+
+  .topbar {
+    height: 76px;
+  }
+
+  .logo-container {
+    width: var(--logo-size, 50px);
+    height: var(--logo-size, 50px);
+  }
+
+  .shop-name {
+    font-size: 1.2rem;
+  }
+
+  .header-socials {
+    display: flex;
+  }
+
+
+
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .info-layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .map-wrapper {
+    height: 100%;
+    min-height: 300px;
+  }
+
+  .banner-promo {
+    padding: 48px 40px;
+    margin: 32px auto;
+  }
+
+  .banner-title {
+    font-size: 2.4rem;
+  }
+
+  .time-slots {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .appointment-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .appointment-card-actions {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  /* Modais no tablet já podem ser caixas centrais normais */
+  .modal-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+
+  .modal-content {
+    max-width: 520px;
+    border-radius: var(--radius);
+    margin-top: 0;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LARGE (lg) — min-width: 992px (Desktops pequenos)
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 992px) {
+  .desktop-nav {
+    display: flex !important;
+  }
+
+
+
+  .testimonials-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EXTRA LARGE (xl) — min-width: 1200px (Desktops)
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+    padding: 0 32px;
+  }
+
+  .team-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .time-slots {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .section {
+    padding: 70px 0;
+  }
+
+  .appointment-card {
+    padding: 22px 28px;
+  }
+
+  .banner-title {
+    font-size: 2.8rem;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WIDE DESKTOP — min-width: 1440px
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1320px;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .section {
+    padding: 80px 0;
+  }
+
+  .banner-promo {
+    padding: 60px 56px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SAFE AREA (iOS notch)
+   ══════════════════════════════════════════════════════════════ */
+@supports (padding: max(0px)) {
+  .mobile-bottom-nav {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+    height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px));
+  }
+}

@@ -1,0 +1,78 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Visão Geral</h2>
+            <p class="text-secondary text-sm">Acompanhe o desempenho da sua loja em tempo real.</p>
+        </div>
+        <div class="flex align-center gap-2">
+            <button class="btn btn-outline flex align-center gap-2" id="btn-refresh-dashboard">
+                <i data-lucide="refresh-cw"></i> Atualizar
+            </button>
+            <button class="btn btn-primary flex align-center gap-2" id="btn-novo-agendamento-dash">
+                <i data-lucide="plus"></i> Novo Agendamento
+            </button>
+        </div>
+    </div>
+
+    <!-- KPIs / Metric Cards -->
+    <div class="grid grid-md-2 grid-lg-4 gap-4 mb-4" id="dashboard-kpis">
+        <!-- Skeleton Cards (default while loading) -->
+        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
+        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
+        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
+        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
+    </div>
+
+    <!-- Main Area: Agendamentos & Próximos da Equipe -->
+    <div class="grid grid-lg-2 gap-4" id="dashboard-main-area">
+        <!-- Coluna 1: Agendamentos do Dia -->
+        <div class="config-card mb-0 flex flex-column" style="max-height: 450px; overflow-y: auto;">
+            <div class="flex flex-column flex-sm-row justify-between align-start align-sm-center mb-3 border-bottom-dashed pb-3 gap-2 sticky top-0 bg-placeholder z-10" style="margin-top:-16px; margin-left:-16px; margin-right:-16px; padding:16px;">
+                <h3 class="text-primary text-md m-0 flex align-center gap-2">
+                    Agendamentos
+                    <i data-lucide="clock" class="text-warning icon-sm"></i>
+                </h3>
+                <input type="date" id="dash-filter-date" class="form-input bg-placeholder-dark border-none rounded-md px-2 py-1 text-primary text-sm outline-none">
+            </div>
+            
+            <div id="upcoming-appointments-list">
+                <!-- Skeleton rows -->
+                <div class="flex gap-3 mb-3">
+                    <div class="skeleton" style="width: 48px; height: 48px; border-radius: 50%;"></div>
+                    <div class="skeleton flex-1" style="height: 48px; border-radius: 8px;"></div>
+                </div>
+                <div class="flex gap-3 mb-3">
+                    <div class="skeleton" style="width: 48px; height: 48px; border-radius: 50%;"></div>
+                    <div class="skeleton flex-1" style="height: 48px; border-radius: 8px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 2: Próximos da Equipe -->
+        <div class="config-card mb-0 flex flex-column" style="max-height: 450px; overflow-y: auto;">
+            <div class="flex justify-between align-center mb-3 border-bottom-dashed pb-3 sticky top-0 bg-placeholder z-10" style="margin-top:-16px; margin-left:-16px; margin-right:-16px; padding:16px;">
+                <h3 class="text-primary text-md m-0 flex align-center gap-2">
+                    Próximos da Equipe
+                    <i data-lucide="users" class="text-success icon-sm"></i>
+                </h3>
+            </div>
+
+            <!-- Filtros da Equipe (Avatares) -->
+            <div class="flex overflow-x-auto gap-3 pb-3 mb-2 hide-scrollbar border-bottom-dashed" id="team-filters-container">
+                <div class="skeleton flex-shrink-0" style="width: 50px; height: 50px; border-radius: 50%;"></div>
+                <div class="skeleton flex-shrink-0" style="width: 50px; height: 50px; border-radius: 50%;"></div>
+                <div class="skeleton flex-shrink-0" style="width: 50px; height: 50px; border-radius: 50%;"></div>
+                <div class="skeleton flex-shrink-0" style="width: 50px; height: 50px; border-radius: 50%;"></div>
+            </div>
+            
+            <div id="team-next-appointments-list">
+                <!-- Skeleton rows -->
+                <div class="flex gap-3 mb-3">
+                    <div class="skeleton" style="width: 48px; height: 48px; border-radius: 50%;"></div>
+                    <div class="skeleton flex-1" style="height: 48px; border-radius: 8px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

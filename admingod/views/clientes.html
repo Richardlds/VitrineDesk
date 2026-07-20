@@ -1,0 +1,69 @@
+<div class="admin-section fade-in">
+    <div class="flex justify-between align-center mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Clientes Globais</h2>
+            <p class="text-secondary text-sm">Pesquise e gerencie clientes em toda a rede de lojas do VitrineDesk.</p>
+        </div>
+    </div>
+
+    <!-- Interface de Busca Poderosa -->
+    <div class="config-card p-4 mb-4">
+        <h3 class="text-primary text-md mb-3 flex align-center gap-2"><i data-lucide="search" class="icon-sm"></i> Localizar Cliente</h3>
+        <div class="flex gap-3 align-center flex-wrap">
+            <div class="search-box relative flex-1 min-w-250px">
+                <i data-lucide="user" class="absolute text-secondary search-icon-pos-md"></i>
+                <input type="text" id="input-search-cliente" placeholder="Buscar por Nome, CPF, Telefone ou E-mail..." class="w-100 bg-placeholder border-dashed rounded-md py-3 pr-3 text-primary outline-none focus:border-primary transition-all text-sm search-input-md">
+            </div>
+            <button id="btn-search-cliente" class="btn btn-primary px-6 py-3 rounded-md font-bold flex align-center gap-2">
+                Buscar
+            </button>
+        </div>
+        <p class="text-xs text-secondary mt-2"><i data-lucide="info" class="icon-sm inline align-middle"></i> A busca não é automática por motivos de performance. Digite o termo e clique em Buscar.</p>
+    </div>
+
+    <!-- Lista de Resultados -->
+    <div class="config-card p-0 mb-4 overflow-hidden">
+        <div class="p-4 border-bottom-dashed">
+            <h3 class="text-primary text-md m-0 flex align-center gap-2"><i data-lucide="users" class="text-secondary icon-sm"></i> Resultados da Busca</h3>
+        </div>
+
+        <div class="table-responsive w-100 overflow-x-auto">
+            <table class="w-100 text-left border-collapse min-w-800">
+                <thead>
+                    <tr class="bg-placeholder text-secondary text-xs uppercase tracking-wider">
+                        <th class="py-3 px-4 font-medium">Cliente</th>
+                        <th class="py-3 px-4 font-medium">Contato / CPF</th>
+                        <th class="py-3 px-4 font-medium text-center">Status</th>
+                        <th class="py-3 px-4 font-medium text-right">Ações de Segurança</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-clientes" class="text-sm">
+                    <tr>
+                        <td colspan="4" class="py-8 text-center text-secondary">
+                            <i data-lucide="search" class="mb-2 w-8 h-8 opacity-50"></i>
+                            <p>Utilize a barra acima para localizar clientes no banco de dados.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div id="pagination-clientes" class="p-4 border-top-dashed flex justify-between align-center flex-wrap gap-3 d-none">
+            <div class="text-secondary text-sm">
+                Mostrando <span id="pag-start" class="text-primary font-bold">0</span> a <span id="pag-end" class="text-primary font-bold">0</span> de <span id="pag-total" class="text-primary font-bold">0</span> clientes
+            </div>
+            <div class="flex gap-2">
+                <button id="btn-prev-page" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-left" class="icon-sm m-0"></i>
+                </button>
+                <div id="pag-numbers" class="flex gap-1">
+                    <!-- Page numbers injected here -->
+                </div>
+                <button id="btn-next-page" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-right" class="icon-sm m-0"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

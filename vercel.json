@@ -1,0 +1,75 @@
+{
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/vitrinedesk/css/:match*",
+      "destination": "/cliente/css/:match*"
+    },
+    {
+      "source": "/vitrinedesk/js/:match*",
+      "destination": "/cliente/js/:match*"
+    },
+    {
+      "source": "/vitrinedesk/assets/:match*",
+      "destination": "/cliente/assets/:match*"
+    },
+    {
+      "source": "/vitrinedesk/:slug",
+      "destination": "/cliente/index.html"
+    },
+    {
+      "source": "/cliente/css/:match*",
+      "destination": "/cliente/css/:match*"
+    },
+    {
+      "source": "/cliente/js/:match*",
+      "destination": "/cliente/js/:match*"
+    },
+    {
+      "source": "/cliente/assets/:match*",
+      "destination": "/cliente/assets/:match*"
+    },
+    {
+      "source": "/cliente/:slug",
+      "destination": "/cliente/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        }
+      ]
+    }
+  ]
+}

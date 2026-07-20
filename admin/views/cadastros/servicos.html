@@ -1,0 +1,126 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Serviços</h2>
+            <p class="text-secondary text-sm">Gerencie os serviços oferecidos e seus respectivos valores.</p>
+        </div>
+        <div class="flex align-center gap-2">
+            <button id="btn-importar-servico" class="btn btn-outline border-dashed text-secondary flex align-center gap-2 cursor-pointer">
+                <i data-lucide="download"></i> Importar da Rede
+            </button>
+            <button id="btn-novo-servico" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+                <i data-lucide="plus"></i> Novo Serviço
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="servicos-table">
+                <thead>
+                    <tr>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3" style="width: 60px;">Preview</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Nome do Serviço</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Duração</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Preço Base</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="servicos-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro (Oculto por Padrão) -->
+    <div id="modal-servico" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-title">Cadastrar Serviço</h3>
+                <button id="btn-close-modal" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-servico">
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome do Serviço</label>
+                    <input type="text" id="input-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Corte Degradê" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-2 inline-block">Foto do Serviço</label>
+                    <div class="flex align-center gap-3">
+                        <div id="service-img-preview" class="bg-placeholder rounded-md flex justify-center align-center border-dashed w-60px h-60px overflow-hidden bg-center bg-cover">
+                            <i data-lucide="image" class="text-secondary" id="service-img-icon"></i>
+                        </div>
+                        <div class="flex-1">
+                            <input type="file" id="input-imagem" accept="image/png, image/jpeg, image/webp" class="d-none">
+                            <button type="button" onclick="document.getElementById('input-imagem').click()" class="btn border-none bg-primary-light text-primary py-2 px-3 rounded-md cursor-pointer text-sm font-medium">Escolher Foto</button>
+                            <button type="button" id="btn-remover-foto" class="btn border-none bg-error-light text-error py-2 px-3 rounded-md cursor-pointer text-sm font-medium d-none ml-2">Remover</button>
+                            <div class="text-xs text-secondary mt-1">PNG ou JPG até 2MB</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Categoria / Tag</label>
+                    <input type="text" id="input-categoria" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Cabelo, Barba, Massagem">
+                    <div class="text-xs text-secondary mt-1">Usada para agrupar e filtrar serviços no site do cliente.</div>
+                </div>
+                
+                <div class="grid grid-md-2 mb-3">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Duração (minutos)</label>
+                        <input type="number" id="input-duracao" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="45" required>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Preço (R$)</label>
+                        <input type="number" id="input-preco" step="0.01" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="35.00" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Status</label>
+                    <select id="input-status" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-between gap-3 mt-4">
+                    <button type="button" id="btn-excluir" class="btn bg-error-light text-error border-none rounded-lg px-4 py-2 cursor-pointer d-none" title="Excluir Permanentemente">
+                        <i data-lucide="trash-2"></i> Excluir
+                    </button>
+                    <button type="button" id="btn-desativar" class="btn bg-placeholder text-secondary border-none rounded-lg px-4 py-2 cursor-pointer d-none" title="Inativar Serviço">
+                        Desativar
+                    </button>
+                    <button type="submit" id="btn-salvar" class="btn btn-primary flex-1 py-3 rounded-lg cursor-pointer flex align-center justify-center gap-2">
+                        Salvar Serviço
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Importação -->
+    <div id="modal-importar-servico" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-importar-servico-title">Importar Serviço da Rede</h3>
+                <button id="btn-close-modal-importar-servico" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <p class="text-sm text-secondary mb-3">Selecione um serviço de outra filial sua para copiar para cá.</p>
+            
+            <div id="importar-servico-lista" class="flex flex-column gap-2 max-h-300px overflow-y-auto pr-2">
+                <!-- Injetado via JS -->
+            </div>
+        </div>
+    </div>
+</div>

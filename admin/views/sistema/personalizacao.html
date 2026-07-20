@@ -1,0 +1,389 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="mb-1 text-primary">Personalização (VitrineDesk)</h2>
+        <p class="text-secondary text-sm">Configure a aparência e as informações da sua vitrine de agendamentos online.</p>
+    </div>
+
+    <div class="grid grid-md-2 gap-4 align-start" id="vitrine-form-area">
+        <!-- Esquerda: Formulários -->
+        <div class="flex flex-column gap-4">
+            
+            <!-- 1. Identidade Base -->
+            <details class="config-accordion config-card mb-0 p-4" open>
+                <summary class="flex align-center justify-between transition-colors">
+                    <div class="flex align-center gap-2">
+                        <i data-lucide="image" class="text-primary"></i>
+                        <h3 class="m-0 text-primary">1. Identidade Base</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                </summary>
+                
+                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-2 inline-block">Favicon</label>
+                    <div class="flex align-center gap-3">
+                        <div id="preview-favicon" class="bg-placeholder rounded-full flex justify-center align-center border-dashed w-48px h-48px bg-center bg-cover bg-no-repeat">
+                            <i data-lucide="upload" class="text-secondary" id="icon-favicon"></i>
+                        </div>
+                        <div>
+                            <button id="btn-upload-favicon" class="btn border-none bg-primary-light text-primary py-2 px-3 rounded-md cursor-pointer text-sm font-medium">Fazer Upload</button>
+                            <input type="file" id="input-favicon" accept="image/*" class="d-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-2 inline-block">Logo Oficial</label>
+                    <div class="flex flex-column gap-3">
+                        <div class="flex align-center gap-3">
+                            <div id="preview-logo" class="bg-placeholder rounded-md flex justify-center align-center border-dashed bg-center bg-contain bg-no-repeat" style="width: 120px; height: 60px;">
+                                <i data-lucide="upload" class="text-secondary" id="icon-logo"></i>
+                            </div>
+                            <div>
+                                <button id="btn-upload-logo" class="btn border-none bg-primary-light text-primary py-2 px-3 rounded-md cursor-pointer text-sm font-medium">Fazer Upload</button>
+                                <input type="file" id="input-logo" accept="image/*" class="d-none">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <div>
+                                <label class="text-xs text-secondary mb-1 inline-block">Tamanho</label>
+                                <select id="input-logo-size" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm">
+                                    <option value="40px">Pequeno</option>
+                                    <option value="60px" selected>Médio (Padrão)</option>
+                                    <option value="80px">Grande</option>
+                                    <option value="100px">Extra Grande</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs text-secondary mb-1 inline-block">Formato</label>
+                                <select id="input-logo-format" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm">
+                                    <option value="10px" selected>Arredondado</option>
+                                    <option value="0px">Quadrado</option>
+                                    <option value="50%">Círculo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-2 inline-block">Capa (Banner)</label>
+                    <div class="flex flex-column gap-2">
+                        <div id="preview-cover" class="bg-placeholder rounded-md flex justify-center align-center border-dashed w-100 bg-center bg-cover bg-no-repeat cursor-pointer" style="height: 100px;">
+                            <i data-lucide="upload" class="text-secondary" id="icon-cover"></i>
+                        </div>
+                        <input type="file" id="input-cover" accept="image/*" class="d-none">
+                        <div class="text-xs text-secondary mt-1">Recomendado: 1920x400px</div>
+                    </div>
+                </div>
+
+                <div class="mb-4 pt-3 border-top-dashed border-placeholder">
+                    <label class="font-medium text-sm text-secondary mb-3 inline-block">Templates de Cores</label>
+                    <div class="grid-cols-2 grid-md-3 gap-3">
+                        <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="dark-elegance">
+                            <div class="flex" style="pointer-events: none;">
+                                <span class="w-24px h-24px rounded-full" style="background: #6366f1; border: 2px solid var(--color-bg-surface);"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #3b82f6; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #050505; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                            </div>
+                            <span style="pointer-events: none;" class="font-bold">Dark Elegance</span>
+                        </button>
+                        
+                        <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="barber-classic">
+                            <div class="flex" style="pointer-events: none;">
+                                <span class="w-24px h-24px rounded-full" style="background: #d4af37; border: 2px solid var(--color-bg-surface);"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #aa0000; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #0a0a0a; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                            </div>
+                            <span style="pointer-events: none;" class="font-bold">Barber Classic</span>
+                        </button>
+
+                        <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="neon-vibe">
+                            <div class="flex" style="pointer-events: none;">
+                                <span class="w-24px h-24px rounded-full" style="background: #ff00ff; border: 2px solid var(--color-bg-surface);"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #00ffff; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #080010; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                            </div>
+                            <span style="pointer-events: none;" class="font-bold">Neon Vibe</span>
+                        </button>
+
+                        <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="ocean-blue">
+                            <div class="flex" style="pointer-events: none;">
+                                <span class="w-24px h-24px rounded-full" style="background: #0ea5e9; border: 2px solid var(--color-bg-surface);"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #0284c7; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #081729; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                            </div>
+                            <span style="pointer-events: none;" class="font-bold">Ocean Blue</span>
+                        </button>
+
+                        <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="light-clean">
+                            <div class="flex" style="pointer-events: none;">
+                                <span class="w-24px h-24px rounded-full" style="background: #0f172a; border: 2px solid var(--color-bg-surface);"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #3b82f6; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #f8fafc; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                            </div>
+                            <span style="pointer-events: none;" class="font-bold">Light Clean</span>
+                        </button>
+                        
+                        <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="forest-green">
+                            <div class="flex" style="pointer-events: none;">
+                                <span class="w-24px h-24px rounded-full" style="background: #16a34a; border: 2px solid var(--color-bg-surface);"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #22c55e; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                <span class="w-24px h-24px rounded-full" style="background: #052e16; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                            </div>
+                            <span style="pointer-events: none;" class="font-bold">Forest Green</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid-cols-2 grid-md-3 gap-3 mb-3">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor Primária</label>
+                        <div class="flex align-center gap-2">
+                            <input type="color" value="#6366f1" class="color-picker cursor-pointer border-none bg-transparent" id="color-primary-input">
+                            <span class="text-sm color-hex-display">#6366f1</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor Secundária</label>
+                        <div class="flex align-center gap-2">
+                            <input type="color" value="#3b82f6" class="color-picker cursor-pointer border-none bg-transparent" id="color-secondary-input">
+                            <span class="text-sm color-hex-display">#3b82f6</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor de Destaque</label>
+                        <div class="flex align-center gap-2">
+                            <input type="color" value="#10b981" class="color-picker cursor-pointer border-none bg-transparent" id="color-accent-input">
+                            <span class="text-sm color-hex-display">#10b981</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-cols-2 grid-md-3 gap-3 mb-0">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Fundo do Site</label>
+                        <div class="flex align-center gap-2">
+                            <input type="color" value="#050505" class="color-picker cursor-pointer border-none bg-transparent" id="color-bg-site-input">
+                            <span class="text-sm color-hex-display d-none">#050505</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Fundo dos Cards</label>
+                        <div class="flex align-center gap-2">
+                            <input type="color" value="#121212" class="color-picker cursor-pointer border-none bg-transparent" id="color-bg-cards-input">
+                            <span class="text-sm color-hex-display d-none">#121212</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Linhas e Bordas</label>
+                        <div class="flex align-center gap-2">
+                            <input type="color" value="#222222" class="color-picker cursor-pointer border-none bg-transparent" id="color-border-input">
+                            <span class="text-sm color-hex-display d-none">#222222</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Texto Principal</label>
+                        <div class="flex align-center gap-2">
+                            <input type="color" value="#ffffff" class="color-picker cursor-pointer border-none bg-transparent" id="color-text-primary-input">
+                            <span class="text-sm color-hex-display d-none">#ffffff</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Texto Secundário</label>
+                        <div class="flex align-center gap-2">
+                            <input type="color" value="#9ca3af" class="color-picker cursor-pointer border-none bg-transparent" id="color-text-secondary-input">
+                            <span class="text-sm color-hex-display d-none">#9ca3af</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </details>
+
+            <!-- 2. Tipografia e Estilos -->
+            <details class="config-accordion config-card mb-0 p-4">
+                <summary class="flex align-center justify-between transition-colors">
+                    <div class="flex align-center gap-2">
+                        <i data-lucide="type" class="text-primary"></i>
+                        <h3 class="m-0 text-primary">2. Tipografia e Estilos</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                </summary>
+
+                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Fonte Principal</label>
+                    <select id="input-font-family" class="input-form bg-placeholder border-dashed text-primary text-sm w-100 py-2 px-3 rounded-md outline-none">
+                        <option value="Inter">Inter (Premium)</option>
+                        <option value="Roboto">Roboto</option>
+                        <option value="Poppins">Poppins</option>
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Open Sans">Open Sans</option>
+                        <option value="Lato">Lato</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-md-2 gap-3 mb-0">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Estilo de Botões</label>
+                        <select id="input-button-style" class="input-form bg-placeholder border-dashed text-primary text-sm w-100 py-2 px-3 rounded-md outline-none">
+                            <option value="rounded">Arredondados (Padrão)</option>
+                            <option value="pill">Pílula</option>
+                            <option value="square">Retos</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Estilo de Cards</label>
+                        <select id="input-card-style" class="input-form bg-placeholder border-dashed text-primary text-sm w-100 py-2 px-3 rounded-md outline-none">
+                            <option value="smooth">Suave (Com sombra)</option>
+                            <option value="flat">Plano (Com borda)</option>
+                            <option value="glass">Glassmorphism (Premium)</option>
+                        </select>
+                    </div>
+                </div>
+                </div>
+            </details>
+
+            <!-- 3. Cabeçalho (Top Bar) -->
+            <details class="config-accordion config-card mb-0 p-4">
+                <summary class="flex align-center justify-between transition-colors">
+                    <div class="flex align-center gap-2">
+                        <i data-lucide="layout-template" class="text-primary"></i>
+                        <h3 class="m-0 text-primary">3. Cabeçalho (Top Bar)</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                </summary>
+
+                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+
+                <div class="grid-cols-2 gap-3 mb-3">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor de Fundo</label>
+                        <div class="flex align-center gap-2">
+                            <input id="input-topbar-bg-color" type="color" value="#050505" class="color-picker cursor-pointer border-none bg-transparent">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor dos Links</label>
+                        <div class="flex align-center gap-2">
+                            <input id="input-topbar-text-color" type="color" value="#ffffff" class="color-picker cursor-pointer border-none bg-transparent">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Comportamento de Rolagem</label>
+                    <select id="input-topbar-sticky" class="input-form bg-placeholder border-dashed text-primary text-sm w-100 py-2 px-3 rounded-md outline-none">
+                        <option value="sticky">Fixo (Sempre visível)</option>
+                        <option value="static">Desaparecer ao rolar</option>
+                    </select>
+                </div>
+                </div>
+            </details>
+
+            <!-- 4. Rodapé e WhatsApp -->
+            <details class="config-accordion config-card mb-0 p-4">
+                <summary class="flex align-center justify-between transition-colors">
+                    <div class="flex align-center gap-2">
+                        <i data-lucide="message-circle" class="text-primary"></i>
+                        <h3 class="m-0 text-primary">4. Rodapé e WhatsApp</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                </summary>
+
+                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+
+                <div class="grid-cols-2 gap-3 mb-3">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Fundo do Rodapé</label>
+                        <div class="flex align-center gap-2">
+                            <input id="input-footer-color" type="color" value="#121212" class="color-picker cursor-pointer border-none bg-transparent">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Texto do Rodapé</label>
+                        <div class="flex align-center gap-2">
+                            <input id="input-footer-text-color" type="color" value="#9ca3af" class="color-picker cursor-pointer border-none bg-transparent">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Texto de Copyright / CNPJ</label>
+                    <input id="input-footer-text" type="text" placeholder="© 2026 VitrineDesk - Todos os direitos reservados" class="bg-transparent border-dashed text-primary text-sm w-100 py-2 px-3 rounded-md outline-none">
+                </div>
+
+                <hr class="border-dashed border-secondary my-3 opacity-20">
+
+                <div class="flex align-center justify-between mb-3">
+                    <div>
+                        <h4 class="font-medium mb-1">Botão Flutuante do WhatsApp</h4>
+                        <p class="text-xs text-secondary">Exibir o botão de chat no canto da tela</p>
+                    </div>
+                    <label class="switch cursor-pointer">
+                        <input id="input-whatsapp-enabled" type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="grid grid-md-2 gap-3 mb-0">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Número</label>
+                        <div class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 border-dashed">
+                            <i data-lucide="phone" class="text-secondary mr-2 icon-sm"></i>
+                            <input id="input-whatsapp-number" type="text" placeholder="(11) 99999-9999" class="bg-transparent border-none text-primary outline-none text-sm w-100">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Mensagem Padrão</label>
+                        <div class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 border-dashed">
+                            <i data-lucide="message-square" class="text-secondary mr-2 icon-sm"></i>
+                            <input id="input-whatsapp-message" type="text" placeholder="Olá, gostaria de agendar..." class="bg-transparent border-none text-primary outline-none text-sm w-100">
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </details>
+
+            <!-- 5. Galeria de Fotos -->
+            <details class="config-accordion config-card mb-0 p-4">
+                <summary class="flex align-center justify-between transition-colors">
+                    <div class="flex align-center gap-2">
+                        <i data-lucide="layout-grid" class="text-primary"></i>
+                        <h3 class="m-0 text-primary">5. Galeria de Fotos</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
+                </summary>
+                
+                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                <p class="text-xs text-secondary mb-3">Adicione até 6 fotos para o portfólio da loja, antes-e-depois ou infraestrutura.</p>
+
+                <div class="grid grid-md-3 gap-3" id="gallery-container">
+                    <input type="file" id="input-gallery" accept="image/*" class="d-none">
+                    <!-- Slots will be generated by JS -->
+                </div>
+                </div>
+            </details>
+
+            <!-- Botão Salvar -->
+            <button id="btn-save-vitrine" class="btn btn-primary py-3 rounded-lg cursor-pointer w-100 mb-4 font-bold flex align-center justify-center gap-2">
+                <i data-lucide="save"></i> Salvar Personalização
+            </button>
+
+        </div>
+
+        <!-- Direita: Preview (Mock) -->
+        <div class="sticky-top">
+            <div class="config-card mb-0 flex flex-column align-center justify-center bg-placeholder border-dashed text-center min-h-400px h-100">
+                <i data-lucide="smartphone" class="text-secondary mb-2 w-48px h-48px"></i>
+                <h3 class="text-secondary mb-1">Preview em tempo real</h3>
+                <p class="text-secondary text-sm px-3">Visualize como sua VitrineDesk está ficando para o cliente final.</p>
+                <button id="btn-abrir-preview" class="btn bg-transparent text-primary py-2 px-3 mt-3 rounded-md cursor-pointer text-sm font-medium border-primary">Abrir Preview</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,332 @@
+<div class="admin-section fade-in">
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Tenants (Lojas)</h2>
+            <p class="text-secondary text-sm">Gerencie todos os negócios cadastrados, limite de uso, suspensão e acesso root (Logar como).</p>
+        </div>
+        <div class="flex gap-2">
+            <div class="relative">
+                <i data-lucide="search" class="absolute left-3 top-50 translate-y-n50 text-secondary icon-sm absolute-center-y"></i>
+                <input type="text" id="input-search-tenant" placeholder="Buscar por nome ou link..." class="bg-placeholder border-dashed border-placeholder rounded-md pl-9 pr-3 py-2 text-primary outline-none text-sm focus:border-primary transition-colors min-w-250px">
+            </div>
+            <button class="btn btn-primary px-3 py-2 rounded-md font-medium flex align-center gap-2">
+                <i data-lucide="plus" class="icon-sm"></i> Novo Tenant
+            </button>
+        </div>
+    </div>
+
+
+    <div class="flex gap-4 mb-4 border-bottom-dashed border-placeholder pb-2" id="tenants-tabs">
+        <button class="btn bg-transparent border-none text-primary font-bold cursor-pointer tab-btn active" data-filter="all" style="border-bottom: 2px solid var(--color-primary); padding-bottom: 8px;">Todas as Lojas</button>
+        <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors tab-btn" data-filter="pending" style="padding-bottom: 8px;">Novos Lojistas (Aprovação) <span id="badge-pending" class="badge bg-warning-light text-warning rounded-full px-2 py-1 text-xs ml-1 d-none">0</span></button>
+        <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors tab-btn" data-filter="disparos" style="padding-bottom: 8px;">Mensagens / Disparos</button>
+    </div>
+
+    <!-- Tabela de Tenants -->
+    <div id="tenants-table-container" class="config-card overflow-hidden">
+        <div class="table-responsive custom-scrollbar">
+            <table class="data-table w-100">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Nome da Loja / Link</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Dono (E-mail)</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Status</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Plano / Assinatura</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Ações Mestre</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-tenants">
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-secondary">
+                            <i data-lucide="loader" class="animate-spin mb-2 mx-auto"></i> Carregando tenants...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="p-3 border-top-dashed flex justify-between align-center bg-placeholder bg-opacity-50">
+            <span class="text-xs text-secondary">Exibindo todos os registros.</span>
+        </div>
+    </div>
+
+    <!-- Painel de Disparos -->
+    <div id="tenants-disparos-container" class="config-card p-4 d-none fade-in">
+        <h3 class="text-primary mb-3">Disparo de Boas-Vindas para Novos Lojistas</h3>
+        <p class="text-sm text-secondary mb-4">Esta mensagem será enviada automaticamente para a caixa de notificações (sininho) de todo novo lojista assim que ele se cadastrar.</p>
+        
+        <div class="grid grid-cols-1 gap-4 max-w-600px">
+            <div>
+                <label class="font-medium text-sm text-secondary mb-1 inline-block">Título da Notificação</label>
+                <input type="text" id="welcome-msg-title" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: Seja bem-vindo ao VitrineDesk!">
+            </div>
+            <div>
+                <label class="font-medium text-sm text-secondary mb-1 inline-block">Conteúdo da Mensagem</label>
+                <textarea id="welcome-msg-body" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" rows="4" placeholder="Ex: Configure sua loja e comece a vender..."></textarea>
+            </div>
+            <div>
+                <button id="btn-save-welcome-msg" class="btn btn-primary px-4 py-2 rounded-md font-bold flex align-center gap-2">
+                    <i data-lucide="send"></i> Salvar Disparo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Plano -->
+<div id="modal-plano" class="modal-overlay d-none">
+    <div class="modal-content config-card modal-card-sm">
+        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+            <h3 id="modal-plano-title" class="text-primary m-0">Editar Assinatura</h3>
+            <button id="btn-close-modal-plano" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <input type="hidden" id="plano-tenant-id">
+        
+        <div class="mb-4">
+            <label class="font-medium text-sm text-secondary mb-1 inline-block">Plano Atual</label>
+            <select id="plano-select" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary">
+                <option value="">Carregando planos...</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label class="font-medium text-sm text-secondary mb-1 inline-block">Data de Vencimento</label>
+            <input type="date" id="plano-vencimento" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary">
+        </div>
+        
+        <button id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-md font-bold flex align-center justify-center gap-2">
+            <i data-lucide="save"></i> Salvar Assinatura
+        </button>
+    </div>
+</div>
+
+<!-- Modal Configurações Master -->
+<div id="modal-master-settings" class="modal-overlay d-none">
+    <div class="modal-content config-card modal-card-lg" style="max-height: 90vh; overflow-y: auto; width: 90%; max-width: 800px;">
+        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+            <h3 class="text-danger m-0 flex align-center gap-2"><i data-lucide="shield-alert" class="w-5 h-5"></i> Controle Master</h3>
+            <button id="btn-close-modal-master" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-danger transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <input type="hidden" id="master-tenant-id">
+        
+        <!-- Modal Tabs -->
+        <div class="flex gap-4 mb-4 border-bottom-dashed border-placeholder pb-2" id="modal-master-tabs">
+            <button class="btn bg-transparent border-none text-primary font-bold cursor-pointer master-tab-btn active" data-tab="master-tab-geral" style="border-bottom: 2px solid var(--color-primary); padding-bottom: 8px;">Configuração Geral</button>
+            <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors master-tab-btn" data-tab="master-tab-limites" style="padding-bottom: 8px;">Limites & Status</button>
+            <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors master-tab-btn" data-tab="master-tab-branding" style="padding-bottom: 8px;">Personalização</button>
+            <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors master-tab-btn" data-tab="master-tab-integracoes" style="padding-bottom: 8px;">Integrações & API</button>
+            <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-danger transition-colors master-tab-btn" data-tab="master-tab-risco" style="padding-bottom: 8px;">Zona de Risco</button>
+            <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors master-tab-btn" data-tab="master-tab-menus" style="padding-bottom: 8px;">Menus Extra</button>
+        </div>
+
+        <!-- TAB: Configuração Geral -->
+        <div id="master-tab-geral" class="master-tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome da Loja</label>
+                    <input type="text" id="master-config-name" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Nome da Vitrine">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">URL (Slug)</label>
+                    <input type="text" id="master-config-slug" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="link-da-loja">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Plano / Assinatura</label>
+                    <select id="master-config-plano" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary">
+                        <option value="">Carregando planos...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Vencimento da Assinatura</label>
+                    <input type="date" id="master-config-vencimento" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Limites & Status -->
+        <div id="master-tab-limites" class="master-tab-content d-none">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Limite de Produtos</label>
+                    <input type="number" id="master-product-limit" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ilimitado">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Limite de Funcionários</label>
+                    <input type="number" id="master-staff-limit" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ilimitado">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Limite de Armazenamento (MB)</label>
+                    <input type="number" id="master-storage-limit" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Padrão do Plano">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Limite de Clientes/Leads</label>
+                    <input type="number" id="master-client-limit" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ilimitado">
+                </div>
+            </div>
+            
+            <div class="flex flex-column gap-3 mb-4 p-3 rounded-md border-dashed border-placeholder bg-placeholder" style="background: rgba(255,255,255,0.02);">
+                <div class="flex justify-between align-center">
+                    <span class="text-sm text-primary font-medium">Permitir Agendamento Online</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-allow-booking" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between align-center">
+                    <span class="text-sm text-primary font-medium">Permitir Catálogo Online</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-allow-catalog" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between align-center">
+                    <span class="text-sm text-primary font-medium">Ativar Multi-Filiais</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-allow-branches">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Personalização -->
+        <div id="master-tab-branding" class="master-tab-content d-none">
+            <div class="mb-4">
+                <label class="font-medium text-sm text-secondary mb-1 inline-block">Sobrescrever Cor Primária</label>
+                <div class="flex gap-2">
+                    <input type="color" id="master-primary-color" class="w-100 bg-placeholder border-dashed rounded-md p-1 outline-none color-picker-h" style="height: 40px; flex: 1;">
+                    <button id="btn-clear-color" class="btn bg-placeholder text-secondary border-dashed rounded-md px-3 hover:bg-hover transition-colors" title="Limpar Cor">Limpar</button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">WhatsApp de Suporte</label>
+                    <input type="text" id="master-whatsapp" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: 5511999999999">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Domínio Customizado</label>
+                    <input type="text" id="master-custom-domain" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: loja.com.br">
+                </div>
+            </div>
+
+            <div class="flex flex-column gap-3 mb-4 p-3 rounded-md border-dashed border-placeholder bg-placeholder" style="background: rgba(255,255,255,0.02);">
+                <div class="flex justify-between align-center">
+                    <span class="text-sm text-primary font-medium text-success flex align-center gap-1"><i data-lucide="badge-check" class="icon-xs"></i> Selo Verificado / Loja Oficial</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-verified-badge">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between align-center">
+                    <span class="text-sm text-primary font-medium">Ocultar Marca "Powered by VitrineDesk" (White Label)</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-white-label">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Integrações & Financeiro -->
+        <div id="master-tab-integracoes" class="master-tab-content d-none">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Gateway de Pagamento Exclusivo</label>
+                    <select id="master-payment-gateway" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary">
+                        <option value="">Padrão (VitrineDesk Stripe)</option>
+                        <option value="mercadopago">Mercado Pago (Direto)</option>
+                        <option value="asaas">Asaas (Direto)</option>
+                        <option value="pix_manual">Apenas PIX Manual</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Taxa Transação VitrineDesk (%)</label>
+                    <input type="number" step="0.1" id="master-transaction-fee" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Deixe vazio para padrão (2%)">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Webhook URL (Notificações Externas)</label>
+                    <input type="url" id="master-webhook-url" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="https://api.site.com/webhook">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Desconto Assinatura Mensal (%)</label>
+                    <input type="number" id="master-subscription-discount" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="0 a 100">
+                </div>
+            </div>
+
+            <div class="flex flex-column gap-3 mb-4 p-3 rounded-md border-dashed border-placeholder bg-placeholder" style="background: rgba(255,255,255,0.02);">
+                <div class="flex justify-between align-center">
+                    <span class="text-sm text-primary font-medium">Permitir Venda Online (E-commerce / Cartão)</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-allow-payments" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between align-center">
+                    <span class="text-sm text-primary font-medium text-warning flex align-center gap-1"><i data-lucide="gift" class="icon-xs"></i> Isenção Total de Mensalidade (Cortesia)</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-free-subscription">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Zona de Risco -->
+        <div id="master-tab-risco" class="master-tab-content d-none">
+            <div class="mb-5 p-4 rounded-md border-dashed border-warning bg-warning-light bg-opacity-20 flex flex-column gap-3">
+                <div class="flex justify-between align-center">
+                    <div>
+                        <h4 class="text-warning m-0 mb-1 font-bold">Bloquear Exportação de Dados</h4>
+                        <p class="text-xs text-secondary m-0">Impede que o lojista baixe listas de clientes e vendas</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-block-export">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between align-center">
+                    <div>
+                        <h4 class="text-warning m-0 mb-1 font-bold">Exigir 2FA da Equipe</h4>
+                        <p class="text-xs text-secondary m-0">Força autenticação em 2 fatores para todos da loja</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="master-force-2fa">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-5 p-4 rounded-md border-dashed border-danger bg-danger-light bg-opacity-20 flex align-center justify-between">
+                <div>
+                    <h4 class="text-danger m-0 mb-1 font-bold">Banimento Total</h4>
+                    <p class="text-xs text-secondary m-0">Inabilita completamente a loja e derruba o acesso (Status: BANNED)</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="master-ban-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- TAB: Menus Extra (Overrides) -->
+        <div id="master-tab-menus" class="master-tab-content d-none">
+            <h4 class="text-primary mb-2 mt-0">Permissões de Menu (Exceções)</h4>
+            <p class="text-xs text-secondary mb-4">Ligue ou desligue o acesso a menus específicos APENAS para este lojista, ignorando as restrições do plano atual dele.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4" id="master-menu-overrides-container">
+                <!-- Injetado via tenantsController.js -->
+            </div>
+        </div>
+
+        <button id="btn-salvar-master" class="btn bg-danger text-white w-100 py-3 rounded-md font-bold flex align-center justify-center gap-2 border-none cursor-pointer hover:opacity-90">
+            <i data-lucide="save"></i> Aplicar Todas as Alterações
+        </button>
+    </div>
+</div>

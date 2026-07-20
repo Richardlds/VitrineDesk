@@ -1,0 +1,613 @@
+/* ============================================================
+   SERVICOS.CSS — VitrineDesk Cliente
+   Grids: serviços, equipe, galeria, depoimentos, horários, mapa
+   ============================================================ */
+
+/* ────────────────────────── Toolbar (filtros + view toggle) ────────────────────────── */
+.services-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.services-view-controls {
+  display: flex;
+  position: relative;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 4px;
+  flex-shrink: 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.view-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 38px;
+  height: 38px;
+  background: var(--primary);
+  border-radius: 20px;
+  z-index: 1;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.services-view-controls[data-active-view="list"] .view-slider {
+  transform: translateX(0);
+}
+
+.services-view-controls[data-active-view="grid3"] .view-slider {
+  transform: translateX(42px); /* 38px width + 4px gap */
+}
+
+.services-view-controls[data-active-view="grid4"] .view-slider {
+  transform: translateX(84px); /* (38px + 4px) * 2 */
+}
+
+.services-view-controls[data-active-view="grid5"] .view-slider {
+  transform: translateX(126px); /* (38px + 4px) * 3 */
+}
+
+.view-btn {
+  position: relative;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 20px;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.view-btn:hover {
+  color: #fff;
+}
+
+.view-btn.active {
+  color: #fff;
+}
+
+/* ────────────────────────── Serviços Grid ────────────────────────── */
+.services-grid {
+  display: grid;
+  gap: 12px;
+}
+
+/* Base: xs (< 576px) = Mobile */
+.services-grid.view-grid3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.services-grid.view-grid3 .service-name {
+  font-size: 0.75rem; /* Menor no celular para caber 3 colunas */
+}
+
+.services-grid.view-grid4,
+.services-grid.view-grid5 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 576px) {
+  .services-grid.view-grid4,
+  .services-grid.view-grid5 { grid-template-columns: repeat(3, 1fr); }
+  .services-grid.view-grid3 .service-name { font-size: 0.85rem; }
+}
+
+@media (min-width: 768px) {
+  .services-grid { gap: 16px; }
+  .services-grid.view-grid3 .service-name { font-size: 0.95rem; }
+  
+  .services-grid.view-grid4,
+  .services-grid.view-grid5 { grid-template-columns: repeat(4, 1fr); }
+  .services-grid.view-grid4 .service-name,
+  .services-grid.view-grid5 .service-name { font-size: 0.85rem; }
+}
+
+@media (min-width: 992px) {
+  .services-grid.view-grid5 { grid-template-columns: repeat(5, 1fr); }
+}
+
+/* VIEW: Lista */
+.services-grid.view-list {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+
+.service-card {
+  position: relative;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--primary-rgb), 0.3);
+  box-shadow: var(--neon-glow);
+}
+
+/* Modo Lista: card horizontal */
+.view-list .service-card {
+  aspect-ratio: unset;
+  flex-direction: row;
+  align-items: center;
+  height: auto;
+  min-height: 80px;
+  gap: 12px;
+  padding: 8px;
+}
+
+.view-list .service-img-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  flex: 1;
+  overflow: visible;
+  border-radius: 0;
+}
+
+.view-list .service-img,
+.view-list .service-img-placeholder {
+  width: 80px;
+  height: 80px;
+  flex: 0 0 80px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.view-list .service-overlay {
+  position: static;
+  background: transparent;
+  flex: 1;
+  padding: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+}
+
+.view-list .service-name {
+  font-size: 1rem;
+  white-space: normal;
+  overflow: visible;
+  line-height: 1.2;
+}
+
+.view-list .service-price {
+  font-size: 1rem;
+  margin-top: 2px;
+}
+
+.view-list .service-btn-agendar {
+  position: static;
+  opacity: 1;
+  transform: none;
+  margin: 0 8px;
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+}
+
+.view-list .service-card:hover {
+  transform: translateX(4px);
+  box-shadow: none;
+}
+
+.service-img-wrapper {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+}
+
+.service-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.service-card:hover .service-img {
+  transform: scale(1.08);
+}
+
+/* Overlay gradiente sobre a imagem */
+.service-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 10px 10px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.service-name {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.service-duration {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.service-price {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 2px;
+}
+
+/* Botão agendar (aparece no hover no desktop) */
+.service-btn-agendar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+  box-shadow: var(--neon-glow);
+  z-index: 3;
+}
+
+.service-card:hover .service-btn-agendar {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Placeholder se não tem imagem */
+.service-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--primary-rgb), 0.08);
+  color: var(--primary);
+  font-size: 2.5rem;
+}
+
+/* ────────────────────────── Equipe Grid ────────────────────────── */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.team-card {
+  text-align: center;
+  padding: 16px 10px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.team-card:hover {
+  border-color: rgba(var(--primary-rgb), 0.3);
+  transform: translateY(-3px);
+}
+
+.team-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 8px;
+  border: 2px solid var(--primary);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.2);
+}
+
+.team-avatar-placeholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  background: rgba(var(--primary-rgb), 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.team-name {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.team-role {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ────────────────────────── Galeria Grid ────────────────────────── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.gallery-item {
+  position: relative;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.1);
+}
+
+.gallery-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.3s ease;
+}
+
+.gallery-item:hover::after {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ────────────────────────── Depoimentos ────────────────────────── */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* Mobile: 1 coluna */
+  gap: 16px;
+}
+
+.testimonial-card {
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.testimonial-card:hover {
+  border-color: rgba(var(--primary-rgb), 0.2);
+}
+
+.testimonial-stars {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+
+.testimonial-stars i {
+  color: var(--warning);
+  font-size: 0.85rem;
+}
+
+.testimonial-text {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.testimonial-author {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ────────────────────────── Horários de Funcionamento ────────────────────────── */
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hours-table tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.hours-table tr:last-child {
+  border-bottom: none;
+}
+
+.hours-table td {
+  padding: 12px 8px;
+  font-size: 0.9rem;
+}
+
+.hours-table td:first-child {
+  font-weight: 600;
+  color: #fff;
+}
+
+.hours-table td:last-child {
+  text-align: right;
+  color: var(--text-muted);
+}
+
+.hours-table tr.today {
+  background: rgba(var(--primary-rgb), 0.08);
+  border-radius: 8px;
+}
+
+.hours-table tr.today td:first-child {
+  color: var(--primary);
+}
+
+/* ────────────────────────── Mapa ────────────────────────── */
+.info-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* Mobile: uma coluna */
+  gap: 24px;
+}
+
+.info-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.info-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(var(--primary-rgb), 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.info-text h4 {
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.info-text p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.map-wrapper {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  min-height: 250px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.map-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  border: none;
+  display: block;
+}
+
+/* ────────────────────────── Empty State ────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+.empty-state-text {
+  font-size: 0.95rem;
+}
+
+/* ────────────────────────── Filtros de Serviços ────────────────────────── */
+.services-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 1 1 auto;
+}
+
+.service-filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  min-height: 36px;
+  white-space: nowrap;
+}
+
+.service-filter-btn:hover {
+  border-color: rgba(var(--primary-rgb), 0.3);
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.service-filter-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: var(--neon-glow);
+}
+
+/* Esconder cards não filtrados com animação */
+.service-card.filtered-out {
+  display: none;
+}
+
+/* As lógicas de colunas fixas foram removidas para usar auto-fill fluido (Mobile First Real). */

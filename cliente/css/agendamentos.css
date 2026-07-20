@@ -1,0 +1,445 @@
+/* ============================================================
+   AGENDAMENTOS.CSS — VitrineDesk Cliente
+   Lista de agendamentos do cliente, cards com status, empty state
+   ============================================================ */
+
+/* ────────────────────────── Lista de Agendamentos ────────────────────────── */
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ────────────────────────── Card de Agendamento ────────────────────────── */
+.appointment-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--text-muted);
+  transition: var(--transition);
+}
+
+.appointment-card:hover {
+  border-color: rgba(var(--primary-rgb), 0.2);
+  border-left-color: var(--primary);
+}
+
+/* Bordas coloridas por status */
+.appointment-card.status-confirmado {
+  border-left-color: var(--success);
+}
+
+.appointment-card.status-pendente {
+  border-left-color: var(--warning);
+}
+
+.appointment-card.status-cancelado {
+  border-left-color: var(--danger);
+  opacity: 0.7;
+}
+
+.appointment-card.status-concluido {
+  border-left-color: var(--primary);
+}
+
+/* ── Info principal ── */
+.appointment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.appointment-service {
+  font-family: var(--font-title);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.appointment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.appointment-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.appointment-meta-item i {
+  color: var(--primary);
+  font-size: 0.85rem;
+}
+
+/* ── Badge de Status ── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.status-badge.confirmado {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-badge.pendente {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-badge.cancelado {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status-badge.concluido {
+  background: rgba(var(--primary-rgb), 0.15);
+  color: var(--primary);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+}
+
+/* ── Extras listados no card ── */
+.appointment-extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.appointment-extra-tag {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(var(--primary-rgb), 0.2);
+}
+
+/* ── Ações do card ── */
+.appointment-card-actions {
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+/* ── Preço do agendamento ── */
+.appointment-price {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ────────────────────────── Empty State de Agendamentos ────────────────────────── */
+.appointments-empty {
+  text-align: center;
+  padding: 48px 20px;
+}
+
+.appointments-empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.appointments-empty-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.appointments-empty-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* ────────────────────────── Filtros de Status ────────────────────────── */
+.appointment-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  min-height: 36px;
+}
+
+.filter-btn:hover {
+  border-color: rgba(var(--primary-rgb), 0.3);
+  color: var(--text-main);
+}
+
+.filter-btn.active {
+  background: rgba(var(--primary-rgb), 0.15);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: var(--neon-glow);
+}
+
+/* ============================================================
+   WIDGET PRÓXIMOS AGENDAMENTOS (HOME)
+   ============================================================ */
+.upcoming-widget {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.upcoming-widget:hover {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  border-color: rgba(var(--primary-rgb), 0.3);
+}
+
+.upcoming-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top right, rgba(var(--primary-rgb), 0.1), transparent 70%);
+  pointer-events: none;
+}
+
+/* ============================================================
+   DRAWER ÁREA DO CLIENTE
+   ============================================================ */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  justify-content: flex-end; /* Abre da direita */
+}
+
+.drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawer-content {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  background: var(--bg-dark);
+  border-left: none;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+}
+
+@media (min-width: 576px) {
+  .drawer-content {
+    max-width: 420px;
+    border-left: 1px solid var(--border);
+  }
+}
+
+.drawer-overlay.active .drawer-content {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.drawer-tabs {
+  display: flex;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer-tab {
+  flex: 1;
+  padding: 16px 0;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition);
+  z-index: 2;
+}
+
+.drawer-tab.active {
+  color: var(--primary);
+}
+
+.drawer-tab-slider {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  width: 50%;
+  background: var(--primary);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--neon-glow);
+  border-radius: 2px 2px 0 0;
+}
+
+.drawer-body {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.drawer-panel {
+  display: none;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.drawer-panel.active {
+  display: block;
+}
+
+/* Estilos Específicos do Perfil */
+.client-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(var(--primary-rgb), 0.1);
+  border: 2px solid rgba(var(--primary-rgb), 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+#client-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.client-avatar-edit-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.client-avatar:hover .client-avatar-edit-overlay {
+  opacity: 1;
+}
+
+.client-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.client-info-list {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.client-info-item {
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding-bottom: 12px;
+}
+
+.client-info-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.info-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-icon-wrapper i {
+  width: 18px;
+  height: 18px;
+}
+
+.info-value {
+  color: var(--text-main);
+  font-weight: 500;
+}
+

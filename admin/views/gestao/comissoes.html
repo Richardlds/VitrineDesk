@@ -1,0 +1,55 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Gestão de Comissões</h2>
+            <p class="text-secondary text-sm">Acompanhe os repasses e valores devidos à sua equipe de profissionais.</p>
+        </div>
+        <div class="flex align-center gap-2">
+            <select id="filtro-mes-comissao" class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                <option value="atual" selected>Mês Atual</option>
+                <option value="anterior">Mês Anterior</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Resumo -->
+    <div class="grid grid-md-2 gap-4 mb-4" id="comissoes-resumo">
+        <!-- Injetado via JS -->
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="comissoes-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Profissional</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Total Faturado</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Comissão Devida</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="comissoes-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Paginação -->
+        <div class="flex flex-wrap justify-between align-center border-top-dashed p-3 mt-0 gap-3">
+            <div class="text-sm text-secondary">
+                Mostrando <span id="pag-inicio-comissao" class="font-bold text-primary">0</span> a <span id="pag-fim-comissao" class="font-bold text-primary">0</span> de <span id="pag-total-comissao" class="font-bold text-primary">0</span>
+            </div>
+            <div class="flex gap-2 align-center">
+                <button id="btn-prev-page-comissao" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-left" class="icon-sm"></i>
+                </button>
+                <span id="pag-atual-comissao" class="text-sm font-medium text-primary px-2">Pág. 1 de 1</span>
+                <button id="btn-next-page-comissao" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="admin-section fade-in">
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary flex align-center gap-2"><i data-lucide="mail"></i> Mensagens do Site</h2>
+            <p class="text-secondary text-sm">Leads, dúvidas e suportes enviados pelo formulário da Landing Page.</p>
+        </div>
+        <div class="flex gap-2">
+            <button id="btn-refresh-mensagens" class="btn bg-placeholder text-secondary border-none rounded-md px-3 py-2 cursor-pointer hover:bg-hover transition-colors flex align-center gap-2" title="Atualizar Lista">
+                <i data-lucide="refresh-cw" class="icon-sm m-0"></i>
+            </button>
+            <button id="btn-mark-all-read-msgs" class="btn btn-secondary px-3 py-2 rounded-md font-medium flex align-center gap-2">
+                <i data-lucide="check-check" class="icon-sm"></i> Marcar todas como Lidas
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela de Mensagens -->
+    <div class="config-card overflow-hidden">
+        <div class="table-responsive custom-scrollbar">
+            <table class="data-table w-100">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed" style="width: 15%">Data</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed" style="width: 25%">Remetente</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed" style="width: 45%">Mensagem</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed" style="width: 15%">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-mensagens">
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-secondary">
+                            <i data-lucide="loader" class="animate-spin mb-2 mx-auto"></i> Carregando mensagens...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Visualizar Mensagem -->
+<div id="modal-ver-mensagem" class="modal-overlay d-none">
+    <div class="modal-content config-card modal-card-sm">
+        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+            <h3 class="text-primary m-0 flex align-center gap-2"><i data-lucide="message-circle" class="w-5 h-5"></i> Detalhes da Mensagem</h3>
+            <button id="btn-close-modal-msg" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <div class="mb-4">
+            <label class="font-medium text-xs text-secondary mb-1 inline-block">Remetente</label>
+            <div id="msg-det-name" class="text-primary font-bold"></div>
+            <div id="msg-det-email" class="text-secondary text-sm"></div>
+        </div>
+
+        <div class="mb-4">
+            <label class="font-medium text-xs text-secondary mb-1 inline-block">WhatsApp</label>
+            <div id="msg-det-whatsapp" class="text-primary text-sm">Não informado</div>
+        </div>
+
+        <div class="mb-4">
+            <label class="font-medium text-xs text-secondary mb-1 inline-block">Mensagem</label>
+            <div id="msg-det-body" class="bg-placeholder border-dashed border-placeholder rounded-md p-3 text-primary text-sm" style="white-space: pre-wrap;"></div>
+        </div>
+
+        <div class="flex gap-2">
+            <a id="btn-reply-email" href="#" target="_blank" class="btn btn-primary flex-1 py-2 rounded-md font-bold flex align-center justify-center gap-2 text-decoration-none">
+                <i data-lucide="mail"></i> Responder E-mail
+            </a>
+            <a id="btn-reply-whatsapp" href="#" target="_blank" class="btn bg-success-light text-success border-none flex-1 py-2 rounded-md font-bold flex align-center justify-center gap-2 text-decoration-none cursor-pointer hover:bg-success hover:text-white transition-colors d-none">
+                <i data-lucide="message-circle"></i> WhatsApp
+            </a>
+        </div>
+    </div>
+</div>

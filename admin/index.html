@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VitrineDesk - Painel Administrativo</title>
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
+    <!-- Design System (Mobile First) -->
+    <link rel="stylesheet" href="/admin/css/design-system.css">
+    <link rel="stylesheet" href="/admin/css/tickets.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+    <!-- Script Principal (Módulos ES6) -->
+    <script type="module" src="/admin/js/core/app.js"></script>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container" style="display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="zap" class="brand-icon"></i>
+                    <span class="brand-text">VitrineDesk</span>
+                    <span id="tenant-plan-badge" class="badge bg-primary-light text-primary d-none" style="font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--color-primary);"></span>
+                </div>
+                <button class="menu-toggle d-md-none" aria-label="Fechar Menu">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <!-- PRINCIPAL -->
+                <div class="nav-section">Principal</div>
+                <button class="nav-item active" data-tab="principal/dashboard">
+                    <i data-lucide="layout-dashboard"></i> Dashboard
+                </button>
+                <button class="nav-item" data-tab="principal/agendamentos">
+                    <i data-lucide="calendar"></i> Agendamentos
+                </button>
+                <button class="nav-item" data-tab="principal/agenda_diaria">
+                    <i data-lucide="calendar-clock"></i> Agenda Diária
+                </button>
+
+                <!-- CADASTROS -->
+                <div class="nav-section">Cadastros</div>
+                <button class="nav-item" data-tab="cadastros/servicos">
+                    <i data-lucide="scissors"></i> Serviços
+                </button>
+                <button class="nav-item" data-tab="cadastros/equipe">
+                    <i data-lucide="users"></i> Equipe
+                </button>
+                <button class="nav-item" data-tab="cadastros/clientes">
+                    <i data-lucide="contact"></i> Clientes
+                </button>
+
+                <!-- CRM & VENDAS -->
+                <div class="nav-section">CRM & Vendas</div>
+                <button class="nav-item" data-tab="crm_vendas/cupons">
+                    <i data-lucide="ticket"></i> Cupons
+                </button>
+                <button class="nav-item" data-tab="crm_vendas/marketing">
+                    <i data-lucide="megaphone"></i> Marketing
+                </button>
+                <button class="nav-item" data-tab="crm_vendas/blacklist">
+                    <i data-lucide="shield-ban"></i> Blacklist
+                </button>
+
+                <!-- GESTÃO -->
+                <div class="nav-section">Gestão</div>
+                <button class="nav-item" data-tab="gestao/relatorios">
+                    <i data-lucide="bar-chart-3"></i> Relatórios
+                </button>
+                <button class="nav-item" data-tab="gestao/comissoes">
+                    <i data-lucide="coins"></i> Comissões
+                </button>
+                <button class="nav-item" data-tab="gestao/metas">
+                    <i data-lucide="target"></i> Metas
+                </button>
+                <button class="nav-item" data-tab="gestao/fidelidade">
+                    <i data-lucide="gift"></i> Fidelidade
+                </button>
+
+                <!-- SISTEMA -->
+                <div class="nav-section">Sistema</div>
+                <button class="nav-item" data-tab="cadastros/filiais">
+                    <i data-lucide="store"></i> Minhas Filiais
+                </button>
+                <button class="nav-item" data-tab="sistema/configuracoes">
+                    <i data-lucide="settings"></i> Configurações
+                </button>
+                <button class="nav-item" data-tab="sistema/personalizacao">
+                    <i data-lucide="palette"></i> Personalização
+                </button>
+
+                <button class="nav-item" data-tab="sistema/usuarios">
+                    <i data-lucide="user-cog"></i> Usuários
+                </button>
+                <button class="nav-item" data-tab="sistema/suporte">
+                    <i data-lucide="life-buoy"></i> Suporte
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout">
+                    <i data-lucide="log-out"></i> Sair
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <header
+                class="topbar topbar-glass flex justify-between align-center px-4 py-3 border-bottom-dashed border-border w-100 gap-4">
+                <!-- Esquerda: Toggle + Título/Breadcrumb -->
+                <div class="flex align-center gap-3" style="min-width: 200px;">
+                    <button class="menu-toggle d-md-none bg-transparent border-none text-primary cursor-pointer p-1"
+                        aria-label="Abrir Menu">
+                        <i data-lucide="menu"></i>
+                    </button>
+
+                    <div class="flex align-center gap-2">
+                        <h1 id="page-title" class="m-0 text-lg font-bold text-primary">Dashboard</h1>
+                        <!-- Filial Ativa -->
+                        <div id="topbar-active-branch"
+                            class="bg-primary-light text-primary text-xs font-bold px-2 py-1 rounded-md d-none flex align-center gap-1">
+                            <i data-lucide="store" class="icon-xs"></i>
+                            <span id="topbar-active-branch-name">Matriz</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Centro: Barra de Pesquisa Spotlight -->
+                <div class="topbar-search d-none d-lg-flex flex-1" style="max-width: 600px;"
+                    onclick="if(window.showToast) window.showToast('Busca global em breve!', 'info')">
+                    <i data-lucide="search" class="icon-sm text-secondary"></i>
+                    <span class="flex-1 text-left text-secondary">Buscar clientes, produtos ou vendas...</span>
+                    <span class="topbar-search-kbd">Ctrl+K</span>
+                </div>
+
+                <!-- Direita: Ações Rápidas + Sino + Perfil -->
+                <div class="flex align-center gap-3">
+                
+                    <!-- Quick Actions -->
+                    <div class="flex align-center gap-2 d-none d-sm-flex border-right-dashed border-border pr-3 mr-1">
+                        <button class="btn bg-primary text-white text-xs py-1 px-3 rounded-full flex align-center gap-1 shadow-sm hover-float cursor-pointer border-none" onclick="document.querySelector('[data-tab=\'cadastros/clientes\']')?.click();" title="Novo Cliente">
+                            <i data-lucide="plus" class="icon-xs"></i> Cliente
+                        </button>
+                        <button class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Limpar Cache Local" onclick="if(window.showToast) window.showToast('Cache limpo!', 'success')">
+                            <i data-lucide="hard-drive" class="icon-sm"></i>
+                        </button>
+                        <button class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Alternar Tema" onclick="if(window.showToast) window.showToast('Dark Mode em breve!', 'info')">
+                            <i data-lucide="moon" class="icon-sm"></i>
+                        </button>
+                    </div>
+                    <!-- Sino de Notificações -->
+                    <div class="notification-container" style="margin-right: 8px;">
+                        <button id="btn-notifications" onclick="window.openNotificationDrawer?.()"
+                            class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors relative p-1"
+                            title="Notificações">
+                            <i data-lucide="bell"></i>
+                            <span id="notifications-badge" class="badge-dot d-none"></span>
+                        </button>
+                    </div>
+
+                    <!-- Perfil do Usuário -->
+                    <div class="user-dropdown-container">
+                        <div class="user-dropdown-trigger" id="profile-dropdown-trigger">
+                            <div class="skeleton sk-avatar w-48px h-48px rounded-full" id="profile-avatar-ph"></div>
+                            <span class="text-sm font-medium d-none d-sm-block text-primary"
+                                id="profile-name-ph">Carregando...</span>
+                            <i data-lucide="chevron-down" class="icon-xs text-secondary d-none d-sm-block"></i>
+                        </div>
+
+                        <div class="user-dropdown-menu">
+                            <div class="user-dropdown-header text-sm">
+                                <strong class="text-primary block mb-1">Minha Conta</strong>
+                                <span class="text-secondary text-xs" id="profile-email-ph">Carregando...</span>
+                            </div>
+                            <button class="user-dropdown-item"
+                                onclick="document.querySelector('[data-tab=\'sistema/configuracoes\']').click()">
+                                <i data-lucide="settings" class="icon-sm"></i>
+                                Configurações
+                            </button>
+                            <button class="user-dropdown-item"
+                                onclick="document.querySelector('[data-tab=\'sistema/suporte\']').click()">
+                                <i data-lucide="life-buoy" class="icon-sm"></i>
+                                Central de Ajuda
+                            </button>
+                            <div class="user-dropdown-divider"></div>
+                            <button class="user-dropdown-item text-danger btn-logout w-100 text-left">
+                                <i data-lucide="log-out" class="icon-sm"></i>
+                                Sair do Sistema
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- Injection point for Tab HTMLs -->
+            <main id="app-content" class="content-area">
+                <!-- Skeleton Loader de Inicialização -->
+                <div class="p-6">
+                    <div class="flex justify-between align-center mb-6">
+                        <div class="skeleton" style="width: 200px; height: 32px; border-radius: 8px;"></div>
+                        <div class="skeleton" style="width: 150px; height: 40px; border-radius: 8px;"></div>
+                    </div>
+                    
+                    <div class="grid grid-sm-2 grid-lg-4 gap-4 mb-6">
+                        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
+                        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
+                        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
+                        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
+                    </div>
+                    
+                    <div class="grid gap-4">
+                        <div class="skeleton w-100" style="height: 400px; border-radius: 12px;"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

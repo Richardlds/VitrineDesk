@@ -1,0 +1,99 @@
+<div class="admin-section fade-in">
+    <div class="flex justify-between align-center mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Configurações Master</h2>
+            <p class="text-secondary text-sm">Controle central de infraestrutura, parâmetros do sistema e manutenção.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-md-2 gap-4 mb-4">
+        <!-- Infraestrutura e Emergência -->
+        <div class="config-card p-4 hover-float transition-all">
+            <h3 class="text-primary text-md mb-4 flex align-center gap-2 border-bottom-dashed pb-2"><i data-lucide="server" class="icon-sm text-secondary"></i> Infraestrutura</h3>
+            
+            <div class="flex flex-column gap-4">
+                <!-- Modo Manutenção -->
+                <div class="flex justify-between align-center p-3 rounded-md border-dashed border-danger-light bg-danger-light hover:bg-danger-glow transition-colors cursor-pointer" id="btn-toggle-maintenance">
+                    <div>
+                        <span class="text-sm font-bold text-danger block flex align-center gap-2"><i data-lucide="alert-triangle" class="icon-sm"></i> Modo de Manutenção</span>
+                        <span class="text-xs text-secondary opacity-80">Derruba todas as lojas temporariamente.</span>
+                    </div>
+                    <label class="toggle-switch pointer-events-none">
+                        <input type="checkbox" id="flag-maintenance">
+                        <span class="slider bg-danger"></span>
+                    </label>
+                </div>
+
+                <!-- Limpar Cache -->
+                <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder hover:bg-hover transition-colors">
+                    <div>
+                        <span class="text-sm font-bold text-primary block">Limpar Cache Global</span>
+                        <span class="text-xs text-secondary">Força atualização dos navegadores dos clientes.</span>
+                    </div>
+                    <button id="btn-clear-cache" class="btn bg-placeholder text-primary border-none rounded p-2 cursor-pointer hover:bg-primary-light transition-colors">
+                        <i data-lucide="refresh-cw" class="icon-sm"></i>
+                    </button>
+                </div>
+
+                <!-- Reindexar Busca -->
+                <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder hover:bg-hover transition-colors">
+                    <div>
+                        <span class="text-sm font-bold text-primary block">Reindexar Banco (Search)</span>
+                        <span class="text-xs text-secondary">Otimiza buscas no Supabase.</span>
+                    </div>
+                    <button id="btn-reindex" class="btn bg-placeholder text-primary border-none rounded p-2 cursor-pointer hover:bg-warning-light hover:text-warning transition-colors">
+                        <i data-lucide="database" class="icon-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assinaturas e Trial -->
+        <div class="config-card p-4 hover-float transition-all">
+            <h3 class="text-primary text-md mb-4 flex align-center gap-2 border-bottom-dashed pb-2"><i data-lucide="calendar-clock" class="icon-sm text-secondary"></i> Gestão de Assinaturas</h3>
+            
+            <div class="flex flex-column gap-3">
+                <div class="form-group mb-0">
+                    <label class="font-medium text-xs text-secondary mb-1 inline-block">Dias de Teste (Trial) Padrão</label>
+                    <input type="number" id="param-trial-days" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary text-sm" value="7">
+                    <span class="text-xs text-tertiary mt-1">Dias grátis concedidos automaticamente a novas lojas.</span>
+                </div>
+                
+                <div class="form-group mb-0 mt-2">
+                    <label class="font-medium text-xs text-secondary mb-1 inline-block">WhatsApp do Suporte (Admin God)</label>
+                    <input type="text" id="param-support-whatsapp" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary text-sm" placeholder="Ex: 5511999999999">
+                    <span class="text-xs text-tertiary mt-1">Número exibido quando a loja está bloqueada (vencida).</span>
+                </div>
+                
+                <div class="form-group mb-0 mt-2">
+                    <label class="font-medium text-xs text-secondary mb-1 inline-block">Mensagem de Plano Vencido</label>
+                    <textarea id="param-expiry-msg" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary text-sm" rows="3" placeholder="Seu período de teste acabou. Entre em contato com o suporte para assinar um plano."></textarea>
+                    <span class="text-xs text-tertiary mt-1">Texto exibido ao lojista quando os dias acabarem.</span>
+                </div>
+
+                <button id="btn-save-params" class="btn btn-primary w-100 py-2 rounded-md font-bold mt-2 flex align-center justify-center gap-2 border-none cursor-pointer">
+                    <i data-lucide="save" class="icon-sm"></i> Salvar Configurações
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs de Auditoria -->
+    <div class="config-card p-0 overflow-hidden">
+        <div class="p-4 border-bottom-dashed flex justify-between align-center">
+            <h3 class="text-primary text-md m-0 flex align-center gap-2"><i data-lucide="terminal" class="text-secondary icon-sm"></i> Logs de Auditoria (Admin God)</h3>
+            <span class="badge bg-placeholder text-secondary text-xs px-2 py-1 rounded">Últimas 24h</span>
+        </div>
+        <div class="p-4 bg-elevated custom-scrollbar logs-container">
+            <div class="mb-2"><span class="text-secondary">[2026-07-12 10:15:22]</span> SYSTEM: Backup automático realizado com sucesso (2.4GB).</div>
+            <div class="mb-2"><span class="text-secondary">[2026-07-12 11:30:05]</span> ROOT: Modificação de plano. TenantID: 884 (Free -> Pro).</div>
+            <div class="mb-2"><span class="text-secondary">[2026-07-12 14:02:19]</span> SEC: Tentativa de login falha. IP: 192.168.1.104.</div>
+            <div class="mb-2"><span class="text-secondary">[2026-07-12 15:45:00]</span> ROOT: Feature flag alterada. TenantID: 902 (online_payment: true).</div>
+            <div class="mb-2"><span class="text-secondary">[2026-07-12 17:20:11]</span> SEC: Ação LGPD Executada. ClienteID: 4059 deletado permanentemente.</div>
+            <div class="mb-2"><span class="text-warning">[2026-07-12 18:05:33]</span> WARN: API de disparo SMS atingiu 80% do limite mensal.</div>
+            <div class="mb-2"><span class="text-secondary">[2026-07-12 19:40:02]</span> ROOT: Configurações globais acessadas.</div>
+            <div class="mb-2"><span class="text-secondary">[2026-07-12 19:50:44]</span> SYSTEM: Reindexação do Supabase concluída.</div>
+            <div id="live-log-entry" class="text-primary animate-pulse">_ Aguardando novos eventos...</div>
+        </div>
+    </div>
+</div>

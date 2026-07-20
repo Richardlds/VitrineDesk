@@ -1,0 +1,127 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Marketing (Notificações Push)</h2>
+            <p class="text-secondary text-sm">Crie campanhas e envie notificações em massa para o portal dos seus clientes.</p>
+        </div>
+        <button id="btn-nova-campanha" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="send"></i> Nova Campanha
+        </button>
+    </div>
+
+    <!-- Promo Bar Config -->
+    <div class="config-card mb-4 p-4">
+        <h3 class="mb-3 text-primary flex align-center gap-2"><i data-lucide="megaphone" class="icon-sm"></i> Barra de Promoção (Site)</h3>
+        <p class="text-sm text-secondary mb-3">Defina um aviso fixo que aparecerá no topo do seu site para todos os clientes verem (ex: "Use o cupom VERAO20 para 20% OFF").</p>
+        
+        <form id="form-promo-bar" class="flex flex-column gap-3">
+            <div class="flex gap-3 align-end flex-wrap">
+                <div class="flex-1 min-w-200">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Texto da Promoção</label>
+                    <input type="text" id="input-promo-text" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Aproveite 10% de desconto no primeiro agendamento!">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Fundo</label>
+                    <input type="color" id="input-promo-bg" class="w-40px h-40px rounded-md border-none p-0 cursor-pointer" value="#ff0000" title="Cor de Fundo da Barra">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Texto</label>
+                    <input type="color" id="input-promo-text-color" class="w-40px h-40px rounded-md border-none p-0 cursor-pointer" value="#ffffff" title="Cor do Texto">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Status</label>
+                    <div class="flex align-center h-40px gap-2">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="input-promo-active">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="text-sm font-bold text-primary" id="promo-status-label">Inativo</span>
+                    </div>
+                </div>
+                <button type="submit" id="btn-save-promo" class="btn btn-primary h-40px px-4 rounded-md flex align-center gap-2 cursor-pointer">
+                    <i data-lucide="save" class="icon-sm"></i> Salvar Barra
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabela de Campanhas Push -->
+    <h3 class="mb-3 text-primary mt-4 flex align-center gap-2"><i data-lucide="smartphone" class="icon-sm"></i> Histórico de Disparos Push</h3>
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="marketing-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Nome da Campanha</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Público-Alvo</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Data de Disparo</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="marketing-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Paginação -->
+        <div class="flex flex-wrap justify-between align-center border-top-dashed p-3 mt-0 gap-3">
+            <div class="text-sm text-secondary">
+                Mostrando <span id="pag-inicio-marketing" class="font-bold text-primary">0</span> a <span id="pag-fim-marketing" class="font-bold text-primary">0</span> de <span id="pag-total-marketing" class="font-bold text-primary">0</span>
+            </div>
+            <div class="flex gap-2 align-center">
+                <button id="btn-prev-page-marketing" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-left" class="icon-sm"></i>
+                </button>
+                <span id="pag-atual-marketing" class="text-sm font-medium text-primary px-2">Pág. 1 de 1</span>
+                <button id="btn-next-page-marketing" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-1 cursor-pointer hover:bg-hover transition-colors" disabled>
+                    <i data-lucide="chevron-right" class="icon-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro / Edição -->
+    <div id="modal-marketing" class="modal-overlay d-none">
+        <div class="modal-content config-card">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-marketing-title">Nova Campanha</h3>
+                <button id="btn-close-modal-marketing" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-marketing">
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome Interno da Campanha</label>
+                    <input type="text" id="input-campanha-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Promoção Mês dos Pais" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Público-Alvo</label>
+                    <select id="input-campanha-publico" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                        <option value="todos">Todos os Clientes</option>
+                        <option value="inativos">Clientes Inativos (Mais de 30 dias)</option>
+                        <option value="ativos">Clientes Frequentes</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Título da Notificação</label>
+                    <input type="text" id="input-campanha-titulo" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Mega Desconto" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Mensagem</label>
+                    <textarea id="input-campanha-msg" rows="5" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm resize-none" placeholder="Olá {{nome_cliente}}, temos uma novidade..." required></textarea>
+                    <p class="text-xs text-secondary mt-2">Dica: Use <span class="font-mono bg-placeholder px-1 rounded">{{nome_cliente}}</span> para personalizar a mensagem.</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-lg cursor-pointer flex justify-center align-center gap-2">
+                    <i data-lucide="send" class="icon-sm"></i> Programar Disparo
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

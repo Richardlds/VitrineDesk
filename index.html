@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
+ script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com; 
+ style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; 
+ font-src 'self' https://fonts.gstatic.com data:; 
+ connect-src 'self' https://*.supabase.co https://api.ipify.org https://cdn.jsdelivr.net https://unpkg.com; 
+ img-src 'self' data: https:; 
+ frame-src 'self';">
+    <!-- SEO Tags -->
+    <title>VitrineDesk - Crie Sua Loja Online e Receba Agendamentos</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <meta name="description"
+        content="A plataforma SaaS completa para barbearias, salões de beleza e lojas de cosméticos criarem sua vitrine online em minutos com agendamento integrado.">
+    <meta name="keywords"
+        content="agendamento online, barbearia, salão de beleza, cosméticos, vitrine online, saas, beleza">
+
+    <!-- PWA & Mobile -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="apple-touch-icon" href="/assets/icon-192.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="VitrineDesk - Crie Sua Loja Online e Receba Agendamentos">
+    <meta property="og:description"
+        content="A plataforma SaaS completa para barbearias, salões de beleza e lojas de cosméticos criarem sua vitrine online em minutos com agendamento integrado.">
+    <meta property="og:url" content="https://barbearia-pranchana.vercel.app/">
+    <meta property="og:image" content="https://barbearia-pranchana.vercel.app/assets/placeholder.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Animações (AOS) -->
+
+    <!-- Links para Estilo Externo da Landing Page -->
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/landing.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar" id="navbar">
+        <div class="container navbar-inner">
+            <a href="#" class="logo "><i data-lucide="zap" class="w-5 h-5 text-primary"></i> VitrineDesk</a>
+
+            <button class="hamburger" id="hamburger-toggle" aria-label="Menu de Navegação" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#funcionalidades">Funcionalidades</a></li>
+                <li><a href="#negocios">Negócios</a></li>
+                <li><a href="#planos">Planos</a></li>
+                <li><a href="#como-funciona">Como Funciona</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="/login.html" class="btn btn-secondary btn-sm">Entrar</a></li>
+                <li><a href="/login.html?register=true" class="btn btn-primary btn-sm btn-glow">Começar Grátis</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="glowing-orb orb-1"></div>
+        <div class="glowing-orb orb-2"></div>
+        <div class="hero-particles" id="hero-particles"></div>
+        <div class="container">
+            <div class="badge">
+                <span><i data-lucide="star" class="star-filled"></i> 4.9 • +1000 lojas criadas</span>
+            </div>
+
+            <h1>Sua Loja Online<br>em <span class="text-primary">Minutos</span></h1>
+            <p class="hero-subtitle">A plataforma completa para barbearias, salões de beleza e lojas de cosméticos
+                venderem
+                mais com agendamento online inteligente.</p>
+
+            <div class="hero-buttons">
+                <a href="/login.html?register=true" class="btn btn-primary btn-lg btn-glow "><i data-lucide="rocket"
+                        class="w-5 h-5"></i>
+                    Começar Grátis</a>
+                <a href="/cliente/vintage-barber-5678" target="_blank" class="btn btn-secondary btn-lg "><i
+                        data-lucide="eye" class="w-5 h-5"></i> Ver
+                    Demo</a>
+            </div>
+
+            <!-- Mockup do Dashboard -->
+            <div class="hero-mockup-wrapper reveal-on-scroll reveal-zoom">
+                <div class="hero-mockup-frame">
+                    <img src="/assets/bannerindex.png" alt="Dashboard Preview" class="hero-mockup-image">
+                </div>
+            </div>
+
+            <!-- Indicador de Scroll -->
+            <div class="scroll-indicator">
+                <span>Deslizar</span>
+                <div class="scroll-indicator-mouse">
+                    <div class="scroll-indicator-wheel"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL PROOF SECTION -->
+    <section class="social-proof-section reveal-on-scroll">
+        <div class="container text-center">
+            <div class="social-proof-wrapper">
+                <div class="avatars-row">
+                    <img src="https://placehold.co/100x100/ef4444/white?text=E" alt="Avatar Cliente 5"
+                        class="avatar-img">
+                    <img src="https://placehold.co/100x100/6366f1/white?text=A" alt="Avatar Cliente 1"
+                        class="avatar-img">
+                    <img src="https://placehold.co/100x100/f59e0b/white?text=D" alt="Avatar Cliente 4"
+                        class="avatar-img">
+                    <img src="https://placehold.co/100x100/10b981/white?text=C" alt="Avatar Cliente 3"
+                        class="avatar-img">
+                    <img src="https://placehold.co/100x100/3b82f6/white?text=B" alt="Avatar Cliente 2"
+                        class="avatar-img">
+                </div>
+                <div class="stars-row">
+                    <i data-lucide="star" class="star-filled"></i>
+                    <i data-lucide="star" class="star-filled"></i>
+                    <i data-lucide="star" class="star-filled"></i>
+                    <i data-lucide="star" class="star-filled"></i>
+                    <i data-lucide="star" class="star-filled"></i>
+                </div>
+                <p class="social-proof-text">"Junte-se a +1000 negócios que já usam VitrineDesk"</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 3: PARA QUEM É -->
+    <section id="negocios" class="section section-alt reveal-on-scroll">
+        <div class="container">
+            <h2 class="section-title">Feito para o seu Negócio</h2>
+            <p class="section-subtitle">Soluções personalizadas e otimizadas para todos os tipos de negócios.</p>
+
+            <div class="business-grid">
+                <!-- Comércio Local -->
+                <div class="card business-card card-tilt">
+                    <div class="business-icon "><i data-lucide="store"></i></div>
+                    <h3>Comércio Local</h3>
+                    <p class="text-muted">Presença digital completa para alavancar as vendas da sua loja física.</p>
+                </div>
+                <!-- Prestadores de Serviços -->
+                <div class="card business-card card-tilt">
+                    <div class="business-icon "><i data-lucide="briefcase"></i></div>
+                    <h3>Prestadores de Serviços</h3>
+                    <p class="text-muted">Agendamento online e gestão simplificada para profissionais autônomos.</p>
+                </div>
+                <!-- Varejo Online -->
+                <div class="card business-card card-tilt">
+                    <div class="business-icon "><i data-lucide="shopping-bag"></i></div>
+                    <h3>Varejo Online</h3>
+                    <p class="text-muted">Vitrine virtual elegante e integrada para vender seus produtos na internet.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: FUNCIONALIDADES -->
+    <section id="funcionalidades" class="section reveal-on-scroll">
+        <div class="container">
+            <h2 class="section-title">Recursos Inteligentes</h2>
+            <p class="section-subtitle">Tudo o que você precisa para digitalizar o seu estabelecimento em um único
+                painel.</p>
+
+            <div class="features-grid">
+                <!-- 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i data-lucide="calendar-check"></i></div>
+                    <h3 class="feature-title">Agendamento Online</h3>
+                    <p class="feature-desc">Permita que seus clientes reservem serviços de forma autônoma a qualquer
+                        hora do dia
+                        ou da noite.</p>
+                </div>
+                <!-- 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i data-lucide="clock"></i></div>
+                    <h3 class="feature-title">Gestão de Horários</h3>
+                    <p class="feature-desc">Defina facilmente a sua jornada diária, intervalos e bloqueios de agenda em
+                        tempo
+                        real.</p>
+                </div>
+                <!-- 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i data-lucide="palette"></i></div>
+                    <h3 class="feature-title">Vitrine Personalizada</h3>
+                    <p class="feature-desc">Altere cores, logotipos, banners e informações para transmitir a identidade
+                        da sua
+                        marca.</p>
+                </div>
+                <!-- 4 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i data-lucide="message-circle"></i></div>
+                    <h3 class="feature-title">Link WhatsApp</h3>
+                    <p class="feature-desc">Facilite a comunicação direta do cliente com a sua loja através de links
+                        automatizados.</p>
+                </div>
+                <!-- 5 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i data-lucide="bar-chart-2"></i></div>
+                    <h3 class="feature-title">Dashboard Analytics</h3>
+                    <p class="feature-desc">Acompanhe relatórios de faturamento, ticket médio e serviços mais agendados
+                        em tempo
+                        real.</p>
+                </div>
+                <!-- 6 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i data-lucide="users"></i></div>
+                    <h3 class="feature-title">Multi-profissionais</h3>
+                    <p class="feature-desc">Cadastre toda a sua equipe de profissionais com bios e fotos individuais.
+                    </p>
+                </div>
+                <!-- 7 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box"><i data-lucide="megaphone"></i></div>
+                    <h3 class="feature-title">Marketing & CRM</h3>
+                    <p class="feature-desc">Fidelize e recupere clientes inativos com mensagens automatizadas pelo
+                        WhatsApp.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: COMO FUNCIONA -->
+    <section id="como-funciona" class="section reveal-on-scroll">
+        <div class="container">
+            <h2 class="section-title">Como Funciona</h2>
+            <p class="section-subtitle">Comece a vender e receber agendamentos em apenas 3 passos simples.</p>
+
+            <div class="steps">
+                <!-- Passo 1 -->
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h3>Escolha seu plano</h3>
+                    <p class="text-muted">Crie sua conta em segundos e configure seu perfil básico sem cartão.</p>
+                </div>
+                <!-- Passo 2 -->
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h3>Personalize sua loja</h3>
+                    <p class="text-muted">Adicione seus serviços, fotos da equipe e horários disponíveis.</p>
+                </div>
+                <!-- Passo 3 -->
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h3>Receba agendamentos</h3>
+                    <p class="text-muted">Divulgue o seu link exclusivo e assista sua agenda lotar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: PLANOS E PREÇOS -->
+    <section id="planos" class="section section-alt reveal-on-scroll">
+        <div class="container">
+            <h2 class="section-title">Planos e Preços</h2>
+            <p class="section-subtitle">Escolha o plano ideal para impulsionar e gerenciar a presença digital do seu
+                negócio.
+            </p>
+
+            <div class="pricing-grid">
+                <!-- Plano Starter -->
+                <div class="card plan-card card-tilt">
+                    <div>
+                        <h3><i data-lucide="leaf" class="w-5 h-5 text-primary"></i> Starter</h3>
+                        <div class="plan-price">R$ <span class="counter-number"
+                                data-target="199">0</span>,99<span>/mês</span></div>
+                        <ul class="plan-features">
+                            <li>Personalização de Marca</li>
+                            <li>Cadastro de Serviços</li>
+                            <li>Link WhatsApp na Vitrine</li>
+                            <li>Apenas Landing Page</li>
+                        </ul>
+                    </div>
+                    <a href="/login.html?register=true" class="btn btn-secondary btn-block">Começar</a>
+                </div>
+
+                <!-- Plano Profissional -->
+                <div class="card plan-card plan-popular card-tilt">
+                    <span class="plan-badge "><i data-lucide="star" class="star-filled"></i> Mais Popular</span>
+                    <div>
+                        <h3><i data-lucide="rocket" class="w-5 h-5 text-primary"></i> Profissional</h3>
+                        <div class="plan-price">R$ <span class="counter-number"
+                                data-target="349">0</span>,99<span>/mês</span></div>
+                        <ul class="plan-features">
+                            <li>Agendamento Online</li>
+                            <li>Calendário e Horários</li>
+                            <li>Multi-profissionais</li>
+                            <li>Base de Clientes (CRM)</li>
+                            <li>Dashboard de Vendas</li>
+                        </ul>
+                    </div>
+                    <a href="/login.html?register=true" class="btn btn-primary btn-block btn-glow">Começar Agora</a>
+                </div>
+
+                <!-- Plano Enterprise -->
+                <div class="card plan-card card-tilt">
+                    <div>
+                        <h3><i data-lucide="building-2" class="w-5 h-5 text-primary"></i> Enterprise</h3>
+                        <div class="plan-price" style="font-size: 28px; margin-top: 10px;">Em breve</div>
+                        <ul class="plan-features">
+                            <li>Tudo do Profissional</li>
+                            <li>Automação via WhatsApp</li>
+                            <li>Analytics Avançado</li>
+                            <li>API + Domínio Personalizado</li>
+                            <li>Suporte Prioritário VIP</li>
+                        </ul>
+                    </div>
+                    <a href="/login.html?register=true" class="btn btn-secondary btn-block">Falar com Vendas</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: DEPOIMENTOS -->
+    <section id="depoimentos" class="section reveal-on-scroll">
+        <div class="container">
+            <h2 class="section-title">Quem Usa, Recomenda</h2>
+            <p class="section-subtitle">Veja como o VitrineDesk está transformando a gestão e as vendas de
+                estabelecimentos
+                reais.</p>
+
+            <div class="testimonials-grid">
+                <!-- 1 -->
+                <div class="card testimonial-card">
+                    <div class="stars ">
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                    </div>
+                    <p class="testimonial-quote">"Minha barbearia triplicou os agendamentos em 1 mês! A simplicidade do
+                        agendamento automatizado no WhatsApp encantou meus clientes."</p>
+                    <div class="testimonial-user">
+                        <img src="https://placehold.co/100x100/6366f1/white?text=JS" alt="João Silva Avatar"
+                            class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-info-name">João Silva</div>
+                            <div class="testimonial-info-role">Proprietário da Vintage Barber</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 2 -->
+                <div class="card testimonial-card">
+                    <div class="stars ">
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                    </div>
+                    <p class="testimonial-quote">"A melhor plataforma para salões. Fácil de configurar e extremamente
+                        profissional. Deu uma cara nova aos meus serviços de beleza."</p>
+                    <div class="testimonial-user">
+                        <img src="https://placehold.co/100x100/6366f1/white?text=MS" alt="Maria Santos Avatar"
+                            class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-info-name">Maria Santos</div>
+                            <div class="testimonial-info-role">Fundadora do Glamour Studio</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 3 -->
+                <div class="card testimonial-card">
+                    <div class="stars ">
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                        <i data-lucide="star" class="star-filled"></i>
+                    </div>
+                    <p class="testimonial-quote">"Meus clientes amam agendar online sem precisar baixar nenhum
+                        aplicativo pesado.
+                        Virou outro negócio, super organizado!"</p>
+                    <div class="testimonial-user">
+                        <img src="https://placehold.co/100x100/6366f1/white?text=PC" alt="Pedro Costa Avatar"
+                            class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-info-name">Pedro Costa</div>
+                            <div class="testimonial-info-role">Diretor da Bella Cosméticos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: FAQ ACCORDION -->
+    <section id="faq" class="section section-alt reveal-on-scroll">
+        <div class="container">
+            <h2 class="section-title">Perguntas Frequentes</h2>
+            <p class="section-subtitle">Tire suas principais dúvidas sobre o funcionamento do VitrineDesk.</p>
+
+            <div class="faq-wrapper">
+                <!-- Q1 -->
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Como funciona o teste grátis?</span>
+                        <span class="faq-icon-indicator">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            Você recebe acesso total à plataforma por 7 dias sem pagar nada. Pode configurar sua
+                            vitrine, cadastrar
+                            serviços e equipe, e aceitar agendamentos para validar a experiência.
+                        </div>
+                    </div>
+                </div>
+                <!-- Q2 -->
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Precisa de cartão de crédito?</span>
+                        <span class="faq-icon-indicator">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            Não! O cadastro do teste grátis de 7 dias exige apenas e-mail e senha. Nenhum dado
+                            financeiro ou de cartão
+                            é solicitado na inicialização.
+                        </div>
+                    </div>
+                </div>
+                <!-- Q3 -->
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Posso usar meu domínio?</span>
+                        <span class="faq-icon-indicator">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            Sim, nos planos Profissional e Enterprise, você tem a opção de direcionar e vincular o seu
+                            domínio
+                            customizado (exemplo: www.suabarbearia.com.br) diretamente à sua vitrine online.
+                        </div>
+                    </div>
+                </div>
+                <!-- Q4 -->
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Dá para personalizar as cores?</span>
+                        <span class="faq-icon-indicator">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            Sim! Nossa ferramenta conta com uma central de customizações no painel do lojista onde é
+                            possível definir
+                            sua cor principal, logo, banner de cobertura e imagens em poucos cliques.
+                        </div>
+                    </div>
+                </div>
+                <!-- Q5 -->
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Tem suporte?</span>
+                        <span class="faq-icon-indicator">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            Sim! Oferecemos suporte completo e humanizado via e-mail e canal oficial de WhatsApp,
+                            ajudando você em
+                            todas as etapas da configuração da sua loja online.
+                        </div>
+                    </div>
+                </div>
+                <!-- Q6 -->
+                <div class="faq-item">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span>Posso cancelar a qualquer momento?</span>
+                        <span class="faq-icon-indicator">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            Sim! Não há contratos de fidelidade de longo prazo. Você pode cancelar sua assinatura
+                            diretamente no
+                            painel do cliente a qualquer instante, sem multas rescisórias.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: CTA FINAL -->
+    <section class="cta-final reveal-on-scroll reveal-zoom">
+        <div class="container">
+            <div class="cta-final-box">
+                <h2 class="cta-final-title">Pronto para digitalizar seu negócio?</h2>
+                <p class="cta-final-desc">Crie um canal de agendamento online inteligente e automatize sua agenda de
+                    clientes em
+                    minutos.</p>
+                <a href="/login.html?register=true" class="btn btn-primary btn-glow btn-lg "><i data-lucide="sparkles"
+                        class="w-5 h-5"></i>
+                    Começar Teste Grátis</a>
+                <span class="cta-final-footer-text "><i data-lucide="lock"></i> 7 dias grátis • Sem cartão de crédito
+                    necessário • Cancele a
+                    qualquer
+                    momento</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a href="#" class="logo "><i data-lucide="zap" class="w-6 h-6 text-primary"></i> VitrineDesk</a>
+                    <p>Sua presença online personalizada com agendamento direto e vitrine virtual em
+                        minutos.</p>
+                </div>
+                <div>
+                    <h4>Produto</h4>
+                    <a href="#funcionalidades">Funcionalidades</a>
+                    <a href="#planos">Planos</a>
+                    <a href="/cliente/vintage-barber-5678" target="_blank">Ver Demo</a>
+                </div>
+                <div>
+                    <h4>Suporte</h4>
+                    <a href="#" class="btn-open-contact">Central de Ajuda</a>
+                    <a href="#">WhatsApp Comercial</a>
+                    <a href="#" class="btn-open-contact">Contato</a>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <a href="#">Termos de Uso</a>
+                    <a href="#">Políticas de Privacidade</a>
+                </div>
+                <div>
+                    <h4>Novidades</h4>
+                    <p>Receba novidades e dicas no e-mail.</p>
+                    <div class="newsletter-form-container">
+                        <input type="email" placeholder="seu@email.com" class="form-control"
+                            aria-label="E-mail para Newsletter">
+                        <button class="btn btn-primary btn-sm">Enviar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 VitrineDesk. Todos os direitos reservados.</span>
+                <div class="social-icons-row">
+                    <a href="#" class="social-icon-circle" aria-label="Facebook"><i data-lucide="facebook"
+                            class="w-5 h-5"></i></a>
+                    <a href="#" class="social-icon-circle" aria-label="Instagram"><i data-lucide="instagram"
+                            class="w-5 h-5"></i></a>
+                    <a href="#" class="social-icon-circle" aria-label="WhatsApp"><i data-lucide="message-circle"
+                            class="w-5 h-5"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Contato -->
+    <div id="contact-modal" class="modal-overlay">
+        <div class="modal-content config-card">
+            <button id="btn-close-contact"
+                class="btn border-none bg-transparent text-secondary cursor-pointer hover:text-primary transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+            <h3 class="text-primary font-bold text-lg mb-2 flex align-center gap-2"><i data-lucide="mail"></i> Fale
+                Conosco</h3>
+            <p class="text-secondary text-sm mb-4">Envie sua dúvida ou solicitação. Retornaremos o mais breve possível.
+            </p>
+
+            <form id="contact-form" class="flex flex-column gap-3">
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Seu Nome *</label>
+                    <input type="text" id="contact-name"
+                        class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary"
+                        required>
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">E-mail *</label>
+                    <input type="email" id="contact-email"
+                        class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary"
+                        required>
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">WhatsApp (Opcional)</label>
+                    <input type="text" id="contact-whatsapp"
+                        class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary"
+                        placeholder="DDD + Número">
+                </div>
+                <div>
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Mensagem *</label>
+                    <textarea id="contact-message"
+                        class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary"
+                        rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-md font-bold mt-2"
+                    id="btn-submit-contact">
+                    Enviar Mensagem
+                </button>
+            </form>
+            <!-- Toast Notice -->
+            <div id="contact-toast" class="d-none text-center mt-3 text-sm py-2 rounded-md font-medium"></div>
+        </div>
+    </div>
+
+    <!-- Scripts da Landing Page -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/landing.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>

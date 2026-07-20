@@ -1,0 +1,173 @@
+<div class="admin-section fade-in">
+    <div class="mb-4">
+        <h2 class="mb-1 text-primary">Visão Geral Global</h2>
+        <p class="text-secondary text-sm">Acompanhe as métricas globais de todas as lojas do VitrineDesk.</p>
+    </div>
+
+    <style>
+        .god-grid-3x3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 992px) {
+            .god-grid-3x3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 576px) {
+            .god-grid-3x3 {
+                grid-template-columns: 1fr;
+            }
+        }
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+        }
+    </style>
+
+    <!-- Indicadores Principais (Grid 3x3 ou similar, aqui temos 6 cards + 1 gráfico grande que ocupa a linha) -->
+    <!-- Para manter 3x3 real, podemos ter 9 blocos ou 6 cards e o grafico ocupando 3 colunas em baixo, o que visualmente dá 3 linhas de 3 colunas se contarmos o grafico como uma linha -->
+    <div class="god-grid-3x3">
+        <!-- 1. Lojas Ativas -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-success-light flex align-center justify-center">
+                    <i data-lucide="store" class="text-success"></i>
+                </div>
+                <span class="badge bg-success-light text-success text-xs font-bold px-2 py-1 rounded">Ao vivo</span>
+            </div>
+            <h3 class="text-3xl font-bold text-primary mb-1" id="kpi-total-tenants">--</h3>
+            <p class="text-secondary text-sm m-0">Lojas Ativas</p>
+        </div>
+
+        <!-- 2. Clientes Totais -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-primary-light flex align-center justify-center">
+                    <i data-lucide="users" class="text-primary"></i>
+                </div>
+                <span class="badge bg-primary-light text-primary text-xs font-bold px-2 py-1 rounded">Rede</span>
+            </div>
+            <h3 class="text-3xl font-bold text-primary mb-1" id="kpi-total-clients">--</h3>
+            <p class="text-secondary text-sm m-0">Clientes Cadastrados</p>
+        </div>
+
+        <!-- 3. Novas Lojas Mês -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-success-light flex align-center justify-center">
+                    <i data-lucide="trending-up" class="text-success"></i>
+                </div>
+                <span class="badge bg-success-light text-success text-xs font-bold px-2 py-1 rounded">Neste Mês</span>
+            </div>
+            <h3 class="text-3xl font-bold text-primary mb-1" id="kpi-new-tenants">--</h3>
+            <p class="text-secondary text-sm m-0">Novas Lojas</p>
+        </div>
+
+        <!-- 4. Lojas Vencidas -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-danger-light flex align-center justify-center">
+                    <i data-lucide="store" class="text-danger"></i>
+                </div>
+                <span class="badge bg-danger-light text-danger text-xs font-bold px-2 py-1 rounded">Atenção</span>
+            </div>
+            <h3 class="text-3xl font-bold text-danger mb-1" id="kpi-expired-tenants">--</h3>
+            <p class="text-secondary text-sm m-0">Lojas Vencidas</p>
+        </div>
+
+        <!-- 5. Lojas em Trial -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-warning-light flex align-center justify-center">
+                    <i data-lucide="clock" class="text-warning"></i>
+                </div>
+                <span class="badge bg-warning-light text-warning text-xs font-bold px-2 py-1 rounded">Testando</span>
+            </div>
+            <h3 class="text-3xl font-bold text-primary mb-1" id="kpi-trial-tenants">--</h3>
+            <p class="text-secondary text-sm m-0">Lojas em Trial</p>
+        </div>
+
+        <!-- 6. Agendamentos Globais -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-primary-light flex align-center justify-center">
+                    <i data-lucide="calendar-check" class="text-primary"></i>
+                </div>
+                <span class="badge bg-primary-light text-primary text-xs font-bold px-2 py-1 rounded">Global</span>
+            </div>
+            <h3 class="text-3xl font-bold text-primary mb-1" id="kpi-total-appointments">--</h3>
+            <p class="text-secondary text-sm m-0">Agendamentos Totais</p>
+        </div>
+
+        <!-- 7. Tickets Pendentes -->
+        <div class="config-card p-4 hover-float transition-all border-warning-light border-dashed">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-warning-light flex align-center justify-center">
+                    <i data-lucide="life-buoy" class="text-warning"></i>
+                </div>
+                <span class="badge bg-warning-light text-warning text-xs font-bold px-2 py-1 rounded">Suporte</span>
+            </div>
+            <h3 class="text-3xl font-bold text-warning mb-1" id="kpi-total-tickets">--</h3>
+            <p class="text-secondary text-sm m-0">Tickets Pendentes</p>
+        </div>
+
+        <!-- 8. Mensagens / Leads -->
+        <div class="config-card p-4 hover-float transition-all">
+            <div class="flex justify-between align-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-primary-light flex align-center justify-center">
+                    <i data-lucide="mail" class="text-primary"></i>
+                </div>
+                <span class="badge bg-primary-light text-primary text-xs font-bold px-2 py-1 rounded">Novas</span>
+            </div>
+            <h3 class="text-3xl font-bold text-primary mb-1" id="kpi-unread-messages">--</h3>
+            <p class="text-secondary text-sm m-0">Leads (Não lidos)</p>
+        </div>
+        
+        <!-- 9. Card Fantasma ou Placeholder extra (Mantendo o Grid 3x3 com exatos 9 blocos) -->
+        <div class="config-card p-4 flex flex-column align-center justify-center border-dashed border-placeholder opacity-70">
+            <i data-lucide="activity" class="text-secondary w-8 h-8 mb-2"></i>
+            <span class="text-sm text-secondary font-medium text-center">Status Global<br><span class="text-success">Sistemas Operacionais</span></span>
+        </div>
+    </div>
+
+    <!-- Gráfico de Barras -->
+    <div class="config-card p-5 mb-4">
+        <h3 class="text-primary text-md m-0 mb-4 flex align-center gap-2"><i data-lucide="bar-chart-2" class="text-secondary icon-sm"></i> Crescimento: Lojas Cadastradas</h3>
+        <div class="chart-container">
+            <canvas id="chart-tenants"></canvas>
+        </div>
+    </div>
+
+    <!-- Broadcast Global -->
+    <div class="gap-4">
+        <div class="config-card p-5 flex flex-column">
+            <div class="flex justify-between align-center mb-4">
+                <h3 class="text-primary text-md m-0 flex align-center gap-2"><i data-lucide="radio" class="text-danger icon-sm"></i> Central de Broadcast Global</h3>
+                <span class="badge bg-danger-light text-danger text-xs px-2 py-1 rounded font-bold">Aviso em Massa</span>
+            </div>
+            
+            <div class="mb-4 flex-1">
+                <label class="font-medium text-sm text-secondary mb-2 inline-block">Mensagem (Aparece como notificação para todos os Lojistas no painel)</label>
+                <textarea id="broadcast-message" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-3 text-primary outline-none focus:border-primary custom-scrollbar" rows="3" placeholder="Ex: Manutenção programada para o dia 15/08 às 03:00. O painel ficará indisponível por 1 hora."></textarea>
+            </div>
+            
+            <div class="flex justify-between align-center border-top-dashed pt-4 border-placeholder">
+                <div class="flex align-center gap-3">
+                    <span class="text-sm text-secondary">Tipo de Aviso:</span>
+                    <select id="broadcast-type" class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                        <option value="info">Informativo (Azul)</option>
+                        <option value="warning">Alerta (Amarelo)</option>
+                        <option value="error">Crítico (Vermelho)</option>
+                    </select>
+                </div>
+                <button id="btn-send-broadcast" class="btn bg-primary text-white px-6 py-2 rounded-md font-bold flex align-center gap-2 border-none cursor-pointer hover:opacity-90 transition-all hover-float">
+                    <i data-lucide="send" class="icon-sm"></i> Disparar para Todos
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

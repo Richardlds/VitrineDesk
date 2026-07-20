@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="description" content="Agende seu horário online de forma rápida e prática.">
+  <meta name="theme-color" content="#07070a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Vitrine</title>
+
+  <!-- Favicon placeholder (atualizado dinamicamente) -->
+  <link rel="icon" href="data:," type="image/x-icon">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/base.css?v=20260720-7">
+  <link rel="stylesheet" href="css/header.css?v=20260720-7">
+  <link rel="stylesheet" href="css/servicos.css?v=20260720-7">
+  <link rel="stylesheet" href="css/booking.css?v=20260720-7">
+  <link rel="stylesheet" href="css/auth.css?v=20260720-7">
+  <link rel="stylesheet" href="css/agendamentos.css?v=20260720-7">
+  <link rel="stylesheet" href="css/responsive.css?v=20260720-7">
+</head>
+
+<body>
+
+  <!-- ═══════════════════ LOADING SCREEN ═══════════════════ -->
+  <div id="loading-screen" class="flex-center loading-screen">
+    <div class="spinner spinner-lg"></div>
+    <span class="text-muted">Carregando vitrine...</span>
+  </div>
+
+  <!-- ═══════════════════ APP CONTAINER ═══════════════════ -->
+  <div id="app" class="hidden">
+
+    <!-- ═══════ HERO SECTION (Capa + Header Integrados) ═══════ -->
+    <div class="hero-wrapper">
+
+      <!-- O ID store-cover é manipulado pelo JS. Se oculto, some apenas o background. -->
+      <div class="store-cover-wrapper" id="store-cover">
+        <img id="cover-img" src="" alt="Capa da loja" class="hero-bg-img">
+        <div class="hero-overlay"></div>
+      </div>
+
+      <!-- Topbar Transparente -->
+      <header class="hero-topbar">
+        <div class="container topbar-container flex align-center justify-between">
+
+          <!-- Brand na Topbar -->
+          <a href="#" class="brand-wrapper flex align-center gap-2 text-none" data-action="scrollTo"
+            data-target="section-servicos">
+            <div class="logo-container">
+              <img id="logo-img" src="" alt="Logo">
+              <div class="logo-glow"></div>
+            </div>
+            <div class="shop-info flex flex-column">
+              <h1 class="shop-name" id="shop-name">Carregando...</h1>
+              <span class="shop-status-badge flex align-center gap-1 text-sm text-muted" id="status-badge">
+                <span class="status-dot"></span> Verificando...
+              </span>
+            </div>
+          </a>
+
+          <div class="topbar-actions">
+            <nav class="desktop-nav" id="desktop-nav">
+              <a href="#section-servicos" class="desktop-nav-link" data-action="scrollTo"
+                data-target="section-servicos">Serviços</a>
+              <a href="#section-equipe" class="desktop-nav-link" data-action="scrollTo"
+                data-target="section-equipe">Equipe</a>
+              <a href="#section-horarios" class="desktop-nav-link" data-action="scrollTo"
+                data-target="section-horarios">Horários</a>
+              <a href="#section-info" class="desktop-nav-link" data-action="scrollTo"
+                data-target="section-info">Contato</a>
+            </nav>
+
+            <button class="btn btn-primary btn-auth guest-only" id="btn-auth" data-action="openAuth" data-tab="login"
+              title="Entrar">
+              <i data-lucide="user"></i> <span class="auth-text">Entrar</span>
+            </button>
+
+            <!-- Menu do usuário logado (Area do Cliente) -->
+            <button class="user-menu hidden" id="user-menu" data-action="openClientArea" title="Minha Conta">
+              <div class="user-avatar-small" id="user-avatar-letter">U</div>
+            </button>
+
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- ═══════ BANNER PROMOCIONAL ═══════ -->
+    <div class="promo-banner-full" id="banner-promo">
+      <div class="promo-banner-content">
+        <span class="promo-banner-text" id="banner-promo-text">Promoção!</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+    <main class="main-content">
+
+
+      <!-- ========================================== WIDGET PRÓXIMOS AGENDAMENTOS ========================================== -->
+      <section class="section section-upcoming-appointments hidden" id="section-upcoming-appointments">
+        <div class="container">
+          <div class="glass-card upcoming-widget" id="upcoming-widget-card" data-action="openClientAreaAndTab"
+            data-target="tab-agendamentos">
+            <div class="upcoming-info flex flex-column gap-1">
+              <span class="upcoming-label">Próximo Atendimento</span>
+              <h4 id="upcoming-service-name" class="upcoming-title">Carregando...</h4>
+              <span id="upcoming-date-time" class="upcoming-datetime flex align-center gap-1">
+                <i data-lucide="calendar" class="icon-sm"></i> Aguarde...
+              </span>
+            </div>
+            <div class="upcoming-action">
+              <i data-lucide="chevron-right" class="icon-primary"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== FILIAIS ========================================== -->
+      <section class="section hidden" id="section-filiais">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Nossas Unidades</h2>
+            <p class="section-subtitle">Selecione onde deseja ser atendido</p>
+          </div>
+          <div class="services-grid" id="branches-grid">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== SERVIÇOS ========================================== -->
+      <section class="section" id="section-servicos">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Nossos Serviços</h2>
+            <p class="section-subtitle">Escolha o serviço e agende online</p>
+          </div>
+
+          <!-- Barra de filtros de categoria e visualização -->
+          <div class="services-toolbar">
+            <div class="services-filters" id="services-filters">
+              <button class="service-filter-btn active" data-category="todos">Todos</button>
+            </div>
+            
+            <div class="services-view-controls" id="services-view-controls" data-active-view="grid3">
+              <div class="view-slider"></div>
+              <button class="view-btn" data-action="toggleServicesView" data-view="list" title="Lista">
+                <i data-lucide="list"></i>
+              </button>
+              <button class="view-btn active" data-action="toggleServicesView" data-view="grid3" title="Grade 3 Colunas">
+                <i data-lucide="layout-grid"></i>
+              </button>
+              <button class="view-btn" data-action="toggleServicesView" data-view="grid4" title="Grade 4 Colunas">
+                <i data-lucide="grid-3x3"></i>
+              </button>
+              <button class="view-btn" data-action="toggleServicesView" data-view="grid5" title="Grade 5 Colunas">
+                <i data-lucide="layout-dashboard"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="services-grid view-grid3" id="services-grid">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== EQUIPE ========================================== -->
+      <section class="section" id="section-equipe">
+        <div class="container">
+          <div class="glass-card section-glass">
+            <div class="section-header">
+              <h2 class="section-title">Nossa Equipe</h2>
+              <p class="section-subtitle">Profissionais prontos para atender você</p>
+            </div>
+            <div class="team-grid" id="team-grid">
+              <!-- Renderizado via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== GALERIA ========================================== -->
+      <section class="section" id="section-galeria">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Galeria</h2>
+            <p class="section-subtitle">Veja nosso trabalho</p>
+          </div>
+          <div class="gallery-grid" id="gallery-grid">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== DEPOIMENTOS ========================================== -->
+      <section class="section" id="section-depoimentos">
+        <div class="container">
+          <div class="glass-card section-glass">
+            <div class="section-header">
+              <h2 class="section-title">Depoimentos</h2>
+              <p class="section-subtitle">O que nossos clientes dizem</p>
+            </div>
+            <div class="testimonials-grid" id="testimonials-grid">
+              <!-- Renderizado via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== HORÁRIOS ========================================== -->
+      <section class="section" id="section-horarios">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Horário de Funcionamento</h2>
+          </div>
+          <div class="glass-card">
+            <table class="hours-table" id="hours-table">
+              <!-- Renderizado via JS -->
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== INFORMAÇÕES / MAPA ========================================== -->
+      <section class="section" id="section-info">
+        <div class="container">
+          <div class="glass-card section-glass">
+            <div class="section-header">
+              <h2 class="section-title">Localização</h2>
+            </div>
+            <div class="info-layout">
+              <div class="info-details">
+                <div class="info-item">
+                  <div class="info-icon"><i data-lucide="map-pin"></i></div>
+                  <div class="info-text">
+                    <h4>Endereço</h4>
+                    <p id="info-address">-</p>
+                  </div>
+                </div>
+                <div class="info-item">
+                  <div class="info-icon"><i data-lucide="phone"></i></div>
+                  <div class="info-text">
+                    <h4>Telefone / WhatsApp</h4>
+                    <p id="info-phone">-</p>
+                  </div>
+                </div>
+              </div>
+              <div class="map-wrapper glass-card map-embed" id="map-embed">
+                <!-- Mapa renderizado via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== REDES SOCIAIS ========================================== -->
+      <section class="section" id="section-social">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Redes Sociais</h2>
+          </div>
+          <div class="social-links-grid" id="social-links-container">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ========================================== FOOTER ========================================== -->
+    <footer class="footer-custom">
+      <div class="container footer-container">
+        <p class="footer-logo" id="footer-logo-text">VitrineDesk</p>
+        <p class="footer-copyright text-muted">© <span id="footer-year"></span> Todos os direitos reservados</p>
+      </div>
+    </footer>
+
+    <!-- ========================================== WHATSAPP FLOAT ========================================== -->
+    <a class="whatsapp-float-btn bounce" id="whatsapp-float" href="#" target="_blank" rel="noopener">
+      <i data-lucide="message-circle"></i>
+    </a>
+
+    <!-- ========================================== MOBILE BOTTOM NAV ========================================== -->
+    <nav class="mobile-bottom-nav" id="bottom-nav">
+      <button class="mobile-nav-item active" data-target="section-servicos">
+        <i data-lucide="scissors" class="mobile-nav-icon"></i>
+        <span>Serviços</span>
+      </button>
+      <button class="mobile-nav-item" data-target="section-equipe">
+        <i data-lucide="users" class="mobile-nav-icon"></i>
+        <span>Equipe</span>
+      </button>
+      <button class="mobile-nav-item" data-target="section-horarios">
+        <i data-lucide="clock" class="mobile-nav-icon"></i>
+        <span>Horários</span>
+      </button>
+      <button class="mobile-nav-item" data-action="openClientArea">
+        <i data-lucide="calendar-check" class="mobile-nav-icon"></i>
+        <span>Agenda</span>
+      </button>
+    </nav>
+
+    <!-- Modal Termos de Uso -->
+    <div id="modal-termos" class="modal-overlay flex-center">
+      <div class="modal-content glass-card modal-termos-content">
+        <span class="close-btn" data-close-modal>&times;</span>
+        <h3 class="modal-termos-title">Termos de Uso e Responsabilidade</h3>
+        <div id="termos-conteudo" class="modal-termos-text">
+          Carregando termos...
+        </div>
+        <div class="text-right mt-3">
+          <button class="btn btn-primary" data-action="closeTermos">Entendi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Auth, Modal Area Cliente, Bookings, etc (MANTIDOS E ENVELOPADOS NO MESMO ESTILO) -->
+  <div class="modal-overlay" id="booking-modal">
+    <div class="modal-content glass-modal booking-modal-content">
+
+      <!-- Premium Header com Botões de Ação -->
+      <div class="booking-top-nav">
+        <button class="btn-icon-circular hidden" id="btn-back-booking" title="Voltar"><i
+            data-lucide="arrow-left"></i></button>
+        <div class="booking-progress-pill">
+          <span class="pulse-dot"></span> Etapa <span id="current-step-text">1</span> de 5
+        </div>
+        <button class="btn-icon-circular" data-action="closeBooking" title="Fechar"><i data-lucide="x"></i></button>
+      </div>
+
+      <!-- Informações do Serviço em Destaque -->
+      <div class="booking-service-hero">
+        <h3 class="bsh-title" id="booking-service-name">Nome do Serviço</h3>
+        <div class="bsh-meta">
+          <span class="bsh-price" id="booking-service-price">R$ 0,00</span>
+          <span class="bsh-dot">•</span>
+          <span class="bsh-duration"><i data-lucide="clock"></i> <span id="booking-service-duration">0 min</span></span>
+        </div>
+      </div>
+
+      <div class="booking-body-container">
+        <!-- Step 1: Profissionais -->
+        <div class="booking-step active" id="step-profissionais">
+          <h4 class="step-title">Com quem será o atendimento?</h4>
+          <div class="prof-grid premium-scroll" id="prof-grid">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+
+        <!-- Step 2: Data -->
+        <div class="booking-step" id="step-data">
+          <h4 class="step-title">Escolha a data ideal</h4>
+          <div class="calendar-wrapper modern-calendar">
+            <div class="calendar-header">
+              <button class="btn-icon" id="cal-prev"><i data-lucide="chevron-left"></i></button>
+              <div class="calendar-month-year" id="calendar-month-year">Mês Ano</div>
+              <button class="btn-icon" id="cal-next"><i data-lucide="chevron-right"></i></button>
+            </div>
+            <div class="calendar-days-header">
+              <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+            </div>
+            <div class="calendar-grid" id="calendar-grid">
+              <!-- Renderizado via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Horários e Extras -->
+        <div class="booking-step" id="step-horarios">
+
+          <h4 class="step-title mt-4">Qual o melhor horário?</h4>
+          <div class="time-slots modern-slots premium-scroll" id="time-slots-grid">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+
+
+        <!-- Step 4: Adicionais -->
+        <div class="booking-step" id="step-extras">
+          <h4 class="step-title">Deseja turbinar seu atendimento?</h4>
+          <div class="extras-list" id="extras-list">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+
+        <!-- Step 5: Resumo e Cupom -->
+        <div class="booking-step" id="step-resumo">
+          <h4 class="step-title">Quase lá! Confira os detalhes</h4>
+
+          <div class="booking-summary-ticket" id="booking-summary">
+            <!-- Renderizado via JS -->
+          </div>
+
+          <div class="coupon-wrapper mt-3">
+            <div class="modern-input-group">
+              <i data-lucide="tag" class="input-icon"></i>
+              <input type="text" id="coupon-code" class="text-uppercase" placeholder="Tem um cupom de desconto?">
+              <button class="btn-apply-coupon" id="btn-apply-coupon">Aplicar</button>
+            </div>
+            <div id="coupon-message" class="coupon-msg"></div>
+          </div>
+
+          <div class="modern-input-group mt-3 note-group">
+            <i data-lucide="message-square" class="input-icon align-top"></i>
+            <textarea id="booking-notes" rows="2"
+              placeholder="Alguma observação para o profissional? (opcional)"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer / Botões Finais -->
+      <div class="modal-footer booking-footer modern-footer">
+        <!-- Next button logic is hidden as it auto-advances, but we keep the structure -->
+        <button class="btn btn-primary btn-hidden hidden" id="btn-next-booking">Continuar</button>
+        <button class="btn btn-glow btn-primary hidden" id="btn-submit-booking">
+          Confirmar Agendamento <i data-lucide="check-circle"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- Modal Auth (Login/Register) -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-content glass-card modal-auth-width">
+
+      <!-- Botão Fechar Absoluto (Canto Superior Direito) -->
+      <button class="btn-close-absolute" data-close-auth><i data-lucide="x"></i></button>
+
+      <!-- Toggle Login / Cadastro (Pill) -->
+      <div class="auth-toggle-wrapper mt-2 mb-4">
+        <div class="auth-toggle">
+          <button class="auth-tab active" data-tab="login">Entrar</button>
+          <button class="auth-tab" data-tab="register">Criar Conta</button>
+          <div class="auth-toggle-slider"></div>
+        </div>
+      </div>
+
+      <div class="auth-form-panel active" id="auth-login">
+        <form id="form-login" novalidate>
+          <div class="input-group">
+            <input type="email" id="login-email" required autocomplete="email">
+            <label>E-mail</label>
+            <span class="validation-icon success-icon"><i data-lucide="check-circle"></i></span>
+            <span class="validation-icon error-icon"><i data-lucide="x-circle"></i></span>
+          </div>
+          <div class="input-group">
+            <input type="password" id="login-senha" required autocomplete="current-password" minlength="6">
+            <label>Senha</label>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-glow mt-2 py-3 text-md font-medium">
+            Acessar Minha Conta <i data-lucide="arrow-right" class="icon-sm"></i>
+          </button>
+        </form>
+      </div>
+
+      <div class="auth-form-panel" id="auth-register">
+        <form id="form-register" novalidate>
+          <div class="input-group mb-3">
+            <input type="text" id="register-nome" required autocomplete="name">
+            <label>Nome completo</label>
+          </div>
+          <div class="input-group mb-3">
+            <input type="email" id="register-email" required autocomplete="email">
+            <label>E-mail</label>
+            <span class="validation-icon success-icon"><i data-lucide="check-circle"></i></span>
+            <span class="validation-icon error-icon"><i data-lucide="x-circle"></i></span>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" id="register-senha" required autocomplete="new-password" minlength="6">
+            <label>Criar Senha (mín. 6)</label>
+          </div>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div class="input-group mb-0">
+              <input type="tel" id="register-telefone" data-mask="telefone" autocomplete="tel"
+                placeholder="(11) 90000-0000" required minlength="14">
+              <label>WhatsApp</label>
+              <span class="validation-icon success-icon"><i data-lucide="check-circle"></i></span>
+              <span class="validation-icon error-icon"><i data-lucide="x-circle"></i></span>
+            </div>
+            <div class="input-group mb-0">
+              <input type="text" id="register-cpf" data-mask="cpf" maxlength="14" required placeholder="000.000.000-00">
+              <label>CPF</label>
+              <span class="validation-icon success-icon"><i data-lucide="check-circle"></i></span>
+              <span class="validation-icon error-icon"><i data-lucide="x-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group flex align-center gap-3 mb-5 mt-4">
+            <input type="checkbox" id="register-termos" required class="checkbox-modern">
+            <label for="register-termos" class="text-sm text-secondary cursor-pointer">
+              Aceito os <a href="#" id="link-termos-uso" class="text-primary font-medium">Termos de Uso</a>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-glow py-3 text-md font-medium">
+            Finalizar Cadastro <i data-lucide="check" class="icon-sm"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ========================================== DRAWER AREA DO CLIENTE ========================================== -->
+  <div class="drawer-overlay" id="client-area-drawer">
+    <div class="drawer-content glass-card">
+      <div class="drawer-header">
+        <h3 class="drawer-title">Área do Cliente</h3>
+        <button class="btn-icon-circular" data-close-drawer title="Fechar"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="drawer-tabs">
+        <button class="drawer-tab active" data-target="tab-dados">Meus Dados</button>
+        <button class="drawer-tab" data-target="tab-agendamentos">Agendamentos</button>
+        <div class="drawer-tab-slider"></div>
+      </div>
+
+      <div class="drawer-body premium-scroll">
+        <!-- Aba de Dados do Cliente -->
+        <div class="drawer-panel active" id="tab-dados">
+          <div class="client-profile-header mb-4 flex flex-column align-center text-center">
+            <div class="client-avatar" id="client-avatar-wrapper" style="cursor: pointer; position: relative;">
+              <i data-lucide="user" id="client-avatar-icon"></i>
+              <img id="client-avatar-img" class="hidden" alt="Avatar">
+              <div class="client-avatar-edit-overlay">
+                <i data-lucide="camera"></i>
+              </div>
+              <input type="file" id="client-avatar-upload" hidden accept="image/jpeg, image/png, image/webp">
+            </div>
+            <h4 class="client-name mt-2" id="client-name-display">Carregando...</h4>
+            <span class="client-status text-sm text-muted" id="client-store-display">Cliente VitrineDesk</span>
+          </div>
+
+          <div class="client-info-form mt-4">
+            <form id="form-update-profile" novalidate>
+              <div class="input-group">
+                <input type="text" id="drawer-client-name" required autocomplete="name">
+                <label>Nome Completo</label>
+              </div>
+              <div class="input-group">
+                <input type="email" id="drawer-client-email" required autocomplete="email">
+                <label>E-mail</label>
+              </div>
+              <div class="input-group">
+                <input type="tel" id="drawer-client-phone" data-mask="telefone" autocomplete="tel" placeholder="(11) 90000-0000" required minlength="14">
+                <label>WhatsApp</label>
+              </div>
+              <div class="input-group input-readonly">
+                <input type="text" id="drawer-client-cpf" data-mask="cpf" readonly>
+                <label>CPF</label>
+              </div>
+              
+              <div class="drawer-actions mt-4">
+                <button type="submit" class="btn btn-primary btn-block mb-3" id="btn-save-drawer-profile">
+                  <i data-lucide="save"></i> Salvar Alterações
+                </button>
+                <button type="button" class="btn btn-danger btn-block btn-outline" data-action="logout">
+                  <i data-lucide="log-out"></i> Sair da Minha Conta
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Aba de Agendamentos -->
+        <div class="drawer-panel" id="tab-agendamentos">
+          <div class="appointment-filters">
+            <button class="filter-btn active" data-filter="todos">Todos</button>
+            <button class="filter-btn" data-filter="confirmed">Confirmados</button>
+            <button class="filter-btn" data-filter="pending">Pendentes</button>
+            <button class="filter-btn" data-filter="completed">Concluídos</button>
+            <button class="filter-btn" data-filter="cancelled">Cancelados</button>
+          </div>
+          <div id="appointments-list" class="appointments-list mt-3">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="js/utils.js?v=20260720-8"></script>
+  <script type="module" src="js/auth.js?v=20260720-8"></script>
+  <script type="module" src="js/booking.js?v=20260720-8"></script>
+  <script type="module" src="js/agendamentos.js?v=20260720-8"></script>
+  <script type="module" src="js/app.js?v=20260720-8"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+  <script>
+    try { document.getElementById('footer-year').textContent = new Date().getFullYear(); } catch (e) { }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+</body>
+
+</html>
