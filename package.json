@@ -1,0 +1,20 @@
+{
+    "name": "vitrinedesk",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Plataforma SaaS multi-tenant para agendamentos",
+    "dependencies": {
+        "stripe": "^14.0.0"
+    },
+    "scripts": {
+        "dev": "vercel dev",
+        "serve": "npx serve -c serve.json",
+        "deploy": "vercel --prod"
+    },
+    "keywords": [
+        "saas",
+        "agendamento",
+        "supabase"
+    ],
+    "license": "MIT"
+}
