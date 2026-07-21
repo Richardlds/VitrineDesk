@@ -124,6 +124,7 @@ export function renderServiceFilters() {
 function filtrarServicos(categoria) {
   const cards = document.querySelectorAll('.service-card');
   cards.forEach(card => {
+    // eslint-disable-next-line no-useless-assignment
     let serviceData = {};
     try {
       serviceData = JSON.parse(card.dataset.service || '{}');
