@@ -17,16 +17,23 @@ export async function renderMap(tenant) {
 
       if (typeof endereco === 'object') {
         const parts = [endereco.rua, endereco.numero, endereco.bairro, endereco.cidade, endereco.estado].filter(Boolean);
-        addressEl.innerHTML = parts.join(', ');
+        addressEl.textContent = parts.join(', ');
       } else {
-        addressEl.innerHTML = endereco;
+        addressEl.textContent = endereco;
       }
       
       if (tenant.social?.google_maps) {
-          let addressHtml = addressEl.innerHTML;
-          addressHtml += `<br><a href="${tenant.social.google_maps}" target="_blank" class="btn btn-primary map-btn"><i data-lucide="map" class="icon-sm"></i> Abrir no Maps</a>`;
-          addressEl.innerHTML = addressHtml;
-          if (window.lucide) window.lucide.createIcons({ root: addressEl });
+          const mapUrl = tenant.social.google_maps;
+          if (!mapUrl.toLowerCase().trim().startsWith('javascript:')) {
+              addressEl.appendChild(document.createElement('br'));
+              const mapBtn = document.createElement('a');
+              mapBtn.href = mapUrl;
+              mapBtn.target = '_blank';
+              mapBtn.className = 'btn btn-primary map-btn';
+              mapBtn.innerHTML = '<i data-lucide="map" class="icon-sm"></i> Abrir no Maps';
+              addressEl.appendChild(mapBtn);
+              if (window.lucide) window.lucide.createIcons({ root: addressEl });
+          }
       }
     }
 
