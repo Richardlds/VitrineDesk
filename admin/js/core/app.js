@@ -34,6 +34,7 @@ class AdminApp {
         this.initSidebar();
         await this.initUserProfile();
         this.router = new Router(this.state);
+        this.initGlobalSearch();
         this.initLogout();
     }
 
@@ -910,6 +911,117 @@ class AdminApp {
         };
         checkUnreadNotifications();
 
+    }
+
+    initGlobalSearch() {
+        const searchInput = document.getElementById('global-search-input');
+        const searchResults = document.getElementById('global-search-results');
+        if (!searchInput || !searchResults) return;
+
+        // Base de Telas do Sistema
+        const systemPagesIndex = [
+            { title: "Dashboard", route: "principal/dashboard", keywords: "inicio home relatorio painel", icon: "layout-dashboard" },
+            { title: "Agendamentos", route: "principal/agendamentos", keywords: "agenda horario marcar", icon: "calendar" },
+            { title: "Agenda Diária", route: "principal/agenda_diaria", keywords: "hoje dia calendario", icon: "calendar-clock" },
+            { title: "Serviços", route: "cadastros/servicos", keywords: "procedimentos tratamentos precos", icon: "scissors" },
+            { title: "Equipe", route: "cadastros/equipe", keywords: "funcionarios barbeiros cabeleireiros profs", icon: "users" },
+            { title: "Clientes", route: "cadastros/clientes", keywords: "fichas contatos", icon: "contact" },
+            { title: "Cupons", route: "crm_vendas/cupons", keywords: "desconto promocao", icon: "ticket" },
+            { title: "Marketing", route: "crm_vendas/marketing", keywords: "divulgacao campanhas", icon: "megaphone" },
+            { title: "Blacklist", route: "crm_vendas/blacklist", keywords: "bloqueados banidos", icon: "shield-ban" },
+            { title: "Relatórios", route: "gestao/relatorios", keywords: "graficos dados financeiro", icon: "bar-chart-3" },
+            { title: "Comissões", route: "gestao/comissoes", keywords: "pagamentos porcentagem", icon: "coins" },
+            { title: "Metas", route: "gestao/metas", keywords: "objetivos", icon: "target" },
+            { title: "Fidelidade", route: "gestao/fidelidade", keywords: "pontos recompensas", icon: "gift" },
+            { title: "Minhas Filiais", route: "cadastros/filiais", keywords: "lojas unidades matriz", icon: "store" },
+            { title: "Configurações", route: "sistema/configuracoes", keywords: "ajustes preferencias", icon: "settings" },
+            { title: "Personalização", route: "sistema/personalizacao", keywords: "cores tema logo design visual", icon: "palette" },
+            { title: "Usuários", route: "sistema/usuarios", keywords: "acessos permissoes gerentes", icon: "user-cog" },
+            { title: "Suporte", route: "sistema/suporte", keywords: "ajuda chamados whatsapp ticket", icon: "life-buoy" }
+        ];
+
+        // Atalho Ctrl+K para focar a barra
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.add('d-none');
+            }
+        });
+
+        // Focar input reabre o dropdown se tiver texto
+        searchInput.addEventListener('focus', () => {
+            if (searchInput.value.trim().length > 0) {
+                searchResults.classList.remove('d-none');
+            }
+        });
+
+        // Lógica Principal de Busca
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim().toLowerCase();
+            
+            // Disparar evento customizado globalmente para módulos locais (ex: Cliente table)
+            const event = new CustomEvent('globalSearch', { detail: { term: searchTerm } });
+            window.dispatchEvent(event);
+
+            if (searchTerm.length === 0) {
+                searchResults.classList.add('d-none');
+                searchResults.innerHTML = '';
+                return;
+            }
+
+            // Filtrar as funções do sistema
+            const matchedPages = systemPagesIndex.filter(page => {
+                return page.title.toLowerCase().includes(searchTerm) || 
+                       page.keywords.includes(searchTerm) ||
+                       page.route.toLowerCase().includes(searchTerm);
+            });
+
+            // Renderizar Resultados
+            searchResults.innerHTML = '';
+            
+            if (matchedPages.length > 0) {
+                // Título de Seção "Telas / Funções"
+                searchResults.innerHTML += `
+                    <div class="px-3 py-2 text-xs font-bold text-secondary uppercase bg-placeholder border-bottom-dashed">
+                        Telas do Sistema
+                    </div>
+                `;
+
+                matchedPages.forEach(page => {
+                    // Ignora menus restritos pelo plano (Router.js usa window.allowedMenus)
+                    if (window.allowedMenus && window.allowedMenus[page.route] === false) return;
+
+                    const itemHtml = `
+                        <div class="search-result-item flex align-center gap-3 px-3 py-2 cursor-pointer hover-bg" data-route="${page.route}" onclick="document.querySelector('[data-tab=\\'${page.route}\\']')?.click(); document.getElementById('global-search-results').classList.add('d-none'); document.getElementById('global-search-input').value = '';">
+                            <i data-lucide="${page.icon}" class="icon-sm text-primary"></i>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-primary m-0">${page.title}</p>
+                                <p class="text-xs text-secondary m-0">Ir para ${page.title}</p>
+                            </div>
+                        </div>
+                    `;
+                    searchResults.innerHTML += itemHtml;
+                });
+            } else {
+                searchResults.innerHTML = `
+                    <div class="p-4 text-center text-secondary text-sm">
+                        Nenhuma tela encontrada para "<strong>${searchTerm}</strong>".<br>
+                        A busca em cadastros locais (ex: Clientes) já foi acionada.
+                    </div>
+                `;
+            }
+
+            if (window.lucide) window.lucide.createIcons();
+            searchResults.classList.remove('d-none');
+            searchResults.classList.add('flex'); // Garante formato de coluna se d-none for removido
+        });
     }
 
     initLogout() {

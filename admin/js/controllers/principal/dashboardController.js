@@ -77,8 +77,16 @@ export class dashboardController {
 
             this.renderKpis(kpis);
             
-            // Carregar agendamentos da lista separadamente usando o filtro
-            await this.loadAppointmentsForDate(tenantId, this.currentDateFilter);
+            // Carregar rankings de Profissionais e Clientes baseado no filtro selecionado
+            let rankingStartDate = firstDay;
+            const filterEl = document.getElementById('dash-ranking-filter');
+            if (filterEl) {
+                const days = parseInt(filterEl.value);
+                const dateRank = new Date();
+                dateRank.setDate(dateRank.getDate() - days);
+                rankingStartDate = dateRank.toISOString();
+            }
+            await this.loadRankings(tenantId, rankingStartDate, activeBranchId);
             
             // Carregar os próximos clientes da equipe
             await this.loadTeamNextAppointments(tenantId);
@@ -162,101 +170,126 @@ export class dashboardController {
         kpiContainer.innerHTML = html;
     }
 
-    async loadAppointmentsForDate(tenantId, dateStr) {
+    async loadRankings(tenantId, firstDay, activeBranchId) {
         try {
-            const listContainer = document.getElementById('upcoming-appointments-list');
-            if (listContainer) listContainer.innerHTML = `<div class="text-center text-secondary py-3"><i data-lucide="loader" class="animate-spin icon-sm"></i> Carregando...</div>`;
-            if (window.lucide) window.lucide.createIcons();
-            const activeBranchId = localStorage.getItem('active_branch_id');
+            const profContainer = document.getElementById('ranking-profissionais-list');
+            const clientContainer = document.getElementById('ranking-clientes-list');
 
+            if (profContainer) profContainer.innerHTML = `<div class="text-center text-secondary py-2"><i data-lucide="loader" class="animate-spin icon-sm"></i></div>`;
+            if (clientContainer) clientContainer.innerHTML = `<div class="text-center text-secondary py-2"><i data-lucide="loader" class="animate-spin icon-sm"></i></div>`;
+            if (window.lucide) window.lucide.createIcons();
+
+            // Buscar agendamentos concluídos do mês para gerar o ranking real
             let query = supabase
                 .from('appointments')
-                .select('id, appointment_time, client_name, client_phone, services(name), profissionais(nome, foto_url)')
+                .select('client_name, client_phone, profissionais(nome, foto_url)')
                 .eq('tenant_id', tenantId)
-                .eq('appointment_date', dateStr)
-                .order('appointment_time', { ascending: true });
+                .gte('created_at', firstDay)
+                .eq('status', 'completed'); // Conta apenas serviços que de fato aconteceram
 
             if (activeBranchId) {
                 query = query.eq('branch_id', activeBranchId);
             }
 
             const { data: appts, error } = await query;
-
             if (error) throw error;
 
-            const mappedAppointments = (appts || []).map(a => ({
-                id: a.id,
-                hora: a.appointment_time ? a.appointment_time.substring(0, 5) : '--:--',
-                cliente: a.client_name || 'Desconhecido',
-                telefone: a.client_phone || 'Sem contato',
-                servico: (a.services && a.services.name) ? a.services.name : 'Serviço Padrão',
-                cor: (a.services && a.services.color) ? a.services.color : 'var(--color-primary)',
-                profissional: (a.profissionais && a.profissionais.nome) ? a.profissionais.nome : 'Sem Profissional',
-                profissionalAvatar: (a.profissionais && a.profissionais.foto_url) ? a.profissionais.foto_url : null
-            }));
+            // Dicionários para agregação
+            const profStats = {};
+            const clientStats = {};
 
-            this.renderAppointments(mappedAppointments);
-        } catch (e) {
-            console.error("Erro ao carregar agendamentos do dia", e);
-            this.renderAppointments([]);
-        }
-    }
+            (appts || []).forEach(apt => {
+                // Profissionais
+                if (apt.profissionais && apt.profissionais.nome) {
+                    const pName = apt.profissionais.nome;
+                    const pAvatar = apt.profissionais.foto_url;
+                    if (!profStats[pName]) profStats[pName] = { count: 0, avatar: pAvatar };
+                    profStats[pName].count++;
+                }
 
-    renderAppointments(appointments) {
-        const listContainer = document.getElementById('upcoming-appointments-list');
-        if (!listContainer) return;
+                // Clientes
+                if (apt.client_name) {
+                    const cName = apt.client_name;
+                    const cPhone = apt.client_phone || '';
+                    if (!clientStats[cName]) clientStats[cName] = { count: 0, phone: cPhone };
+                    clientStats[cName].count++;
+                }
+            });
 
-        if (appointments.length === 0) {
-            listContainer.innerHTML = `<p class="text-secondary text-center py-3">Nenhum agendamento para hoje.</p>`;
-            return;
-        }
+            // Ordenar e pegar os Top 3
+            const topProfs = Object.keys(profStats)
+                .map(name => ({ name, ...profStats[name] }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 3);
 
-        let html = '';
-        appointments.forEach((apt, index) => {
-            const orderLabel = `${index + 1}º`;
-            const avatarHtml = apt.profissionalAvatar 
-                ? `<img src="${apt.profissionalAvatar}" style="width:20px; height:20px; border-radius:50%; object-fit:cover; border: 1px solid var(--color-border);" title="${apt.profissional}">`
-                : `<div style="width:20px; height:20px; border-radius:50%; background:var(--color-primary-light); color:var(--color-primary); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold;" title="${apt.profissional}">${apt.profissional.substring(0,2).toUpperCase()}</div>`;
-            
-            // Format phone number nicely
-            let phoneFmt = apt.telefone.replace(/\D/g, '');
-            if(phoneFmt.length === 11) {
-                phoneFmt = `(${phoneFmt.substring(0,2)}) ${phoneFmt.substring(2,7)}-${phoneFmt.substring(7,11)}`;
-            } else {
-                phoneFmt = apt.telefone;
+            const topClients = Object.keys(clientStats)
+                .map(name => ({ name, ...clientStats[name] }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 3);
+
+            // Renderizar Profissionais
+            if (profContainer) {
+                if (topProfs.length === 0) {
+                    profContainer.innerHTML = `<p class="text-xs text-secondary mb-0">Nenhum dado suficiente neste mês.</p>`;
+                } else {
+                    let pHTml = '';
+                    topProfs.forEach((p, idx) => {
+                        const avatarHtml = p.avatar 
+                            ? `<img src="${p.avatar}" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border: 1px solid var(--color-border);">`
+                            : `<div style="width:32px; height:32px; border-radius:50%; background:var(--color-primary-light); color:var(--color-primary); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold;">${p.name.substring(0,2).toUpperCase()}</div>`;
+                        
+                        pHTml += `
+                            <div class="flex justify-between align-center p-2 bg-placeholder rounded-md mb-1">
+                                <div class="flex align-center gap-3">
+                                    <span class="text-xs font-bold text-secondary" style="width: 15px;">${idx + 1}º</span>
+                                    ${avatarHtml}
+                                    <span class="text-sm font-medium text-primary">${p.name}</span>
+                                </div>
+                                <span class="badge bg-primary-light text-primary text-xs">${p.count} serv.</span>
+                            </div>
+                        `;
+                    });
+                    profContainer.innerHTML = pHTml;
+                }
             }
 
-            html += `
-                <div class="dash-apt-card" data-id="${apt.id}" style="border-left: 4px solid ${apt.cor}; position: relative; padding: 12px 16px;">
-                    <div class="dash-apt-time" style="background: transparent; color: var(--color-text-primary); border-radius: 8px; padding: 0; min-width: 50px; border: 1px solid var(--color-border);">
-                        <strong style="font-size: 1rem; color: ${apt.cor}; padding: 6px 0; display: block; text-align: center; border-bottom: 1px solid var(--color-border); width: 100%;">${apt.hora}</strong>
-                        <span style="display: block; text-align: center; font-size: 0.65rem; padding: 4px 0; color: var(--color-text-secondary); font-weight: bold;">${orderLabel}</span>
-                    </div>
-                    
-                    <div class="dash-apt-details" style="display: flex; flex-direction: column; gap: 4px;">
-                        <div class="dash-apt-title" style="font-size: 1.05rem; margin-bottom: 0;">${apt.cliente}</div>
-                        <div class="flex gap-3 mt-1" style="flex-wrap: wrap;">
-                            <div class="dash-apt-info-row" style="color: var(--color-text-secondary); font-size: 0.8rem; display: flex; align-items: center; gap: 4px;">
-                                <i data-lucide="phone" style="width:12px; height:12px;"></i> ${phoneFmt}
-                            </div>
-                            <div class="dash-apt-info-row" style="color: var(--color-text-secondary); font-size: 0.8rem; display: flex; align-items: center; gap: 4px;">
-                                <i data-lucide="scissors" style="width:12px; height:12px;"></i> 
-                                <span style="background: ${apt.cor}20; color: ${apt.cor}; padding: 2px 6px; border-radius: 4px; font-weight: 500;">${apt.servico}</span>
-                            </div>
-                        </div>
-                    </div>
+            // Renderizar Clientes
+            if (clientContainer) {
+                if (topClients.length === 0) {
+                    clientContainer.innerHTML = `<p class="text-xs text-secondary mb-0">Nenhum dado suficiente neste mês.</p>`;
+                } else {
+                    let cHtml = '';
+                    topClients.forEach((c, idx) => {
+                        let phoneFmt = c.phone.replace(/\D/g, '');
+                        if(phoneFmt.length === 11) phoneFmt = `(${phoneFmt.substring(0,2)}) ${phoneFmt.substring(2,7)}-${phoneFmt.substring(7,11)}`;
+                        else phoneFmt = c.phone;
 
-                    <div class="dash-apt-action flex align-center gap-2">
-                        <div class="flex align-center gap-2 bg-placeholder px-2 py-1 rounded" style="font-size: 0.8rem; color: var(--color-text-secondary);">
-                            ${avatarHtml}
-                            <span class="d-none d-sm-inline">${apt.profissional.split(' ')[0]}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
+                        cHtml += `
+                            <div class="flex justify-between align-center p-2 bg-placeholder rounded-md mb-1">
+                                <div class="flex align-center gap-3">
+                                    <span class="text-xs font-bold text-secondary" style="width: 15px;">${idx + 1}º</span>
+                                    <div class="flex flex-column">
+                                        <span class="text-sm font-medium text-primary">${c.name}</span>
+                                        <span class="text-xs text-secondary">${phoneFmt}</span>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success-light text-success text-xs">${c.count} idas</span>
+                            </div>
+                        `;
+                    });
+                    clientContainer.innerHTML = cHtml;
+                }
+            }
 
-        listContainer.innerHTML = html;
+            if (window.lucide) window.lucide.createIcons();
+            
+        } catch (e) {
+            console.error("Erro ao carregar rankings", e);
+            const profContainer = document.getElementById('ranking-profissionais-list');
+            const clientContainer = document.getElementById('ranking-clientes-list');
+            if(profContainer) profContainer.innerHTML = `<p class="text-xs text-secondary">Erro ao carregar</p>`;
+            if(clientContainer) clientContainer.innerHTML = `<p class="text-xs text-secondary">Erro ao carregar</p>`;
+        }
     }
 
     async loadTeamNextAppointments(tenantId) {
@@ -555,13 +588,18 @@ export class dashboardController {
             });
         }
         
-        const filterDateInput = document.getElementById('dash-filter-date');
-        if (filterDateInput) {
-            filterDateInput.value = this.currentDateFilter;
-            filterDateInput.addEventListener('change', async (e) => {
-                this.currentDateFilter = e.target.value;
+        const rankingFilterSelect = document.getElementById('dash-ranking-filter');
+        if (rankingFilterSelect) {
+            rankingFilterSelect.addEventListener('change', async (e) => {
+                const days = parseInt(e.target.value);
                 const tenantId = await getCurrentTenantId();
-                if (tenantId) await this.loadAppointmentsForDate(tenantId, this.currentDateFilter);
+                const activeBranchId = localStorage.getItem('active_branch_id');
+                
+                const date = new Date();
+                date.setDate(date.getDate() - days);
+                const startDateStr = date.toISOString();
+                
+                if (tenantId) await this.loadRankings(tenantId, startDateStr, activeBranchId);
             });
         }
 

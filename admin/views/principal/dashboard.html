@@ -26,25 +26,52 @@
 
     <!-- Main Area: Agendamentos & Próximos da Equipe -->
     <div class="grid grid-lg-2 gap-4" id="dashboard-main-area">
-        <!-- Coluna 1: Agendamentos do Dia -->
+        <!-- Coluna 1: Ranking (Top Profissionais e Clientes) -->
         <div class="config-card mb-0 flex flex-column" style="max-height: 450px; overflow-y: auto;">
-            <div class="flex flex-column flex-sm-row justify-between align-start align-sm-center mb-3 border-bottom-dashed pb-3 gap-2 sticky top-0 bg-placeholder z-10" style="margin-top:-16px; margin-left:-16px; margin-right:-16px; padding:16px;">
-                <h3 class="text-primary text-md m-0 flex align-center gap-2">
-                    Agendamentos
-                    <i data-lucide="clock" class="text-warning icon-sm"></i>
-                </h3>
-                <input type="date" id="dash-filter-date" class="form-input bg-placeholder-dark border-none rounded-md px-2 py-1 text-primary text-sm outline-none">
+            <div class="flex flex-column flex-sm-row justify-between align-start align-sm-center mb-3 border-bottom-dashed pb-3 sticky top-0 bg-placeholder z-10 gap-2" style="margin-top:-16px; margin-left:-16px; margin-right:-16px; padding:16px;">
+                <div>
+                    <h3 class="text-primary text-md m-0 flex align-center gap-2">
+                        Destaques
+                        <i data-lucide="award" class="text-warning icon-sm"></i>
+                    </h3>
+                    <span class="text-xs text-secondary mt-1">Quem mais realizou e agendou serviços</span>
+                </div>
+                <select id="dash-ranking-filter" class="form-input bg-placeholder-dark border-none rounded-md px-2 py-1 text-primary text-sm outline-none cursor-pointer">
+                    <option value="30" style="background: var(--color-bg-base); color: var(--color-text-primary);">Últimos 30 Dias</option>
+                    <option value="7" style="background: var(--color-bg-base); color: var(--color-text-primary);">Últimos 7 Dias</option>
+                    <option value="3" style="background: var(--color-bg-base); color: var(--color-text-primary);">Últimos 3 Dias</option>
+                </select>
             </div>
             
-            <div id="upcoming-appointments-list">
-                <!-- Skeleton rows -->
-                <div class="flex gap-3 mb-3">
-                    <div class="skeleton" style="width: 48px; height: 48px; border-radius: 50%;"></div>
-                    <div class="skeleton flex-1" style="height: 48px; border-radius: 8px;"></div>
+            <!-- Ranking de Profissionais -->
+            <div class="mb-4">
+                <h4 class="text-sm font-bold text-secondary uppercase mb-2">Top 3 Profissionais</h4>
+                <div id="ranking-profissionais-list" class="flex flex-column gap-2">
+                    <!-- Skeleton rows -->
+                    <div class="flex gap-3 align-center">
+                        <div class="skeleton" style="width: 32px; height: 32px; border-radius: 50%;"></div>
+                        <div class="skeleton flex-1" style="height: 24px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="flex gap-3 align-center">
+                        <div class="skeleton" style="width: 32px; height: 32px; border-radius: 50%;"></div>
+                        <div class="skeleton flex-1" style="height: 24px; border-radius: 4px;"></div>
+                    </div>
                 </div>
-                <div class="flex gap-3 mb-3">
-                    <div class="skeleton" style="width: 48px; height: 48px; border-radius: 50%;"></div>
-                    <div class="skeleton flex-1" style="height: 48px; border-radius: 8px;"></div>
+            </div>
+
+            <!-- Ranking de Clientes -->
+            <div>
+                <h4 class="text-sm font-bold text-secondary uppercase mb-2">Top 3 Clientes (Fieis)</h4>
+                <div id="ranking-clientes-list" class="flex flex-column gap-2">
+                    <!-- Skeleton rows -->
+                    <div class="flex gap-3 align-center">
+                        <div class="skeleton" style="width: 32px; height: 32px; border-radius: 50%;"></div>
+                        <div class="skeleton flex-1" style="height: 24px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="flex gap-3 align-center">
+                        <div class="skeleton" style="width: 32px; height: 32px; border-radius: 50%;"></div>
+                        <div class="skeleton flex-1" style="height: 24px; border-radius: 4px;"></div>
+                    </div>
                 </div>
             </div>
         </div>

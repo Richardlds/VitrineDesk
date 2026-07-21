@@ -178,6 +178,9 @@ export async function init() {
           const { openBookingModal } = await import('./booking.js');
           openBookingModal(service);
         }
+      } else if (action === 'closeBooking') {
+        const { closeBookingModal } = await import('./booking.js');
+        closeBookingModal();
       } else if (action === 'selectProfessional') {
         const { selectProfessional } = await import('./booking.js');
         selectProfessional(actionEl.getAttribute('data-prof-id'));

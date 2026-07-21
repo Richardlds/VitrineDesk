@@ -123,15 +123,25 @@
         <div class="main-wrapper">
             <header
                 class="topbar topbar-glass flex justify-between align-center px-4 py-3 border-bottom-dashed border-border w-100 gap-4">
-                <!-- Esquerda: Toggle + Título/Breadcrumb -->
-                <div class="flex align-center gap-3" style="min-width: 200px;">
+                <!-- Esquerda: Toggle + Busca -->
+                <div class="flex align-center gap-3 flex-1">
                     <button class="menu-toggle d-md-none bg-transparent border-none text-primary cursor-pointer p-1"
                         aria-label="Abrir Menu">
                         <i data-lucide="menu"></i>
                     </button>
 
-                    <div class="flex align-center gap-2">
-                        <h1 id="page-title" class="m-0 text-lg font-bold text-primary">Dashboard</h1>
+                    <div class="flex align-center gap-2 flex-1">
+                        <h1 id="page-title" class="d-none">Dashboard</h1>
+                        <!-- Nova Barra de Pesquisa Substituindo o Título -->
+                        <div class="topbar-search flex flex-1 relative" style="max-width: 400px; margin: 0; cursor: text;" id="global-search-container">
+                            <i data-lucide="search" class="icon-sm text-secondary"></i>
+                            <input type="text" id="global-search-input" class="flex-1 bg-transparent border-none outline-none text-secondary w-100" placeholder="Buscar clientes, funções ou telas..." autocomplete="off">
+                            <span class="topbar-search-kbd d-none d-sm-block">Ctrl+K</span>
+                            
+                            <!-- Dropdown de Resultados Spotlight -->
+                            <div id="global-search-results" class="absolute w-100 border border-dashed border-border rounded-md shadow-md flex-column overflow-hidden d-none" style="top: 110%; left: 0; z-index: 9999; max-height: 350px; overflow-y: auto; background-color: var(--color-bg-base);">
+                            </div>
+                        </div>
                         <!-- Filial Ativa -->
                         <div id="topbar-active-branch"
                             class="bg-primary-light text-primary text-xs font-bold px-2 py-1 rounded-md d-none flex align-center gap-1">
@@ -140,15 +150,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Centro: Barra de Pesquisa Spotlight -->
-                <div class="topbar-search d-none d-lg-flex flex-1" style="max-width: 600px;"
-                    onclick="if(window.showToast) window.showToast('Busca global em breve!', 'info')">
-                    <i data-lucide="search" class="icon-sm text-secondary"></i>
-                    <span class="flex-1 text-left text-secondary">Buscar clientes, produtos ou vendas...</span>
-                    <span class="topbar-search-kbd">Ctrl+K</span>
-                </div>
-
                 <!-- Direita: Ações Rápidas + Sino + Perfil -->
                 <div class="flex align-center gap-3">
                 

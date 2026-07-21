@@ -3,6 +3,7 @@
    ========================================================================== */
 
 :root {
+    color-scheme: dark;
     /* Brand Colors (VitrineDesk Original) */
     --color-primary: #6366f1;
     --color-primary-hover: #4f46e5;
@@ -18,7 +19,7 @@
     --color-border: #222222;
 
     /* Text Colors */
-    --color-text-primary: #ffffff;
+    --color-text-primary: #f8fafc;
     --color-text-secondary: #9ca3af;
 
     /* Status Colors */
@@ -95,11 +96,14 @@ h1 {
 }
 
 #page-title {
-    font-size: 1.2rem; /* Mobile */
+    font-size: 1.2rem;
+    /* Mobile */
 }
+
 @media (min-width: 768px) {
     #page-title {
-        font-size: 1.5rem; /* Desktop */
+        font-size: 1.5rem;
+        /* Desktop */
     }
 }
 
@@ -832,7 +836,8 @@ h3 {
     position: fixed;
     bottom: var(--space-4);
     right: var(--space-4);
-    background: rgba(255, 255, 255, 0.05); /* Premium Glassmorphism */
+    background: rgba(255, 255, 255, 0.05);
+    /* Premium Glassmorphism */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     color: var(--color-text-primary);
@@ -844,6 +849,7 @@ h3 {
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: opacity 0.3s ease, transform 0.2s ease;
 }
+
 .toast-container:hover {
     transform: translateY(-2px);
     background: rgba(255, 255, 255, 0.08);
@@ -2304,7 +2310,7 @@ details.config-accordion .accordion-content {
 
 .dash-apt-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .dash-apt-time {
@@ -2377,10 +2383,13 @@ details.config-accordion .accordion-content {
     overflow-x: auto;
     padding-bottom: 10px;
     margin-bottom: 16px;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
+    /* Firefox */
 }
+
 .dash-team-filters::-webkit-scrollbar {
-    display: none; /* Chrome */
+    display: none;
+    /* Chrome */
 }
 
 .dash-team-pill {

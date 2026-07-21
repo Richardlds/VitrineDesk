@@ -3,6 +3,10 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/admingod/login",
+      "destination": "/admingod/login.html"
+    },
+    {
       "source": "/vitrinedesk/css/:match*",
       "destination": "/cliente/css/:match*"
     },

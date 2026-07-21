@@ -10,6 +10,10 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path):
         path = urllib.parse.unquote(path)
         
+        # Simula o rewrite do Vercel para a página de login do God Mode
+        if path == '/admingod/login':
+            return super().translate_path('/admingod/login.html')
+            
         # Simula o rewrite do Vercel para a página do cliente (vitrine)
         if path.startswith('/cliente/') or path.startswith('/vitrinedesk/'):
             prefix = '/cliente/' if path.startswith('/cliente/') else '/vitrinedesk/'

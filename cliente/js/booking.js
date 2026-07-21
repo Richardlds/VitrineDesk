@@ -683,6 +683,22 @@ async function submitBooking() {
       if (window.lucide) lucide.createIcons();
     }
 
+    // Verificar se o cliente foi bloqueado (Blacklist)
+    const tenantId = getTenantId();
+    try {
+      const clientCheck = await supaFetch(`/rest/v1/clientes?id=eq.${cliente.id}&select=is_blacklisted,blacklist_motivo`);
+      if (clientCheck && clientCheck.length > 0 && clientCheck[0].is_blacklisted) {
+        showToast(`Agendamento bloqueado. Motivo: ${clientCheck[0].blacklist_motivo || 'Restrição na conta'}`, 'error');
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = 'Confirmar Agendamento';
+        }
+        return;
+      }
+    } catch(err) {
+      console.error('Erro ao verificar blacklist:', err);
+    }
+
     const observacoes = document.getElementById('booking-notes')?.value?.trim() || '';
 
     const extrasTexto = bookingState.extras.length > 0
@@ -703,7 +719,7 @@ async function submitBooking() {
     }
     const totalTexto = `Total: ${formatCurrency(finalTotal)}`;
 
-    const tenantId = getTenantId();
+
 
     const appointment = {
       tenant_id: tenantId,
