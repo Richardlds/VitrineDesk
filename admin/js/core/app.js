@@ -16,10 +16,12 @@ class AdminApp {
         // Verifica se está logado no God Mode instantaneamente (localStorage)
         const impersonateId = localStorage.getItem('impersonate_tenant_id');
         if (impersonateId) {
+            const escapeHTML = (str) => str ? str.replace(/[&<>'"`]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;', '`': '&#96;' }[tag] || tag)) : '';
+            const safeImpersonateId = escapeHTML(impersonateId);
             const godBanner = document.createElement('div');
             godBanner.innerHTML = `
                 <div style="background: #dc2626; color: #fff; padding: 8px 16px; text-align: center; font-weight: bold; font-size: 14px; position: relative; z-index: 1000; display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%;">
-                    <span><i data-lucide="zap" style="width: 16px; height: 16px; margin-right: 4px;"></i> <strong>GOD MODE:</strong> Você está logado na loja (${impersonateId}). Todas as ações serão registradas como ROOT.</span>
+                    <span><i data-lucide="zap" style="width: 16px; height: 16px; margin-right: 4px;"></i> <strong>GOD MODE:</strong> Você está logado na loja (${safeImpersonateId}). Todas as ações serão registradas como ROOT.</span>
                     <button id="btn-exit-god-mode" style="background: rgba(0,0,0,0.3); border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">Sair</button>
                 </div>
             `;
@@ -94,7 +96,8 @@ class AdminApp {
                 const vencimento = t?.settings?.vencimento;
                 if (vencimento && new Date(vencimento) < new Date()) {
                     const supportWpp = mData?.support_whatsapp || '5511999999999';
-                    document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #ef4444; margin-bottom: 10px;">⚠️ Assinatura Vencida</h1><p style="color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;">O plano da sua loja expirou. Por favor, regularize sua assinatura para continuar utilizando o painel.</p><a href="https://wa.me/${supportWpp}?text=Ol%C3%A1%2C%20preciso%20regularizar%20minha%20assinatura!" target="_blank" style="margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold;">Falar com o Suporte</a>${localStorage.getItem('impersonate_tenant_id') ? `<button onclick="localStorage.removeItem('impersonate_tenant_id'); window.location.href='/admingod/'" style="margin-top: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Voltar ao God Mode</button>` : ''}</div>`;
+                    const safeSupportWpp = encodeURIComponent(supportWpp);
+                    document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #ef4444; margin-bottom: 10px;">⚠️ Assinatura Vencida</h1><p style="color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;">O plano da sua loja expirou. Por favor, regularize sua assinatura para continuar utilizando o painel.</p><a href="https://wa.me/${safeSupportWpp}?text=Ol%C3%A1%2C%20preciso%20regularizar%20minha%20assinatura!" target="_blank" style="margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold;">Falar com o Suporte</a>${localStorage.getItem('impersonate_tenant_id') ? `<button onclick="localStorage.removeItem('impersonate_tenant_id'); window.location.href='/admingod/'" style="margin-top: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Voltar ao God Mode</button>` : ''}</div>`;
                     throw new Error("Assinatura Vencida");
                 }
 
