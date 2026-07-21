@@ -368,13 +368,48 @@ export async function checkMaintenanceMode(supabase) {
             const whitelist = config.whitelist || [];
             if (!whitelist.includes(myIp)) {
                 // Bloquear acesso
-                document.body.innerHTML = `
-                    <div style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:${config.bg || "#18181b"}; color:${config.color || "#ffffff"}; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999999; font-family: sans-serif; padding: 2rem; text-align: center;">
-                        <h1 style="font-size:3rem; margin-bottom:1rem;">${config.title || "Manutenção"}</h1>
-                        <p style="font-size:1.2rem; margin-bottom:2rem; max-width:600px;">${config.msg || "Voltamos logo."}</p>
-                        ${config.time ? `<p style="font-weight:bold; font-size: 1.1rem;">Previsão de volta: ${config.time}</p>` : ""}
-                    </div>
-                `;
+                document.body.innerHTML = '';
+
+                const container = document.createElement('div');
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '100vw';
+                container.style.height = '100vh';
+                container.style.background = config.bg || "#18181b";
+                container.style.color = config.color || "#ffffff";
+                container.style.display = 'flex';
+                container.style.flexDirection = 'column';
+                container.style.alignItems = 'center';
+                container.style.justifyContent = 'center';
+                container.style.zIndex = '999999';
+                container.style.fontFamily = 'sans-serif';
+                container.style.padding = '2rem';
+                container.style.textAlign = 'center';
+
+                const title = document.createElement('h1');
+                title.style.fontSize = '3rem';
+                title.style.marginBottom = '1rem';
+                title.textContent = config.title || "Manutenção";
+                container.appendChild(title);
+
+                const msg = document.createElement('p');
+                msg.style.fontSize = '1.2rem';
+                msg.style.marginBottom = '2rem';
+                msg.style.maxWidth = '600px';
+                msg.textContent = config.msg || "Voltamos logo.";
+                container.appendChild(msg);
+
+                if (config.time) {
+                    const time = document.createElement('p');
+                    time.style.fontWeight = 'bold';
+                    time.style.fontSize = '1.1rem';
+                    time.textContent = "Previsão de volta: " + config.time;
+                    container.appendChild(time);
+                }
+
+                document.body.appendChild(container);
+
                 // Para a execução adicional se possível
                 throw new Error("Manutenção Ativa");
             }
