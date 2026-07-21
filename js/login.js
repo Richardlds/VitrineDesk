@@ -279,9 +279,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           const safeStaffData = { ...foundStaff };
           delete safeStaffData.password;
 
-          localStorage.setItem('staff_user', JSON.stringify(safeStaffData));
-          localStorage.setItem('staff_auth_expires', Date.now() + (24 * 60 * 60 * 1000));
-          localStorage.setItem('staff_tenant_id', staffTenant.id);
+          sessionStorage.setItem('staff_user', JSON.stringify(safeStaffData));
+          sessionStorage.setItem('staff_auth_expires', Date.now() + (24 * 60 * 60 * 1000));
+          sessionStorage.setItem('staff_tenant_id', staffTenant.id);
           localStorage.removeItem('impersonated_tenant_id');
           localStorage.removeItem('impersonate_tenant_id');
           resetAttempts();

@@ -28,9 +28,9 @@ export async function getCurrentTenantId() {
     }
 
     // 2. Check for Staff user
-    const staffTenantId = localStorage.getItem('staff_tenant_id');
-    const staffUserStr = localStorage.getItem('staff_user');
-    const staffExpires = localStorage.getItem('staff_auth_expires');
+    const staffTenantId = sessionStorage.getItem('staff_tenant_id');
+    const staffUserStr = sessionStorage.getItem('staff_user');
+    const staffExpires = sessionStorage.getItem('staff_auth_expires');
 
     if (staffTenantId && staffUserStr && staffExpires) {
         if (Date.now() < parseInt(staffExpires)) {
@@ -38,9 +38,9 @@ export async function getCurrentTenantId() {
             return cachedTenantId;
         } else {
             // Expired staff session
-            localStorage.removeItem('staff_tenant_id');
-            localStorage.removeItem('staff_user');
-            localStorage.removeItem('staff_auth_expires');
+            sessionStorage.removeItem('staff_tenant_id');
+            sessionStorage.removeItem('staff_user');
+            sessionStorage.removeItem('staff_auth_expires');
         }
     }
 
