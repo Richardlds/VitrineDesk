@@ -132,6 +132,7 @@ export class tenantsController {
 
         let html = '';
         filteredTenants.forEach(t => {
+            // eslint-disable-next-line no-useless-assignment
             let statusBadge = '';
             if (t.approval_status === 'approved') {
                 const venc = t.settings?.vencimento;

@@ -387,6 +387,7 @@ export class dashboardController {
         this.teamMembers.forEach(m => {
             const isActive = this.currentTeamFilter === String(m.id);
             
+            // eslint-disable-next-line no-useless-assignment
             let avatarContent = `<i data-lucide="user" style="width:12px; height:12px;"></i>`;
             if (m.foto_url) {
                 avatarContent = `<img src="${m.foto_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;

@@ -36,14 +36,16 @@ export default async function handler(req, res) {
   }
 
   switch (event.type) {
-    case 'checkout.session.completed':
+    case 'checkout.session.completed': {
       const session = event.data.object;
       console.log('Pagamento confirmado:', session.id);
       break;
-    case 'customer.subscription.deleted':
+    }
+    case 'customer.subscription.deleted': {
       const subscription = event.data.object;
       console.log('Assinatura cancelada:', subscription.id);
       break;
+    }
     default:
       console.log(`Evento não tratado: ${event.type}`);
   }

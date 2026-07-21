@@ -163,6 +163,7 @@ class AdminApp {
 
             allNavItems.forEach(item => {
                 const modId = item.getAttribute('data-tab');
+                // eslint-disable-next-line no-useless-assignment
                 let isAllowed = true;
                 // Default deny if there are plans in the system but tenant has no plan/features.
                 // If tenant has no plan_id, we can either allow or deny. Let's strictly deny by default unless overridden.
