@@ -720,7 +720,7 @@ class AdminApp {
                             badgeNotif.classList.add('badge-pop');
                         }
                         
-                        if (window.playNotificationSound) window.playNotificationSound(4);
+                        if (window.playNotificationSound) window.playNotificationSound(1);
                         if (cachedNotifs && Array.isArray(cachedNotifs)) {
                             cachedNotifs.unshift(newNotif);
                             if (drawerPanel && drawerPanel.classList.contains('open')) {
@@ -763,7 +763,7 @@ class AdminApp {
             void badgeNotif?.offsetWidth; // trigger reflow
             badgeNotif?.classList.add('badge-pop');
             
-            if (window.playNotificationSound) window.playNotificationSound(4);
+            if (window.playNotificationSound) window.playNotificationSound(1);
             
             if (cachedNotifs && Array.isArray(cachedNotifs)) {
                 cachedNotifs.unshift(newNotif);
@@ -1075,7 +1075,7 @@ class AdminApp {
 //   Global Utilities (Toasts, Prompts)
 // ==========================================================================
 
-window.playNotificationSound = function(profile = 4) {
+window.playNotificationSound = function(profile = 1) {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;

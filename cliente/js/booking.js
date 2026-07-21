@@ -686,7 +686,7 @@ async function submitBooking() {
     // Verificar se o cliente foi bloqueado (Blacklist)
     const tenantId = getTenantId();
     try {
-      const clientCheck = await supaFetch(`/rest/v1/clientes?id=eq.${cliente.id}&select=is_blacklisted,blacklist_motivo`);
+      const clientCheck = await supaFetch(`/rest/v1/clientes?id=eq.${cliente.id}&tenant_id=eq.${tenantId}&select=is_blacklisted,blacklist_motivo`);
       if (clientCheck && clientCheck.length > 0 && clientCheck[0].is_blacklisted) {
         showToast(`Agendamento bloqueado. Motivo: ${clientCheck[0].blacklist_motivo || 'Restrição na conta'}`, 'error');
         if (btnSubmit) {
