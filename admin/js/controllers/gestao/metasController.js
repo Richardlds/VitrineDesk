@@ -139,6 +139,7 @@ export class metasController {
         }
 
         const percent = meta > 0 ? Math.min((atingido / meta) * 100, 100) : 0;
+        // eslint-disable-next-line no-useless-assignment
         let colorClass = 'bg-primary';
         if (percent >= 100) colorClass = 'bg-success';
         else if (percent > 70) colorClass = 'bg-primary';
@@ -182,6 +183,7 @@ export class metasController {
             const atingido = await this.getFaturamentoReal(item.mes_ano, tenantId);
             const percent = item.valor_alvo > 0 ? (atingido / item.valor_alvo) * 100 : 0;
             
+            // eslint-disable-next-line no-useless-assignment
             let statusBadge = '';
             if (percent >= 100) {
                 statusBadge = '<span class="status-badge bg-success-light text-success">Atingida</span>';
