@@ -83,9 +83,7 @@ export class configuracoesController {
                         if (window.showToast) window.showToast('Limpando cache...', 'info');
                         if ('caches' in window) {
                             const names = await caches.keys();
-                            for (let name of names) {
-                                await caches.delete(name);
-                            }
+                            await Promise.all(names.map(name => caches.delete(name)));
                         }
                         await this.addLog('system', 'Cache global do navegador limpo com sucesso.');
                         if (window.showToast) window.showToast('Cache limpo! Recarregando...', 'success');
