@@ -16,15 +16,31 @@ class AdminApp {
         // Verifica se está logado no God Mode instantaneamente (localStorage)
         const impersonateId = localStorage.getItem('impersonate_tenant_id');
         if (impersonateId) {
-            const escapeHTML = (str) => str ? str.replace(/[&<>'"`]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;', '`': '&#96;' }[tag] || tag)) : '';
-            const safeImpersonateId = escapeHTML(impersonateId);
             const godBanner = document.createElement('div');
-            godBanner.innerHTML = `
-                <div style="background: #dc2626; color: #fff; padding: 8px 16px; text-align: center; font-weight: bold; font-size: 14px; position: relative; z-index: 1000; display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%;">
-                    <span><i data-lucide="zap" style="width: 16px; height: 16px; margin-right: 4px;"></i> <strong>GOD MODE:</strong> Você está logado na loja (${safeImpersonateId}). Todas as ações serão registradas como ROOT.</span>
-                    <button id="btn-exit-god-mode" style="background: rgba(0,0,0,0.3); border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">Sair</button>
-                </div>
-            `;
+            godBanner.style.cssText = 'background: #dc2626; color: #fff; padding: 8px 16px; text-align: center; font-weight: bold; font-size: 14px; position: relative; z-index: 1000; display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%;';
+
+            const span = document.createElement('span');
+
+            const icon = document.createElement('i');
+            icon.setAttribute('data-lucide', 'zap');
+            icon.style.cssText = 'width: 16px; height: 16px; margin-right: 4px;';
+            span.appendChild(icon);
+
+            const strong = document.createElement('strong');
+            strong.textContent = 'GOD MODE: ';
+            span.appendChild(strong);
+
+            const textNode = document.createTextNode(`Você está logado na loja (${impersonateId}). Todas as ações serão registradas como ROOT.`);
+            span.appendChild(textNode);
+
+            const btn = document.createElement('button');
+            btn.id = 'btn-exit-god-mode';
+            btn.style.cssText = 'background: rgba(0,0,0,0.3); border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;';
+            btn.textContent = 'Sair';
+
+            godBanner.appendChild(span);
+            godBanner.appendChild(btn);
+
             document.body.insertBefore(godBanner, document.body.firstChild);
 
             document.getElementById('btn-exit-god-mode').addEventListener('click', () => {
@@ -50,11 +66,32 @@ class AdminApp {
             const tenantId = await getCurrentTenantId();
             
             if (!tenantId) {
-                document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #ef4444; margin-bottom: 10px;">⚠️ Loja Não Encontrada</h1><p style="color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;">Não encontramos nenhuma loja vinculada ao seu usuário. Se você acabou de se cadastrar, ocorreu um erro na criação da loja.</p><button id="btn-logout-missing-tenant" style="margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; cursor: pointer; border: none;">Sair e Voltar ao Login</button></div>`;
-                document.getElementById('btn-logout-missing-tenant').addEventListener('click', async () => {
+                document.body.innerHTML = '';
+                const container = document.createElement('div');
+                container.style.cssText = 'height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;';
+
+                const h1 = document.createElement('h1');
+                h1.style.cssText = 'color: #ef4444; margin-bottom: 10px;';
+                h1.textContent = '⚠️ Loja Não Encontrada';
+
+                const p = document.createElement('p');
+                p.style.cssText = 'color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;';
+                p.textContent = 'Não encontramos nenhuma loja vinculada ao seu usuário. Se você acabou de se cadastrar, ocorreu um erro na criação da loja.';
+
+                const btn = document.createElement('button');
+                btn.id = 'btn-logout-missing-tenant';
+                btn.style.cssText = 'margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; cursor: pointer; border: none;';
+                btn.textContent = 'Sair e Voltar ao Login';
+                btn.addEventListener('click', async () => {
                     await supabase.auth.signOut();
                     window.location.href = '/login.html';
                 });
+
+                container.appendChild(h1);
+                container.appendChild(p);
+                container.appendChild(btn);
+                document.body.appendChild(container);
+
                 throw new Error("Tenant não encontrado");
             }
             
@@ -89,7 +126,21 @@ class AdminApp {
                 const aData = { user: sessionData?.session?.user };
 
                 if (mData?.maintenance_mode) {
-                    document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: var(--color-primary, #6366f1); margin-bottom: 10px;">🛠️ Sistema em Manutenção</h1><p style="color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;">Nossa equipe está realizando melhorias na plataforma. O painel voltará ao normal em instantes.</p></div>`;
+                    document.body.innerHTML = '';
+                    const container = document.createElement('div');
+                    container.style.cssText = 'height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;';
+
+                    const h1 = document.createElement('h1');
+                    h1.style.cssText = 'color: var(--color-primary, #6366f1); margin-bottom: 10px;';
+                    h1.textContent = '🛠️ Sistema em Manutenção';
+
+                    const p = document.createElement('p');
+                    p.style.cssText = 'color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;';
+                    p.textContent = 'Nossa equipe está realizando melhorias na plataforma. O painel voltará ao normal em instantes.';
+
+                    container.appendChild(h1);
+                    container.appendChild(p);
+                    document.body.appendChild(container);
                     throw new Error("Manutenção");
                 }
 
@@ -97,7 +148,41 @@ class AdminApp {
                 if (vencimento && new Date(vencimento) < new Date()) {
                     const supportWpp = mData?.support_whatsapp || '5511999999999';
                     const safeSupportWpp = encodeURIComponent(supportWpp);
-                    document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #ef4444; margin-bottom: 10px;">⚠️ Assinatura Vencida</h1><p style="color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;">O plano da sua loja expirou. Por favor, regularize sua assinatura para continuar utilizando o painel.</p><a href="https://wa.me/${safeSupportWpp}?text=Ol%C3%A1%2C%20preciso%20regularizar%20minha%20assinatura!" target="_blank" style="margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold;">Falar com o Suporte</a>${localStorage.getItem('impersonate_tenant_id') ? `<button onclick="localStorage.removeItem('impersonate_tenant_id'); window.location.href='/admingod/'" style="margin-top: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Voltar ao God Mode</button>` : ''}</div>`;
+                    document.body.innerHTML = '';
+
+                    const container = document.createElement('div');
+                    container.style.cssText = 'height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;';
+
+                    const h1 = document.createElement('h1');
+                    h1.style.cssText = 'color: #ef4444; margin-bottom: 10px;';
+                    h1.textContent = '⚠️ Assinatura Vencida';
+
+                    const p = document.createElement('p');
+                    p.style.cssText = 'color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;';
+                    p.textContent = 'O plano da sua loja expirou. Por favor, regularize sua assinatura para continuar utilizando o painel.';
+
+                    const a = document.createElement('a');
+                    a.href = `https://wa.me/${safeSupportWpp}?text=Ol%C3%A1%2C%20preciso%20regularizar%20minha%20assinatura!`;
+                    a.target = '_blank';
+                    a.style.cssText = 'margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold;';
+                    a.textContent = 'Falar com o Suporte';
+
+                    container.appendChild(h1);
+                    container.appendChild(p);
+                    container.appendChild(a);
+
+                    if (localStorage.getItem('impersonate_tenant_id')) {
+                        const btn = document.createElement('button');
+                        btn.style.cssText = 'margin-top: 20px; background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer;';
+                        btn.textContent = 'Voltar ao God Mode';
+                        btn.addEventListener('click', () => {
+                            localStorage.removeItem('impersonate_tenant_id');
+                            window.location.href = '/admingod/';
+                        });
+                        container.appendChild(btn);
+                    }
+
+                    document.body.appendChild(container);
                     throw new Error("Assinatura Vencida");
                 }
 
@@ -992,34 +1077,69 @@ class AdminApp {
             
             if (matchedPages.length > 0) {
                 // Título de Seção "Telas / Funções"
-                searchResults.innerHTML += `
-                    <div class="px-3 py-2 text-xs font-bold text-secondary uppercase bg-placeholder border-bottom-dashed">
-                        Telas do Sistema
-                    </div>
-                `;
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'px-3 py-2 text-xs font-bold text-secondary uppercase bg-placeholder border-bottom-dashed';
+                titleDiv.textContent = 'Telas do Sistema';
+                searchResults.appendChild(titleDiv);
 
                 matchedPages.forEach(page => {
                     // Ignora menus restritos pelo plano (Router.js usa window.allowedMenus)
                     if (window.allowedMenus && window.allowedMenus[page.route] === false) return;
 
-                    const itemHtml = `
-                        <div class="search-result-item flex align-center gap-3 px-3 py-2 cursor-pointer hover-bg" data-route="${page.route}" onclick="document.querySelector('[data-tab=\\'${page.route}\\']')?.click(); document.getElementById('global-search-results').classList.add('d-none'); document.getElementById('global-search-input').value = '';">
-                            <i data-lucide="${page.icon}" class="icon-sm text-primary"></i>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-primary m-0">${page.title}</p>
-                                <p class="text-xs text-secondary m-0">Ir para ${page.title}</p>
-                            </div>
-                        </div>
-                    `;
-                    searchResults.innerHTML += itemHtml;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'search-result-item flex align-center gap-3 px-3 py-2 cursor-pointer hover-bg';
+                    itemDiv.setAttribute('data-route', page.route);
+                    itemDiv.onclick = () => {
+                        const tab = document.querySelector(`[data-tab='${page.route}']`);
+                        if (tab) tab.click();
+                        document.getElementById('global-search-results').classList.add('d-none');
+                        document.getElementById('global-search-input').value = '';
+                    };
+
+                    const icon = document.createElement('i');
+                    icon.setAttribute('data-lucide', page.icon);
+                    icon.className = 'icon-sm text-primary';
+                    itemDiv.appendChild(icon);
+
+                    const textContainer = document.createElement('div');
+                    textContainer.className = 'flex-1';
+
+                    const titleP = document.createElement('p');
+                    titleP.className = 'text-sm font-medium text-primary m-0';
+                    titleP.textContent = page.title;
+                    textContainer.appendChild(titleP);
+
+                    const subtitleP = document.createElement('p');
+                    subtitleP.className = 'text-xs text-secondary m-0';
+                    subtitleP.textContent = `Ir para ${page.title}`;
+                    textContainer.appendChild(subtitleP);
+
+                    itemDiv.appendChild(textContainer);
+                    searchResults.appendChild(itemDiv);
                 });
             } else {
-                searchResults.innerHTML = `
-                    <div class="p-4 text-center text-secondary text-sm">
-                        Nenhuma tela encontrada para "<strong>${searchTerm}</strong>".<br>
-                        A busca em cadastros locais (ex: Clientes) já foi acionada.
-                    </div>
-                `;
+                const notFoundDiv = document.createElement('div');
+                notFoundDiv.className = 'p-4 text-center text-secondary text-sm';
+
+                const span1 = document.createElement('span');
+                span1.textContent = 'Nenhuma tela encontrada para "';
+                notFoundDiv.appendChild(span1);
+
+                const strong = document.createElement('strong');
+                strong.textContent = searchTerm;
+                notFoundDiv.appendChild(strong);
+
+                const span2 = document.createElement('span');
+                span2.textContent = '".';
+                notFoundDiv.appendChild(span2);
+
+                notFoundDiv.appendChild(document.createElement('br'));
+
+                const span3 = document.createElement('span');
+                span3.textContent = 'A busca em cadastros locais (ex: Clientes) já foi acionada.';
+                notFoundDiv.appendChild(span3);
+
+                searchResults.appendChild(notFoundDiv);
             }
 
             if (window.lucide) window.lucide.createIcons();
