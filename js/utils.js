@@ -23,10 +23,17 @@ export function showToast(message, type = 'info', onClickCallback = null) {
   };
   const iconName = icons[type] || 'info';
 
-  toast.innerHTML = `
-    <div class="toast-icon"><i data-lucide="${iconName}"></i></div>
-    <div class="toast-message">${message}</div>
-  `;
+  const iconDiv = document.createElement('div');
+  iconDiv.className = 'toast-icon';
+  iconDiv.innerHTML = `<i data-lucide="${iconName}"></i>`;
+
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'toast-message';
+  msgDiv.textContent = message;
+
+  toast.appendChild(iconDiv);
+  toast.appendChild(msgDiv);
+
   container.appendChild(toast);
   
   if (window.lucide) {
@@ -428,9 +435,9 @@ export function showPrompt(titulo, mensagem, placeholder = '') {
       const html = `
         <div class="modal-overlay" id="prompt-modal-custom" style="display:none; z-index:9999;">
           <div class="modal-content" style="max-width: 400px; padding: 24px; text-align: center;">
-            <h3 id="prompt-title" style="margin-bottom: 12px;">${titulo}</h3>
-            <p id="prompt-message" style="margin-bottom: 16px; color: var(--text-secondary);">${mensagem}</p>
-            <input type="text" id="prompt-input" class="form-control" placeholder="${placeholder}" style="margin-bottom: 24px; width: 100%;">
+            <h3 id="prompt-title" style="margin-bottom: 12px;"></h3>
+            <p id="prompt-message" style="margin-bottom: 16px; color: var(--text-secondary);"></p>
+            <input type="text" id="prompt-input" class="form-control" style="margin-bottom: 24px; width: 100%;">
             <div style="display: flex; gap: 12px; justify-content: center;">
               <button class="btn btn-secondary" id="prompt-cancel">Cancelar</button>
               <button class="btn btn-primary" id="prompt-ok">OK</button>
@@ -440,16 +447,20 @@ export function showPrompt(titulo, mensagem, placeholder = '') {
       `;
       document.body.insertAdjacentHTML('beforeend', html);
       promptModal = document.getElementById('prompt-modal-custom');
-    } else {
-      document.getElementById('prompt-title').innerText = titulo;
-      document.getElementById('prompt-message').innerText = mensagem;
-      document.getElementById('prompt-input').placeholder = placeholder;
-      document.getElementById('prompt-input').value = '';
     }
 
+    const titleEl = document.getElementById('prompt-title');
+    const msgEl = document.getElementById('prompt-message');
     const input = document.getElementById('prompt-input');
     const btnOk = document.getElementById('prompt-ok');
     const btnCancel = document.getElementById('prompt-cancel');
+
+    if (titleEl) titleEl.textContent = titulo;
+    if (msgEl) msgEl.textContent = mensagem;
+    if (input) {
+      input.placeholder = placeholder;
+      input.value = '';
+    }
 
     const closeModal = (result) => {
       promptModal.style.display = 'none';
