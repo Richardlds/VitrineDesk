@@ -507,11 +507,11 @@ export class tenantsController {
                                                 'clientes', 'services', 'profissionais', 'branches'
                                             ];
                                             
-                                            for (const table of tablesToClean) {
+                                            await Promise.all(tablesToClean.map(async (table) => {
                                                 const { error: errDep } = await supabase.from(table).delete().eq('tenant_id', id);
                                                 // Ignorar erros caso a tabela não exista ou algo menor, queremos tentar o máximo
                                                 if (errDep) console.warn(`Erro limpando ${table}:`, errDep);
-                                            }
+                                            }));
                                             
                                             // Agora exclui a loja
                                             const { error } = await supabase.from('tenants').delete().eq('id', id);
