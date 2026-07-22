@@ -346,17 +346,15 @@ export class personalizacaoController {
             }
             
             // Upload das fotos da Galeria
-            const finalGaleria = [];
-            for (let i = 0; i < this.galeria.length; i++) {
-                const item = this.galeria[i];
+            const uploadPromises = this.galeria.map(async (item) => {
                 if (item.isNew && item.file) {
                     const url = await uploadImageToSupabase(item.file, 'tenant-images', tenantId);
-                    if (url) finalGaleria.push(url);
-                } else {
-                    finalGaleria.push(item); // url existente
+                    return url ? url : null;
                 }
-            }
-            this.galeria = finalGaleria;
+                return item; // url existente
+            });
+            const results = await Promise.all(uploadPromises);
+            this.galeria = results.filter(item => item !== null);
 
             // Busca tenant atual para juntar
             const { data: tenantData } = await supabase.from('tenants').select('settings').eq('id', tenantId).single();
