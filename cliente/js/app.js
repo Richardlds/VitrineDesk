@@ -959,3 +959,16 @@ export function renderBranches() {
   });
 }
 
+
+
+// Registro do Service Worker (PWA)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/cliente/sw.js').then(registration => {
+      console.log('ServiceWorker registrado com sucesso:', registration.scope);
+    }).catch(err => {
+      console.log('Falha no registro do ServiceWorker:', err);
+    });
+  });
+}
+
