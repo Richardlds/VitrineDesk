@@ -61,13 +61,36 @@ export async function init() {
 
     if (!tenant) {
       document.getElementById('loading-screen')?.classList.add('hidden');
-      document.getElementById('app')?.classList.remove('hidden');
-      document.getElementById('app').innerHTML = `
-        <div class="flex-center" style="min-height:100vh;flex-direction:column;gap:16px;">
-          <h2 style="color:var(--text-main); display:flex; align-items:center; gap:8px;"><i data-lucide="x-circle"></i> Loja "${slug}" não encontrada</h2>
-          <p class="text-muted">Verifique o endereço e tente novamente.</p>
-        </div>
-      `;
+      const appEl = document.getElementById('app');
+      if (appEl) {
+        appEl.classList.remove('hidden');
+        appEl.innerHTML = '';
+
+        const container = document.createElement('div');
+        container.className = 'flex-center';
+        container.style.cssText = 'min-height:100vh;flex-direction:column;gap:16px;';
+
+        const heading = document.createElement('h2');
+        heading.style.cssText = 'color:var(--text-main); display:flex; align-items:center; gap:8px;';
+
+        const icon = document.createElement('i');
+        icon.setAttribute('data-lucide', 'x-circle');
+
+        const textNode = document.createTextNode(` Loja "${slug}" não encontrada`);
+
+        heading.appendChild(icon);
+        heading.appendChild(textNode);
+
+        const p = document.createElement('p');
+        p.className = 'text-muted';
+        p.textContent = 'Verifique o endereço e tente novamente.';
+
+        container.appendChild(heading);
+        container.appendChild(p);
+
+        appEl.appendChild(container);
+        if (window.lucide) window.lucide.createIcons();
+      }
       return;
     }
 
