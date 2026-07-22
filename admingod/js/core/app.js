@@ -31,15 +31,17 @@ class SuperAdminApp {
             const isGod = await requireAuth();
             if (!isGod) return false;
 
-            const { data: authData } = await supabase.auth.getUser();
+            const { data: authData } = await supabase.auth.getSession();
 
-            if (!authData?.user) {
-                window.location.href = '/admingod/login';
+            const userObj = authData?.session?.user || authData?.user;
+            if (!userObj) {
+                for (let key in sessionStorage) { if (key.startsWith('sb-')) { sessionStorage.removeItem(key); } }
+                window.location.href = '/login.html';
                 return false;
             }
 
             // A role já foi validada no requireAuth
-            const userEmail = authData.user.email;
+            const userEmail = userObj.email;
 
             if (nameEl) nameEl.textContent = 'Master Admin';
             if (emailEl) emailEl.textContent = userEmail;
@@ -56,7 +58,8 @@ class SuperAdminApp {
 
         } catch (error) {
             console.error('Erro ao verificar sessão do Super Admin:', error);
-            window.location.href = '/admingod/login';
+            for (let key in sessionStorage) { if (key.startsWith('sb-')) { sessionStorage.removeItem(key); } }
+                window.location.href = '/login.html';
             return false;
         }
     }
@@ -77,10 +80,20 @@ class SuperAdminApp {
     initLogout() {
         const btnLogout = document.getElementById('btn-logout');
         if (btnLogout) {
-            btnLogout.addEventListener('click', async () => {
+            btnLogout.addEventListener('click', async (e) => {
+                e.preventDefault();
                 const { error } = await supabase.auth.signOut();
                 if (error) console.error('Erro ao fazer logout:', error.message);
-                window.location.href = '/admingod/login';
+                
+                // Força a limpeza de qualquer zombie session
+                for (let key in localStorage) {
+                    if (key.startsWith('sb-')) {
+                        localStorage.removeItem(key);
+                    }
+                }
+                
+                for (let key in sessionStorage) { if (key.startsWith('sb-')) { sessionStorage.removeItem(key); } }
+                window.location.href = '/login.html';
             });
         }
     }

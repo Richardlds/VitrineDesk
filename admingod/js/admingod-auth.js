@@ -29,9 +29,10 @@ export async function login(email, password) {
             .eq('id', userId)
             .single();
 
-        if (userError || !userData || userData.role !== 'superadmin') {
+        if (userError || !userData || (userData.role !== 'superadmin' && userData.role !== 'admin')) {
             await supabase.auth.signOut();
-            throw new Error('Acesso negado: o usuário não é um Superadmin.');
+        for (let key in sessionStorage) { if (key.startsWith('sb-')) { sessionStorage.removeItem(key); } }
+            throw new Error('Acesso negado: permissões insuficientes.');
         }
 
         // Registrar log de login (Fire and forget)
@@ -58,7 +59,8 @@ export async function logout() {
     }
     
     await supabase.auth.signOut();
-    window.location.href = '/admingod/login';
+        for (let key in sessionStorage) { if (key.startsWith('sb-')) { sessionStorage.removeItem(key); } }
+    window.location.href = '/login.html';
 }
 
 /**
@@ -68,7 +70,7 @@ export async function requireAuth() {
     const { data } = await supabase.auth.getSession();
 
     if (!data.session) {
-        window.location.href = '/admingod/login';
+        window.location.href = '/login.html';
         return false;
     }
 
@@ -79,9 +81,10 @@ export async function requireAuth() {
         .eq('id', data.session.user.id)
         .single();
 
-    if (userError || !userData || userData.role !== 'superadmin') {
+    if (userError || !userData || (userData.role !== 'superadmin' && userData.role !== 'admin')) {
         await supabase.auth.signOut();
-        window.location.href = '/admingod/login';
+        for (let key in sessionStorage) { if (key.startsWith('sb-')) { sessionStorage.removeItem(key); } }
+        window.location.href = '/login.html';
         return false;
     }
 

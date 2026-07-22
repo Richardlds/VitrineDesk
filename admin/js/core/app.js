@@ -53,6 +53,7 @@ class AdminApp {
                 document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #ef4444; margin-bottom: 10px;">⚠️ Loja Não Encontrada</h1><p style="color: var(--color-text-secondary, #9ca3af); max-width: 400px; line-height: 1.5;">Não encontramos nenhuma loja vinculada ao seu usuário. Se você acabou de se cadastrar, ocorreu um erro na criação da loja.</p><button id="btn-logout-missing-tenant" style="margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; cursor: pointer; border: none;">Sair e Voltar ao Login</button></div>`;
                 document.getElementById('btn-logout-missing-tenant').addEventListener('click', async () => {
                     await supabase.auth.signOut();
+                    for (let key in sessionStorage) { if (key.startsWith('sb-')) { sessionStorage.removeItem(key); } }
                     window.location.href = '/login.html';
                 });
                 throw new Error("Tenant não encontrado");
@@ -1031,7 +1032,8 @@ class AdminApp {
     initLogout() {
         const btnLogout = document.querySelector('.btn-logout');
         if (btnLogout) {
-            btnLogout.addEventListener('click', async () => {
+            btnLogout.addEventListener('click', async (e) => {
+                e.preventDefault();
                 const confirmSair = await window.showConfirm('Tem certeza que deseja sair do sistema?', 'Sim, sair', 'Cancelar');
                 if (!confirmSair) return;
 
@@ -1041,6 +1043,7 @@ class AdminApp {
 
                 try {
                     await supabase.auth.signOut();
+                    for (let key in sessionStorage) { if (key.startsWith('sb-')) { sessionStorage.removeItem(key); } }
                     window.location.href = '../login.html';
                 } catch (error) {
                     console.error('Erro ao deslogar:', error);

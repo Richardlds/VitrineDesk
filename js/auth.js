@@ -214,3 +214,94 @@ export async function getCurrentTenant() {
     return null;
   }
 }
+// Login com Google
+export async function loginWithGoogle() {
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + window.location.pathname, queryParams: { prompt: 'select_account' }
+      }
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error('Erro no login com Google:', err);
+    showToast('Erro ao iniciar login com Google', 'error');
+  }
+}
+
+// Completar cadastro de usuário logado via Google
+export async function completeGoogleRegistration(userId, email, shopName, type, razaoSocial, document) {
+  if (!shopName || shopName.trim().length < 2) {
+    showToast('Nome da loja é obrigatório', 'error');
+    return null;
+  }
+
+  try {
+    const slug = shopName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString().slice(-4);
+
+    // Buscar plano padrão
+    const { data: defaultPlan } = await supabase.from('plans').select('id').eq('is_default', true).maybeSingle();
+
+    // Buscar configurações master para trial e mensagem
+    const { data: masterSettings } = await supabase.from('master_settings').select('trial_days, welcome_msg_title, welcome_msg_body').eq('id', 1).maybeSingle();
+
+    let vencimento = null;
+    if (masterSettings && masterSettings.trial_days) {
+      const d = new Date();
+      d.setDate(d.getDate() + parseInt(masterSettings.trial_days));
+      vencimento = d.toISOString();
+    }
+
+    const { data: insertedTenants, error: tenantError } = await supabase.from('tenants').insert([{
+      owner_id: userId,
+      name: shopName.trim(),
+      slug: slug,
+      type: type || 'barbearia',
+      approval_status: 'pending',
+      is_active: false,
+      settings: {
+        razao_social: razaoSocial || '',
+        cnpj: document || '',
+        email: email.trim().toLowerCase(),
+        plano_id: defaultPlan ? defaultPlan.id : null,
+        vencimento: vencimento
+      }
+    }]).select();
+
+    if (tenantError || !insertedTenants || insertedTenants.length === 0) {
+      showToast('Erro ao criar loja. Verifique se os dados estão corretos.', 'error');
+      console.error(tenantError);
+      return null;
+    }
+
+    const insertedTenant = insertedTenants[0];
+
+    // Enviar mensagem de boas vindas para o lojista
+    if (masterSettings && masterSettings.welcome_msg_title && masterSettings.welcome_msg_body) {
+      await supabase.from('notifications').insert([{
+        tenant_id: insertedTenant.id,
+        type: 'system',
+        title: masterSettings.welcome_msg_title,
+        message: masterSettings.welcome_msg_body,
+        read: false
+      }]);
+    }
+
+    // Criar a filial Matriz padrão automaticamente
+    await supabase.from('branches').insert([{
+      tenant_id: insertedTenant.id,
+      name: 'Matriz - ' + shopName.trim(),
+      is_main: true
+    }]);
+
+    await supabase.auth.signOut();
+    showToast('? Cadastro concluído! Aguardando aprovação do administrador.', 'success');
+    setTimeout(() => window.location.href = 'login.html', 3000);
+    return true;
+  } catch (err) {
+    console.error('Detalhe técnico ao completar cadastro:', err);
+    showToast('Erro ao finalizar cadastro.', 'error');
+    return null;
+  }
+}

@@ -7,7 +7,7 @@ const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3Mi
 // O supabase-js expõe `window.supabase` através da CDN (index.html).
 export const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     auth: {
-        storage: window.localStorage,
+        storage: window.sessionStorage,
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true
