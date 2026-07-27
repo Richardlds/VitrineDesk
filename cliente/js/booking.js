@@ -109,8 +109,36 @@ export async function openBookingModal(service) {
       extras: [],
       tenantId: tenantId,
       discount: 0,
-      couponCode: ''
+      couponCode: '',
+      discountData: null,
+      planDiscountApplied: false
     };
+
+    // Verificar se o cliente tem um plano de assinatura ativo
+    if (window.activeClientSubscription && window.activeClientSubscription.tenant_client_plans) {
+      const plan = window.activeClientSubscription.tenant_client_plans;
+      const periodEnd = new Date(window.activeClientSubscription.current_period_end);
+      
+      if (periodEnd > new Date()) {
+        const freeAppointmentsTotal = plan.free_appointments_per_month || 0;
+        const usedAppointments = window.activeClientSubscription.used_free_appointments_this_cycle || 0;
+        
+        if (freeAppointmentsTotal > usedAppointments) {
+          // Tem agendamento grátis
+          bookingState.discountData = {
+            desconto_percentual: 100
+          };
+          bookingState.planDiscountApplied = 'free_appointment';
+        } else if (plan.discount_percentage > 0) {
+          // Usa apenas desconto percentual
+          bookingState.discountData = {
+            desconto_percentual: plan.discount_percentage
+          };
+          bookingState.planDiscountApplied = 'percentage';
+        }
+      }
+    }
+
     currentStep = 1;
     updateModalUI();
 
@@ -628,9 +656,13 @@ function updateBookingSummary() {
       
       totalPrice = totalPrice - desconto;
       
+      let badgeLabel = 'Desconto';
+      if (bookingState.planDiscountApplied === 'free_appointment') badgeLabel = 'Agendamento Grátis (Plano)';
+      else if (bookingState.planDiscountApplied === 'percentage') badgeLabel = 'Desconto do Plano';
+      
       html += `
         <div class="flex-between skel-mt-2">
-          <span class="text-success">Desconto ${descontoTexto}</span>
+          <span class="text-success">${badgeLabel} ${descontoTexto}</span>
           <span class="text-success">- ${formatCurrency(desconto)}</span>
         </div>
       `;
@@ -742,6 +774,21 @@ async function submitBooking() {
 
     if (result && result.length > 0) {
       showToast('Agendamento realizado com sucesso!', 'success');
+      
+      // Se usou agendamento grátis do plano, incrementar o uso
+      if (bookingState.planDiscountApplied === 'free_appointment' && window.activeClientSubscription) {
+        try {
+          const used = (window.activeClientSubscription.used_free_appointments_this_cycle || 0) + 1;
+          await supaFetch(`/rest/v1/client_subscriptions?id=eq.${window.activeClientSubscription.id}`, {
+            method: 'PATCH',
+            body: { used_free_appointments_this_cycle: used }
+          });
+          window.activeClientSubscription.used_free_appointments_this_cycle = used;
+        } catch(err) {
+          console.error('Erro ao atualizar uso do plano', err);
+        }
+      }
+
       closeBookingModal();
       
       // Limpar campos

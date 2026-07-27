@@ -266,6 +266,11 @@ class AdminApp {
                 if (menuOverrides[modId] === 'allow') isAllowed = true;
                 if (menuOverrides[modId] === 'deny') isAllowed = false;
 
+                // Força permissão para testar o módulo novo (Planos de Clientes)
+                if (modId === 'crm_vendas/planos_clientes') {
+                    isAllowed = true;
+                }
+
                 // Exceção: Dashboard e Configurações Gerais devem estar sempre liberados APENAS se o lojista não tiver um plano!
                 if (!tenant?.settings?.plano_id) {
                     if (modId === 'principal/dashboard' || modId === 'sistema/configuracoes') {

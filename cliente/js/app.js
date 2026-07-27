@@ -10,6 +10,7 @@ import { checkMaintenanceMode, getSlugFromURL, supaFetch, showToast, showConfirm
 import { getLoggedClient, isLogged, initAuth, updateAuthUI } from './auth.js';
 import { initAgendamentos, loadMyAppointments } from './agendamentos.js';
 import { initBooking } from './booking.js';
+import { initPlanos } from './planos.js';
 
 // Módulos de renderização
 import { renderServices } from './renders/services.js';
@@ -140,6 +141,7 @@ export async function init() {
     initAuth();
     initBooking();
     initAgendamentos();
+    initPlanos();
     initBottomNav();
     initScrollReveal();
 

@@ -1,0 +1,82 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Planos de Assinatura</h2>
+            <p class="text-secondary text-sm">Crie planos mensais para seus clientes e ofereça descontos ou agendamentos gratuitos.</p>
+        </div>
+        <button id="btn-novo-plano" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="plus"></i> Novo Plano
+        </button>
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="planos-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Plano</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Mensalidade</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Desconto / Grátis</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Assinantes</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="planos-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro / Edição -->
+    <div id="modal-plano" class="modal-overlay d-none">
+        <div class="modal-content config-card" style="max-width: 500px;">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 id="modal-plano-title">Criar Plano de Assinatura</h3>
+                <button id="btn-close-modal-plano" class="btn bg-transparent border-none text-secondary cursor-pointer">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="form-plano">
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome do Plano</label>
+                    <input type="text" id="input-plano-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Clube VIP" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Descrição (Opcional)</label>
+                    <textarea id="input-plano-descricao" rows="2" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm resize-none" placeholder="Vantagens do plano..."></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Mensalidade (R$)</label>
+                    <input type="number" id="input-plano-preco" step="0.01" min="1" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 50.00" required>
+                </div>
+                
+                <div class="grid grid-md-2 mb-4 gap-3">
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Desconto (%)</label>
+                        <input type="number" id="input-plano-desconto" min="0" max="100" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 20">
+                    </div>
+                    <div>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Agend. Grátis/mês</label>
+                        <input type="number" id="input-plano-gratis" min="0" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 2">
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button type="button" id="btn-inativar-plano" class="btn bg-danger-light text-danger w-100 py-3 rounded-lg cursor-pointer d-none border-none">
+                        Desativar
+                    </button>
+                    <button type="submit" id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-lg cursor-pointer flex align-center justify-center">
+                        Salvar e Criar no Stripe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

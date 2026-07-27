@@ -10,6 +10,7 @@ export class planosController {
             { id: 'cadastros/servicos', name: 'Serviços' },
             { id: 'cadastros/equipe', name: 'Equipe' },
             { id: 'cadastros/clientes', name: 'Clientes' },
+            { id: 'crm_vendas/planos_clientes', name: 'Planos de Clientes' },
             { id: 'crm_vendas/cupons', name: 'Cupons' },
             { id: 'crm_vendas/marketing', name: 'Marketing' },
             { id: 'crm_vendas/blacklist', name: 'Blacklist' },

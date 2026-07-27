@@ -520,6 +520,7 @@
       <div class="drawer-tabs">
         <button class="drawer-tab active" data-target="tab-dados">Meus Dados</button>
         <button class="drawer-tab" data-target="tab-agendamentos">Agendamentos</button>
+        <button class="drawer-tab" data-target="tab-assinaturas">Assinaturas</button>
         <div class="drawer-tab-slider"></div>
       </div>
 
@@ -583,6 +584,26 @@
             <!-- Renderizado via JS -->
           </div>
         </div>
+
+        <!-- Aba de Assinaturas -->
+        <div class="drawer-panel" id="tab-assinaturas">
+          <div class="flex flex-column gap-3">
+            <div id="minhas-assinaturas-container">
+              <h4 class="text-primary mb-2">Meu Plano Atual</h4>
+              <div id="active-subscription-card" class="glass-card text-center p-3 text-secondary text-sm">
+                Carregando...
+              </div>
+            </div>
+            <div class="mt-4">
+              <h4 class="text-primary mb-2">Planos Disponíveis</h4>
+              <p class="text-secondary text-sm mb-3">Assine um plano e garanta descontos ou serviços grátis!</p>
+              <div id="available-plans-list" class="flex flex-column gap-3">
+                <!-- Renderizado via JS -->
+                <div class="text-center text-secondary p-3"><i data-lucide="loader" class="animate-spin icon-sm"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -595,6 +616,7 @@
   <script type="module" src="js/auth.js?v=20260720-8"></script>
   <script type="module" src="js/booking.js?v=20260720-8"></script>
   <script type="module" src="js/agendamentos.js?v=20260720-8"></script>
+  <script type="module" src="js/planos.js?v=20260720-8"></script>
   <script type="module" src="js/app.js?v=20260720-8"></script>
 
   <!-- Lucide Icons -->
