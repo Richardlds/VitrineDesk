@@ -184,10 +184,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } else {
 
-           window.location.href = 'admin/';
-
+           window.location.href = '/admin/';
            return;
-
         }
 
       }
@@ -196,17 +194,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const { data: adminData } = await supabase.from('admin_users').select('role').eq('id', user.id).limit(1).maybeSingle();
 
-      if (adminData?.role === 'superadmin' || adminData?.role === 'admin') {
+        if (adminData?.role === 'superadmin' || adminData?.role === 'admin') {
+          window.location.href = '/admingod/';
+          return;
+        }
 
-        window.location.href = 'admingod/';
-
-        return;
-
-      }
-
-
-
-      const modalComplete = document.getElementById('modal-complete-registration');
+        const modalComplete = document.getElementById('modal-complete-registration');
 
         if (modalComplete) {
 
@@ -884,7 +877,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           setTimeout(() => {
 
-            window.location.href = 'admin/';
+            window.location.href = '/admin/';
 
           }, 500);
 
@@ -926,7 +919,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
               setTimeout(() => {
 
-                window.location.href = 'admingod/';
+                window.location.href = '/admingod/';
 
               }, 500);
 

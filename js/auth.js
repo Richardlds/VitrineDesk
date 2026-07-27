@@ -122,7 +122,7 @@ export async function loginMerchant(email, password) {
     if (adminData?.role === 'superadmin' || adminData?.role === 'admin') {
       showToast("Bem-vindo, Superadmin! 🚀", "success");
       setTimeout(() => {
-        window.location.href = 'superadmin/index.html';
+        window.location.href = '/admingod/';
       }, 500);
     } else {
       // ✅ Verificar se tenant está ativo e aprovado
@@ -152,7 +152,7 @@ export async function loginMerchant(email, password) {
 
       showToast("Login realizado!", "success");
       setTimeout(() => {
-        window.location.href = 'admin/';
+        window.location.href = '/admin/';
       }, 500);
     }
 
