@@ -333,7 +333,7 @@
   bottom: -1px;
   left: 0;
   height: 2px;
-  width: 50%;
+  width: 33.333%;
   background: var(--primary);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: var(--neon-glow);

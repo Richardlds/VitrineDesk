@@ -1,4 +1,4 @@
-import { supabase } from './utils.js';
+import { supaFetch } from './utils.js';
 
 let tenantPlans = [];
 let activeSubscription = null;
@@ -7,16 +7,14 @@ export async function initPlanos() {
     const tenantId = window.globalTenantId;
     if (!tenantId) return;
 
-    // Load available plans
-    const { data: plans, error: pErr } = await supabase
-        .from('tenant_client_plans')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .eq('active', true)
-        .order('price', { ascending: true });
-
-    if (!pErr && plans) {
-        tenantPlans = plans;
+    try {
+        // Load available plans
+        const plans = await supaFetch(`/rest/v1/tenant_client_plans?tenant_id=eq.${tenantId}&active=eq.true&order=price.asc&select=*`);
+        if (plans && Array.isArray(plans)) {
+            tenantPlans = plans;
+        }
+    } catch(err) {
+        console.error('Erro ao buscar planos:', err);
     }
 
     // Load user active subscription if logged in
@@ -28,18 +26,18 @@ export async function initPlanos() {
 export async function loadActiveSubscription() {
     if (!window.globalUser) return;
     
-    const { data, error } = await supabase
-        .from('client_subscriptions')
-        .select('*, tenant_client_plans(*)')
-        .eq('tenant_id', window.globalTenantId)
-        .eq('client_id', window.globalUser.id)
-        .eq('status', 'active')
-        .maybeSingle();
-
-    if (!error && data) {
-        activeSubscription = data;
-        window.activeClientSubscription = data; // Export global for booking logic
-    } else {
+    try {
+        const data = await supaFetch(`/rest/v1/client_subscriptions?tenant_id=eq.${window.globalTenantId}&client_id=eq.${window.globalUser.id}&status=eq.active&select=*,tenant_client_plans(*)`);
+        
+        if (data && data.length > 0) {
+            activeSubscription = data[0];
+            window.activeClientSubscription = data[0]; // Export global for booking logic
+        } else {
+            activeSubscription = null;
+            window.activeClientSubscription = null;
+        }
+    } catch(err) {
+        console.error('Erro ao carregar assinatura:', err);
         activeSubscription = null;
         window.activeClientSubscription = null;
     }
