@@ -1,4 +1,4 @@
-﻿import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
+import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
 
 export class configuracoesController {
     constructor() {
@@ -133,6 +133,7 @@ export class configuracoesController {
             setChk('toggle-hide-galeria', vis.hide_galeria);
             setChk('toggle-hide-mapa', vis.hide_mapa);
             setChk('toggle-hide-horarios', vis.hide_horarios);
+            setChk('toggle-hide-planos', vis.hide_planos);
 
             // Aba Horários
             const horarios = settings.horarios || {};
@@ -222,7 +223,8 @@ export class configuracoesController {
                     hide_depoimentos: getChk('toggle-hide-depoimentos'),
                     hide_galeria: getChk('toggle-hide-galeria'),
                     hide_mapa: getChk('toggle-hide-mapa'),
-                    hide_horarios: getChk('toggle-hide-horarios')
+                    hide_horarios: getChk('toggle-hide-horarios'),
+                    hide_planos: getChk('toggle-hide-planos')
                 }
             };
 

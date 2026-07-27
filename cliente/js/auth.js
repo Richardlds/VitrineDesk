@@ -1,4 +1,4 @@
-import { supaFetch, showToast, showConfirm, formatarCPF, validarCPF, mascararCPF, mascararTelefone, scrollToSection, formatDate, formatTime, showSkeleton, hideSkeleton, supaUploadAvatar, getSupaPublicUrl } from './utils.js';
+import { supaFetch, showToast, showConfirm, formatarCPF, validarCPF, mascararCPF, mascararTelefone, scrollToSection, formatDate, formatTime, showSkeleton, hideSkeleton, supaUploadAvatar, getSupaPublicUrl, getSupabaseAuthClient } from './utils.js';
 import { loadMyAppointments } from './agendamentos.js';
 
 // ────────────────────────── Estado ──────────────────────────
@@ -125,6 +125,27 @@ export async function loginCliente(email, senha) {
     console.error('Erro no login:', e);
     showToast('Erro ao realizar login. Tente novamente.', 'error');
     return null;
+  }
+}
+
+export async function loginComGoogle() {
+  try {
+    const supabase = getSupabaseAuthClient();
+    if (!supabase) {
+      showToast('Erro: Biblioteca de autenticação não carregada.', 'error');
+      return;
+    }
+    
+    // Inicia fluxo OAuth. O redirect volta para a mesma página.
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.href
+      }
+    });
+  } catch (e) {
+    console.error('Erro ao chamar login com Google:', e);
+    showToast('Erro ao inicializar Google Login', 'error');
   }
 }
 
@@ -463,10 +484,19 @@ export function initAuth() {
   if (window._authInitialized) return;
   window._authInitialized = true;
   try {
+    // Verificar sessão Google (OAuth redirect callback)
+    checkGoogleOAuthSession();
+
     // Abas de auth
     document.querySelectorAll('.auth-tab').forEach(tab => {
       tab.addEventListener('click', () => openAuthModal(tab.dataset.tab));
     });
+
+    const btnGoogleLogin = document.getElementById('btn-google-login');
+    if (btnGoogleLogin) btnGoogleLogin.addEventListener('click', loginComGoogle);
+
+    const btnGoogleRegister = document.getElementById('btn-google-register');
+    if (btnGoogleRegister) btnGoogleRegister.addEventListener('click', loginComGoogle);
 
 
 
@@ -761,6 +791,81 @@ export function initAuth() {
     }
   } catch (e) {
     console.error('Erro ao inicializar auth:', e);
+  }
+}
+
+async function checkGoogleOAuthSession() {
+  try {
+    const supabase = getSupabaseAuthClient();
+    if (!supabase) return;
+
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error) {
+      console.error('Erro ao verificar sessão Google:', error);
+      return;
+    }
+
+    if (session && session.user) {
+      // Usuário autenticado pelo Google!
+      // Vamos sincronizar com a nossa tabela `clientes`
+      const email = session.user.email;
+      const nome = session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'Cliente';
+      const avatar_url = session.user.user_metadata?.avatar_url || '';
+      const tenantId = getTenantId();
+
+      if (!tenantId) return;
+
+      // 1. Verifica se já existe
+      const busca = await supaFetch(`/rest/v1/clientes?email=eq.${encodeURIComponent(email)}&select=*`);
+      
+      let clienteFinal = null;
+
+      if (busca && busca.length > 0) {
+        // Já existe, atualiza foto se não tinha
+        clienteFinal = busca[0];
+        if (!clienteFinal.foto_url && avatar_url) {
+          await supaFetch(`/rest/v1/clientes?id=eq.${clienteFinal.id}`, {
+            method: 'PATCH',
+            body: { foto_url: avatar_url }
+          });
+          clienteFinal.foto_url = avatar_url;
+        }
+      } else {
+        // Não existe, cria silenciosamente
+        const novoCliente = {
+          tenant_id: tenantId,
+          nome: nome,
+          email: email,
+          senha: 'oauth_google_' + Date.now(), // Senha dummy (ignorada)
+          foto_url: avatar_url,
+          data_aceite_termo: new Date().toISOString()
+        };
+
+        const result = await supaFetch('/rest/v1/clientes', {
+          method: 'POST',
+          body: novoCliente
+        });
+
+        if (result && result.length > 0) {
+          clienteFinal = result[0];
+        }
+      }
+
+      if (clienteFinal) {
+        saveClientSession(clienteFinal);
+        updateAuthUI(true);
+        // Opcionalmente podemos deslogar da auth do supabase para não dar conflito,
+        // mas é melhor deixar a sessão lá para eventuais refresh tokens
+        if (window.location.hash.includes('access_token')) {
+          // Limpa hash da url pra ficar bonitinho
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+          showToast(`Bem-vindo(a), ${clienteFinal.nome}!`, 'success');
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Erro no sync do Google OAuth:', e);
   }
 }
 

@@ -47,11 +47,26 @@ function renderPlanos() {
     const listContainer = document.getElementById('available-plans-list');
     const activeContainer = document.getElementById('active-subscription-card');
     
-    if (!listContainer || !activeContainer) return;
+    // Novas UI do plano
+    const homeSection = document.getElementById('section-planos');
+    const homeGrid = document.getElementById('home-plans-grid');
+    const profileBadge = document.getElementById('profile-active-plan-badge');
+    const profilePlanName = document.getElementById('profile-active-plan-name');
+    
+    // Verificando visibilidade configurada pelo Lojista
+    const tenantStr = sessionStorage.getItem('vp_tenant');
+    let hidePlanos = false;
+    if (tenantStr) {
+        try {
+            const tenantObj = JSON.parse(tenantStr);
+            hidePlanos = tenantObj.settings?.visibilidade?.hide_planos === true;
+        } catch (e) {}
+    }
 
-    // Render Active Subscription
+    // Render Active Subscription no Modal e Perfil
     if (!window.globalUser) {
-        activeContainer.innerHTML = 'Faça login para ver sua assinatura.';
+        if (activeContainer) activeContainer.innerHTML = 'Faça login para ver sua assinatura.';
+        if (profileBadge) profileBadge.classList.add('hidden');
     } else if (activeSubscription) {
         const plan = activeSubscription.tenant_client_plans;
         const periodEnd = new Date(activeSubscription.current_period_end).toLocaleDateString('pt-BR');
@@ -63,24 +78,37 @@ function renderPlanos() {
             benefitsText.push(`${restantes} agendamento(s) grátis restante(s) neste ciclo`);
         }
 
-        activeContainer.innerHTML = `
-            <h5 class="text-primary font-bold text-lg mb-1">${plan.name}</h5>
-            <p class="text-secondary text-sm mb-2">${benefitsText.join(' • ')}</p>
-            <div class="flex justify-between align-center mt-3 pt-3 border-top-dashed">
-                <span class="text-xs text-muted">Válido até: ${periodEnd}</span>
-                <span class="status-badge bg-success-light text-success border-none shadow-sm">Ativo</span>
-            </div>
-        `;
+        if (activeContainer) {
+            activeContainer.innerHTML = `
+                <h5 class="text-primary font-bold text-lg mb-1">${plan.name}</h5>
+                <p class="text-secondary text-sm mb-2">${benefitsText.join(' • ')}</p>
+                <div class="flex justify-between align-center mt-3 pt-3 border-top-dashed">
+                    <span class="text-xs text-muted">Válido até: ${periodEnd}</span>
+                    <span class="status-badge bg-success-light text-success border-none shadow-sm">Ativo</span>
+                </div>
+            `;
+        }
+        
+        // Exibição visual estrita no perfil
+        if (profileBadge && profilePlanName) {
+            profilePlanName.textContent = plan.name;
+            profileBadge.classList.remove('hidden');
+        }
     } else {
-        activeContainer.innerHTML = 'Você ainda não possui nenhum plano ativo.';
+        if (activeContainer) activeContainer.innerHTML = 'Você ainda não possui nenhum plano ativo.';
+        if (profileBadge) profileBadge.classList.add('hidden');
+    }
+
+    // Lógica para esconder a Seção da Home
+    if (tenantPlans.length === 0 || hidePlanos) {
+        if (homeSection) homeSection.classList.add('hidden');
+        if (listContainer) listContainer.innerHTML = '<div class="text-center text-secondary p-3">Nenhum plano disponível no momento.</div>';
+        return;
+    } else {
+        if (homeSection) homeSection.classList.remove('hidden');
     }
 
     // Render Available Plans
-    if (tenantPlans.length === 0) {
-        listContainer.innerHTML = '<div class="text-center text-secondary p-3">Nenhum plano disponível no momento.</div>';
-        return;
-    }
-
     let html = '';
     tenantPlans.forEach(plan => {
         // If user already has this active plan, skip or show as current
@@ -93,32 +121,40 @@ function renderPlanos() {
         if (plan.free_appointments_per_month > 0) benefits.push(`${plan.free_appointments_per_month} Agendamentos Grátis/mês`);
         
         html += `
-            <div class="glass-card p-3 border border-dashed border-primary-light transition-all hover-float">
-                <div class="flex justify-between align-start mb-2">
-                    <h5 class="font-bold text-md text-primary m-0">${plan.name}</h5>
-                    <span class="font-bold text-primary">R$ ${Number(plan.price).toFixed(2)}/mês</span>
+            <div class="service-card glass-card">
+                <div class="service-info" style="padding: 16px;">
+                    <div class="flex-between-start mb-2">
+                        <h5 class="font-bold text-md text-primary m-0">${plan.name}</h5>
+                        <span class="font-bold text-primary">R$ ${Number(plan.price).toFixed(2)}/mês</span>
+                    </div>
+                    ${plan.description ? `<p class="text-sm text-secondary mb-2">${plan.description}</p>` : ''}
+                    <ul class="text-sm text-secondary mb-3 pl-3" style="list-style-position: inside;">
+                        ${benefits.map(b => `<li style="list-style-type: disc; margin-bottom: 4px;">${b}</li>`).join('')}
+                    </ul>
+                    <button class="btn btn-primary btn-block py-2 rounded-md font-medium text-sm btn-assinar-plano" data-plan-id="${plan.id}" data-price-id="${plan.stripe_price_id}">
+                        Assinar Agora
+                    </button>
                 </div>
-                ${plan.description ? `<p class="text-sm text-secondary mb-2">${plan.description}</p>` : ''}
-                <ul class="text-sm text-secondary mb-3 pl-3">
-                    ${benefits.map(b => `<li style="list-style-type: disc; margin-bottom: 4px;">${b}</li>`).join('')}
-                </ul>
-                <button class="btn btn-primary w-100 py-2 rounded-md font-medium text-sm btn-assinar-plano" data-plan-id="${plan.id}" data-price-id="${plan.stripe_price_id}">
-                    Assinar Agora
-                </button>
             </div>
         `;
     });
 
-    listContainer.innerHTML = html || '<div class="text-center text-secondary p-3">Você já assinou o plano disponível.</div>';
+    const fallbackHtml = '<div class="text-center text-secondary p-3 w-100">Você já assinou o plano disponível.</div>';
     
-    // Bind click events
-    const btns = listContainer.querySelectorAll('.btn-assinar-plano');
+    if (listContainer) listContainer.innerHTML = html || fallbackHtml;
+    if (homeGrid) homeGrid.innerHTML = html || fallbackHtml;
+    
+    // Bind click events (Home e Drawer)
+    const btns = document.querySelectorAll('.btn-assinar-plano');
     btns.forEach(btn => {
         btn.addEventListener('click', async (e) => {
             if (!window.globalUser) {
                 if (window.showToast) window.showToast('Faça login primeiro!', 'warning');
-                document.getElementById('client-area-drawer').classList.remove('open');
-                document.getElementById('auth-modal').classList.add('open');
+                const drawer = document.getElementById('client-area-drawer');
+                if (drawer) drawer.classList.remove('active');
+                
+                // Puxar dinamicamente o import e abrir auth
+                import('./auth.js').then(module => module.openAuthModal('login')).catch(console.error);
                 return;
             }
 
@@ -126,8 +162,8 @@ function renderPlanos() {
             const priceId = e.currentTarget.getAttribute('data-price-id');
             
             const originalText = e.currentTarget.innerHTML;
-            e.currentTarget.innerHTML = '<i data-lucide="loader" class="animate-spin icon-sm"></i> Aguarde...';
-            if (window.lucide) window.lucide.createIcons();
+            e.currentTarget.innerHTML = '<i data-lucide="loader" class="lucide-spin icon-sm"></i> Aguarde...';
+            if (window.lucide) window.lucide.createIcons({ root: e.currentTarget });
 
             try {
                 const response = await fetch('/api/stripe/create-subscription-checkout', {
@@ -153,6 +189,7 @@ function renderPlanos() {
                 console.error(err);
                 if (window.showToast) window.showToast('Erro ao iniciar assinatura', 'error');
                 e.currentTarget.innerHTML = originalText;
+                if (window.lucide) window.lucide.createIcons({ root: e.currentTarget });
             }
         });
     });
