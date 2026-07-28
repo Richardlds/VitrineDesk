@@ -1,0 +1,41 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="mb-1 text-primary">Minha Assinatura</h2>
+        <p class="text-secondary text-sm">Gerencie seu plano com a VitrineDesk e expanda os recursos do seu negócio.</p>
+    </div>
+
+    <div class="grid grid-md-2 gap-4 align-start">
+        
+        <!-- Esquerda: Plano Atual -->
+        <div class="flex flex-column gap-4">
+            <div class="config-card mb-0 p-4">
+                <h3 class="m-0 text-primary flex align-center gap-2 mb-4">
+                    <i data-lucide="award" class="text-primary"></i> Meu Plano Atual
+                </h3>
+                
+                <div id="assinatura-atual-container" class="flex flex-column gap-3 text-center p-4 bg-placeholder border-dashed rounded-md">
+                    <i data-lucide="loader" class="lucide-spin icon-md mx-auto text-secondary"></i>
+                    <p class="text-sm text-secondary mt-2">Carregando informações...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direita: Planos Disponíveis -->
+        <div class="flex flex-column gap-4">
+            <div class="config-card mb-0 p-4">
+                <h3 class="m-0 text-primary flex align-center gap-2 mb-4">
+                    <i data-lucide="rocket" class="text-primary"></i> Planos Disponíveis
+                </h3>
+                
+                <div id="planos-disponiveis-list" class="flex flex-column gap-3">
+                    <div class="text-center p-4 bg-placeholder border-dashed rounded-md">
+                        <i data-lucide="loader" class="lucide-spin icon-md mx-auto text-secondary"></i>
+                        <p class="text-sm text-secondary mt-2">Carregando planos...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

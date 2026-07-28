@@ -1,4 +1,4 @@
-import { supabase } from '../core/supabaseClient.js';
+﻿import { supabase } from '../core/supabaseClient.js';
 
 export class planosController {
     constructor() {
@@ -19,6 +19,7 @@ export class planosController {
             { id: 'gestao/metas', name: 'Metas' },
             { id: 'gestao/fidelidade', name: 'Fidelidade' },
             { id: 'cadastros/filiais', name: 'Minhas Filiais' },
+            { id: 'sistema/assinatura', name: 'Minha Assinatura' },
             { id: 'sistema/configuracoes', name: 'Configurações' },
             { id: 'sistema/personalizacao', name: 'Personalização' },
             { id: 'sistema/usuarios', name: 'Usuários' },

@@ -1,4 +1,4 @@
-import { supaFetch, showToast, showConfirm, formatarCPF, validarCPF, mascararCPF, mascararTelefone, scrollToSection, formatDate, formatTime, showSkeleton, hideSkeleton, supaUploadAvatar, getSupaPublicUrl, getSupabaseAuthClient } from './utils.js';
+﻿import { supaFetch, showToast, showConfirm, formatarCPF, validarCPF, mascararCPF, mascararTelefone, scrollToSection, formatDate, formatTime, showSkeleton, hideSkeleton, supaUploadAvatar, getSupaPublicUrl, getSupabaseAuthClient } from './utils.js';
 import { loadMyAppointments } from './agendamentos.js';
 
 // ────────────────────────── Estado ──────────────────────────
@@ -137,6 +137,7 @@ export async function loginComGoogle() {
     }
     
     // Inicia fluxo OAuth. O redirect volta para a mesma página.
+    localStorage.setItem('oauth_redirect', window.location.pathname);
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {

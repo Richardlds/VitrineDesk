@@ -1,4 +1,4 @@
-/* VitrineDesk - AutenticaÃ§Ã£o */
+ï»¿/* VitrineDesk - AutenticaÃ§Ã£o */
 import { supabase } from './config.js';
 import { showToast } from './utils.js';
 
@@ -217,6 +217,7 @@ export async function getCurrentTenant() {
 // Login com Google
 export async function loginWithGoogle() {
   try {
+    localStorage.setItem('oauth_redirect', window.location.pathname);
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -230,20 +231,20 @@ export async function loginWithGoogle() {
   }
 }
 
-// Completar cadastro de usuário logado via Google
+// Completar cadastro de usuï¿½rio logado via Google
 export async function completeGoogleRegistration(userId, email, shopName, type, razaoSocial, document) {
   if (!shopName || shopName.trim().length < 2) {
-    showToast('Nome da loja é obrigatório', 'error');
+    showToast('Nome da loja ï¿½ obrigatï¿½rio', 'error');
     return null;
   }
 
   try {
     const slug = shopName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString().slice(-4);
 
-    // Buscar plano padrão
+    // Buscar plano padrï¿½o
     const { data: defaultPlan } = await supabase.from('plans').select('id').eq('is_default', true).maybeSingle();
 
-    // Buscar configurações master para trial e mensagem
+    // Buscar configuraï¿½ï¿½es master para trial e mensagem
     const { data: masterSettings } = await supabase.from('master_settings').select('trial_days, welcome_msg_title, welcome_msg_body').eq('id', 1).maybeSingle();
 
     let vencimento = null;
@@ -270,7 +271,7 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
     }]).select();
 
     if (tenantError || !insertedTenants || insertedTenants.length === 0) {
-      showToast('Erro ao criar loja. Verifique se os dados estão corretos.', 'error');
+      showToast('Erro ao criar loja. Verifique se os dados estï¿½o corretos.', 'error');
       console.error(tenantError);
       return null;
     }
@@ -288,7 +289,7 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
       }]);
     }
 
-    // Criar a filial Matriz padrão automaticamente
+    // Criar a filial Matriz padrï¿½o automaticamente
     await supabase.from('branches').insert([{
       tenant_id: insertedTenant.id,
       name: 'Matriz - ' + shopName.trim(),
@@ -296,11 +297,11 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
     }]);
 
     await supabase.auth.signOut();
-    showToast('? Cadastro concluído! Aguardando aprovação do administrador.', 'success');
+    showToast('? Cadastro concluï¿½do! Aguardando aprovaï¿½ï¿½o do administrador.', 'success');
     setTimeout(() => window.location.href = 'login.html', 3000);
     return true;
   } catch (err) {
-    console.error('Detalhe técnico ao completar cadastro:', err);
+    console.error('Detalhe tï¿½cnico ao completar cadastro:', err);
     showToast('Erro ao finalizar cadastro.', 'error');
     return null;
   }

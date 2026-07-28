@@ -1,4 +1,4 @@
-import { Router } from './Router.js';
+﻿import { Router } from './Router.js';
 import { StateManager } from './StateManager.js';
 import { supabase, getCurrentTenantId } from './supabaseClient.js';
 
@@ -272,10 +272,14 @@ class AdminApp {
                 }
 
                 // Exceção: Dashboard e Configurações Gerais devem estar sempre liberados APENAS se o lojista não tiver um plano!
-                if (!tenant?.settings?.plano_id) {
+                                if (!tenant?.settings?.plano_id) {
                     if (modId === 'principal/dashboard' || modId === 'sistema/configuracoes') {
                         isAllowed = true;
                     }
+                }
+
+                if (modId === 'sistema/suporte') {
+                    isAllowed = true;
                 }
 
                 window.allowedMenus[modId] = isAllowed;

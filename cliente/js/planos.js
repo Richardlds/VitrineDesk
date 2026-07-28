@@ -1,4 +1,4 @@
-import { supaFetch } from './utils.js';
+﻿import { supaFetch } from './utils.js';
 
 let tenantPlans = [];
 let activeSubscription = null;
@@ -69,43 +69,58 @@ function renderPlanos() {
         if (profileBadge) profileBadge.classList.add('hidden');
     } else if (activeSubscription) {
         const plan = activeSubscription.tenant_client_plans;
-        const periodEnd = new Date(activeSubscription.current_period_end).toLocaleDateString('pt-BR');
-        
-        let benefitsText = [];
-        if (plan.discount_percentage > 0) benefitsText.push(`${plan.discount_percentage}% de desconto`);
-        if (plan.free_appointments_per_month > 0) {
-            const restantes = plan.free_appointments_per_month - (activeSubscription.used_free_appointments_this_cycle || 0);
-            benefitsText.push(`${restantes} agendamento(s) grátis restante(s) neste ciclo`);
-        }
+        if (!plan) {
+            if (activeContainer) activeContainer.innerHTML = 'Plano indisponível (pode ter sido excluído).';
+        } else {
+            const periodEnd = new Date(activeSubscription.current_period_end).toLocaleDateString('pt-BR');
+            
+            let benefitsText = [];
+            if (plan.discount_percentage > 0) benefitsText.push(`${plan.discount_percentage}% de desconto`);
+            if (plan.free_appointments_per_month > 0) {
+                const restantes = plan.free_appointments_per_month - (activeSubscription.used_free_appointments_this_cycle || 0);
+                benefitsText.push(`${restantes} agendamento(s) grátis restante(s) neste ciclo`);
+            }
 
-        if (activeContainer) {
-            activeContainer.innerHTML = `
-                <h5 class="text-primary font-bold text-lg mb-1">${plan.name}</h5>
-                <p class="text-secondary text-sm mb-2">${benefitsText.join(' • ')}</p>
-                <div class="flex justify-between align-center mt-3 pt-3 border-top-dashed">
-                    <span class="text-xs text-muted">Válido até: ${periodEnd}</span>
-                    <span class="status-badge bg-success-light text-success border-none shadow-sm">Ativo</span>
-                </div>
-            `;
-        }
-        
-        // Exibição visual estrita no perfil
-        if (profileBadge && profilePlanName) {
-            profilePlanName.textContent = plan.name;
-            profileBadge.classList.remove('hidden');
+            if (activeContainer) {
+                activeContainer.innerHTML = `
+                    <h5 class="text-primary font-bold text-lg mb-1">${plan.name}</h5>
+                    <p class="text-secondary text-sm mb-2">${benefitsText.join(' ? ')}</p>
+                    <div class="flex justify-between align-center mt-3 pt-3 border-top-dashed">
+                        <span class="text-xs text-muted">Válido até: ${periodEnd}</span>
+                        <span class="status-badge bg-success-light text-success border-none shadow-sm">Ativo</span>
+                    </div>
+                `;
+            }
+            
+            // Exibi??o visual estrita no perfil
+            if (profileBadge && profilePlanName) {
+                profilePlanName.textContent = plan.name;
+                profileBadge.classList.remove('hidden');
+            }
         }
     } else {
-        if (activeContainer) activeContainer.innerHTML = 'Você ainda não possui nenhum plano ativo.';
+        if (activeContainer) activeContainer.innerHTML = 'Voc? ainda n?o possui nenhum plano ativo.';
         if (profileBadge) profileBadge.classList.add('hidden');
     }
 
-    // Lógica para esconder a Seção da Home
+    // L?gica para esconder a Se??o da Home
     if (tenantPlans.length === 0 || hidePlanos) {
         if (homeSection) homeSection.classList.add('hidden');
         if (listContainer) listContainer.innerHTML = '<div class="text-center text-secondary p-3">Nenhum plano disponível no momento.</div>';
         return;
     } else {
         if (homeSection) homeSection.classList.remove('hidden');
+        
+        // Adiciona link no menu superior se n?o existir
+        const navLinks = document.querySelector('.nav-links');
+        if (navLinks && !document.getElementById('nav-link-planos')) {
+            const planosLink = document.createElement('a');
+            planosLink.href = '#section-planos';
+            planosLink.className = 'nav-link';
+            planosLink.id = 'nav-link-planos';
+            planosLink.textContent = 'Planos';
+            navLinks.insertBefore(planosLink, navLinks.lastElementChild);
+        }
     }
 
     // Render Available Plans
@@ -118,7 +133,7 @@ function renderPlanos() {
 
         let benefits = [];
         if (plan.discount_percentage > 0) benefits.push(`Desconto de ${plan.discount_percentage}% nos serviços`);
-        if (plan.free_appointments_per_month > 0) benefits.push(`${plan.free_appointments_per_month} Agendamentos Grátis/mês`);
+        if (plan.free_appointments_per_month > 0) benefits.push(`${plan.free_appointments_per_month} Agendamentos grátis/mês`);
         
         html += `
             <div class="service-card glass-card">
@@ -153,48 +168,16 @@ function renderPlanos() {
                 const drawer = document.getElementById('client-area-drawer');
                 if (drawer) drawer.classList.remove('active');
                 
-                // Puxar dinamicamente o import e abrir auth
-                import('./auth.js').then(module => module.openAuthModal('login')).catch(console.error);
+                const loginModal = document.getElementById('login-modal');
+                if (loginModal) loginModal.classList.add('active');
                 return;
             }
-
-            const planId = e.currentTarget.getAttribute('data-plan-id');
-            const priceId = e.currentTarget.getAttribute('data-price-id');
             
-            const originalText = e.currentTarget.innerHTML;
-            e.currentTarget.innerHTML = '<i data-lucide="loader" class="lucide-spin icon-sm"></i> Aguarde...';
-            if (window.lucide) window.lucide.createIcons({ root: e.currentTarget });
-
-            try {
-                const response = await fetch('/api/stripe/create-subscription-checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        priceId: priceId,
-                        clientId: window.globalUser.id,
-                        tenantId: window.globalTenantId,
-                        planId: planId,
-                        successUrl: window.location.href,
-                        cancelUrl: window.location.href
-                    })
-                });
-
-                const data = await response.json();
-                if (data.url) {
-                    window.location.href = data.url;
-                } else {
-                    throw new Error('URL de checkout não retornada');
-                }
-            } catch (err) {
-                console.error(err);
-                if (window.showToast) window.showToast('Erro ao iniciar assinatura', 'error');
-                e.currentTarget.innerHTML = originalText;
-                if (window.lucide) window.lucide.createIcons({ root: e.currentTarget });
-            }
+            const planId = e.target.dataset.planId;
+            if (window.showToast) window.showToast('Redirecionando para o pagamento...', 'info');
+            // ... integra??o stripe (pendente)
         });
     });
-
-    if (window.lucide) window.lucide.createIcons();
 }
 
 // Escutar evento de login para recarregar

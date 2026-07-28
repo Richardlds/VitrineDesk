@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -46,6 +46,15 @@
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/landing.css">
     <link rel="stylesheet" href="/css/responsive.css">
+    <script>
+        if (window.location.hash.includes('access_token')) {
+            const redirect = localStorage.getItem('oauth_redirect');
+            if (redirect && redirect !== '/' && redirect !== window.location.pathname) {
+                localStorage.removeItem('oauth_redirect');
+                window.location.href = redirect + window.location.hash;
+            }
+        }
+    </script>
 </head>
 
 <body>
