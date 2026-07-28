@@ -10,7 +10,7 @@ import { checkMaintenanceMode, getSlugFromURL, supaFetch, showToast, showConfirm
 import { getLoggedClient, isLogged, initAuth, updateAuthUI } from './auth.js';
 import { initAgendamentos, loadMyAppointments } from './agendamentos.js';
 import { initBooking } from './booking.js';
-import { initPlanos } from './planos.js';
+import { initPlanos } from './planos.js?v=1785239187,27244';
 
 // Módulos de renderização
 import { renderServices } from './renders/services.js';
