@@ -1,4 +1,4 @@
-﻿import { supaFetch } from './utils.js';
+import { supaFetch } from './utils.js';
 import { getTenantId } from './app.js';
 import { getLoggedClient } from './auth.js';
 
@@ -127,36 +127,52 @@ function renderPlanos() {
 
     // Render Available Plans
     let html = '';
+    let hasAvailablePlans = tenantPlans.length > 0;
+    
     tenantPlans.forEach(plan => {
-        // If user already has this active plan, skip or show as current
-        if (activeSubscription && activeSubscription.plan_id === plan.id) {
-            return; // Already showing above
-        }
+        const isCurrentPlan = activeSubscription && activeSubscription.plan_id === plan.id;
 
         let benefits = [];
-        if (plan.discount_percentage > 0) benefits.push(`Desconto de ${plan.discount_percentage}% nos serviços`);
-        if (plan.free_appointments_per_month > 0) benefits.push(`${plan.free_appointments_per_month} Agendamentos grátis/mês`);
+        if (plan.discount_percentage > 0) benefits.push(`Desconto de ${plan.discount_percentage}% em outros serviços`);
+        if (plan.free_appointments_per_month > 0) {
+            let srvText = (plan.included_services && plan.included_services.length > 0) ? ' nos serviços selecionados' : '';
+            benefits.push(`${plan.free_appointments_per_month} Agendamentos grátis/mês${srvText}`);
+        }
         
+        let cardStyle = isCurrentPlan ? 'border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);' : '';
+        let badgeHtml = isCurrentPlan ? `<div style="position: absolute; top: -14px; right: 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark, #0056b3)); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 10;">Plano Atual</div>` : '';
+        
+        let buttonHtml = isCurrentPlan 
+            ? `<button class="btn btn-secondary btn-block btn-assinar" disabled>Plano Ativo</button>`
+            : `<button class="btn btn-primary btn-block btn-assinar btn-assinar-plano" data-plan-id="${plan.id}" data-price-id="${plan.stripe_price_id}">Assinar Agora</button>`;
+        
+        let imageHtml = plan.image_url ? `<div class="plan-image-wrapper"><img src="${plan.image_url}" alt="${plan.name}"></div>` : '';
+
+        // Lucide check icon string
+        const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
         html += `
-            <div class="service-card glass-card">
-                <div class="service-info" style="padding: 16px;">
-                    <div class="flex-between-start mb-2">
-                        <h5 class="font-bold text-md text-primary m-0">${plan.name}</h5>
-                        <span class="font-bold text-primary">R$ ${Number(plan.price).toFixed(2)}/mês</span>
+            <div class="plan-card" style="${cardStyle}">
+                ${badgeHtml}
+                ${imageHtml}
+                <div class="plan-content">
+                    <div class="plan-header">
+                        <h5 class="plan-title">${plan.name}</h5>
+                        <div class="plan-price">R$ ${Number(plan.price).toFixed(2)}<span>/mês</span></div>
+                        ${plan.description ? `<p class="plan-desc">${plan.description}</p>` : ''}
                     </div>
-                    ${plan.description ? `<p class="text-sm text-secondary mb-2">${plan.description}</p>` : ''}
-                    <ul class="text-sm text-secondary mb-3 pl-3" style="list-style-position: inside;">
-                        ${benefits.map(b => `<li style="list-style-type: disc; margin-bottom: 4px;">${b}</li>`).join('')}
+                    
+                    <ul class="plan-benefits">
+                        ${benefits.map(b => `<li>${checkIcon}<span>${b}</span></li>`).join('')}
                     </ul>
-                    <button class="btn btn-primary btn-block py-2 rounded-md font-medium text-sm btn-assinar-plano" data-plan-id="${plan.id}" data-price-id="${plan.stripe_price_id}">
-                        Assinar Agora
-                    </button>
+                    
+                    ${buttonHtml}
                 </div>
             </div>
         `;
     });
 
-    const fallbackHtml = '<div class="text-center text-secondary p-3 w-100">Você já assinou o plano disponível.</div>';
+    const fallbackHtml = '<div class="text-center text-secondary p-3 w-100">Nenhum plano disponível.</div>';
     
     if (listContainer) listContainer.innerHTML = html || fallbackHtml;
     if (homeGrid) homeGrid.innerHTML = html || fallbackHtml;

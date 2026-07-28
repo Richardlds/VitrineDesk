@@ -4,9 +4,14 @@
             <h2 class="mb-1 text-primary">Gestão de Planos</h2>
             <p class="text-secondary text-sm">Crie e edite planos de assinatura e defina quais módulos do sistema cada plano terá acesso.</p>
         </div>
-        <button id="btn-novo-plano" class="btn btn-primary px-3 py-2 rounded-md font-medium flex align-center gap-2">
-            <i data-lucide="plus" class="icon-sm"></i> Novo Plano
-        </button>
+        <div class="flex gap-2">
+            <button id="btn-tutorial-stripe-god" class="btn btn-outline px-3 py-2 rounded-md font-medium flex align-center gap-2">
+                <i data-lucide="help-circle" class="icon-sm"></i> Configurar Stripe
+            </button>
+            <button id="btn-novo-plano" class="btn btn-primary px-3 py-2 rounded-md font-medium flex align-center gap-2">
+                <i data-lucide="plus" class="icon-sm"></i> Novo Plano
+            </button>
+        </div>
     </div>
 
     <!-- Tabela de Planos -->
@@ -71,5 +76,55 @@
         <button id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-md font-bold flex align-center justify-center gap-2">
             <i data-lucide="save"></i> Salvar Plano
         </button>
+    </div>
+</div>
+
+<!-- Modal Tutorial Stripe Plataforma -->
+<div id="modal-tutorial-stripe-god" class="modal-overlay d-none">
+    <div class="modal-content config-card modal-card-lg" style="max-height: 90vh; overflow-y: auto; width: 90%; max-width: 800px;">
+        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+            <h3 class="text-primary m-0 flex align-center gap-2"><i data-lucide="info" class="text-primary"></i> Como Configurar o Stripe da Plataforma</h3>
+            <button id="btn-close-tutorial-stripe-god" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <div class="text-secondary text-sm line-height-1-6">
+            <p class="mb-3">Siga os passos abaixo para permitir que a Plataforma (você) receba o pagamento das assinaturas dos lojistas através do Stripe.</p>
+            
+            <h4 class="text-primary mt-4 mb-2">1. Configurar Chaves (Vercel)</h4>
+            <p class="mb-3">
+                A plataforma usa a sua conta mestre do Stripe. Você precisa garantir que a chave <strong>STRIPE_SECRET_KEY</strong> (começa com sk_live_ ou sk_test_) esteja configurada nas variáveis de ambiente do seu painel na Vercel (ou no arquivo .env se estiver rodando localmente).
+            </p>
+
+            <h4 class="text-primary mt-4 mb-2">2. Criar Webhook da Plataforma</h4>
+            <ul class="pl-4 mb-3">
+                <li class="mb-1">Acesse o <strong>Dashboard da sua conta Stripe</strong>.</li>
+                <li class="mb-1">Vá em <strong>Desenvolvedores &gt; Webhooks</strong> e clique em <strong>Adicionar endpoint</strong>.</li>
+                <li class="mb-1">Na URL do endpoint, insira exatamente a URL abaixo (substitua o domínio pelo seu):<br>
+                    <code class="bg-placeholder px-2 py-1 rounded text-xs mt-1 inline-block">https://SEUDOMINIO.com/api/stripe/platform/webhook</code>
+                </li>
+                <li class="mb-1">Selecione os seguintes eventos para escutar:
+                    <ul class="pl-4 mt-1 text-xs font-mono bg-placeholder p-2 rounded">
+                        <li>checkout.session.completed</li>
+                        <li>invoice.payment_succeeded</li>
+                        <li>invoice.payment_failed</li>
+                        <li>customer.subscription.deleted</li>
+                    </ul>
+                </li>
+                <li class="mb-1">Clique em Adicionar e copie o <strong>Segredo de Assinatura</strong> (começa com whsec_). Coloque ele na variável <strong>STRIPE_WEBHOOK_SECRET</strong> da Vercel.</li>
+            </ul>
+
+            <h4 class="text-primary mt-4 mb-2">3. Como usar</h4>
+            <p class="mb-3">
+                Com as variáveis inseridas na Vercel, sempre que você criar um "Novo Plano" aqui nesta tela, a plataforma vai automaticamente comunicar com o Stripe e criar o plano lá também para gerar os links de checkout dos lojistas.
+            </p>
+        </div>
+        
+        <div class="mt-4 pt-3 border-top-dashed text-right">
+            <button class="btn btn-primary px-4 py-2 rounded-md font-medium" onclick="document.getElementById('modal-tutorial-stripe-god').classList.add('d-none')">
+                Entendi
+            </button>
+        </div>
     </div>
 </div>

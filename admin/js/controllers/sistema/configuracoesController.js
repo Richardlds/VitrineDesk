@@ -101,6 +101,14 @@ export class configuracoesController {
                 .single();
 
             if (error) throw error;
+            
+            // Buscar integrações (Stripe)
+            const { data: integrations } = await supabase
+                .from('tenant_integrations')
+                .select('*')
+                .eq('tenant_id', this.tenantId)
+                .single();
+
             this.tenantData = tenant;
             const settings = tenant.settings || {};
             const vis = settings.visibilidade || {};
@@ -147,6 +155,18 @@ export class configuracoesController {
                 if (chk) chk.dispatchEvent(new Event('change'));
             });
 
+            // Aba Stripe
+            if (integrations) {
+                setVal('input-stripe-public', integrations.stripe_public_key);
+                setVal('input-stripe-secret', integrations.stripe_secret_key);
+                setVal('input-stripe-webhook', integrations.stripe_webhook_secret);
+            }
+            
+            const hint = document.getElementById('webhook-url-hint');
+            if (hint) {
+                hint.textContent = `${window.location.origin}/api/stripe/webhook?tenantId=${this.tenantId}`;
+            }
+
         } catch (error) {
             console.error('Erro ao buscar dados do tenant:', error);
             throw error;
@@ -154,6 +174,20 @@ export class configuracoesController {
     }
 
     bindEvents() {
+        const btnTutorial = document.getElementById('btn-tutorial-stripe-lojista');
+        if (btnTutorial) {
+            btnTutorial.addEventListener('click', () => {
+                document.getElementById('modal-tutorial-stripe-lojista').classList.remove('d-none');
+            });
+        }
+
+        const btnCloseTutorial = document.getElementById('btn-close-tutorial-stripe-lojista');
+        if (btnCloseTutorial) {
+            btnCloseTutorial.addEventListener('click', () => {
+                document.getElementById('modal-tutorial-stripe-lojista').classList.add('d-none');
+            });
+        }
+
         const tabBtns = document.querySelectorAll('.config-tab-btn');
         const tabContents = document.querySelectorAll('.config-tab-content');
 
@@ -255,6 +289,29 @@ export class configuracoesController {
                     throw new Error('Este link (slug) já está em uso por outra loja.');
                 }
                 throw error;
+            }
+
+            // Salvar integrações
+            const stripePublic = getVal('input-stripe-public');
+            const stripeSecret = getVal('input-stripe-secret');
+            const stripeWebhook = getVal('input-stripe-webhook');
+
+            // Se houver algum valor, fazemos o upsert
+            if (stripePublic || stripeSecret || stripeWebhook) {
+                const { error: errorIntegrations } = await supabase
+                    .from('tenant_integrations')
+                    .upsert({
+                        tenant_id: this.tenantId,
+                        stripe_public_key: stripePublic,
+                        stripe_secret_key: stripeSecret,
+                        stripe_webhook_secret: stripeWebhook,
+                        updated_at: new Date().toISOString()
+                    });
+                    
+                if (errorIntegrations) {
+                    console.error('Erro ao salvar integrações:', errorIntegrations);
+                    throw new Error('As configurações foram salvas, mas houve um erro ao salvar as credenciais do Stripe.');
+                }
             }
 
             if (window.showToast) window.showToast('Configurações salvas com sucesso!', 'success');

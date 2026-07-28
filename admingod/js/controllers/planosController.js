@@ -1,4 +1,4 @@
-﻿import { supabase } from '../core/supabaseClient.js';
+import { supabase } from '../core/supabaseClient.js';
 
 export class planosController {
     constructor() {
@@ -179,6 +179,172 @@ export class planosController {
         document.getElementById('modal-plano').classList.remove('d-none');
     }
 
+    async init() {
+        try {
+            this.bindEvents();
+            this.renderFeaturesForm();
+            await this.loadPlanos();
+        } catch (error) {
+            console.error('Erro ao iniciar planos:', error);
+        }
+    }
+
+    renderFeaturesForm() {
+        const container = document.getElementById('plano-features-container');
+        if (!container) return;
+
+        let html = '';
+        this.MENU_MODULES.forEach(module => {
+            html += `
+                <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder bg-placeholder bg-opacity-20">
+                    <span class="text-sm text-primary font-medium">${module.name}</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="feature-toggle" data-module="${module.id}">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    bindEvents() {
+        const btnTutorial = document.getElementById('btn-tutorial-stripe-god');
+        if (btnTutorial) {
+            btnTutorial.addEventListener('click', () => {
+                document.getElementById('modal-tutorial-stripe-god').classList.remove('d-none');
+            });
+        }
+
+        const btnCloseTutorial = document.getElementById('btn-close-tutorial-stripe-god');
+        if (btnCloseTutorial) {
+            btnCloseTutorial.addEventListener('click', () => {
+                document.getElementById('modal-tutorial-stripe-god').classList.add('d-none');
+            });
+        }
+
+        const btnNovo = document.getElementById('btn-novo-plano');
+        if (btnNovo) {
+            btnNovo.addEventListener('click', () => {
+                document.getElementById('plano-id').value = '';
+                document.getElementById('plano-nome').value = '';
+                document.getElementById('plano-preco').value = '';
+                document.getElementById('plano-default').checked = false;
+                document.getElementById('modal-plano-title').textContent = 'Novo Plano';
+                document.querySelectorAll('.feature-toggle').forEach(chk => chk.checked = false);
+                document.getElementById('modal-plano').classList.remove('d-none');
+            });
+        }
+
+        const btnClose = document.getElementById('btn-close-modal-plano');
+        if (btnClose) {
+            btnClose.addEventListener('click', () => {
+                document.getElementById('modal-plano').classList.add('d-none');
+            });
+        }
+
+        const btnSalvar = document.getElementById('btn-salvar-plano');
+        if (btnSalvar) {
+            btnSalvar.addEventListener('click', () => this.salvarPlano());
+        }
+
+        const tbody = document.getElementById('table-body-planos');
+        if (tbody) {
+            tbody.addEventListener('click', (e) => {
+                const btnEdit = e.target.closest('.btn-edit');
+                if (btnEdit) {
+                    const id = btnEdit.getAttribute('data-id');
+                    this.abrirModalEdicao(id);
+                }
+
+                const btnDelete = e.target.closest('.btn-delete');
+                if (btnDelete) {
+                    const id = btnDelete.getAttribute('data-id');
+                    if (window.showConfirm) {
+                        window.showConfirm('Deseja realmente excluir este plano? Tenants vinculados podem perder referências.', async () => {
+                            await this.deletarPlano(id);
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    async loadPlanos() {
+        const tbody = document.getElementById('table-body-planos');
+        if (!tbody) return;
+
+        try {
+            const { data, error } = await supabase.from('plans').select('*').order('price', { ascending: true });
+            if (error) throw error;
+            this.planos = data || [];
+            this.renderTable();
+        } catch (error) {
+            console.error('Erro ao buscar planos:', error);
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-danger">Erro ao carregar dados. ${error.message}</td></tr>`;
+        }
+    }
+
+    renderTable() {
+        const tbody = document.getElementById('table-body-planos');
+        if (!tbody) return;
+
+        if (this.planos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-secondary">Nenhum plano cadastrado.</td></tr>`;
+            return;
+        }
+
+        let html = '';
+        this.planos.forEach(p => {
+            const featuresAtivas = Object.keys(p.features || {}).filter(k => p.features[k] === true).length;
+            const totalFeatures = this.MENU_MODULES.length;
+            
+            const badgePadrao = p.is_default ? '<span class="badge bg-success-light text-success ml-2 px-2 py-1 rounded text-xs" style="margin-left: 8px;">Padrão</span>' : '';
+
+            html += `
+                <tr class="border-bottom-dashed border-placeholder hover:bg-hover transition-colors">
+                    <td class="py-3 px-4 font-bold text-primary">${p.name} ${badgePadrao}</td>
+                    <td class="py-3 px-4 text-success font-medium">R$ ${parseFloat(p.price || 0).toFixed(2).replace('.', ',')}</td>
+                    <td class="py-3 px-4 text-center text-sm text-secondary">
+                        <span class="badge bg-primary-light text-primary px-2 py-1 rounded">${featuresAtivas}/${totalFeatures} Liberados</span>
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="flex justify-center gap-2">
+                            <button class="btn bg-primary-light text-primary border-none rounded px-2 py-1 cursor-pointer hover:bg-primary transition-colors hover:text-white btn-edit" data-id="${p.id}">
+                                <i data-lucide="edit-3" class="icon-sm m-0"></i>
+                            </button>
+                            <button class="btn bg-danger-light text-danger border-none rounded px-2 py-1 cursor-pointer hover:bg-danger transition-colors hover:text-white btn-delete" data-id="${p.id}">
+                                <i data-lucide="trash-2" class="icon-sm m-0"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+        if (window.lucide) window.lucide.createIcons();
+    }
+
+    abrirModalEdicao(id) {
+        const plano = this.planos.find(p => p.id === id);
+        if (!plano) return;
+
+        document.getElementById('plano-id').value = plano.id;
+        document.getElementById('plano-nome').value = plano.name;
+        document.getElementById('plano-preco').value = plano.price;
+        document.getElementById('plano-default').checked = plano.is_default === true;
+        document.getElementById('modal-plano-title').textContent = 'Editar Plano';
+
+        const features = plano.features || {};
+        document.querySelectorAll('.feature-toggle').forEach(chk => {
+            const module = chk.getAttribute('data-module');
+            chk.checked = features[module] === true;
+        });
+
+        document.getElementById('modal-plano').classList.remove('d-none');
+    }
+
     async salvarPlano() {
         const id = document.getElementById('plano-id').value;
         const name = document.getElementById('plano-nome').value.trim();
@@ -218,6 +384,22 @@ export class planosController {
                 const res = await supabase.from('plans').update(payload).eq('id', id);
                 error = res.error;
             } else {
+                // CREATE - Create in Stripe Platform first
+                const response = await fetch('/api/stripe/platform/create-plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: payload.name, price: payload.price })
+                });
+                
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || 'Erro ao criar no Stripe (Plataforma)');
+                }
+                const stripeData = await response.json();
+                
+                payload.stripe_product_id = stripeData.productId;
+                payload.stripe_price_id = stripeData.priceId;
+
                 const res = await supabase.from('plans').insert([payload]);
                 error = res.error;
             }
@@ -229,7 +411,7 @@ export class planosController {
             await this.loadPlanos();
         } catch (error) {
             console.error('Erro ao salvar plano:', error);
-            if (window.showToast) window.showToast('Erro ao salvar plano.', 'error');
+            if (window.showToast) window.showToast('Erro ao salvar plano. ' + (error.message || ''), 'error');
         } finally {
             btnSalvar.innerHTML = originalHtml;
             if (window.lucide) window.lucide.createIcons();

@@ -1,4 +1,4 @@
-import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
+import { supabase, getCurrentTenantId, uploadImageToSupabase } from '../../core/supabaseClient.js';
 
 export class planos_clientesController {
     constructor(stateManager) {
@@ -12,6 +12,7 @@ export class planos_clientesController {
         this.tenantId = await getCurrentTenantId();
         this.bindEvents();
         await this.loadPlans();
+        await this.loadServices();
     }
 
     bindEvents() {
@@ -27,6 +28,37 @@ export class planos_clientesController {
         });
 
         form?.addEventListener('submit', (e) => this.handleSavePlan(e));
+
+        const inputFile = document.getElementById('input-plano-foto');
+        if (inputFile) {
+            inputFile.addEventListener('change', (e) => this.handleImagePreview(e));
+        }
+    }
+
+    handleImagePreview(e) {
+        const file = e.target.files[0];
+        const previewEl = document.getElementById('preview-plano-img');
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewEl.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async loadServices() {
+        try {
+            const { data, error } = await supabase
+                .from('services')
+                .select('id, name')
+                .eq('tenant_id', this.tenantId);
+            if (error) throw error;
+            this.tenantServices = data || [];
+        } catch (err) {
+            console.error('Erro ao buscar serviços do tenant:', err);
+            this.tenantServices = [];
+        }
     }
 
     openModal(plan = null) {
@@ -46,6 +78,16 @@ export class planos_clientesController {
             document.getElementById('input-plano-preco').value = plan.price;
             document.getElementById('input-plano-desconto').value = plan.discount_percentage || '';
             document.getElementById('input-plano-gratis').value = plan.free_appointments_per_month || '';
+            document.getElementById('input-plano-image-url').value = plan.image_url || '';
+
+            const previewEl = document.getElementById('preview-plano-img');
+            if (plan.image_url) {
+                previewEl.innerHTML = `<img src="${plan.image_url}" style="width:100%; height:100%; object-fit:cover;">`;
+            } else {
+                previewEl.innerHTML = `<i data-lucide="image" class="text-muted"></i>`;
+            }
+
+            this.renderServicesCheckboxes(plan.included_services || []);
             
             // Disable price editing if already created in stripe
             if (plan.stripe_product_id) {
@@ -64,11 +106,38 @@ export class planos_clientesController {
         } else {
             title.textContent = 'Criar Plano de Assinatura';
             document.getElementById('input-plano-preco').disabled = false;
+            document.getElementById('input-plano-image-url').value = '';
+            document.getElementById('preview-plano-img').innerHTML = `<i data-lucide="image" class="text-muted"></i>`;
+            this.renderServicesCheckboxes([]);
+
             btnInativar.classList.add('d-none');
             btnSalvar.textContent = 'Salvar e Criar no Stripe';
         }
 
         modal.classList.remove('d-none');
+    }
+
+    renderServicesCheckboxes(selectedServiceIds = []) {
+        const listDiv = document.getElementById('plano-servicos-list');
+        if (!listDiv) return;
+
+        if (!this.tenantServices || this.tenantServices.length === 0) {
+            listDiv.innerHTML = '<p class="text-sm text-secondary">Nenhum serviço cadastrado ainda.</p>';
+            return;
+        }
+
+        let html = '<div class="flex flex-column gap-2">';
+        this.tenantServices.forEach(s => {
+            const isChecked = selectedServiceIds.includes(s.id) ? 'checked' : '';
+            html += `
+                <label class="flex align-center gap-2 cursor-pointer">
+                    <input type="checkbox" class="cb-included-service" value="${s.id}" ${isChecked}>
+                    <span class="text-sm text-secondary">${s.name}</span>
+                </label>
+            `;
+        });
+        html += '</div>';
+        listDiv.innerHTML = html;
     }
 
     closeModal() {
@@ -164,6 +233,25 @@ export class planos_clientesController {
             const desconto = parseFloat(document.getElementById('input-plano-desconto').value) || 0;
             const gratis = parseInt(document.getElementById('input-plano-gratis').value, 10) || 0;
 
+            // Get included services
+            const includedServices = [];
+            document.querySelectorAll('.cb-included-service:checked').forEach(cb => {
+                includedServices.push(cb.value);
+            });
+
+            // Handle Image Upload
+            const fileInput = document.getElementById('input-plano-foto');
+            let imageUrl = document.getElementById('input-plano-image-url').value;
+
+            if (fileInput.files.length > 0) {
+                btnSalvar.innerHTML = `<i data-lucide="loader" class="animate-spin icon-sm mr-2"></i> Fazendo upload...`;
+                try {
+                    imageUrl = await uploadImageToSupabase(fileInput.files[0], 'avatars', this.tenantId);
+                } catch (e) {
+                    console.error('Falha no upload', e);
+                }
+            }
+
             if (this.editingPlanId) {
                 // UPDATE (only allows updating name, desc, benefits. Price is disabled).
                 const { error } = await supabase
@@ -172,7 +260,9 @@ export class planos_clientesController {
                         name: nome,
                         description: descricao,
                         discount_percentage: desconto,
-                        free_appointments_per_month: gratis
+                        free_appointments_per_month: gratis,
+                        included_services: includedServices,
+                        image_url: imageUrl
                     })
                     .eq('id', this.editingPlanId)
                     .eq('tenant_id', this.tenantId);
@@ -184,7 +274,7 @@ export class planos_clientesController {
                 const response = await fetch('/api/stripe/create-plan', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: nome, price: preco })
+                    body: JSON.stringify({ name: nome, price: preco, tenantId: this.tenantId })
                 });
                 
                 if (!response.ok) throw new Error('Erro ao criar no Stripe');
@@ -199,6 +289,8 @@ export class planos_clientesController {
                         price: preco,
                         discount_percentage: desconto,
                         free_appointments_per_month: gratis,
+                        included_services: includedServices,
+                        image_url: imageUrl,
                         stripe_product_id: stripeData.productId,
                         stripe_price_id: stripeData.priceId
                     }]);

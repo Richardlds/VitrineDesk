@@ -122,15 +122,20 @@ export async function openBookingModal(service) {
       if (periodEnd > new Date()) {
         const freeAppointmentsTotal = plan.free_appointments_per_month || 0;
         const usedAppointments = window.activeClientSubscription.used_free_appointments_this_cycle || 0;
+        const includedServices = plan.included_services || [];
         
-        if (freeAppointmentsTotal > usedAppointments) {
-          // Tem agendamento grátis
+        // Verifica se o serviço atual está na lista de serviços incluídos (ou se a lista for vazia e antes aplicava a todos)
+        // Para manter compatibilidade caso não tenham selecionado nada, podemos assumir que se não tem array, não tem serviços incluídos.
+        const isServiceIncluded = includedServices.includes(bookingState.serviceId);
+
+        if (isServiceIncluded && freeAppointmentsTotal > usedAppointments) {
+          // Tem agendamento grátis e o serviço está incluso
           bookingState.discountData = {
             desconto_percentual: 100
           };
           bookingState.planDiscountApplied = 'free_appointment';
         } else if (plan.discount_percentage > 0) {
-          // Usa apenas desconto percentual
+          // Usa apenas desconto percentual para "outros serviços" ou caso os grátis tenham acabado
           bookingState.discountData = {
             desconto_percentual: plan.discount_percentage
           };

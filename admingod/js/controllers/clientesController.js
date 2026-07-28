@@ -58,6 +58,7 @@ export class clientesController {
         this.currentPage = page;
 
         const tbody = document.getElementById('table-body-clientes');
+        if (!tbody) return;
         tbody.innerHTML = `
             <tr>
                 <td colspan="4" class="py-8 text-center text-secondary">
@@ -94,12 +95,13 @@ export class clientesController {
             this.renderPagination();
         } catch (error) {
             console.error('Erro na busca de clientes:', error);
-            tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-danger">Erro ao realizar a busca no banco.</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-danger">Erro ao realizar a busca no banco.</td></tr>`;
         }
     }
 
     renderClientes() {
         const tbody = document.getElementById('table-body-clientes');
+        if (!tbody) return;
         let html = '';
 
         if (this.clientes.length === 0) {

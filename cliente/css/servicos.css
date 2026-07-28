@@ -611,3 +611,131 @@
 }
 
 /* As lógicas de colunas fixas foram removidas para usar auto-fill fluido (Mobile First Real). */
+
+/* ============================================================
+   PLAN CARD (Premium UI)
+   ============================================================ */
+.plan-card {
+  position: relative;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  height: max-content; /* Permite que o card tenha o tamanho natural do conteúdo */
+  min-height: 100%; /* Ocupar o espaço do grid verticalmente se os cards da mesma linha forem maiores */
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--primary-rgb), 0.5);
+  box-shadow: 0 12px 40px 0 rgba(var(--primary-rgb), 0.2);
+}
+
+.plan-card .plan-image-wrapper {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+
+.plan-card .plan-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.plan-card:hover .plan-image-wrapper img {
+  transform: scale(1.05);
+}
+
+.plan-card .plan-content {
+  padding: 24px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.plan-card .plan-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plan-card .plan-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.plan-card .plan-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.plan-card .plan-price span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--secondary);
+}
+
+.plan-card .plan-desc {
+  font-size: 0.95rem;
+  color: var(--secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.plan-card .plan-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plan-card .plan-benefits li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--secondary);
+  line-height: 1.4;
+}
+
+.plan-card .plan-benefits li svg {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.plan-card .btn-assinar {
+  margin-top: 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px;
+  transition: all 0.3s ease;
+}
+
+.plan-card .btn-assinar:hover:not(:disabled) {
+  background: var(--primary-dark, #0056b3);
+  box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.4);
+}

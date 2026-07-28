@@ -1,4 +1,10 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL || 'https://ioadqdpxbuqdlwamqtxm.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -11,6 +17,20 @@ export default async function handler(req, res) {
     if (!priceId || !clientId || !tenantId || !planId) {
       return res.status(400).json({ error: 'Missing required metadata or priceId' });
     }
+
+    // Buscar chave secreta do Lojista
+    const { data: integration, error: integrationError } = await supabase
+      .from('tenant_integrations')
+      .select('stripe_secret_key')
+      .eq('tenant_id', tenantId)
+      .single();
+
+    if (integrationError || !integration?.stripe_secret_key) {
+      console.error('Tenant missing Stripe integration or error:', integrationError);
+      return res.status(400).json({ error: 'Lojista não configurou as credenciais do Stripe.' });
+    }
+
+    const stripe = new Stripe(integration.stripe_secret_key);
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',

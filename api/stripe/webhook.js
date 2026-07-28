@@ -28,14 +28,31 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const { tenantId } = req.query;
+  if (!tenantId) {
+    return res.status(400).json({ error: 'Missing tenantId in webhook URL' });
+  }
+
+  // Buscar integrações do Lojista
+  const { data: integration, error: integrationError } = await supabase
+    .from('tenant_integrations')
+    .select('stripe_secret_key, stripe_webhook_secret')
+    .eq('tenant_id', tenantId)
+    .single();
+
+  if (integrationError || !integration?.stripe_secret_key || !integration?.stripe_webhook_secret) {
+    console.error('Tenant missing Stripe integration or error:', integrationError);
+    return res.status(400).json({ error: 'Lojista não configurou corretamente as credenciais do Stripe.' });
+  }
+
+  const stripe = new Stripe(integration.stripe_secret_key);
   const sig = req.headers['stripe-signature'];
 
   let event;
 
   try {
     const rawBody = await buffer(req);
-    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(rawBody, sig, integration.stripe_webhook_secret);
   } catch (err) {
     return res.status(400).json({ error: `Webhook Error: ${err.message}` });
   }

@@ -1,4 +1,10 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL || 'https://ioadqdpxbuqdlwamqtxm.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -6,11 +12,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, price } = req.body; // price comes in as a string or number, e.g. 50.00
+    const { name, price, tenantId } = req.body; 
     
-    if (!name || price === undefined) {
-      return res.status(400).json({ error: 'Missing name or price' });
+    if (!name || price === undefined || !tenantId) {
+      return res.status(400).json({ error: 'Missing name, price or tenantId' });
     }
+
+    // Buscar chave secreta do Lojista
+    const { data: integration, error: integrationError } = await supabase
+      .from('tenant_integrations')
+      .select('stripe_secret_key')
+      .eq('tenant_id', tenantId)
+      .single();
+
+    if (integrationError || !integration?.stripe_secret_key) {
+      console.error('Tenant missing Stripe integration or error:', integrationError);
+      return res.status(400).json({ error: 'Lojista não configurou as credenciais do Stripe.' });
+    }
+
+    const stripe = new Stripe(integration.stripe_secret_key);
 
     // 1. Create a Product
     const product = await stripe.products.create({

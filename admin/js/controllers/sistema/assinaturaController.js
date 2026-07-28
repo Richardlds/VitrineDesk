@@ -1,4 +1,4 @@
-﻿import { supabase } from '../../core/supabaseClient.js';
+import { supabase } from '../../core/supabaseClient.js';
 const escapeHTML = (str) => str ? str.replace(/[&<>'"`]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;', '`': '&#96;' }[tag] || tag)) : '';
 
 
@@ -112,7 +112,7 @@ export class assinaturaController {
             const isAtual = p.id === planoAtualId;
             const actionBtn = isAtual 
                 ? `<button class="btn btn-outline w-100 rounded-md py-2 font-medium" disabled>Plano Atual</button>`
-                : `<button class="btn btn-primary w-100 rounded-md py-2 font-medium btn-assinar" data-id="${p.id}" data-name="${escapeHTML(p.name)}">Mudar para este plano</button>`;
+                : `<button class="btn btn-primary w-100 rounded-md py-2 font-medium btn-assinar" data-id="${p.id}" data-name="${escapeHTML(p.name)}" data-price-id="${p.stripe_price_id || ''}">Mudar para este plano</button>`;
 
             html += `
                 <div class="p-4 bg-white rounded-md border-dashed ${isAtual ? 'border-primary' : 'border-placeholder'} relative">
@@ -135,16 +135,46 @@ export class assinaturaController {
             btn.addEventListener('click', (e) => {
                 const planId = e.target.getAttribute('data-id');
                 const planName = e.target.getAttribute('data-name');
-                this.assinarPlano(planId, planName);
+                const priceId = e.target.getAttribute('data-price-id');
+                this.assinarPlano(planId, planName, priceId);
             });
         });
     }
 
-    assinarPlano(planId, planName) {
-        // Redirecionamento temporário para o WhatsApp para upgrade
-        const msg = encodeURIComponent(`Olá! Gostaria de mudar minha assinatura da VitrineDesk para o plano: ${planName}`);
-        window.open(`https://wa.me/${(window.globalMaintenanceData?.support_whatsapp || '5511999999999')}?text=${msg}`, '_blank');
-        window.showToast('Redirecionando para atendimento financeiro...', 'info');
+    async assinarPlano(planId, planName, priceId) {
+        if (!priceId) {
+            window.showToast('Este plano não possui integração de pagamento ativa. Contate o suporte.', 'error');
+            return;
+        }
+
+        const btn = document.querySelector(`.btn-assinar[data-id="${planId}"]`);
+        if (btn) btn.innerHTML = '<i data-lucide="loader" class="animate-spin"></i> Gerando link...';
+
+        try {
+            const tenant = window.globalTenant;
+            const baseUrl = window.location.origin;
+
+            const response = await fetch('/api/stripe/platform/create-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    priceId: priceId,
+                    planId: planId,
+                    tenantId: tenant.id,
+                    successUrl: `${baseUrl}/admin/index.html?module=sistema/assinatura&success=true`,
+                    cancelUrl: `${baseUrl}/admin/index.html?module=sistema/assinatura&canceled=true`
+                })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Falha ao criar sessão');
+
+            window.location.href = data.url;
+        } catch (error) {
+            console.error('Erro no checkout:', error);
+            window.showToast(error.message, 'error');
+            if (btn) btn.innerHTML = `Mudar para este plano`;
+        }
     }
 
     bindEvents() {

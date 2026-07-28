@@ -43,6 +43,21 @@
             
             <form id="form-plano">
                 <div class="mb-3">
+                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Foto do Plano (Opcional)</label>
+                    <div class="flex align-center gap-3">
+                        <div id="preview-plano-img" class="bg-placeholder border-dashed rounded-md flex justify-center align-center overflow-hidden" style="width: 80px; height: 80px;">
+                            <i data-lucide="image" class="text-muted"></i>
+                        </div>
+                        <div>
+                            <input type="file" id="input-plano-foto" accept="image/*" class="d-none">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('input-plano-foto').click()">Selecionar Foto</button>
+                            <p class="text-xs text-muted mt-1">Recomendado: 400x400px (JPG/PNG)</p>
+                            <input type="hidden" id="input-plano-image-url">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
                     <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome do Plano</label>
                     <input type="text" id="input-plano-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Clube VIP" required>
                 </div>
@@ -59,12 +74,20 @@
                 
                 <div class="grid grid-md-2 mb-4 gap-3">
                     <div>
-                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Desconto (%)</label>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Desconto em Outros Serviços (%)</label>
                         <input type="number" id="input-plano-desconto" min="0" max="100" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 20">
                     </div>
                     <div>
-                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Agend. Grátis/mês</label>
+                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Agend. Grátis/mês (Serviços Inclusos)</label>
                         <input type="number" id="input-plano-gratis" min="0" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 2">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="font-medium text-sm text-secondary mb-2 inline-block">Serviços Incluídos</label>
+                    <p class="text-xs text-muted mb-2">Selecione os serviços que o cliente poderá agendar gratuitamente (usando sua cota de agendamentos grátis).</p>
+                    <div id="plano-servicos-list" class="bg-placeholder border-dashed rounded-md p-3" style="max-height: 200px; overflow-y: auto;">
+                        <p class="text-sm text-secondary">Carregando serviços...</p>
                     </div>
                 </div>
 
