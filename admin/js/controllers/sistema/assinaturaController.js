@@ -1,4 +1,6 @@
 ﻿import { supabase } from '../../core/supabaseClient.js';
+const escapeHTML = (str) => str ? str.replace(/[&<>'"`]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;', '`': '&#96;' }[tag] || tag)) : '';
+
 
 export class assinaturaController {
     constructor() {
@@ -65,7 +67,7 @@ export class assinaturaController {
             <div class="text-left w-100">
                 <div class="flex justify-between align-start mb-3">
                     <div>
-                        <h4 class="text-primary font-bold text-lg m-0">${window.escapeHTML(planoNome)}</h4>
+                        <h4 class="text-primary font-bold text-lg m-0">${escapeHTML(planoNome)}</h4>
                         <p class="text-secondary text-sm m-0 mt-1">${planoPreco}</p>
                     </div>
                     ${badgeHtml}
@@ -74,7 +76,7 @@ export class assinaturaController {
                 <div class="p-3 bg-white rounded-md border-dashed mt-4 flex flex-column gap-2">
                     <div class="flex justify-between align-center">
                         <span class="text-sm text-secondary">Status:</span>
-                        <span class="text-sm font-bold text-primary capitalize">${window.escapeHTML(tenant?.subscription_status || 'Free')}</span>
+                        <span class="text-sm font-bold text-primary capitalize">${escapeHTML(tenant?.subscription_status || 'Free')}</span>
                     </div>
                     <div class="flex justify-between align-center">
                         <span class="text-sm text-secondary">Vencimento:</span>
@@ -110,16 +112,16 @@ export class assinaturaController {
             const isAtual = p.id === planoAtualId;
             const actionBtn = isAtual 
                 ? `<button class="btn btn-outline w-100 rounded-md py-2 font-medium" disabled>Plano Atual</button>`
-                : `<button class="btn btn-primary w-100 rounded-md py-2 font-medium btn-assinar" data-id="${p.id}" data-name="${window.escapeHTML(p.name)}">Mudar para este plano</button>`;
+                : `<button class="btn btn-primary w-100 rounded-md py-2 font-medium btn-assinar" data-id="${p.id}" data-name="${escapeHTML(p.name)}">Mudar para este plano</button>`;
 
             html += `
                 <div class="p-4 bg-white rounded-md border-dashed ${isAtual ? 'border-primary' : 'border-placeholder'} relative">
                     ${isAtual ? '<div class="absolute top-0 right-0 bg-primary text-white text-xs px-2 py-1" style="border-bottom-left-radius: 8px;">Atual</div>' : ''}
                     <div class="flex justify-between align-start mb-3">
-                        <h4 class="text-primary font-bold m-0">${window.escapeHTML(p.name)}</h4>
+                        <h4 class="text-primary font-bold m-0">${escapeHTML(p.name)}</h4>
                         <span class="text-primary font-bold">R$ ${Number(p.price).toFixed(2)}/mês</span>
                     </div>
-                    <p class="text-sm text-secondary mb-4">${p.description ? window.escapeHTML(p.description) : 'Acesso aos módulos da plataforma'}</p>
+                    <p class="text-sm text-secondary mb-4">${p.description ? escapeHTML(p.description) : 'Acesso aos módulos da plataforma'}</p>
                     
                     ${actionBtn}
                 </div>
