@@ -1,10 +1,12 @@
 ﻿import { supaFetch } from './utils.js';
+import { getTenantId } from './app.js';
+import { getLoggedClient } from './auth.js';
 
 let tenantPlans = [];
 let activeSubscription = null;
 
 export async function initPlanos() {
-    const tenantId = window.globalTenantId;
+    const tenantId = getTenantId();
     if (!tenantId) return;
 
     try {
@@ -24,10 +26,10 @@ export async function initPlanos() {
 }
 
 export async function loadActiveSubscription() {
-    if (!window.globalUser) return;
+    if (!getLoggedClient()) return;
     
     try {
-        const data = await supaFetch(`/rest/v1/client_subscriptions?tenant_id=eq.${window.globalTenantId}&client_id=eq.${window.globalUser.id}&status=eq.active&select=*,tenant_client_plans(*)`);
+        const data = await supaFetch(`/rest/v1/client_subscriptions?tenant_id=eq.${getTenantId()}&client_id=eq.${getLoggedClient().id}&status=eq.active&select=*,tenant_client_plans(*)`);
         
         if (data && data.length > 0) {
             activeSubscription = data[0];
@@ -64,7 +66,7 @@ function renderPlanos() {
     }
 
     // Render Active Subscription no Modal e Perfil
-    if (!window.globalUser) {
+    if (!getLoggedClient()) {
         if (activeContainer) activeContainer.innerHTML = 'Faça login para ver sua assinatura.';
         if (profileBadge) profileBadge.classList.add('hidden');
     } else if (activeSubscription) {
@@ -163,7 +165,7 @@ function renderPlanos() {
     const btns = document.querySelectorAll('.btn-assinar-plano');
     btns.forEach(btn => {
         btn.addEventListener('click', async (e) => {
-            if (!window.globalUser) {
+            if (!getLoggedClient()) {
                 if (window.showToast) window.showToast('Faça login primeiro!', 'warning');
                 const drawer = document.getElementById('client-area-drawer');
                 if (drawer) drawer.classList.remove('active');
