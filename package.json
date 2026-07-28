@@ -4,7 +4,8 @@
     "private": true,
     "description": "Plataforma SaaS multi-tenant para agendamentos",
     "dependencies": {
-        "stripe": "^14.0.0"
+        "stripe": "^14.0.0",
+        "@supabase/supabase-js": "^2.39.3"
     },
     "scripts": {
         "dev": "vercel dev",
