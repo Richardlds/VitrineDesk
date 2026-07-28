@@ -43,20 +43,25 @@ export default async function handler(req, res) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
+        console.log('Webhook checkout recebido. Modo:', session.mode, 'Metadata:', session.metadata);
         
         // Verifica se é uma assinatura (SaaS)
         if (session.mode === 'subscription' && session.metadata?.tenant_id) {
           const { tenant_id, plan_id } = session.metadata;
           const subscriptionId = session.subscription;
 
+          console.log('Buscando detalhes da subscription na Stripe...', subscriptionId);
           // Busca dados da subscription no Stripe para pegar o vencimento
           const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
           const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
 
+          console.log('Buscando tenant no Supabase...', tenant_id);
           // Pega o settings atual do tenant para não sobrescrever o resto
-          const { data: tenantData } = await supabase.from('tenants').select('settings').eq('id', tenant_id).single();
+          const { data: tenantData, error: selectError } = await supabase.from('tenants').select('settings').eq('id', tenant_id).single();
+          if (selectError) console.error('Erro ao buscar tenant:', selectError);
           const currentSettings = tenantData?.settings || {};
 
+          console.log('Atualizando tenant no Supabase com novo plano...', plan_id);
           // Atualiza a tabela tenants com o novo plano e status
           const { error } = await supabase
             .from('tenants')
@@ -73,7 +78,13 @@ export default async function handler(req, res) {
             })
             .eq('id', tenant_id);
 
-          if (error) console.error('Erro ao atualizar assinatura do tenant:', error);
+          if (error) {
+            console.error('Erro ao atualizar assinatura do tenant:', error);
+          } else {
+            console.log('Tenant atualizado com sucesso!');
+          }
+        } else {
+          console.log('Sessão ignorada: não é subscription ou não tem tenant_id no metadata');
         }
         break;
       }
