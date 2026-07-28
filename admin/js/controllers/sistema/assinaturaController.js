@@ -1,4 +1,4 @@
-import { supabase } from '../../core/supabaseClient.js';
+import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
 const escapeHTML = (str) => str ? str.replace(/[&<>'"`]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;', '`': '&#96;' }[tag] || tag)) : '';
 
 
@@ -151,7 +151,9 @@ export class assinaturaController {
         if (btn) btn.innerHTML = '<i data-lucide="loader" class="animate-spin"></i> Gerando link...';
 
         try {
-            const tenant = window.globalTenant;
+            const tenantId = await getCurrentTenantId();
+            if (!tenantId) throw new Error("Tenant não identificado");
+            
             const baseUrl = window.location.origin;
 
             const response = await fetch('/api/stripe/platform/create-checkout', {
@@ -160,7 +162,7 @@ export class assinaturaController {
                 body: JSON.stringify({
                     priceId: priceId,
                     planId: planId,
-                    tenantId: tenant.id,
+                    tenantId: tenantId,
                     successUrl: `${baseUrl}/admin/index.html?module=sistema/assinatura&success=true`,
                     cancelUrl: `${baseUrl}/admin/index.html?module=sistema/assinatura&canceled=true`
                 })
