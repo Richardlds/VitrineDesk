@@ -73,8 +73,7 @@ export default async function handler(req, res) {
                     vencimento: currentPeriodEnd,
                     stripe_subscription_id: subscriptionId,
                     stripe_customer_id: session.customer
-                },
-                updated_at: new Date().toISOString()
+                }
             })
             .eq('id', tenant_id);
 
@@ -108,8 +107,7 @@ export default async function handler(req, res) {
                     settings: {
                         ...currentSettings,
                         vencimento: currentPeriodEnd
-                    },
-                    updated_at: new Date().toISOString()
+                    }
                 })
                 .eq('id', tenant_id);
                 
@@ -132,8 +130,7 @@ export default async function handler(req, res) {
             const { error } = await supabase
                 .from('tenants')
                 .update({ 
-                    subscription_status: subscriptionDetails.status, // past_due ou canceled
-                    updated_at: new Date().toISOString()
+                    subscription_status: subscriptionDetails.status // past_due ou canceled
                 })
                 .eq('id', tenant_id);
 
