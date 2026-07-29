@@ -46,12 +46,12 @@ export class assinaturaController {
         
         if (!planoId) {
             container.innerHTML = `
-                <div class="flex flex-column align-center text-center p-2">
-                    <div class="bg-danger-light p-3 rounded-full mb-3 inline-block">
-                        <i data-lucide="alert-triangle" class="text-danger"></i>
+                <div class="assinatura-hero" style="background: var(--color-bg-surface, #121212); border: 1px solid var(--color-border, #222222); color: inherit; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center;">
+                    <div style="background: var(--color-danger-light, #fee2e2); padding: 1rem; border-radius: 50%; display: inline-block; margin-bottom: 1rem;">
+                        <i data-lucide="alert-triangle" style="color: var(--color-danger, #ef4444); width: 32px; height: 32px;"></i>
                     </div>
-                    <h4 class="text-primary font-bold mb-2">Sem Assinatura</h4>
-                    <p class="text-sm text-secondary">Você ainda não assinou nenhum plano. Escolha um plano abaixo para liberar recursos.</p>
+                    <h3 class="assinatura-hero-title" style="justify-content: center; color: var(--color-primary, #6366f1); margin-bottom: 0.5rem;">Sem Assinatura</h3>
+                    <p class="text-secondary" style="margin: 0 auto; max-width: 400px; font-size: 0.95rem;">Você ainda não assinou nenhum plano. Escolha um plano abaixo para liberar recursos.</p>
                 </div>
             `;
             if (window.lucide) window.lucide.createIcons({ root: container });
@@ -60,41 +60,40 @@ export class assinaturaController {
 
         const meuPlano = this.planos.find(p => p.id === planoId);
         const planoNome = meuPlano ? meuPlano.name : 'Desconhecido';
-        const planoPreco = meuPlano ? `R$ ${Number(meuPlano.price).toFixed(2)}/mês` : '';
+        const planoPreco = meuPlano ? `R$ ${Number(meuPlano.price).toLocaleString('pt-BR', {minimumFractionDigits: 2})}/mês` : '';
         const vencimento = tenant?.settings?.vencimento ? new Date(tenant.settings.vencimento).toLocaleDateString('pt-BR') : 'Sem Vencimento';
+        const isActive = tenant?.subscription_status === 'active';
         
-        let badgeHtml = '';
-        if (tenant?.subscription_status === 'active') {
-            badgeHtml = `<span class="status-badge bg-success-light text-success border-none shadow-sm ml-2">Ativo</span>`;
-        } else {
-            badgeHtml = `<span class="status-badge bg-danger-light text-danger border-none shadow-sm ml-2">Inativo / Vencido</span>`;
-        }
+        const tagClass = isActive ? 'tag-active' : 'tag-inactive';
+        const tagText = isActive ? 'Plano Ativo' : 'Inativo / Vencido';
 
         container.innerHTML = `
-            <div class="text-left w-100">
-                <div class="flex justify-between align-start mb-3">
+            <div class="assinatura-hero">
+                <div class="assinatura-hero-content">
                     <div>
-                        <h4 class="text-primary font-bold text-lg m-0">${escapeHTML(planoNome)}</h4>
-                        <p class="text-secondary text-sm m-0 mt-1">${planoPreco}</p>
+                        <h3 class="assinatura-hero-title">
+                            ${escapeHTML(planoNome)}
+                            <span class="assinatura-tag ${tagClass}">${tagText}</span>
+                        </h3>
+                        <p class="assinatura-hero-subtitle">Seu plano atual lhe dá acesso aos recursos essenciais para gerenciar e alavancar seu negócio na VitrineDesk.</p>
+                        
+                        <div class="assinatura-metric-container">
+                            <div class="assinatura-metric">
+                                <span class="assinatura-metric-label">Valor Atual</span>
+                                <span class="assinatura-metric-value">${planoPreco}</span>
+                            </div>
+                            <div class="assinatura-metric">
+                                <span class="assinatura-metric-label">Próximo Vencimento</span>
+                                <span class="assinatura-metric-value">${vencimento}</span>
+                            </div>
+                        </div>
                     </div>
-                    ${badgeHtml}
-                </div>
-                
-                <div class="p-3 bg-white rounded-md border-dashed mt-4 flex flex-column gap-2">
-                    <div class="flex justify-between align-center">
-                        <span class="text-sm text-secondary">Status:</span>
-                        <span class="text-sm font-bold text-primary capitalize">${escapeHTML(tenant?.subscription_status || 'Free')}</span>
+                    
+                    <div>
+                        <a href="https://wa.me/${(window.globalMaintenanceData?.support_whatsapp || '5511999999999')}?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20minha%20assinatura!" target="_blank" class="assinatura-btn-support">
+                            <i data-lucide="headset"></i> Suporte Financeiro
+                        </a>
                     </div>
-                    <div class="flex justify-between align-center">
-                        <span class="text-sm text-secondary">Vencimento:</span>
-                        <span class="text-sm font-bold text-primary">${vencimento}</span>
-                    </div>
-                </div>
-
-                <div class="mt-4 pt-3 border-top-dashed text-center">
-                    <a href="https://wa.me/${(window.globalMaintenanceData?.support_whatsapp || '5511999999999')}?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20minha%20assinatura!" target="_blank" class="btn btn-outline text-secondary text-sm py-2 px-4 rounded-md">
-                        <i data-lucide="help-circle" class="mr-2 icon-sm"></i> Suporte Financeiro
-                    </a>
                 </div>
             </div>
         `;
@@ -121,15 +120,37 @@ export class assinaturaController {
                 ? `<button class="btn btn-outline w-100 rounded-md py-2 font-medium" disabled>Plano Atual</button>`
                 : `<button class="btn btn-primary w-100 rounded-md py-2 font-medium btn-assinar" data-id="${p.id}" data-name="${escapeHTML(p.name)}" data-price-id="${p.stripe_price_id || ''}">Mudar para este plano</button>`;
 
+            let benefitsList = ['Acesso aos recursos da plataforma', 'Suporte técnico especializado', 'Atualizações automáticas do sistema'];
+            if (p.benefits && p.benefits.trim()) {
+                benefitsList = p.benefits.split('\n').map(b => b.trim()).filter(b => b);
+            }
+            
+            let featuresHtml = '';
+            benefitsList.forEach(b => {
+                featuresHtml += `
+                    <li>
+                        <i data-lucide="check-circle-2"></i> ${escapeHTML(b)}
+                    </li>
+                `;
+            });
+
             html += `
-                <div class="p-4 bg-white rounded-md border-dashed ${isAtual ? 'border-primary' : 'border-placeholder'} relative">
-                    ${isAtual ? '<div class="absolute top-0 right-0 bg-primary text-white text-xs px-2 py-1" style="border-bottom-left-radius: 8px;">Atual</div>' : ''}
-                    <div class="flex justify-between align-start mb-3">
-                        <h4 class="text-primary font-bold m-0">${escapeHTML(p.name)}</h4>
-                        <span class="text-primary font-bold">R$ ${Number(p.price).toFixed(2)}/mês</span>
-                    </div>
-                    <p class="text-sm text-secondary mb-4">${p.description ? escapeHTML(p.description) : 'Acesso aos módulos da plataforma'}</p>
+                <div class="plan-card ${isAtual ? 'plan-active' : ''}">
+                    ${isAtual ? '<div class="plan-badge">Plano Atual</div>' : ''}
                     
+                    <h4 class="text-primary font-bold" style="font-size: 1.25rem; margin: 0 0 0.25rem 0;">${escapeHTML(p.name)}</h4>
+                    <p class="text-secondary" style="font-size: 0.85rem; margin: 0;">${p.description ? escapeHTML(p.description) : 'Expanda os recursos do seu negócio.'}</p>
+                    
+                    <div class="plan-price">
+                        <span class="plan-price-currency">R$</span>
+                        <span>${Number(p.price).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                        <span class="plan-price-month">/mês</span>
+                    </div>
+                    
+                    <ul class="plan-features">
+                        ${featuresHtml}
+                    </ul>
+
                     ${actionBtn}
                 </div>
             `;

@@ -61,6 +61,20 @@
                 <input type="number" step="0.01" id="plano-preco" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: 99.90">
             </div>
         </div>
+
+        <div class="mb-4">
+            <label class="font-medium text-sm text-secondary mb-1 inline-block">Descrição do Plano (Visível para o lojista)</label>
+            <textarea id="plano-descricao" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary custom-scrollbar" rows="3" placeholder="Ex: Ideal para grandes lojas. Acesso a todos os relatórios e ferramentas premium."></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label class="font-medium text-sm text-secondary mb-1 inline-block">Benefícios do Plano (Um por linha)</label>
+            <textarea id="plano-beneficios" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary custom-scrollbar" rows="4" placeholder="Ex:
+Acesso aos recursos da plataforma
+Suporte técnico 24/7
+Gerenciamento de Multi-filiais"></textarea>
+            <p class="text-xs text-secondary mt-1">Esses itens aparecerão como tópicos com um 'check' na tela do lojista.</p>
+        </div>
         
         <div class="mb-4 flex align-center gap-2">
             <input type="checkbox" id="plano-default" class="cursor-pointer">
