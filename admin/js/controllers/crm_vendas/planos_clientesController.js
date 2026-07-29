@@ -5,13 +5,16 @@ export class planos_clientesController {
         this.state = stateManager;
         this.tenantId = null;
         this.plans = [];
+        this.subscribers = [];
         this.editingPlanId = null;
+        this.searchSubscribersTimeout = null;
     }
 
     async init() {
         this.tenantId = await getCurrentTenantId();
         this.bindEvents();
         await this.loadPlans();
+        await this.loadSubscribers();
         await this.loadServices();
     }
 
@@ -33,6 +36,46 @@ export class planos_clientesController {
         if (inputFile) {
             inputFile.addEventListener('change', (e) => this.handleImagePreview(e));
         }
+
+        // Tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => this.switchTab(e.currentTarget));
+        });
+
+        // Search & Filter Assinantes
+        const searchAssinantes = document.getElementById('search-assinantes');
+        const filterAssinantes = document.getElementById('filter-assinantes-status');
+
+        searchAssinantes?.addEventListener('input', () => {
+            clearTimeout(this.searchSubscribersTimeout);
+            this.searchSubscribersTimeout = setTimeout(() => this.loadSubscribers(), 400);
+        });
+
+        filterAssinantes?.addEventListener('change', () => this.loadSubscribers());
+    }
+
+    switchTab(activeBtn) {
+        // Reset buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active', 'text-primary', 'bg-placeholder');
+            btn.classList.add('text-secondary', 'bg-transparent');
+            btn.style.borderBottom = 'none';
+        });
+
+        // Set active button
+        activeBtn.classList.add('active', 'text-primary', 'bg-placeholder');
+        activeBtn.classList.remove('text-secondary', 'bg-transparent');
+        activeBtn.style.borderBottom = '2px solid var(--color-primary)';
+
+        // Hide all contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('d-none');
+        });
+
+        // Show target content
+        const targetId = activeBtn.getAttribute('data-tab');
+        document.getElementById(targetId)?.classList.remove('d-none');
     }
 
     handleImagePreview(e) {
@@ -219,6 +262,155 @@ export class planos_clientesController {
         };
     }
 
+    async loadSubscribers() {
+        const tbody = document.getElementById('assinantes-table-body');
+        if (!tbody) return;
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="p-3 text-center">
+                    <div class="skeleton w-100 h-40px mb-2"></div>
+                    <div class="skeleton w-100 h-40px"></div>
+                </td>
+            </tr>
+        `;
+
+        const searchTerm = document.getElementById('search-assinantes')?.value.trim().toLowerCase();
+        const filterStatus = document.getElementById('filter-assinantes-status')?.value;
+
+        try {
+            // Buscando da nova tabela, e fazendo join manual por enquanto caso o foreign key pro 'clientes' seja complexo.
+            // Para simplificar, buscamos tenant_customer_subscriptions( client_id, plan_id, status, start_date, end_date )
+            let query = supabase
+                .from('tenant_customer_subscriptions')
+                .select(`
+                    id,
+                    status,
+                    start_date,
+                    end_date,
+                    client_id,
+                    plan_id,
+                    clientes!client_id(nome, email, telefone),
+                    tenant_client_plans!plan_id(name)
+                `)
+                .eq('tenant_id', this.tenantId)
+                .order('start_date', { ascending: false });
+
+            if (filterStatus && filterStatus !== 'todos') {
+                query = query.eq('status', filterStatus);
+            }
+
+            const { data, error } = await query;
+            if (error) {
+                // Fallback amigável caso a tabela não exista ainda:
+                if (error.code === '42P01' || error.code === 'PGRST116' || error.message?.includes('not found') || error.details?.includes('does not exist')) {
+                     tbody.innerHTML = `<tr><td colspan="6" class="text-center text-secondary p-5">A infraestrutura de assinantes ainda não foi ativada neste banco de dados (tabela não encontrada).</td></tr>`;
+                     return;
+                }
+                // Se for outro erro de postgrest genérico (ex: 404), trata também amigavelmente
+                if (error.code && error.code.startsWith('PGRST')) {
+                     tbody.innerHTML = `<tr><td colspan="6" class="text-center text-secondary p-5">A infraestrutura de assinantes ainda não está disponível ou a tabela não foi criada no banco de dados.</td></tr>`;
+                     return;
+                }
+                throw error;
+            }
+
+            let filteredData = data || [];
+
+            // Filtro de busca textual no nome do cliente
+            if (searchTerm) {
+                filteredData = filteredData.filter(sub => {
+                    const nome = sub.clientes?.nome?.toLowerCase() || '';
+                    const email = sub.clientes?.email?.toLowerCase() || '';
+                    return nome.includes(searchTerm) || email.includes(searchTerm);
+                });
+            }
+
+            this.subscribers = filteredData;
+            this.renderSubscribersTable();
+        } catch (err) {
+            console.error('Erro ao carregar assinantes:', err);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger p-4">Erro ao carregar assinantes.</td></tr>`;
+        }
+    }
+
+    renderSubscribersTable() {
+        const tbody = document.getElementById('assinantes-table-body');
+        if (!tbody) return;
+
+        if (this.subscribers.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-secondary p-5">Nenhum assinante encontrado.</td></tr>`;
+            return;
+        }
+
+        let html = '';
+        this.subscribers.forEach(sub => {
+            let statusClass = 'bg-secondary-light text-secondary';
+            let statusText = sub.status || 'Desconhecido';
+            
+            if (sub.status === 'ativo') {
+                statusClass = 'bg-success-light text-success';
+                statusText = 'Ativo';
+            } else if (sub.status === 'cancelado') {
+                statusClass = 'bg-danger-light text-danger';
+                statusText = 'Cancelado';
+            } else if (sub.status === 'suspenso') {
+                statusClass = 'bg-warning-light text-warning';
+                statusText = 'Suspenso';
+            }
+
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '-';
+                return new Date(dateStr).toLocaleDateString('pt-BR');
+            };
+
+            const clientName = sub.clientes?.nome || 'Desconhecido';
+            const clientEmail = sub.clientes?.email || '';
+            const planName = sub.tenant_client_plans?.name || 'Plano Deletado';
+
+            html += `
+                <tr class="border-bottom-dashed hover:bg-hover transition-colors">
+                    <td class="p-3 text-sm">
+                        <div class="font-medium text-primary">${clientName}</div>
+                        ${clientEmail ? `<div class="text-xs text-secondary mt-1">${clientEmail}</div>` : ''}
+                    </td>
+                    <td class="p-3 text-sm text-secondary font-medium">${planName}</td>
+                    <td class="p-3 text-sm text-secondary text-center">${formatDate(sub.start_date)}</td>
+                    <td class="p-3 text-sm text-secondary text-center">${formatDate(sub.end_date)}</td>
+                    <td class="p-3 text-sm text-center">
+                        <span class="status-badge ${statusClass} border-none">${statusText}</span>
+                    </td>
+                    <td class="p-3 text-right">
+                        <button class="btn bg-transparent border-none text-primary cursor-pointer hover:underline text-sm" onclick="window.changeSubStatus('${sub.id}')">Alterar Status</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+        if (window.lucide) window.lucide.createIcons();
+
+        window.changeSubStatus = async (id) => {
+            const sub = this.subscribers.find(s => s.id === id);
+            if (!sub) return;
+
+            const nextStatus = sub.status === 'ativo' ? 'cancelado' : 'ativo';
+            if (window.showConfirm) {
+                window.showConfirm(`Deseja alterar o status desta assinatura para ${nextStatus.toUpperCase()}?`, async () => {
+                    try {
+                        const { error } = await supabase.from('tenant_customer_subscriptions').update({ status: nextStatus }).eq('id', id);
+                        if (error) throw error;
+                        if (window.showToast) window.showToast('Status atualizado com sucesso', 'success');
+                        this.loadSubscribers();
+                    } catch (e) {
+                        console.error(e);
+                        if (window.showToast) window.showToast('Erro ao atualizar status', 'error');
+                    }
+                });
+            }
+        };
+    }
+
     async handleSavePlan(e) {
         e.preventDefault();
         const btnSalvar = document.getElementById('btn-salvar-plano');
@@ -331,5 +523,6 @@ export class planos_clientesController {
 
     destroy() {
         delete window.editPlan;
+        delete window.changeSubStatus;
     }
 }

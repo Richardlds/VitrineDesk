@@ -2,16 +2,26 @@
     <!-- Header -->
     <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
         <div>
-            <h2 class="mb-1 text-primary">Planos de Assinatura</h2>
-            <p class="text-secondary text-sm">Crie planos mensais para seus clientes e ofereça descontos ou agendamentos gratuitos.</p>
+            <h2 class="mb-1 text-primary">Planos e Assinaturas</h2>
+            <p class="text-secondary text-sm">Gerencie os planos que você oferece e acompanhe seus assinantes.</p>
         </div>
         <button id="btn-novo-plano" class="btn btn-primary flex align-center gap-2 cursor-pointer">
             <i data-lucide="plus"></i> Novo Plano
         </button>
     </div>
 
-    <!-- Tabela -->
-    <div class="config-card mb-0">
+    <!-- Tabs Navigation -->
+    <div class="flex flex-wrap gap-2 border-bottom-dashed mb-4 pb-2">
+        <button type="button" class="tab-btn active px-4 py-2 border-none rounded-t-md bg-placeholder text-primary font-medium cursor-pointer transition-colors" data-tab="tab-planos" style="border-bottom: 2px solid var(--color-primary);">
+            <i data-lucide="package" class="icon-sm mr-1" style="vertical-align: middle;"></i> Planos Criados
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-assinantes">
+            <i data-lucide="users" class="icon-sm mr-1" style="vertical-align: middle;"></i> Assinantes
+        </button>
+    </div>
+
+    <!-- Tab 1: Tabela de Planos -->
+    <div id="tab-planos" class="tab-content config-card mb-0">
         <div class="table-responsive">
             <table class="data-table w-100" id="planos-table">
                 <thead>
@@ -26,6 +36,43 @@
                 </thead>
                 <tbody id="planos-table-body">
                     <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tab 2: Assinantes -->
+    <div id="tab-assinantes" class="tab-content config-card mb-0 d-none">
+        <div class="flex justify-between align-center mb-3">
+            <h4 class="text-primary font-medium m-0">Lista de Assinantes</h4>
+            <div class="flex gap-2">
+                <select id="filter-assinantes-status" class="bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                    <option value="todos">Todos os Status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="suspenso">Suspensos</option>
+                    <option value="cancelado">Cancelados</option>
+                </select>
+                <div class="search-box bg-placeholder rounded-md px-3 py-2 flex align-center w-100" style="max-width: 250px;">
+                    <i data-lucide="search" class="icon-sm text-muted mr-2"></i>
+                    <input type="text" id="search-assinantes" placeholder="Buscar cliente..." class="bg-transparent border-none outline-none text-sm text-primary w-100">
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="data-table w-100">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Cliente</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Plano</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Início</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Vencimento</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="assinantes-table-body">
+                    <!-- Skeletons / Lista injetada via JS -->
                 </tbody>
             </table>
         </div>

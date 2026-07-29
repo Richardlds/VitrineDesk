@@ -107,7 +107,7 @@ export class configuracoesController {
                 .from('tenant_integrations')
                 .select('*')
                 .eq('tenant_id', this.tenantId)
-                .single();
+                .maybeSingle();
 
             this.tenantData = tenant;
             const settings = tenant.settings || {};
@@ -188,25 +188,9 @@ export class configuracoesController {
             });
         }
 
-        const tabBtns = document.querySelectorAll('.config-tab-btn');
-        const tabContents = document.querySelectorAll('.config-tab-content');
-
+        const tabBtns = document.querySelectorAll('.tab-btn');
         tabBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                tabBtns.forEach(b => {
-                    b.classList.remove('active', 'text-primary');
-                    b.classList.add('text-secondary');
-                    b.querySelector('.tab-indicator').classList.add('d-none');
-                });
-                tabContents.forEach(c => c.classList.add('d-none'));
-
-                btn.classList.add('active', 'text-primary');
-                btn.classList.remove('text-secondary');
-                btn.querySelector('.tab-indicator').classList.remove('d-none');
-
-                document.getElementById(btn.getAttribute('data-target')).classList.remove('d-none');
-            });
+            btn.addEventListener('click', (e) => this.switchTab(e.currentTarget));
         });
 
         const formConfig = document.getElementById('form-configuracoes-loja');
@@ -216,6 +200,25 @@ export class configuracoesController {
                 await this.salvarConfiguracoes();
             });
         }
+    }
+
+    switchTab(activeBtn) {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active', 'text-primary', 'bg-placeholder');
+            btn.classList.add('text-secondary', 'bg-transparent');
+            btn.style.borderBottom = 'none';
+        });
+
+        activeBtn.classList.add('active', 'text-primary', 'bg-placeholder');
+        activeBtn.classList.remove('text-secondary', 'bg-transparent');
+        activeBtn.style.borderBottom = '2px solid var(--color-primary)';
+
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('d-none');
+        });
+
+        const targetId = activeBtn.getAttribute('data-tab');
+        document.getElementById(targetId)?.classList.remove('d-none');
     }
 
     async salvarConfiguracoes() {

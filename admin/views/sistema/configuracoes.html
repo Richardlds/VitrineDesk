@@ -12,17 +12,28 @@
             <!-- Esquerda: Formulários -->
             <div class="flex flex-column gap-4">
 
-                <!-- 1: IDENTIDADE -->
-                <details class="config-accordion config-card mb-0 p-4" open>
-                    <summary class="flex align-center justify-between transition-colors">
-                        <div class="flex align-center gap-2">
-                            <i data-lucide="building" class="text-primary"></i>
-                            <h3 class="m-0 text-primary">1. Identidade do Negócio</h3>
-                        </div>
-                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                    </summary>
+                <!-- Tabs Navigation -->
+                <div class="flex flex-wrap gap-2 border-bottom-dashed mb-4 pb-2">
+                    <button type="button" class="tab-btn active px-4 py-2 border-none rounded-t-md bg-placeholder text-primary font-medium cursor-pointer transition-colors" data-tab="tab-identidade" style="border-bottom: 2px solid var(--color-primary);">
+                        <i data-lucide="building" class="icon-sm mr-1" style="vertical-align: middle;"></i> Identidade
+                    </button>
+                    <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-contatos">
+                        <i data-lucide="link" class="icon-sm mr-1" style="vertical-align: middle;"></i> Contatos
+                    </button>
+                    <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-visibilidade">
+                        <i data-lucide="eye" class="icon-sm mr-1" style="vertical-align: middle;"></i> Visibilidade
+                    </button>
+                    <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-horarios">
+                        <i data-lucide="clock" class="icon-sm mr-1" style="vertical-align: middle;"></i> Horários
+                    </button>
+                    <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-pagamentos">
+                        <i data-lucide="credit-card" class="icon-sm mr-1" style="vertical-align: middle;"></i> Pagamentos
+                    </button>
+                </div>
 
-                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                <!-- 1: IDENTIDADE -->
+                <div id="tab-identidade" class="tab-content config-card mb-0 p-4">
+                    <div class="mt-2">
                         <p class="text-sm text-secondary mb-4 mt-0">Defina o nome da sua vitrine pública e URL
                             personalizada.</p>
 
@@ -71,19 +82,12 @@
                             </div>
                         </div>
                     </div>
-                </details>
+                    </div>
+                </div>
 
                 <!-- 2: LINKS -->
-                <details class="config-accordion config-card mb-0 p-4">
-                    <summary class="flex align-center justify-between transition-colors">
-                        <div class="flex align-center gap-2">
-                            <i data-lucide="link" class="text-primary"></i>
-                            <h3 class="m-0 text-primary">2. Canais de Contato</h3>
-                        </div>
-                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                    </summary>
-
-                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                <div id="tab-contatos" class="tab-content d-none config-card mb-0 p-4">
+                    <div class="mt-2">
                         <p class="text-sm text-secondary mb-4 mt-0">Adicione o Instagram, Facebook e os links onde os
                             clientes te encontram.</p>
 
@@ -148,19 +152,12 @@
                             </div>
                         </div>
                     </div>
-                </details>
+                    </div>
+                </div>
 
                 <!-- 3: VISIBILIDADE -->
-                <details class="config-accordion config-card mb-0 p-4">
-                    <summary class="flex align-center justify-between transition-colors">
-                        <div class="flex align-center gap-2">
-                            <i data-lucide="eye" class="text-primary"></i>
-                            <h3 class="m-0 text-primary">3. Controle de Visibilidade</h3>
-                        </div>
-                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                    </summary>
-
-                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                <div id="tab-visibilidade" class="tab-content d-none config-card mb-0 p-4">
+                    <div class="mt-2">
                         <p class="text-sm text-secondary mb-4 mt-0">Defina o endereço e ative as travas de visibilidade
                             da loja pública.</p>
 
@@ -230,38 +227,24 @@
                             </label>
                         </div>
                     </div>
-                </details>
+                    </div>
+                </div>
 
                 <!-- 4: HORÁRIOS -->
-                <details class="config-accordion config-card mb-0 p-4">
-                    <summary class="flex align-center justify-between transition-colors">
-                        <div class="flex align-center gap-2">
-                            <i data-lucide="clock" class="text-primary"></i>
-                            <h3 class="m-0 text-primary">4. Dias e Horários</h3>
-                        </div>
-                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                    </summary>
-
-                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                <div id="tab-horarios" class="tab-content d-none config-card mb-0 p-4">
+                    <div class="mt-2">
                         <p class="text-sm text-secondary mb-4 mt-0">Defina o horário exato de expediente de Segunda a
                             Domingo.</p>
                         <div id="horarios-container" class="flex flex-col gap-3">
                             <!-- Gerado via JS no Controller -->
                         </div>
                     </div>
-                </details>
+                    </div>
+                </div>
 
                 <!-- 5: STRIPE (PAGAMENTOS) -->
-                <details class="config-accordion config-card mb-0 p-4">
-                    <summary class="flex align-center justify-between transition-colors">
-                        <div class="flex align-center gap-2">
-                            <i data-lucide="credit-card" class="text-primary"></i>
-                            <h3 class="m-0 text-primary">5. Pagamentos (Stripe)</h3>
-                        </div>
-                        <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                    </summary>
-
-                    <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+                <div id="tab-pagamentos" class="tab-content d-none config-card mb-0 p-4">
+                    <div class="mt-2">
                         <div class="flex justify-between align-start mb-4 gap-3">
                             <p class="text-sm text-secondary m-0 flex-1">Integre sua própria conta do Stripe para receber os pagamentos diretamente dos seus clientes.</p>
                             <button type="button" id="btn-tutorial-stripe-lojista" class="btn btn-outline px-3 py-1 rounded-md text-xs font-medium flex align-center gap-2 whitespace-nowrap">
@@ -277,13 +260,13 @@
                         </div>
                         <div class="mb-3">
                             <label class="font-medium text-sm text-secondary mb-1 inline-block">Chave Secreta (Secret Key)</label>
-                            <input type="password" id="input-stripe-secret"
+                            <input type="password" id="input-stripe-secret" autocomplete="new-password"
                                 class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
                                 placeholder="sk_live_...">
                         </div>
                         <div class="mb-4">
                             <label class="font-medium text-sm text-secondary mb-1 inline-block">Webhook Secret</label>
-                            <input type="password" id="input-stripe-webhook"
+                            <input type="password" id="input-stripe-webhook" autocomplete="new-password"
                                 class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
                                 placeholder="whsec_...">
                             <small class="block text-xs text-secondary mt-2">
@@ -291,7 +274,8 @@
                             </small>
                         </div>
                     </div>
-                </details>
+                    </div>
+                </div>
 
                 <!-- Botão Salvar -->
                 <button type="submit" id="btn-salvar-configuracoes"

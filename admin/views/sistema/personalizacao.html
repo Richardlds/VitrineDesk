@@ -9,17 +9,28 @@
         <!-- Esquerda: Formulários -->
         <div class="flex flex-column gap-4">
             
+            <!-- Tabs Navigation -->
+            <div class="flex flex-wrap gap-2 border-bottom-dashed mb-4 pb-2">
+                <button type="button" class="tab-btn active px-4 py-2 border-none rounded-t-md bg-placeholder text-primary font-medium cursor-pointer transition-colors" data-tab="tab-identidade" style="border-bottom: 2px solid var(--color-primary);">
+                    <i data-lucide="image" class="icon-sm mr-1" style="vertical-align: middle;"></i> Identidade
+                </button>
+                <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-tipografia">
+                    <i data-lucide="type" class="icon-sm mr-1" style="vertical-align: middle;"></i> Estilos
+                </button>
+                <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-cabecalho">
+                    <i data-lucide="layout-template" class="icon-sm mr-1" style="vertical-align: middle;"></i> Cabeçalho
+                </button>
+                <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-rodape">
+                    <i data-lucide="message-circle" class="icon-sm mr-1" style="vertical-align: middle;"></i> Rodapé & Chat
+                </button>
+                <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-galeria">
+                    <i data-lucide="layout-grid" class="icon-sm mr-1" style="vertical-align: middle;"></i> Galeria
+                </button>
+            </div>
+            
             <!-- 1. Identidade Base -->
-            <details class="config-accordion config-card mb-0 p-4" open>
-                <summary class="flex align-center justify-between transition-colors">
-                    <div class="flex align-center gap-2">
-                        <i data-lucide="image" class="text-primary"></i>
-                        <h3 class="m-0 text-primary">1. Identidade Base</h3>
-                    </div>
-                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                </summary>
-                
-                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+            <div id="tab-identidade" class="tab-content config-card mb-0 p-4">
+                <div class="mt-2">
                 
                 <div class="mb-3">
                     <label class="font-medium text-sm text-secondary mb-2 inline-block">Favicon</label>
@@ -201,19 +212,12 @@
                     </div>
                 </div>
                 </div>
-            </details>
+                </div>
+            </div>
 
             <!-- 2. Tipografia e Estilos -->
-            <details class="config-accordion config-card mb-0 p-4">
-                <summary class="flex align-center justify-between transition-colors">
-                    <div class="flex align-center gap-2">
-                        <i data-lucide="type" class="text-primary"></i>
-                        <h3 class="m-0 text-primary">2. Tipografia e Estilos</h3>
-                    </div>
-                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                </summary>
-
-                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+            <div id="tab-tipografia" class="tab-content d-none config-card mb-0 p-4">
+                <div class="mt-2">
 
                 <div class="mb-3">
                     <label class="font-medium text-sm text-secondary mb-1 inline-block">Fonte Principal</label>
@@ -246,19 +250,12 @@
                     </div>
                 </div>
                 </div>
-            </details>
+                </div>
+            </div>
 
             <!-- 3. Cabeçalho (Top Bar) -->
-            <details class="config-accordion config-card mb-0 p-4">
-                <summary class="flex align-center justify-between transition-colors">
-                    <div class="flex align-center gap-2">
-                        <i data-lucide="layout-template" class="text-primary"></i>
-                        <h3 class="m-0 text-primary">3. Cabeçalho (Top Bar)</h3>
-                    </div>
-                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                </summary>
-
-                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+            <div id="tab-cabecalho" class="tab-content d-none config-card mb-0 p-4">
+                <div class="mt-2">
 
                 <div class="grid-cols-2 gap-3 mb-3">
                     <div>
@@ -283,19 +280,12 @@
                     </select>
                 </div>
                 </div>
-            </details>
+                </div>
+            </div>
 
             <!-- 4. Rodapé e WhatsApp -->
-            <details class="config-accordion config-card mb-0 p-4">
-                <summary class="flex align-center justify-between transition-colors">
-                    <div class="flex align-center gap-2">
-                        <i data-lucide="message-circle" class="text-primary"></i>
-                        <h3 class="m-0 text-primary">4. Rodapé e WhatsApp</h3>
-                    </div>
-                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                </summary>
-
-                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+            <div id="tab-rodape" class="tab-content d-none config-card mb-0 p-4">
+                <div class="mt-2">
 
                 <div class="grid-cols-2 gap-3 mb-3">
                     <div>
@@ -347,19 +337,12 @@
                     </div>
                 </div>
                 </div>
-            </details>
+                </div>
+            </div>
 
             <!-- 5. Galeria de Fotos -->
-            <details class="config-accordion config-card mb-0 p-4">
-                <summary class="flex align-center justify-between transition-colors">
-                    <div class="flex align-center gap-2">
-                        <i data-lucide="layout-grid" class="text-primary"></i>
-                        <h3 class="m-0 text-primary">5. Galeria de Fotos</h3>
-                    </div>
-                    <i data-lucide="chevron-down" class="text-secondary accordion-icon transition-transform"></i>
-                </summary>
-                
-                <div class="accordion-content mt-4 pt-4 border-top-dashed border-placeholder">
+            <div id="tab-galeria" class="tab-content d-none config-card mb-0 p-4">
+                <div class="mt-2">
                 <p class="text-xs text-secondary mb-3">Adicione até 6 fotos para o portfólio da loja, antes-e-depois ou infraestrutura.</p>
 
                 <div class="grid grid-md-3 gap-3" id="gallery-container">
@@ -367,7 +350,8 @@
                     <!-- Slots will be generated by JS -->
                 </div>
                 </div>
-            </details>
+                </div>
+            </div>
 
             <!-- Botão Salvar -->
             <button id="btn-save-vitrine" class="btn btn-primary py-3 rounded-lg cursor-pointer w-100 mb-4 font-bold flex align-center justify-center gap-2">

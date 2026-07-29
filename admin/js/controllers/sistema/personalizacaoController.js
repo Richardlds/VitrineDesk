@@ -88,6 +88,11 @@ export class personalizacaoController {
     }
 
     bindEvents() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => this.switchTab(e.currentTarget));
+        });
+
         const btnSave = document.getElementById('btn-save-vitrine');
         if (btnSave) {
             btnSave.addEventListener('click', (e) => this.handleSave(e));
@@ -218,6 +223,25 @@ export class personalizacaoController {
                 }
             });
         }
+    }
+
+    switchTab(activeBtn) {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active', 'text-primary', 'bg-placeholder');
+            btn.classList.add('text-secondary', 'bg-transparent');
+            btn.style.borderBottom = 'none';
+        });
+
+        activeBtn.classList.add('active', 'text-primary', 'bg-placeholder');
+        activeBtn.classList.remove('text-secondary', 'bg-transparent');
+        activeBtn.style.borderBottom = '2px solid var(--color-primary)';
+
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('d-none');
+        });
+
+        const targetId = activeBtn.getAttribute('data-tab');
+        document.getElementById(targetId)?.classList.remove('d-none');
     }
 
     setupImageUpload(btnId, inputId, callback) {
