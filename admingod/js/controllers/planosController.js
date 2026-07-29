@@ -170,13 +170,11 @@ export class planosController {
         document.getElementById('plano-default').checked = plano.is_default === true;
         document.getElementById('modal-plano-title').textContent = 'Editar Plano';
 
-        const features = plano.features || {};
-        document.querySelectorAll('.feature-toggle').forEach(chk => {
-            const module = chk.getAttribute('data-module');
-            chk.checked = features[module] === true;
-        });
-
-        document.getElementById('modal-plano').classList.remove('d-none');
+            { id: 'sistema/configuracoes', name: 'Configurações' },
+            { id: 'sistema/personalizacao', name: 'Personalização' },
+            { id: 'sistema/usuarios', name: 'Usuários' },
+            { id: 'sistema/suporte', name: 'Suporte' }
+        ];
     }
 
     async init() {
@@ -250,7 +248,7 @@ export class planosController {
 
         const tbody = document.getElementById('table-body-planos');
         if (tbody) {
-            tbody.addEventListener('click', (e) => {
+            tbody.addEventListener('click', async (e) => {
                 const btnEdit = e.target.closest('.btn-edit');
                 if (btnEdit) {
                     const id = btnEdit.getAttribute('data-id');
@@ -265,6 +263,13 @@ export class planosController {
                             await this.deletarPlano(id);
                         });
                     }
+                }
+
+                const btnToggle = e.target.closest('.btn-toggle-status');
+                if (btnToggle) {
+                    const id = btnToggle.getAttribute('data-id');
+                    const isActive = btnToggle.getAttribute('data-status') === 'true';
+                    await this.toggleStatusPlano(id, !isActive);
                 }
             });
         }
@@ -281,7 +286,7 @@ export class planosController {
             this.renderTable();
         } catch (error) {
             console.error('Erro ao buscar planos:', error);
-            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-danger">Erro ao carregar dados. ${error.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger">Erro ao carregar dados. ${error.message}</td></tr>`;
         }
     }
 
@@ -290,7 +295,7 @@ export class planosController {
         if (!tbody) return;
 
         if (this.planos.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-secondary">Nenhum plano cadastrado.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-secondary">Nenhum plano cadastrado.</td></tr>`;
             return;
         }
 
@@ -300,6 +305,8 @@ export class planosController {
             const totalFeatures = this.MENU_MODULES.length;
             
             const badgePadrao = p.is_default ? '<span class="badge bg-success-light text-success ml-2 px-2 py-1 rounded text-xs" style="margin-left: 8px;">Padrão</span>' : '';
+            const isActive = p.active !== false;
+            const statusLabel = isActive ? '<span class="badge bg-success-light text-success px-2 py-1 rounded text-xs">Ativo</span>' : '<span class="badge bg-danger-light text-danger px-2 py-1 rounded text-xs">Inativo</span>';
 
             html += `
                 <tr class="border-bottom-dashed border-placeholder hover:bg-hover transition-colors">
@@ -309,11 +316,17 @@ export class planosController {
                         <span class="badge bg-primary-light text-primary px-2 py-1 rounded">${featuresAtivas}/${totalFeatures} Liberados</span>
                     </td>
                     <td class="py-3 px-4 text-center">
-                        <div class="flex justify-center gap-2">
-                            <button class="btn bg-primary-light text-primary border-none rounded px-2 py-1 cursor-pointer hover:bg-primary transition-colors hover:text-white btn-edit" data-id="${p.id}">
+                        ${statusLabel}
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="flex justify-center gap-2 align-center">
+                            <button class="btn ${isActive ? 'bg-secondary-light text-secondary hover:bg-secondary' : 'bg-success-light text-success hover:bg-success'} border-none rounded px-2 py-1 cursor-pointer transition-colors hover:text-white btn-toggle-status" data-id="${p.id}" data-status="${isActive}" title="${isActive ? 'Desativar' : 'Ativar'}">
+                                <i data-lucide="${isActive ? 'eye-off' : 'eye'}" class="icon-sm m-0"></i>
+                            </button>
+                            <button class="btn bg-primary-light text-primary border-none rounded px-2 py-1 cursor-pointer hover:bg-primary transition-colors hover:text-white btn-edit" data-id="${p.id}" title="Editar">
                                 <i data-lucide="edit-3" class="icon-sm m-0"></i>
                             </button>
-                            <button class="btn bg-danger-light text-danger border-none rounded px-2 py-1 cursor-pointer hover:bg-danger transition-colors hover:text-white btn-delete" data-id="${p.id}">
+                            <button class="btn bg-danger-light text-danger border-none rounded px-2 py-1 cursor-pointer hover:bg-danger transition-colors hover:text-white btn-delete" data-id="${p.id}" title="Excluir">
                                 <i data-lucide="trash-2" class="icon-sm m-0"></i>
                             </button>
                         </div>
@@ -428,6 +441,27 @@ export class planosController {
         } catch (error) {
             console.error('Erro ao excluir plano:', error);
             if (window.showToast) window.showToast('Erro ao excluir plano.', 'error');
+        }
+    }
+
+    async toggleStatusPlano(id, isActive) {
+        try {
+            const { error } = await supabase.from('plans').update({ active: isActive }).eq('id', id);
+            
+            if (error) {
+                // Se a coluna active não existir ainda, vai cair aqui
+                if (error.code === 'PGRST204' || error.message?.includes('active')) {
+                    if (window.showToast) window.showToast('Você precisa criar a coluna "active" (tipo boolean, default true) na tabela plans no Supabase primeiro.', 'warning');
+                    return;
+                }
+                throw error;
+            }
+            
+            if (window.showToast) window.showToast(`Plano ${isActive ? 'ativado' : 'desativado'} com sucesso!`, 'success');
+            await this.loadPlanos();
+        } catch (error) {
+            console.error('Erro ao alterar status do plano:', error);
+            if (window.showToast) window.showToast('Erro ao alterar status do plano.', 'error');
         }
     }
 

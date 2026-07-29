@@ -1,4 +1,4 @@
-﻿import { Router } from './Router.js';
+import { Router } from './Router.js';
 import { StateManager } from './StateManager.js';
 import { supabase, getCurrentTenantId } from './supabaseClient.js';
 
@@ -215,6 +215,9 @@ class AdminApp {
                     planBadge.classList.remove('d-none');
                 }
                 
+                window.globalTenant = t;
+                window.dispatchEvent(new CustomEvent('tenantUpdated', { detail: t }));
+
                 return freshData;
             };
 
@@ -228,6 +231,7 @@ class AdminApp {
             } else {
                 setTimeout(fetchFreshData, 100);
             }
+            window.globalTenant = tenant;
             // --- FIM SWR ---
 
             let planFeatures = plan?.features || {};

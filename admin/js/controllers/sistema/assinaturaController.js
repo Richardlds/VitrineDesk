@@ -13,6 +13,12 @@ export class assinaturaController {
             this.renderAssinaturaAtual();
             this.renderPlanosDisponiveis();
             this.bindEvents();
+
+            // Re-render quando o SWR atualizar o tenant em background
+            window.addEventListener('tenantUpdated', () => {
+                this.renderAssinaturaAtual();
+                this.renderPlanosDisponiveis();
+            });
         } catch (error) {
             console.error('Erro ao iniciar modulo de assinatura:', error);
             window.showToast('Erro ao carregar os planos.', 'error');
@@ -27,7 +33,8 @@ export class assinaturaController {
             .order('price', { ascending: true });
 
         if (error) throw error;
-        this.planos = data || [];
+        // Filtra os planos inativos. Se `active` não existir no DB (undefined/null), assumimos que é ativo para não quebrar.
+        this.planos = (data || []).filter(p => p.active !== false);
     }
 
     renderAssinaturaAtual() {
