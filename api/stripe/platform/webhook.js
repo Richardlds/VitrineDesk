@@ -47,6 +47,11 @@ export default async function handler(req, res) {
         
         // Verifica se é uma assinatura (SaaS)
         if (session.mode === 'subscription' && session.metadata?.tenant_id) {
+          if (session.metadata?.client_id) {
+            console.log('Sessão ignorada: pertence a um cliente final (client_id presente), não ao lojista.');
+            break;
+          }
+
           const { tenant_id, plan_id } = session.metadata;
           const subscriptionId = session.subscription;
 
@@ -104,6 +109,11 @@ export default async function handler(req, res) {
           const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
           
           if (subscriptionDetails.metadata?.tenant_id) {
+            if (subscriptionDetails.metadata?.client_id) {
+              console.log('Fatura ignorada: pertence a um cliente final.');
+              break;
+            }
+
             const tenant_id = subscriptionDetails.metadata.tenant_id;
             const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
 
@@ -136,6 +146,11 @@ export default async function handler(req, res) {
           const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
           
           if (subscriptionDetails.metadata?.tenant_id) {
+              if (subscriptionDetails.metadata?.client_id) {
+                console.log('Evento de cancelamento/falha ignorado: pertence a um cliente final.');
+                break;
+              }
+
               const tenant_id = subscriptionDetails.metadata.tenant_id;
 
               const { error } = await supabase

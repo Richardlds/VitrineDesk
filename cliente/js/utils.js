@@ -30,7 +30,7 @@ export async function supaFetch(endpoint, options = {}) {
   const cacheKey = `vd_cache_${endpoint}`;
   const cacheTTL = 30 * 1000; // Reduzido para 30 segundos para refletir alterações rapidamente
   
-  if (method === 'GET' && typeof sessionStorage !== 'undefined') {
+  if (method === 'GET' && typeof sessionStorage !== 'undefined' && !options.noCache) {
     const cachedStr = sessionStorage.getItem(cacheKey);
     if (cachedStr) {
       try {

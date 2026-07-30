@@ -1,4 +1,4 @@
-﻿import { supaFetch, showToast, showConfirm, formatarCPF, validarCPF, mascararCPF, mascararTelefone, scrollToSection, formatDate, formatTime, showSkeleton, hideSkeleton, supaUploadAvatar, getSupaPublicUrl, getSupabaseAuthClient } from './utils.js';
+import { supaFetch, showToast, showConfirm, formatarCPF, validarCPF, mascararCPF, mascararTelefone, scrollToSection, formatDate, formatTime, showSkeleton, hideSkeleton, supaUploadAvatar, getSupaPublicUrl, getSupabaseAuthClient } from './utils.js';
 import { loadMyAppointments } from './agendamentos.js';
 
 // ────────────────────────── Estado ──────────────────────────
@@ -673,7 +673,7 @@ export function initAuth() {
 
           // Salvar a URL no banco de dados
           const result = await supaFetch(
-            `/rest/v1/clientes?id=eq.${cliente.id}`,
+            `/rest/v1/clientes?id=eq.${cliente.id}&select=*`,
             { method: 'PATCH', body: { foto_url: publicUrl } }
           );
 
