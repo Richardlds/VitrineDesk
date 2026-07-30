@@ -249,6 +249,9 @@ export class planos_clientesController {
                     </td>
                     <td class="p-3 text-right">
                         <button class="btn bg-transparent border-none text-primary cursor-pointer hover:underline text-sm" onclick="window.editPlan('${plan.id}')">Editar</button>
+                        <button class="btn bg-transparent border-none text-danger cursor-pointer ml-2 hover:opacity-70" onclick="window.deletePlan('${plan.id}')" title="Excluir">
+                            <i data-lucide="trash-2" class="icon-sm"></i>
+                        </button>
                     </td>
                 </tr>
             `;
@@ -262,6 +265,40 @@ export class planos_clientesController {
             const plan = this.plans.find(p => p.id === id);
             if (plan) this.openModal(plan);
         };
+        
+        window.deletePlan = async (id) => {
+            if (window.confirm('Tem certeza que deseja excluir este plano? Esta ação não pode ser desfeita e pode afetar os assinantes atuais.')) {
+                await this.deletePlan(id);
+            }
+        };
+    }
+
+    async deletePlan(id) {
+        try {
+            const btnDelete = document.querySelector(`button[onclick="window.deletePlan('${id}')"]`);
+            if (btnDelete) btnDelete.innerHTML = '<span class="loader-sm"></span>';
+
+            const { error } = await supabase
+                .from('tenant_client_plans')
+                .delete()
+                .eq('id', id)
+                .eq('tenant_id', this.tenantId);
+
+            if (error) {
+                // Se der erro de foreign key, é porque tem assinantes
+                if (error.code === '23503') {
+                    throw new Error('Não é possível excluir o plano pois existem clientes assinando este plano. Considere inativá-lo.');
+                }
+                throw error;
+            }
+
+            if (window.showToast) window.showToast('Plano excluído com sucesso!', 'success');
+            await this.loadPlans();
+        } catch (err) {
+            console.error('Erro ao excluir plano:', err);
+            if (window.showToast) window.showToast(err.message || 'Erro ao excluir plano.', 'error');
+            await this.loadPlans(); // Reload to remove loader
+        }
     }
 
     async loadSubscribers() {
