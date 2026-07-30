@@ -193,14 +193,20 @@ export class planos_clientesController {
         const tbody = document.getElementById('planos-table-body');
         if (!tbody) return;
 
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" class="p-3 text-center">
-                    <div class="skeleton w-100 h-40px mb-2"></div>
-                    <div class="skeleton w-100 h-40px"></div>
-                </td>
-            </tr>
-        `;
+        let skeletonHtml = '';
+        for (let i = 0; i < 3; i++) {
+            skeletonHtml += `
+                <tr>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                </tr>
+            `;
+        }
+        tbody.innerHTML = skeletonHtml;
 
         try {
             const { data, error } = await supabase
@@ -305,38 +311,45 @@ export class planos_clientesController {
         const tbody = document.getElementById('assinantes-table-body');
         if (!tbody) return;
 
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" class="p-3 text-center">
-                    <div class="skeleton w-100 h-40px mb-2"></div>
-                    <div class="skeleton w-100 h-40px"></div>
-                </td>
-            </tr>
-        `;
+        let skeletonHtml = '';
+        for (let i = 0; i < 3; i++) {
+            skeletonHtml += `
+                <tr>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 32px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                    <td class="p-3"><div class="skeleton w-100" style="height: 20px; border-radius: 4px;"></div></td>
+                </tr>
+            `;
+        }
+        tbody.innerHTML = skeletonHtml;
 
         const searchTerm = document.getElementById('search-assinantes')?.value.trim().toLowerCase();
         const filterStatus = document.getElementById('filter-assinantes-status')?.value;
 
         try {
-            // Buscando da nova tabela, e fazendo join manual por enquanto caso o foreign key pro 'clientes' seja complexo.
-            // Para simplificar, buscamos tenant_customer_subscriptions( client_id, plan_id, status, start_date, end_date )
+            // Buscando os assinantes reais da tabela client_subscriptions
             let query = supabase
-                .from('tenant_customer_subscriptions')
+                .from('client_subscriptions')
                 .select(`
                     id,
                     status,
-                    start_date,
-                    end_date,
+                    created_at,
+                    current_period_end,
                     client_id,
                     plan_id,
                     clientes!client_id(nome, email, telefone),
                     tenant_client_plans!plan_id(name)
                 `)
                 .eq('tenant_id', this.tenantId)
-                .order('start_date', { ascending: false });
+                .order('created_at', { ascending: false });
 
             if (filterStatus && filterStatus !== 'todos') {
-                query = query.eq('status', filterStatus);
+                if (filterStatus === 'ativo') query = query.eq('status', 'active');
+                if (filterStatus === 'cancelado') query = query.eq('status', 'canceled');
+                if (filterStatus === 'suspenso') query = query.eq('status', 'past_due');
             }
 
             const { data, error } = await query;
@@ -387,15 +400,17 @@ export class planos_clientesController {
             let statusClass = 'bg-secondary-light text-secondary';
             let statusText = sub.status || 'Desconhecido';
             
-            if (sub.status === 'ativo') {
+            if (sub.status === 'active') {
                 statusClass = 'bg-success-light text-success';
                 statusText = 'Ativo';
-            } else if (sub.status === 'cancelado') {
+            } else if (sub.status === 'canceled' || sub.status === 'unpaid') {
                 statusClass = 'bg-danger-light text-danger';
                 statusText = 'Cancelado';
-            } else if (sub.status === 'suspenso') {
+            } else if (sub.status === 'past_due') {
                 statusClass = 'bg-warning-light text-warning';
-                statusText = 'Suspenso';
+                statusText = 'Pagamento Pendente';
+            } else {
+                statusText = sub.status;
             }
 
             const formatDate = (dateStr) => {
@@ -414,8 +429,8 @@ export class planos_clientesController {
                         ${clientEmail ? `<div class="text-xs text-secondary mt-1">${clientEmail}</div>` : ''}
                     </td>
                     <td class="p-3 text-sm text-secondary font-medium">${planName}</td>
-                    <td class="p-3 text-sm text-secondary text-center">${formatDate(sub.start_date)}</td>
-                    <td class="p-3 text-sm text-secondary text-center">${formatDate(sub.end_date)}</td>
+                    <td class="p-3 text-sm text-secondary text-center">${formatDate(sub.created_at)}</td>
+                    <td class="p-3 text-sm text-secondary text-center">${formatDate(sub.current_period_end)}</td>
                     <td class="p-3 text-sm text-center">
                         <span class="status-badge ${statusClass} border-none">${statusText}</span>
                     </td>
