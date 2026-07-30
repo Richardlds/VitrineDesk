@@ -50,37 +50,45 @@ export default async function handler(req, res) {
           const { tenant_id, plan_id } = session.metadata;
           const subscriptionId = session.subscription;
 
-          console.log('Buscando detalhes da subscription na Stripe...', subscriptionId);
-          // Busca dados da subscription no Stripe para pegar o vencimento
-          const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
-          const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
+          if (typeof subscriptionId === 'string' && subscriptionId.startsWith('sub_')) {
+            try {
+              console.log('Buscando detalhes da subscription na Stripe...', subscriptionId);
+              // Busca dados da subscription no Stripe para pegar o vencimento
+              const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
+              const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
 
-          console.log('Buscando tenant no Supabase...', tenant_id);
-          // Pega o settings atual do tenant para não sobrescrever o resto
-          const { data: tenantData, error: selectError } = await supabase.from('tenants').select('settings').eq('id', tenant_id).single();
-          if (selectError) console.error('Erro ao buscar tenant:', selectError);
-          const currentSettings = tenantData?.settings || {};
+              console.log('Buscando tenant no Supabase...', tenant_id);
+              // Pega o settings atual do tenant para não sobrescrever o resto
+              const { data: tenantData, error: selectError } = await supabase.from('tenants').select('settings').eq('id', tenant_id).single();
+              if (selectError) console.error('Erro ao buscar tenant:', selectError);
+              const currentSettings = tenantData?.settings || {};
 
-          console.log('Atualizando tenant no Supabase com novo plano...', plan_id);
-          // Atualiza a tabela tenants com o novo plano e status
-          const { error } = await supabase
-            .from('tenants')
-            .update({
-                subscription_status: subscriptionDetails.status, // geralmente 'active'
-                settings: {
-                    ...currentSettings,
-                    plano_id: plan_id,
-                    vencimento: currentPeriodEnd,
-                    stripe_subscription_id: subscriptionId,
-                    stripe_customer_id: session.customer
-                }
-            })
-            .eq('id', tenant_id);
+              console.log('Atualizando tenant no Supabase com novo plano...', plan_id);
+              // Atualiza a tabela tenants com o novo plano e status
+              const { error } = await supabase
+                .from('tenants')
+                .update({
+                    subscription_status: subscriptionDetails.status, // geralmente 'active'
+                    settings: {
+                        ...currentSettings,
+                        plano_id: plan_id,
+                        vencimento: currentPeriodEnd,
+                        stripe_subscription_id: subscriptionId,
+                        stripe_customer_id: session.customer
+                    }
+                })
+                .eq('id', tenant_id);
 
-          if (error) {
-            console.error('Erro ao atualizar assinatura do tenant:', error);
+              if (error) {
+                console.error('Erro ao atualizar assinatura do tenant:', error);
+              } else {
+                console.log('Tenant atualizado com sucesso!');
+              }
+            } catch (err) {
+              console.error('Erro ao processar subscription no checkout.session.completed:', err.message);
+            }
           } else {
-            console.log('Tenant atualizado com sucesso!');
+            console.log('Sessão ignorada: ID de subscription inválido:', subscriptionId);
           }
         } else {
           console.log('Sessão ignorada: não é subscription ou não tem tenant_id no metadata');
@@ -90,8 +98,10 @@ export default async function handler(req, res) {
       
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object;
-        if (invoice.subscription) {
-          const subscriptionDetails = await stripe.subscriptions.retrieve(invoice.subscription);
+        const subscriptionId = invoice.subscription;
+        
+        if (typeof subscriptionId === 'string' && subscriptionId.startsWith('sub_')) {
+          const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
           
           if (subscriptionDetails.metadata?.tenant_id) {
             const tenant_id = subscriptionDetails.metadata.tenant_id;
@@ -122,19 +132,21 @@ export default async function handler(req, res) {
         const obj = event.data.object;
         const subscriptionId = obj.subscription || obj.id; // no deleted, o object é a propria subscription
         
-        const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
-        
-        if (subscriptionDetails.metadata?.tenant_id) {
-            const tenant_id = subscriptionDetails.metadata.tenant_id;
+        if (typeof subscriptionId === 'string' && subscriptionId.startsWith('sub_')) {
+          const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
+          
+          if (subscriptionDetails.metadata?.tenant_id) {
+              const tenant_id = subscriptionDetails.metadata.tenant_id;
 
-            const { error } = await supabase
-                .from('tenants')
-                .update({ 
-                    subscription_status: subscriptionDetails.status // past_due ou canceled
-                })
-                .eq('id', tenant_id);
+              const { error } = await supabase
+                  .from('tenants')
+                  .update({ 
+                      subscription_status: subscriptionDetails.status // past_due ou canceled
+                  })
+                  .eq('id', tenant_id);
 
-            if (error) console.error('Erro ao cancelar assinatura do tenant:', error);
+              if (error) console.error('Erro ao cancelar assinatura do tenant:', error);
+          }
         }
         break;
       }

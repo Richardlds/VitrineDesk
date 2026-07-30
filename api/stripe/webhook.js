@@ -68,46 +68,58 @@ export default async function handler(req, res) {
           const subscriptionId = session.subscription;
           const customerId = session.customer;
 
-          // Busca dados da subscription no Stripe para pegar o vencimento
-          const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
-          const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
+          if (typeof subscriptionId === 'string' && subscriptionId.startsWith('sub_')) {
+            try {
+              // Busca dados da subscription no Stripe para pegar o vencimento
+              const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
+              const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
 
-          const { error } = await supabase
-            .from('client_subscriptions')
-            .insert([{
-              tenant_id,
-              client_id,
-              plan_id,
-              stripe_subscription_id: subscriptionId,
-              stripe_customer_id: customerId,
-              status: subscriptionDetails.status, // geralmente 'active'
-              current_period_end: currentPeriodEnd,
-              used_free_appointments_this_cycle: 0
-            }]);
+              const { error } = await supabase
+                .from('client_subscriptions')
+                .insert([{
+                  tenant_id,
+                  client_id,
+                  plan_id,
+                  stripe_subscription_id: subscriptionId,
+                  stripe_customer_id: customerId,
+                  status: subscriptionDetails.status, // geralmente 'active'
+                  current_period_end: currentPeriodEnd,
+                  used_free_appointments_this_cycle: 0
+                }]);
 
-          if (error) console.error('Erro ao inserir assinatura:', error);
+              if (error) console.error('Erro ao inserir assinatura:', error);
+            } catch (err) {
+              console.error('Erro ao recuperar subscription no checkout.session.completed:', err.message);
+            }
+          }
         }
         break;
       }
       
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object;
-        if (invoice.subscription) {
-          const subscriptionDetails = await stripe.subscriptions.retrieve(invoice.subscription);
-          const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
+        const subscriptionId = invoice.subscription;
+        
+        if (typeof subscriptionId === 'string' && subscriptionId.startsWith('sub_')) {
+          try {
+            const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
+            const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
 
-          // Renova período e zera agendamentos grátis utilizados
-          const { error } = await supabase
-            .from('client_subscriptions')
-            .update({ 
-              status: subscriptionDetails.status,
-              current_period_end: currentPeriodEnd,
-              used_free_appointments_this_cycle: 0,
-              updated_at: new Date().toISOString()
-            })
-            .eq('stripe_subscription_id', invoice.subscription);
-            
-          if (error) console.error('Erro ao renovar assinatura:', error);
+            // Renova período e zera agendamentos grátis utilizados
+            const { error } = await supabase
+              .from('client_subscriptions')
+              .update({ 
+                status: subscriptionDetails.status,
+                current_period_end: currentPeriodEnd,
+                used_free_appointments_this_cycle: 0,
+                updated_at: new Date().toISOString()
+              })
+              .eq('stripe_subscription_id', subscriptionId);
+              
+            if (error) console.error('Erro ao renovar assinatura:', error);
+          } catch (err) {
+            console.error('Erro ao recuperar subscription no invoice.payment_succeeded:', err.message);
+          }
         }
         break;
       }
