@@ -29,7 +29,14 @@ export async function loadActiveSubscription() {
     if (!getLoggedClient()) return;
     
     try {
-        const data = await supaFetch(`/rest/v1/client_subscriptions?tenant_id=eq.${getTenantId()}&client_id=eq.${getLoggedClient().id}&status=eq.active&select=*,tenant_client_plans(*)`, { noCache: true });
+        const tenantId = getTenantId();
+        const clientId = getLoggedClient().id;
+        
+        // Em vez de bater direto no Supabase (que sofre RLS para cliente anônimo), usamos a API
+        const response = await fetch(`/api/client/get-subscription?tenantId=${tenantId}&clientId=${clientId}`);
+        if (!response.ok) throw new Error('Falha ao buscar assinatura na API');
+        
+        const data = await response.json();
         
         if (data && data.length > 0) {
             activeSubscription = data[0];
