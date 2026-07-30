@@ -118,6 +118,7 @@ export class planos_clientesController {
             title.textContent = 'Editar Plano';
             document.getElementById('input-plano-nome').value = plan.name;
             document.getElementById('input-plano-descricao').value = plan.description || '';
+            document.getElementById('input-plano-vantagens').value = Array.isArray(plan.features) ? plan.features.join('\n') : '';
             document.getElementById('input-plano-preco').value = plan.price;
             document.getElementById('input-plano-desconto').value = plan.discount_percentage || '';
             document.getElementById('input-plano-gratis').value = plan.free_appointments_per_month || '';
@@ -150,6 +151,7 @@ export class planos_clientesController {
             title.textContent = 'Criar Plano de Assinatura';
             document.getElementById('input-plano-preco').disabled = false;
             document.getElementById('input-plano-image-url').value = '';
+            document.getElementById('input-plano-vantagens').value = '';
             document.getElementById('preview-plano-img').innerHTML = `<i data-lucide="image" class="text-muted"></i>`;
             this.renderServicesCheckboxes([]);
 
@@ -424,6 +426,9 @@ export class planos_clientesController {
             const preco = parseFloat(document.getElementById('input-plano-preco').value);
             const desconto = parseFloat(document.getElementById('input-plano-desconto').value) || 0;
             const gratis = parseInt(document.getElementById('input-plano-gratis').value, 10) || 0;
+            
+            const vantagensRaw = document.getElementById('input-plano-vantagens').value;
+            const features = vantagensRaw.split('\n').map(v => v.trim()).filter(v => v.length > 0);
 
             // Get included services
             const includedServices = [];
@@ -451,6 +456,7 @@ export class planos_clientesController {
                     .update({
                         name: nome,
                         description: descricao,
+                        features: features,
                         discount_percentage: desconto,
                         free_appointments_per_month: gratis,
                         included_services: includedServices,
@@ -478,6 +484,7 @@ export class planos_clientesController {
                         tenant_id: this.tenantId,
                         name: nome,
                         description: descricao,
+                        features: features,
                         price: preco,
                         discount_percentage: desconto,
                         free_appointments_per_month: gratis,

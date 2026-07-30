@@ -1,4 +1,4 @@
-import { supaFetch } from './utils.js';
+import { supaFetch, showToast } from './utils.js';
 import { getTenantId } from './app.js';
 import { getLoggedClient } from './auth.js';
 
@@ -139,6 +139,12 @@ function renderPlanos() {
             benefits.push(`${plan.free_appointments_per_month} Agendamentos grátis/mês${srvText}`);
         }
         
+        if (plan.features && Array.isArray(plan.features)) {
+            plan.features.forEach(feat => {
+                if (feat.trim()) benefits.push(feat.trim());
+            });
+        }
+        
         let cardStyle = isCurrentPlan ? 'border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);' : '';
         let badgeHtml = isCurrentPlan ? `<div style="position: absolute; top: -14px; right: 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark, #0056b3)); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 10;">Plano Atual</div>` : '';
         
@@ -182,7 +188,8 @@ function renderPlanos() {
     btns.forEach(btn => {
         btn.addEventListener('click', async (e) => {
             if (!getLoggedClient()) {
-                if (window.showToast) window.showToast('Faça login primeiro!', 'warning');
+                showToast('Faça login primeiro para assinar um plano!', 'warning');
+                
                 const drawer = document.getElementById('client-area-drawer');
                 if (drawer) drawer.classList.remove('active');
                 
@@ -191,9 +198,47 @@ function renderPlanos() {
                 return;
             }
             
-            const planId = e.target.dataset.planId;
-            if (window.showToast) window.showToast('Redirecionando para o pagamento...', 'info');
-            // ... integra??o stripe (pendente)
+            const planId = btn.dataset.planId;
+            const priceId = btn.dataset.priceId;
+            
+            if (!priceId || priceId === 'null' || priceId === 'undefined') {
+                showToast('Erro: Este plano não possui integração de pagamento (Stripe) configurada no painel do lojista.', 'error');
+                return;
+            }
+
+            showToast('Redirecionando para o pagamento...', 'info');
+            
+            try {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" style="width: 20px; height: 20px; margin: 0 auto;"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`;
+                btn.disabled = true;
+
+                const response = await fetch('/api/stripe/create-subscription-checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        priceId: priceId,
+                        planId: planId,
+                        tenantId: getTenantId(),
+                        clientId: getLoggedClient().id,
+                        successUrl: window.location.origin + window.location.pathname + '?checkout=success',
+                        cancelUrl: window.location.origin + window.location.pathname + '?checkout=cancel'
+                    })
+                });
+                
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Erro ao criar checkout');
+                }
+                
+                const data = await response.json();
+                window.location.href = data.url;
+            } catch (err) {
+                console.error(err);
+                btn.innerHTML = 'Assinar Agora';
+                btn.disabled = false;
+                showToast(err.message, 'error');
+            }
         });
     });
 }
