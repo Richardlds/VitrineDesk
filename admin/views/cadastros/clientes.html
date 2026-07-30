@@ -37,6 +37,7 @@
                         <th class="text-left text-secondary text-sm font-medium py-3 px-3">Nome</th>
                         <th class="text-left text-secondary text-sm font-medium py-3 px-3">Telefone (WhatsApp)</th>
                         <th class="text-left text-secondary text-sm font-medium py-3 px-3">Email</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Plano</th>
                         <th class="text-center text-secondary text-sm font-medium py-3 px-3">Agendamentos</th>
                         <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
                     </tr>
@@ -86,11 +87,19 @@
                 <div>
                     <h4 class="text-sm font-medium text-primary mb-3">Dados Cadastrais</h4>
                     <form id="form-cliente">
-                        <div class="mb-3">
-                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome Completo</label>
-                            <input type="text" id="input-cliente-nome"
-                                class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
-                                placeholder="Ex: João da Silva" required>
+                        <div class="grid grid-md-2 gap-3 mb-3">
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome Completo</label>
+                                <input type="text" id="input-cliente-nome"
+                                    class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                                    placeholder="Ex: João da Silva" required>
+                            </div>
+                            <div>
+                                <label class="font-medium text-sm text-secondary mb-1 inline-block">Plano Atual</label>
+                                <input type="text" id="input-cliente-plano"
+                                    class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                                    placeholder="Sem plano ativo" disabled>
+                            </div>
                         </div>
 
                         <div class="grid grid-md-2 gap-3 mb-3">

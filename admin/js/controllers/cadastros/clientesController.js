@@ -51,10 +51,10 @@ export class clientesController {
 
             // this.renderSkeletons();
 
-            // Construir a query base com contador
+            // Construir a query base com contador e join de assinaturas
             let query = supabase
                 .from('clientes')
-                .select('*', { count: 'exact' })
+                .select('*, client_subscriptions(status, tenant_client_plans(name))', { count: 'exact' })
                 .eq('tenant_id', tenantId)
                 .order('nome', { ascending: true });
 
@@ -108,6 +108,14 @@ export class clientesController {
         data.forEach(item => {
             const isBlacklisted = item.is_blacklisted;
             
+            // Verificar plano atual
+            const subs = item.client_subscriptions || [];
+            const activeSub = subs.find(s => s.status === 'active');
+            let planName = '-';
+            if (activeSub && activeSub.tenant_client_plans) {
+                planName = activeSub.tenant_client_plans.name || 'Ativo';
+            }
+            
             html += `
                 <tr class="${isBlacklisted ? 'opacity-70' : ''}">
                     <td class="font-medium text-primary flex align-center gap-2">
@@ -116,6 +124,9 @@ export class clientesController {
                     </td>
                     <td class="text-sm text-secondary">${item.telefone || '-'}</td>
                     <td class="text-sm text-secondary">${item.email || '-'}</td>
+                    <td class="text-sm">
+                        ${planName !== '-' ? `<span class="bg-primary-light text-primary px-2 py-1 rounded-md text-xs font-bold" style="border: 1px solid var(--primary);">${planName}</span>` : '<span class="text-muted">-</span>'}
+                    </td>
                     <td class="text-center">
                         <span class="bg-placeholder text-primary px-2 py-1 rounded-md text-sm font-medium">-</span>
                     </td>
@@ -295,7 +306,7 @@ export class clientesController {
             try {
                 const { data, error } = await supabase
                     .from('clientes')
-                    .select('*')
+                    .select('*, client_subscriptions(status, tenant_client_plans(name))')
                     .eq('id', id)
                     .single();
                     
@@ -305,6 +316,13 @@ export class clientesController {
                 inputTel.value = data.telefone || '';
                 inputEmail.value = data.email || '';
                 inputObs.value = data.blacklist_motivo || '';
+                
+                const inputPlano = document.getElementById('input-cliente-plano');
+                if (inputPlano) {
+                    const subs = data.client_subscriptions || [];
+                    const activeSub = subs.find(s => s.status === 'active');
+                    inputPlano.value = (activeSub && activeSub.tenant_client_plans) ? activeSub.tenant_client_plans.name : 'Sem plano ativo';
+                }
                 
                 if (data.is_blacklisted) {
                     btnDesativar.classList.add('d-none');
