@@ -87,9 +87,13 @@ export default async function handler(req, res) {
                   used_free_appointments_this_cycle: 0
                 }]);
 
-              if (error) console.error('Erro ao inserir assinatura:', error);
+              if (error) {
+                console.error('Erro ao inserir assinatura:', error);
+                return res.status(500).json({ error: 'Erro ao salvar assinatura no banco' });
+              }
             } catch (err) {
               console.error('Erro ao recuperar subscription no checkout.session.completed:', err.message);
+              return res.status(500).json({ error: 'Erro na API do Stripe' });
             }
           }
         }
