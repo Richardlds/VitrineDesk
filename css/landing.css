@@ -1,25 +1,43 @@
 /* ==========================================================================
-   VITRINEDESK - PREMIUM SAAS LANDING PAGE STYLES (DARK MODE / GLASS)
+   VITRINEDESK - PREMIUM SAAS LANDING PAGE STYLES (MOBILE-FIRST)
    ========================================================================== */
 
+/* 1. VARIÁVEIS DE DESIGN PREMIUM */
 :root {
-    --lp-bg-dark: #0A0A0F;
-    --lp-bg-card: rgba(255, 255, 255, 0.03);
-    --lp-bg-card-hover: rgba(255, 255, 255, 0.06);
-    --lp-border-glass: rgba(255, 255, 255, 0.08);
-    --lp-text-primary: #FFFFFF;
-    --lp-text-secondary: #9CA3AF;
+    /* Paleta de Cores */
+    --lp-bg-dark: #07070a;
+    --lp-bg-card: rgba(255, 255, 255, 0.02);
+    --lp-bg-card-hover: rgba(255, 255, 255, 0.05);
+    
+    --lp-border-glass: rgba(255, 255, 255, 0.06);
+    --lp-border-glass-hover: rgba(255, 255, 255, 0.12);
+    
+    --lp-text-primary: #f8fafc;
+    --lp-text-secondary: #94a3b8;
+    
+    /* Cores de Ação (Índigo/Roxo) */
     --lp-accent: #6366f1;
-    --lp-accent-glow: rgba(99, 102, 241, 0.4);
+    --lp-accent-hover: #4f46e5;
+    --lp-accent-glow: rgba(99, 102, 241, 0.35);
     --lp-accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    
+    /* Estados */
     --lp-success: #10b981;
     --lp-warning: #f59e0b;
+    
+    /* Raio de Borda Suave */
     --lp-radius-lg: 24px;
     --lp-radius-md: 16px;
     --lp-radius-sm: 8px;
+    
+    /* Tipografia */
     --lp-font: 'Inter', system-ui, -apple-system, sans-serif;
+    
+    /* Transições */
+    --lp-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+/* 2. BASE GERAL */
 body {
     background-color: var(--lp-bg-dark);
     color: var(--lp-text-primary);
@@ -27,9 +45,18 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Background Gradients & Orbs */
+.container {
+    width: 100%;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* Grid Orbs de Fundo (Performance) */
 .lp-bg-elements {
     position: fixed;
     top: 0;
@@ -40,98 +67,152 @@ body {
     overflow: hidden;
     pointer-events: none;
 }
-
 .lp-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(120px);
+    filter: blur(140px);
     opacity: 0.4;
-    animation: float 20s infinite ease-in-out alternate;
+    animation: float 25s infinite ease-in-out alternate;
 }
-
 .lp-orb-1 {
-    top: -10%;
-    left: -10%;
+    top: -15%;
+    left: -15%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 60%);
+}
+.lp-orb-2 {
+    bottom: -15%;
+    right: -15%;
     width: 50vw;
     height: 50vw;
-    background: radial-gradient(circle, rgba(99,102,241,0.3) 0%, rgba(10,10,15,0) 70%);
+    background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 60%);
+    animation-delay: -10s;
 }
-
-.lp-orb-2 {
-    bottom: -10%;
-    right: -10%;
-    width: 40vw;
-    height: 40vw;
-    background: radial-gradient(circle, rgba(168,85,247,0.25) 0%, rgba(10,10,15,0) 70%);
-    animation-delay: -5s;
-}
-
 @keyframes float {
     0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(5%, 5%) scale(1.1); }
+    100% { transform: translate(3%, 3%) scale(1.05); }
 }
 
-/* Typography Enhancements */
+/* 3. TIPOGRAFIA COMPARTILHADA */
 .lp-title {
-    font-size: clamp(3rem, 6vw, 5rem);
+    font-size: clamp(2.5rem, 8vw, 5rem);
     font-weight: 800;
     line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin-bottom: 1.5rem;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.25rem;
 }
-
 .lp-title-gradient {
     background: var(--lp-accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
-
 .lp-subtitle {
-    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-size: clamp(1rem, 3vw, 1.25rem);
     color: var(--lp-text-secondary);
     font-weight: 400;
-    max-width: 600px;
-    margin: 0 auto 2.5rem;
+    margin-bottom: 2rem;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
 }
-
 .lp-section-title {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.75rem, 5vw, 3rem);
     font-weight: 700;
     letter-spacing: -0.02em;
-    text-align: center;
     margin-bottom: 1rem;
 }
-
 .lp-section-subtitle {
-    text-align: center;
     color: var(--lp-text-secondary);
     font-size: 1.125rem;
     max-width: 600px;
-    margin: 0 auto 4rem;
+}
+.lp-section-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Glass Navbar */
-.lp-navbar {
+/* 4. BOTÕES E COMPONENTES GERAIS */
+.lp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: var(--lp-radius-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--lp-transition);
+    border: none;
+}
+.lp-btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+}
+.lp-btn-block {
+    width: 100%;
+}
+.lp-btn-primary {
+    background: var(--lp-accent-gradient);
+    color: white;
+    box-shadow: 0 4px 20px var(--lp-accent-glow);
+    position: relative;
+    overflow: hidden;
+}
+.lp-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--lp-accent-glow);
+}
+.lp-btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    animation: shine 4s infinite;
+}
+@keyframes shine {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+}
+.lp-btn-outline {
+    background: var(--lp-bg-card);
+    color: var(--lp-text-primary);
+    border: 1px solid var(--lp-border-glass);
+    backdrop-filter: blur(10px);
+}
+.lp-btn-outline:hover {
+    background: var(--lp-bg-card-hover);
+    border-color: var(--lp-border-glass-hover);
+    transform: translateY(-2px);
+}
+
+/* 5. HEADER (Mobile First) */
+.lp-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    padding: 1.25rem 0;
+    padding: 1rem 0;
     z-index: 1000;
-    background: rgba(10, 10, 15, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(7, 7, 10, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--lp-border-glass);
-    transition: all 0.3s ease;
+    transition: var(--lp-transition);
 }
-
-.lp-navbar .container {
+.lp-nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
-
 .lp-logo {
     display: flex;
     align-items: center;
@@ -141,94 +222,73 @@ body {
     color: var(--lp-text-primary);
     text-decoration: none;
 }
-
 .lp-logo i {
     color: var(--lp-accent);
 }
-
-.lp-nav-links {
+.lp-mobile-menu-btn {
+    background: none;
+    border: none;
+    color: var(--lp-text-primary);
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 2rem;
-    list-style: none;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: var(--lp-radius-sm);
 }
-
+/* Menu (Oculto no mobile, expande ao clicar) */
+.lp-nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(7, 7, 10, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--lp-border-glass);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--lp-transition);
+}
+.lp-nav-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.lp-nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 .lp-nav-links a {
     color: var(--lp-text-secondary);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 1rem;
     transition: color 0.2s;
+    display: block;
 }
-
 .lp-nav-links a:hover {
     color: var(--lp-text-primary);
 }
-
-/* Premium Buttons */
-.lp-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--lp-radius-sm);
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: none;
+.lp-nav-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
-.lp-btn-primary {
-    background: var(--lp-accent-gradient);
-    color: white;
-    box-shadow: 0 4px 15px var(--lp-accent-glow);
-    position: relative;
-    overflow: hidden;
-}
-
-.lp-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px var(--lp-accent-glow);
-}
-
-.lp-btn-primary::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%; width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    animation: shine 3s infinite;
-}
-
-@keyframes shine {
-    0% { left: -100%; }
-    20% { left: 200%; }
-    100% { left: 200%; }
-}
-
-.lp-btn-outline {
-    background: var(--lp-bg-card);
-    color: var(--lp-text-primary);
-    border: 1px solid var(--lp-border-glass);
-    backdrop-filter: blur(10px);
-}
-
-.lp-btn-outline:hover {
-    background: var(--lp-bg-card-hover);
-    border-color: rgba(255,255,255,0.2);
-    transform: translateY(-2px);
-}
-
-/* Sections */
+/* 6. HERO SECTION */
 .lp-section {
-    padding: 8rem 0;
+    padding: 6rem 0;
     position: relative;
 }
-
 .lp-hero {
-    padding: 12rem 0 6rem;
+    padding: 9rem 0 4rem;
     text-align: center;
     min-height: 100vh;
     display: flex;
@@ -236,56 +296,50 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 .lp-hero-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: var(--lp-bg-card);
+    padding: 0.5rem 1.25rem;
+    background: rgba(255,255,255,0.03);
     border: 1px solid var(--lp-border-glass);
     border-radius: 50px;
     font-size: 0.875rem;
     font-weight: 500;
     margin-bottom: 2rem;
-    color: var(--lp-text-secondary);
-    backdrop-filter: blur(10px);
+    color: var(--lp-text-primary);
+    backdrop-filter: blur(12px);
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
 }
-
 .lp-hero-badge i {
     color: var(--lp-warning);
 }
-
 .lp-hero-actions {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
     justify-content: center;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
+    width: 100%;
 }
-
-/* 3D Mockup Container */
 .lp-mockup-container {
     perspective: 1000px;
     width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
 }
-
 .lp-mockup {
+    margin: 0;
     background: var(--lp-bg-card);
     border: 1px solid var(--lp-border-glass);
     border-radius: var(--lp-radius-lg);
-    padding: 1rem;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px var(--lp-accent-glow);
-    transform: rotateX(10deg) scale(0.95);
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    backdrop-filter: blur(10px);
+    padding: 0.5rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px var(--lp-accent-glow);
+    transform: rotateX(12deg) scale(0.95);
+    transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    backdrop-filter: blur(16px);
 }
-
 .lp-mockup:hover {
     transform: rotateX(0deg) scale(1);
 }
-
 .lp-mockup img {
     width: 100%;
     height: auto;
@@ -293,145 +347,154 @@ body {
     display: block;
 }
 
-/* Social Proof */
+/* 7. SOCIAL PROOF (LOGOS) */
 .lp-trusted {
-    padding: 4rem 0;
+    padding: 3rem 0;
     border-top: 1px solid var(--lp-border-glass);
     border-bottom: 1px solid var(--lp-border-glass);
-    background: rgba(10,10,15,0.3);
+    background: rgba(7, 7, 10, 0.5);
 }
-
 .lp-trusted-text {
     text-align: center;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--lp-text-secondary);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
-
 .lp-trusted-logos {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 4rem;
-    opacity: 0.5;
-    filter: grayscale(100%);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    justify-items: center;
+    opacity: 0.6;
+    color: var(--lp-text-secondary);
+    transition: var(--lp-transition);
 }
-
+.lp-trusted-logos:hover {
+    opacity: 0.8;
+}
 .lp-trusted-logos svg {
-    height: 30px;
-    fill: currentColor;
+    height: 24px;
+    max-width: 120px;
 }
 
-/* Bento Box Features Grid */
+/* 8. FEATURES BENTO GRID */
 .lp-bento-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: minmax(280px, auto);
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
 }
-
 .lp-bento-card {
     background: var(--lp-bg-card);
     border: 1px solid var(--lp-border-glass);
     border-radius: var(--lp-radius-lg);
-    padding: 2.5rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    backdrop-filter: blur(12px);
+    transition: var(--lp-transition);
 }
-
 .lp-bento-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(255,255,255,0.2);
-}
-
-.lp-bento-card.col-span-2 { grid-column: span 2; }
-.lp-bento-card.row-span-2 { grid-row: span 2; }
-
-.lp-bento-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
+    border-color: var(--lp-border-glass-hover);
     background: var(--lp-bg-card-hover);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.lp-bento-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     border: 1px solid var(--lp-border-glass);
     color: var(--lp-accent);
 }
-
 .lp-bento-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
-
 .lp-bento-card p {
     color: var(--lp-text-secondary);
-    font-size: 1rem;
+    font-size: 0.95rem;
     flex-grow: 1;
 }
-
-/* Steps (Como Funciona) */
-.lp-steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+.lp-bento-image {
+    margin: 2rem 0 0 0;
+    border-radius: var(--lp-radius-md);
+    overflow: hidden;
+    border: 1px solid var(--lp-border-glass);
+}
+.lp-bento-image img {
+    width: 100%;
+    display: block;
 }
 
+/* 9. COMO FUNCIONA (STEPS) */
+.lp-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
 .lp-step-card {
     text-align: center;
     position: relative;
+    padding: 2rem 1rem;
+    background: var(--lp-bg-card);
+    border-radius: var(--lp-radius-lg);
+    border: 1px solid var(--lp-border-glass);
 }
-
 .lp-step-number {
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: var(--lp-accent-gradient);
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1.5rem;
-    box-shadow: 0 10px 20px var(--lp-accent-glow);
+    margin: 0 auto 1.25rem;
+    box-shadow: 0 8px 20px var(--lp-accent-glow);
+}
+.lp-step-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.lp-step-card p {
+    color: var(--lp-text-secondary);
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
 }
 
-/* Pricing */
+/* 10. PRICING */
 .lp-pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    max-width: 900px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 100%;
 }
-
 .lp-price-card {
     background: var(--lp-bg-card);
     border: 1px solid var(--lp-border-glass);
     border-radius: var(--lp-radius-lg);
-    padding: 3rem;
-    backdrop-filter: blur(10px);
+    padding: 2rem;
+    backdrop-filter: blur(12px);
     position: relative;
-    transition: transform 0.3s ease;
+    transition: var(--lp-transition);
 }
-
 .lp-price-card.featured {
-    background: linear-gradient(180deg, rgba(99,102,241,0.1) 0%, rgba(10,10,15,0) 100%);
+    background: linear-gradient(180deg, rgba(99,102,241,0.08) 0%, rgba(10,10,15,0) 100%);
     border: 1px solid var(--lp-accent);
 }
-
-.lp-price-card.featured::before {
-    content: 'Recomendado';
+.lp-price-badge {
     position: absolute;
     top: -12px;
     left: 50%;
@@ -445,185 +508,275 @@ body {
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
-
-.lp-price-card:hover {
-    transform: translateY(-5px);
-}
-
 .lp-price-amount {
-    font-size: 3.5rem;
+    font-size: 2.75rem;
     font-weight: 800;
     margin: 1.5rem 0;
     color: var(--lp-text-primary);
 }
-
 .lp-price-amount span {
     font-size: 1rem;
     color: var(--lp-text-secondary);
     font-weight: 400;
 }
-
 .lp-features-list {
     list-style: none;
     padding: 0;
-    margin: 2rem 0;
+    margin: 1.5rem 0 2rem;
 }
-
 .lp-features-list li {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     color: var(--lp-text-secondary);
+    font-size: 0.95rem;
 }
-
 .lp-features-list li i {
     color: var(--lp-success);
+    flex-shrink: 0;
 }
 
-/* FAQ */
+/* 11. FAQ (Nativo details/summary) */
 .lp-faq {
-    max-width: 700px;
+    max-width: 800px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
-
 .lp-faq-item {
-    border-bottom: 1px solid var(--lp-border-glass);
-    padding: 1.5rem 0;
+    background: var(--lp-bg-card);
+    border: 1px solid var(--lp-border-glass);
+    border-radius: var(--lp-radius-md);
+    padding: 1.25rem;
+    transition: var(--lp-transition);
 }
-
+.lp-faq-item:hover {
+    border-color: var(--lp-border-glass-hover);
+}
 .lp-faq-question {
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
     font-weight: 600;
-    font-size: 1.125rem;
+    font-size: 1.05rem;
+    list-style: none; /* Remove seta padrão */
 }
-
+.lp-faq-question::-webkit-details-marker {
+    display: none;
+}
+.lp-faq-question i {
+    transition: transform 0.3s ease;
+    color: var(--lp-text-secondary);
+}
+.lp-faq-item[open] .lp-faq-question i {
+    transform: rotate(180deg);
+}
 .lp-faq-answer {
     margin-top: 1rem;
     color: var(--lp-text-secondary);
-    display: none;
     line-height: 1.6;
+    font-size: 0.95rem;
+    animation: fadeInDown 0.3s ease-out;
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.lp-faq-item.active .lp-faq-answer {
-    display: block;
-}
-
-.lp-faq-item.active .lp-faq-question i {
-    transform: rotate(180deg);
-}
-
-/* Footer CTA */
+/* 12. FINAL CTA */
 .lp-cta-section {
-    padding: 8rem 0;
+    padding: 6rem 0;
     text-align: center;
-    position: relative;
 }
-
 .lp-cta-box {
-    background: linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.1) 100%);
-    border: 1px solid rgba(99,102,241,0.3);
+    background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(168,85,247,0.05) 100%);
+    border: 1px solid rgba(99,102,241,0.25);
     border-radius: var(--lp-radius-lg);
-    padding: 5rem 2rem;
-    backdrop-filter: blur(10px);
+    padding: 3rem 1.5rem;
+    backdrop-filter: blur(16px);
 }
 
-/* Footer */
+/* 13. FOOTER */
 .lp-footer {
     border-top: 1px solid var(--lp-border-glass);
     padding: 4rem 0 2rem;
-    background: rgba(10,10,15,0.8);
+    background: rgba(7, 7, 10, 0.8);
 }
-
 .lp-footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 4rem;
-    margin-bottom: 4rem;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
 }
-
-.lp-footer-col h4 {
+.lp-footer-brand p {
+    color: var(--lp-text-secondary);
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    max-width: 300px;
+}
+.lp-footer-nav h4 {
     color: var(--lp-text-primary);
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
-
-.lp-footer-col ul {
+.lp-footer-nav ul {
     list-style: none;
     padding: 0;
 }
-
-.lp-footer-col ul li {
+.lp-footer-nav li {
     margin-bottom: 0.75rem;
 }
-
-.lp-footer-col a {
+.lp-footer-nav a {
     color: var(--lp-text-secondary);
     text-decoration: none;
     transition: color 0.2s;
+    font-size: 0.95rem;
 }
-
-.lp-footer-col a:hover {
+.lp-footer-nav a:hover {
     color: var(--lp-text-primary);
 }
-
 .lp-footer-bottom {
     border-top: 1px solid var(--lp-border-glass);
     padding-top: 2rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 1.5rem;
     align-items: center;
     color: var(--lp-text-secondary);
     font-size: 0.875rem;
+    text-align: center;
+}
+.lp-footer-social {
+    display: flex;
+    gap: 1rem;
+}
+.lp-footer-social a {
+    color: var(--lp-text-secondary);
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+}
+.lp-footer-social a:hover {
+    opacity: 1;
+    color: var(--lp-text-primary);
 }
 
-/* Animations */
+/* 14. ANIMATIONS REVEAL */
 .reveal {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
     transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-
 .reveal.active {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Responsive */
-@media (max-width: 992px) {
+/* ==========================================================================
+   MEDIA QUERIES (PROGRESSIVE ENHANCEMENT)
+   ========================================================================== */
+
+/* TABLETS E TELAS MÉDIAS (>= 768px) */
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+    
+    .lp-section { padding: 8rem 0; }
+    .lp-hero { padding: 12rem 0 6rem; }
+    
+    .lp-hero-actions {
+        flex-direction: row;
+        width: auto;
+    }
+    
+    .lp-trusted-logos {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
     .lp-bento-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
     }
+    
+    /* Bento Grid Spans */
+    .col-span-2 { grid-column: span 2; }
+    .row-span-2 { grid-row: span 2; }
+    
     .lp-steps {
-        grid-template-columns: 1fr;
+        flex-direction: row;
     }
+    .lp-step-card {
+        flex: 1;
+    }
+    
     .lp-pricing-grid {
-        grid-template-columns: 1fr;
-        max-width: 500px;
+        flex-direction: row;
+        max-width: 900px;
+        margin: 0 auto;
     }
+    .lp-price-card {
+        flex: 1;
+        padding: 3rem;
+    }
+    
+    .lp-cta-box {
+        padding: 5rem 3rem;
+    }
+    
     .lp-footer-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 2fr 1fr 1fr;
+    }
+    .lp-footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
     }
 }
 
-@media (max-width: 768px) {
-    .lp-bento-grid {
-        grid-template-columns: 1fr;
-    }
-    .lp-bento-card.col-span-2 {
-        grid-column: span 1;
-    }
-    .lp-hero-actions {
-        flex-direction: column;
-    }
-    .lp-footer-grid {
-        grid-template-columns: 1fr;
+/* DESKTOPS E TELAS GRANDES (>= 992px) */
+@media (min-width: 992px) {
+    .container {
+        max-width: 1200px;
     }
     
-    .lp-nav-links {
+    /* Navbar Desktop */
+    .lp-mobile-menu-btn {
         display: none;
+    }
+    .lp-nav-menu {
+        position: static;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background: transparent;
+        border: none;
+        padding: 0;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        flex: 1;
+        margin-left: 3rem;
+    }
+    .lp-nav-links {
+        flex-direction: row;
+        gap: 2rem;
+    }
+    .lp-nav-actions {
+        flex-direction: row;
+    }
+    
+    .lp-mockup {
+        padding: 1rem;
+    }
+    
+    .lp-bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: minmax(280px, auto);
+    }
+    
+    .lp-footer-grid {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
     }
 }
