@@ -253,11 +253,16 @@ export class agenda_diariaController {
         if (visibleProfs.length === 0) {
             wrapper.style.display = 'block';
             wrapper.innerHTML = `<div class="p-4 text-center text-secondary">Nenhum profissional para exibir.</div>`;
+            
+            const listWrapper = document.getElementById('agenda-list-wrapper');
+            if (listWrapper) {
+                listWrapper.innerHTML = `<div class="p-4 text-center text-secondary bg-placeholder rounded-md">Nenhum profissional para exibir.</div>`;
+            }
             return;
         }
 
         // Define as colunas dinamicamente
-        wrapper.style.display = 'grid';
+        wrapper.style.display = ''; // Limpa o display style para usar a classe do CSS (d-md-grid)
         wrapper.style.gridTemplateColumns = `80px repeat(${visibleProfs.length}, minmax(200px, 1fr))`;
 
         const visibleAppointments = this.appointments.filter(apt => {
@@ -268,6 +273,11 @@ export class agenda_diariaController {
             } else {
                 if (apt.status === 'cancelled') return false;
             }
+            
+            if (this.currentProfFilter !== 'all' && apt.profissional_id !== this.currentProfFilter) {
+                return false;
+            }
+            
             return true;
         });
 
@@ -349,13 +359,26 @@ export class agenda_diariaController {
                         let statusClass = apt.status === 'completed' ? 'status-completed' : '';
                         const clientName = apt.client_name || 'Sem Nome';
                         const serviceName = (apt.services && apt.services.name) ? apt.services.name : 'Serviço';
-                        const durationText = (apt.services && apt.services.duration) ? `${apt.services.duration}min` : '';
+                        
                         const realTime = apt.appointment_time.substring(0, 5);
+                        let durationMins = (apt.services && apt.services.duration) ? parseInt(apt.services.duration) : 30;
+                        
+                        // Cálculo de Início e Fim para exibir no Card
+                        let startH = parseInt(realTime.substring(0, 2));
+                        let startM = parseInt(realTime.substring(3, 5));
+                        let totalStartMin = (startH * 60) + startM;
+                        let totalEndMin = totalStartMin + durationMins;
+                        let endH = Math.floor(totalEndMin / 60).toString().padStart(2, '0');
+                        let endM = (totalEndMin % 60).toString().padStart(2, '0');
+                        let endTimeStr = `${endH}:${endM}`;
 
                         html += `
                             <div class="matrix-card ${statusClass}" data-id="${apt.id}"${cardHeightStyle}>
-                                <div class="font-bold text-sm line-clamp-1">${realTime} - ${clientName}</div>
-                                <div class="text-xs opacity-80 line-clamp-1">${serviceName} ${durationText ? '('+durationText+')' : ''}</div>
+                                <div class="font-bold text-xs opacity-80 mb-1 flex align-center gap-1">
+                                    <i data-lucide="clock" class="icon-sm" style="width: 12px; height: 12px;"></i> ${realTime} - ${endTimeStr}
+                                </div>
+                                <div class="font-bold text-sm line-clamp-1">${clientName}</div>
+                                <div class="text-xs opacity-80 line-clamp-1">${serviceName}</div>
                                 ${apt.status === 'completed' ? '<div class="mt-1"><i data-lucide="check-circle" class="icon-sm text-success"></i></div>' : ''}
                             </div>
                         `;
@@ -378,9 +401,9 @@ export class agenda_diariaController {
         wrapper.querySelectorAll('.matrix-card').forEach(el => {
             el.addEventListener('click', () => {
                 const id = el.getAttribute('data-id');
-                if (id && window.router) {
-                    window.pendingAppointmentToView = id;
-                    window.router.navigate('principal/agendamentos');
+                const apt = this.appointments.find(a => a.id === id);
+                if (apt) {
+                    this.openAppointmentDetails(apt);
                 }
             });
         });
@@ -392,7 +415,157 @@ export class agenda_diariaController {
             });
         });
 
+        // 3. RENDERIZAR LISTA MOBILE
+        const listWrapper = document.getElementById('agenda-list-wrapper');
+        if (listWrapper) {
+            let listHtml = '';
+            if (visibleAppointments.length === 0) {
+                listHtml = `<div class="p-4 text-center text-secondary bg-placeholder rounded-md">Nenhum agendamento para exibir.</div>`;
+            } else {
+                // Ordenar por horário
+                const sortedApts = [...visibleAppointments].sort((a, b) => a.appointment_time.localeCompare(b.appointment_time));
+                
+                sortedApts.forEach(apt => {
+                    const prof = this.profissionais.find(p => p.id === apt.profissional_id);
+                    const profName = prof ? (prof.nome || 'Profissional') : 'Profissional';
+                    const time = apt.appointment_time.substring(0, 5);
+                    const serviceName = apt.services ? apt.services.name : 'Serviço';
+                    const duration = apt.services ? parseInt(apt.services.duration) : 30;
+                    const clientName = apt.client_name || 'Sem Nome';
+                    
+                    let statusClass = apt.status === 'completed' ? 'text-success bg-success-light' : 'text-warning bg-warning-light';
+                    let statusText = apt.status === 'completed' ? 'Concluído' : (apt.status === 'pending' ? 'Pendente' : 'Confirmado');
+
+                    listHtml += `
+                        <div class="config-card p-3 flex flex-column gap-2 cursor-pointer border-left-solid hover:bg-hover transition" style="border-left-width: 4px; border-left-color: var(--color-primary);" onclick="window.controllers.agendaDiariaController.openAppointmentDetails('${apt.id}')">
+                            <div class="flex justify-between align-center border-bottom-dashed pb-2">
+                                <div class="font-bold text-lg text-primary">${time} <span class="text-xs font-normal text-secondary ml-1">(${duration} min)</span></div>
+                                <span class="badge ${statusClass} px-2 py-1 rounded text-xs">${statusText}</span>
+                            </div>
+                            <div class="flex justify-between align-center mt-2">
+                                <span class="font-bold text-base line-height-1">${clientName}</span>
+                                <span class="text-sm text-secondary font-medium"><i data-lucide="scissors" class="icon-sm inline-block" style="vertical-align: middle;"></i> ${serviceName}</span>
+                            </div>
+                            <div class="flex align-center gap-2 mt-2 pt-2 border-top-dashed">
+                                <div class="bg-primary-light text-primary rounded-full flex align-center justify-center font-bold text-xs" style="width: 24px; height: 24px;">${profName.charAt(0).toUpperCase()}</div>
+                                <span class="text-sm text-secondary font-medium">${profName}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            listWrapper.innerHTML = listHtml;
+        }
+
         if (window.lucide) window.lucide.createIcons();
+    }
+
+    openAppointmentDetails(apt) {
+        const modal = document.getElementById('modal-appointment-details');
+        const content = document.getElementById('modal-appt-content');
+        if (!modal || !content) return;
+
+        const clientName = apt.client_name || 'Sem Nome';
+        const serviceName = (apt.services && apt.services.name) ? apt.services.name : 'Serviço';
+        const profName = (apt.profissionais && apt.profissionais.nome) ? apt.profissionais.nome : 'Profissional';
+        const price = (apt.services && apt.services.price) ? `R$ ${parseFloat(apt.services.price).toFixed(2).replace('.', ',')}` : 'Não informado';
+        
+                        
+        const realTime = apt.appointment_time.substring(0, 5);
+        let durationMins = (apt.services && apt.services.duration) ? parseInt(apt.services.duration) : 30;
+        
+        let startH = parseInt(realTime.substring(0, 2));
+        let startM = parseInt(realTime.substring(3, 5));
+        let totalStartMin = (startH * 60) + startM;
+        let totalEndMin = totalStartMin + durationMins;
+        let endH = Math.floor(totalEndMin / 60).toString().padStart(2, '0');
+        let endM = (totalEndMin % 60).toString().padStart(2, '0');
+        let endTimeStr = `${endH}:${endM}`;
+        
+        let statusBadge = '<span class="bg-warning-light text-warning px-2 py-1 rounded-sm text-xs font-bold">Pendente</span>';
+        if (apt.status === 'completed') statusBadge = '<span class="bg-success-light text-success px-2 py-1 rounded-sm text-xs font-bold">Concluído</span>';
+        if (apt.status === 'cancelled') statusBadge = '<span class="bg-danger-light text-danger px-2 py-1 rounded-sm text-xs font-bold">Cancelado</span>';
+
+        let dateFormatted = 'Data não informada';
+        if (apt.appointment_date) {
+            const [y, m, d] = apt.appointment_date.split('-');
+            dateFormatted = `${d}/${m}/${y}`;
+        }
+
+        content.innerHTML = `
+            <!-- Sessão: Dados do Cliente -->
+            <div class="grid grid-md-2 gap-3 mb-3">
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Nome do Cliente</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px gap-2">
+                        <div class="bg-primary text-white rounded-full w-24px h-24px flex align-center justify-center text-xs font-bold">${clientName.charAt(0).toUpperCase()}</div>
+                        <span class="font-bold">${clientName}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Telefone (Contato)</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px font-medium">
+                        ${(apt.clientes && apt.clientes.telefone) ? apt.clientes.telefone : '---'}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sessão: Dados do Serviço -->
+            <div class="grid grid-md-2 gap-3 mb-3">
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Serviço Solicitado</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px font-medium">
+                        ${serviceName}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Profissional Responsável</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px font-medium">
+                        ${profName}
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-md-2 gap-3 mb-3">
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Data e Hora</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary flex align-center min-h-40px font-medium">
+                        ${dateFormatted} às ${realTime} - ${endTimeStr}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm text-secondary font-medium block mb-1">Status do Agendamento</label>
+                    <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 flex align-center min-h-40px">
+                        ${statusBadge}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Observações -->
+            ${apt.notes ? `
+            <div class="form-group mb-2">
+                <label class="text-sm text-secondary font-medium block mb-1">Observações do Agendamento</label>
+                <div class="w-100 bg-placeholder border-none rounded-md px-3 py-2 text-primary font-medium line-height-1-5">
+                    ${apt.notes}
+                </div>
+            </div>
+            ` : ''}
+        `;
+
+        if (window.lucide) window.lucide.createIcons();
+        modal.classList.remove('d-none');
+        
+        // Listener para o botão de editar que navega pra página principal de agendamentos
+        const btnEdit = document.getElementById('btn-edit-appt');
+        if (btnEdit) {
+            btnEdit.onclick = () => {
+                modal.classList.add('d-none');
+                if (window.router) {
+                    window.pendingAppointmentToView = apt.id;
+                    window.router.navigate('principal/agendamentos');
+                }
+            };
+        }
     }
 
     async subscribeToRealtimeEvents() {

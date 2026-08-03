@@ -29,48 +29,43 @@ export class configuracoesController {
         const container = document.getElementById('horarios-container');
         if (!container) return;
 
-        let html = `
-            <div class="table-responsive">
-                <table class="data-table w-100">
-                    <thead>
-                        <tr>
-                            <th class="text-left text-secondary text-sm font-medium py-3 px-3">Dia da Semana</th>
-                            <th class="text-center text-secondary text-sm font-medium py-3 px-3">Abertura</th>
-                            <th class="text-center text-secondary text-sm font-medium py-3 px-3">Fechamento</th>
-                            <th class="text-right text-secondary text-sm font-medium py-3 px-3">Expediente</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
+        let html = '<div class="flex flex-column gap-3">';
 
         this.diasDaSemana.forEach((dia, index) => {
             html += `
-                        <tr class="border-bottom-dashed hover:bg-hover transition-colors">
-                            <td class="py-3 px-3">
-                                <label class="font-medium text-sm text-primary capitalize">${this.nomesDias[index]}</label>
-                            </td>
-                            <td class="py-3 px-3 text-center">
-                                <input type="time" id="horario-inicio-${dia}" class="bg-placeholder border-dashed rounded px-2 py-1 text-sm outline-none font-medium text-primary text-center focus:border-primary">
-                            </td>
-                            <td class="py-3 px-3 text-center">
-                                <input type="time" id="horario-fim-${dia}" class="bg-placeholder border-dashed rounded px-2 py-1 text-sm outline-none font-medium text-primary text-center focus:border-primary">
-                            </td>
-                            <td class="py-3 px-3 text-right">
-                                <label class="flex align-center justify-end gap-2 cursor-pointer">
-                                    <input type="checkbox" id="horario-fechado-${dia}" class="custom-checkbox accent-danger">
-                                    <span class="text-xs font-bold text-danger">Fechado</span>
-                                </label>
-                            </td>
-                        </tr>
+                <div class="flex flex-column flex-md-row align-start align-md-center justify-between p-3 bg-placeholder border-dashed rounded-md transition-colors hover:border-primary gap-3">
+                    <div class="w-100 w-md-auto" style="min-width: 140px;">
+                        <label class="font-bold text-sm text-primary capitalize flex align-center gap-2">
+                            <i data-lucide="clock" class="icon-sm text-secondary"></i>
+                            ${this.nomesDias[index]}
+                        </label>
+                    </div>
+                    
+                    <div class="flex align-center justify-between gap-3 w-100 w-md-auto flex-1">
+                        <div class="flex flex-column flex-1">
+                            <span class="text-xs text-secondary mb-1 text-center">Abertura</span>
+                            <input type="time" id="horario-inicio-${dia}" class="bg-transparent border-dashed rounded px-2 py-2 text-sm outline-none font-medium text-primary text-center focus:border-primary w-100">
+                        </div>
+                        <div class="flex flex-column flex-1">
+                            <span class="text-xs text-secondary mb-1 text-center">Fechamento</span>
+                            <input type="time" id="horario-fim-${dia}" class="bg-transparent border-dashed rounded px-2 py-2 text-sm outline-none font-medium text-primary text-center focus:border-primary w-100">
+                        </div>
+                    </div>
+
+                    <div class="w-100 w-md-auto flex justify-end">
+                        <label class="flex align-center justify-center gap-2 cursor-pointer w-100 border-dashed rounded p-2 hover:bg-transparent transition-colors">
+                            <input type="checkbox" id="horario-fechado-${dia}" class="custom-checkbox accent-danger">
+                            <span class="text-sm font-bold text-danger">Fechado</span>
+                        </label>
+                    </div>
+                </div>
             `;
         });
 
-        html += `
-                    </tbody>
-                </table>
-            </div>
-        `;
+        html += '</div>';
         container.innerHTML = html;
+
+        if (window.lucide) window.lucide.createIcons();
 
         this.diasDaSemana.forEach(dia => {
             const chk = document.getElementById(`horario-fechado-${dia}`);

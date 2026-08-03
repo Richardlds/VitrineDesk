@@ -576,7 +576,10 @@ export class agendamentosController {
                 document.getElementById('apt-professional-id').value = rawApt.profissional_id || '';
                 document.getElementById('apt-date').value = rawApt.appointment_date || '';
                 document.getElementById('apt-time').value = rawApt.appointment_time ? rawApt.appointment_time.substring(0, 5) : '';
-                document.getElementById('apt-status').value = rawApt.status || 'pending';
+                
+                const statusInput = document.getElementById('apt-status');
+                statusInput.value = rawApt.status || 'pending';
+                statusInput.dataset.originalStatus = rawApt.status || 'pending';
                 
                 // Buscar dados extras do cliente pelo telefone
                 if (rawApt.client_phone) {
@@ -596,7 +599,10 @@ export class agendamentosController {
         } else {
             title.textContent = "Novo Agendamento";
             document.getElementById('apt-id').value = '';
-            document.getElementById('apt-status').value = 'pending';
+            
+            const statusInput = document.getElementById('apt-status');
+            statusInput.value = 'pending';
+            statusInput.dataset.originalStatus = 'pending';
         }
 
         modal.classList.remove('d-none');
@@ -655,6 +661,9 @@ export class agendamentosController {
             if(window.lucide) window.lucide.createIcons();
 
             let error;
+            const originalStatus = document.getElementById('apt-status').dataset.originalStatus || 'pending';
+            const newStatus = payload.status;
+
             if (id) {
                 // Update
                 const res = await supabase.from('appointments').update(payload).eq('id', id).eq('tenant_id', tenantId);
@@ -663,6 +672,15 @@ export class agendamentosController {
                 // Insert
                 const res = await supabase.from('appointments').insert([payload]);
                 error = res.error;
+            }
+
+            // Lógica de Fidelidade: Adiciona ponto se mudou para completed, tira se tirou de completed
+            if (!error && clientPhone) {
+                if (originalStatus !== 'completed' && newStatus === 'completed') {
+                    await this.processFidelityPoint(tenantId, clientPhone, 1);
+                } else if (originalStatus === 'completed' && newStatus !== 'completed') {
+                    await this.processFidelityPoint(tenantId, clientPhone, -1);
+                }
             }
 
             // Sincronizar dados do cliente na tabela 'clientes' se tiver telefone
@@ -688,7 +706,6 @@ export class agendamentosController {
                     await supabase.from('clientes').insert([clientPayload]);
                 }
             }
-
             btnSave.innerHTML = originalHtml;
             btnSave.disabled = false;
             if(window.lucide) window.lucide.createIcons();
@@ -714,6 +731,31 @@ export class agendamentosController {
             btnSave.disabled = false;
             btnSave.innerHTML = `<i data-lucide="save" class="icon-sm"></i> Salvar Agendamento`;
             if(window.lucide) window.lucide.createIcons();
+        }
+    }
+
+    async processFidelityPoint(tenantId, clientPhone, amount) {
+        try {
+            const { data: config } = await supabase.from('config_fidelidade')
+                .select('is_active')
+                .eq('tenant_id', tenantId)
+                .maybeSingle();
+                
+            if (!config || !config.is_active) return;
+            
+            const { data: client } = await supabase.from('clientes')
+                .select('id, pontos')
+                .eq('tenant_id', tenantId)
+                .eq('telefone', clientPhone)
+                .maybeSingle();
+                
+            if (client) {
+                let novosPontos = (client.pontos || 0) + amount;
+                if (novosPontos < 0) novosPontos = 0;
+                await supabase.from('clientes').update({ pontos: novosPontos }).eq('id', client.id);
+            }
+        } catch (e) {
+            console.error("Erro ao processar ponto de fidelidade automático:", e);
         }
     }
 

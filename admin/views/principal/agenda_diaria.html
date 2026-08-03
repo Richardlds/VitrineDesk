@@ -3,20 +3,12 @@
     <div class="flex flex-wrap justify-between align-start gap-3 mb-4">
         <div class="flex flex-column gap-3">
             <h2 class="mb-0 text-primary">Agenda Diária</h2>
-            <!-- Navegação de Datas Avançada -->
+            <!-- Navegação de Datas -->
             <div class="flex flex-column gap-3 mt-2 w-100">
-                <!-- Acesso Rápido e Calendário -->
                 <div class="flex flex-wrap align-center gap-2">
                     <button class="btn btn-outline text-secondary border-dashed px-3 py-1 text-sm rounded-md cursor-pointer" id="btn-date-ontem">Ontem</button>
                     <button class="btn bg-primary-light text-primary border border-primary px-3 py-1 text-sm rounded-md font-bold cursor-pointer" id="btn-date-hoje">Hoje</button>
                     <button class="btn btn-outline text-secondary border-dashed px-3 py-1 text-sm rounded-md cursor-pointer" id="btn-date-amanha">Amanhã</button>
-                    
-                    <div class="relative ml-2">
-                        <button class="btn bg-placeholder border-none text-secondary flex align-center gap-2 px-3 py-1 rounded-md text-sm cursor-pointer" title="Escolher no calendário">
-                            <i data-lucide="calendar" class="icon-sm"></i> Calendário
-                        </button>
-                        <input type="date" id="input-date-picker" class="absolute top-0 left-0 w-100 h-100 opacity-0 cursor-pointer">
-                    </div>
                 </div>
             </div>
         </div>
@@ -61,9 +53,35 @@
             </div>
         </div>
 
-        <!-- Matriz Gerada dinamicamente -->
-        <div id="agenda-matrix-wrapper" class="agenda-matrix-wrapper">
+        <!-- Matriz Gerada dinamicamente (Desktop) -->
+        <div id="agenda-matrix-wrapper" class="agenda-matrix-wrapper d-none d-md-grid">
             <!-- Slots renderizados pelo JS -->
+        </div>
+
+        <!-- Lista Mobile Gerada dinamicamente (Mobile) -->
+        <div id="agenda-list-wrapper" class="agenda-list-wrapper d-block d-md-none flex flex-column gap-3 py-2">
+            <!-- Cards renderizados pelo JS -->
+        </div>
+    </div>
+    
+    <!-- Detalhes do Agendamento Modal (Reescrito com Design System) -->
+    <div id="modal-appointment-details" class="modal-overlay d-none">
+        <div class="modal-content config-card p-0 flex flex-column w-100 max-w-550">
+            <div class="flex justify-between align-center p-3 border-bottom-dashed">
+                <h3 class="mb-0 text-primary">Detalhes do Agendamento</h3>
+                <button class="btn btn-outline border-none p-1" onclick="document.getElementById('modal-appointment-details').classList.add('d-none')">
+                    <i data-lucide="x" class="icon-sm"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 flex flex-column gap-3" id="modal-appt-content">
+                <!-- Content will be injected here via JS -->
+            </div>
+            
+            <div class="p-3 border-top-solid border-border flex justify-end gap-2 bg-bg-base" style="border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                <button class="btn btn-outline" onclick="document.getElementById('modal-appointment-details').classList.add('d-none')">Fechar</button>
+                <button class="btn btn-primary" id="btn-edit-appt">Editar Completo</button>
+            </div>
         </div>
     </div>
 </div>

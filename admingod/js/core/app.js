@@ -2,6 +2,41 @@ import { Router } from './Router.js';
 import { supabase } from './supabaseClient.js';
 import { requireAuth } from '../admingod-auth.js';
 
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) {
+        const themeIcon = document.getElementById('theme-icon');
+        if (themeIcon && localStorage.getItem('vitrinedesk_god_theme') === 'light') {
+            themeIcon.setAttribute('data-lucide', 'sun');
+        }
+        window.lucide.createIcons();
+    }
+});
+
+// Theme Management
+const savedTheme = localStorage.getItem('vitrinedesk_god_theme');
+if (savedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+}
+
+window.toggleTheme = function(btn) {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('vitrinedesk_god_theme', next);
+    
+    const icon = document.getElementById('theme-icon');
+    if (icon) {
+        icon.setAttribute('data-lucide', next === 'dark' ? 'moon' : 'sun');
+        if (window.lucide) {
+            const parent = icon.parentElement;
+            parent.innerHTML = `<i data-lucide="${next === 'dark' ? 'moon' : 'sun'}" class="icon-sm" id="theme-icon"></i>`;
+            window.lucide.createIcons({root: parent});
+        }
+    }
+    
+    if (window.showToast) window.showToast(`Tema alterado para ${next === 'dark' ? 'Escuro' : 'Claro'}`, 'success');
+};
+
 class SuperAdminApp {
     constructor() {
         // Inicialização básica sem disparar rotas
@@ -612,15 +647,35 @@ class SuperAdminApp {
     }
 }
 
-window.playNotificationSound = function(profile = 4) {
-    try {
+const getAudioContext = () => {
+    if (!window.__globalAudioCtx) {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        
-        if (!window.__globalAudioCtx) {
+        if (AudioContext) {
             window.__globalAudioCtx = new AudioContext();
         }
-        const ctx = window.__globalAudioCtx;
+    }
+    return window.__globalAudioCtx;
+};
+
+// Desbloquear áudio no primeiro clique do usuário
+const unlockAudio = () => {
+    const ctx = getAudioContext();
+    if (ctx && ctx.state === 'suspended') {
+        ctx.resume();
+    }
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
+    document.removeEventListener('keydown', unlockAudio);
+};
+
+document.addEventListener('click', unlockAudio);
+document.addEventListener('touchstart', unlockAudio);
+document.addEventListener('keydown', unlockAudio);
+
+window.playNotificationSound = function(profile = 1) {
+    try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
         
         if (ctx.state === 'suspended') {
             ctx.resume();
@@ -699,13 +754,6 @@ window.playNotificationSound = function(profile = 4) {
         console.error("Web Audio API error:", e);
     }
 };
-
-// Desbloquear áudio no primeiro clique do usuário
-document.addEventListener('click', () => {
-    if (window.__globalAudioCtx && window.__globalAudioCtx.state === 'suspended') {
-        window.__globalAudioCtx.resume();
-    }
-}, { once: true });
 
 window.testSound = function(profileNumber) {
     window.playNotificationSound(profileNumber);

@@ -9,9 +9,9 @@ export class personalizacaoController {
         this.coverUrl = null;
         this.galeria = [];
     }
-    
+
     async init() {
-        
+
         // Simular um fetch das configs atuais
         await this.loadCurrentSettings();
 
@@ -68,19 +68,21 @@ export class personalizacaoController {
                 setVal('input-card-style', pers.card_style);
                 setVal('input-logo-size', pers.logo_size);
                 setVal('input-logo-format', pers.logo_format);
-                
+
                 if (pers.topbar_bg_color) this.updateColorInput('input-topbar-bg-color', pers.topbar_bg_color);
                 if (pers.topbar_text_color) this.updateColorInput('input-topbar-text-color', pers.topbar_text_color);
                 setVal('input-topbar-sticky', pers.topbar_sticky !== undefined ? (pers.topbar_sticky ? 'sticky' : 'static') : undefined);
-                
+
                 if (pers.footer_color) this.updateColorInput('input-footer-color', pers.footer_color);
                 if (pers.footer_text_color) this.updateColorInput('input-footer-text-color', pers.footer_text_color);
                 setVal('input-footer-text', pers.footer_text);
-                
+
                 const whatsappEnabled = document.getElementById('input-whatsapp-enabled');
                 if (whatsappEnabled) whatsappEnabled.checked = pers.whatsapp_enabled !== false; // default true
                 if (data.whatsapp || pers.whatsapp) document.getElementById('input-whatsapp-number').value = data.whatsapp || pers.whatsapp;
                 if (pers.whatsapp_message) document.getElementById('input-whatsapp-message').value = pers.whatsapp_message;
+                if (pers.whatsapp_animation) document.getElementById('input-whatsapp-animation').value = pers.whatsapp_animation;
+                if (pers.whatsapp_size) document.getElementById('input-whatsapp-size').value = pers.whatsapp_size;
             }
         } catch (e) {
             console.error('Erro ao carregar configuracoes de cores:', e);
@@ -97,7 +99,7 @@ export class personalizacaoController {
         if (btnSave) {
             btnSave.addEventListener('click', (e) => this.handleSave(e));
         }
-        
+
         // Preview dinâmico para todos os color pickers
         const colorPickers = document.querySelectorAll('.color-picker');
         colorPickers.forEach(input => {
@@ -184,7 +186,7 @@ export class personalizacaoController {
             this.logoFile = file;  // Arquivo para upload
             this.setPreview('preview-logo', 'icon-logo', base64);
         });
-        
+
         this.setupImageUpload('btn-upload-favicon', 'input-favicon', (base64, file) => {
             this.faviconUrl = base64; // Preview
             this.faviconFile = file;  // Arquivo para upload
@@ -195,7 +197,7 @@ export class personalizacaoController {
         const inputCover = document.getElementById('input-cover');
         const btnUploadCover = document.getElementById('btn-upload-cover');
         const btnRemoverCover = document.getElementById('btn-remover-cover');
-        
+
         if (btnUploadCover && inputCover) {
             btnUploadCover.addEventListener('click', () => inputCover.click());
             inputCover.addEventListener('change', (e) => {
@@ -283,14 +285,14 @@ export class personalizacaoController {
     renderGallery() {
         const container = document.getElementById('gallery-container');
         if (!container) return;
-        
+
         let html = '<input type="file" id="input-gallery" accept="image/*" class="d-none">';
         for (let i = 0; i < 6; i++) {
             if (i < this.galeria.length) {
                 const item = this.galeria[i];
                 const bgUrl = item.isNew ? item.preview : item;
                 const bgStr = `background-image: url('${bgUrl}'); background-size: cover; background-position: center;`;
-                
+
                 html += `
                     <div class="bg-placeholder rounded-md flex justify-center align-center border-dashed cursor-pointer aspect-square relative gallery-slot" data-index="${i}" style="${bgStr}">
                         <div class="absolute top-0 right-0 bg-danger text-white rounded-bl-md flex justify-center align-center w-24px h-24px hover:bg-danger-hover transition-colors" title="Remover"><i data-lucide="trash-2" class="w-3 h-3"></i></div>
@@ -344,11 +346,11 @@ export class personalizacaoController {
     async handleSave(e) {
         const btn = e.currentTarget;
         const originalText = btn.innerHTML;
-        
+
         btn.innerHTML = `<i data-lucide="loader" class="animate-spin icon-sm"></i> Salvando...`;
         btn.disabled = true;
         btn.style.opacity = '0.7';
-        
+
         if (window.lucide) window.lucide.createIcons();
 
         try {
@@ -368,7 +370,7 @@ export class personalizacaoController {
                 const url = await uploadImageToSupabase(this.coverFile, 'tenant-images', tenantId);
                 if (url) this.coverUrl = url;
             }
-            
+
             // Upload das fotos da Galeria
             const uploadPromises = this.galeria.map(async (item) => {
                 if (item.isNew && item.file) {
@@ -411,7 +413,9 @@ export class personalizacaoController {
                 footer_text: document.getElementById('input-footer-text')?.value,
                 whatsapp_enabled: document.getElementById('input-whatsapp-enabled')?.checked,
                 whatsapp: document.getElementById('input-whatsapp-number')?.value,
-                whatsapp_message: document.getElementById('input-whatsapp-message')?.value
+                whatsapp_message: document.getElementById('input-whatsapp-message')?.value,
+                whatsapp_animation: document.getElementById('input-whatsapp-animation')?.value || 'none',
+                whatsapp_size: document.getElementById('input-whatsapp-size')?.value || 60
             };
 
             const updatePayload = {
@@ -425,7 +429,7 @@ export class personalizacaoController {
 
             const { error } = await supabase.from('tenants').update(updatePayload).eq('id', tenantId);
             if (error) throw error;
-            
+
             if (window.showToast) {
                 window.showToast('Configurações aplicadas para todas as filiais!', 'success');
             }
@@ -440,7 +444,7 @@ export class personalizacaoController {
             btn.style.opacity = '1';
         }
     }
-    
+
     destroy() {
         // Remover listeners seria automático se os elementos HTML forem destruídos pelo Router,
         // mas listeners soltos no `window` ou `document` devem ser limpos aqui.

@@ -128,10 +128,16 @@ export class metasController {
 
         if (noMeta) {
             this.progressoCard.innerHTML = `
-                <div class="flex justify-between align-center border-left-4 border-warning bg-warning-light p-4 rounded-lg">
-                    <div>
-                        <h3 class="text-warning text-md mb-1">Nenhuma meta para este mês</h3>
-                        <p class="text-secondary text-sm">Configure uma meta de faturamento para engajar a equipe.</p>
+                <div class="config-card mb-0 bg-bg-surface border-dashed">
+                    <div class="flex flex-wrap align-center gap-4 p-2">
+                        <div class="bg-placeholder text-secondary p-4 rounded-full flex align-center justify-center">
+                            <i data-lucide="target" class="icon-lg opacity-50"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-secondary text-lg mb-1">Nenhuma meta definida</h3>
+                            <p class="text-sm text-secondary m-0">Configure uma meta de faturamento para engajar a equipe neste mês.</p>
+                        </div>
+                        <button class="btn btn-primary shadow-sm hover-float" onclick="document.getElementById('btn-configurar-meta').click()">Configurar Meta</button>
                     </div>
                 </div>
             `;
@@ -139,25 +145,34 @@ export class metasController {
         }
 
         const percent = meta > 0 ? Math.min((atingido / meta) * 100, 100) : 0;
-        // eslint-disable-next-line no-useless-assignment
         let colorClass = 'bg-primary';
-        if (percent >= 100) colorClass = 'bg-success';
-        else if (percent > 70) colorClass = 'bg-primary';
-        else if (percent > 40) colorClass = 'bg-warning';
-        else colorClass = 'bg-danger';
+        let textClass = 'text-primary';
+        if (percent >= 100) { colorClass = 'bg-success'; textClass = 'text-success'; }
+        else if (percent > 70) { colorClass = 'bg-primary'; textClass = 'text-primary'; }
+        else if (percent > 40) { colorClass = 'bg-warning'; textClass = 'text-warning'; }
+        else { colorClass = 'bg-danger'; textClass = 'text-danger'; }
 
         this.progressoCard.innerHTML = `
-            <div class="flex justify-between align-end mb-2">
-                <div>
-                    <span class="text-sm text-secondary block mb-1">Progresso do Mês Atual</span>
-                    <h3 class="text-xl font-bold text-primary">R$ ${atingido.toFixed(2)} <span class="text-sm font-normal text-secondary">de R$ ${meta.toFixed(2)}</span></h3>
+            <div class="config-card mb-0" style="background: linear-gradient(135deg, rgba(99,102,241,0.05) 0%, rgba(99,102,241,0.01) 100%); border: 1px solid rgba(99,102,241,0.15);">
+                <div class="flex flex-wrap align-center gap-4 p-2">
+                    <div class="${colorClass} text-white p-4 rounded-full flex align-center justify-center shadow-sm">
+                        <i data-lucide="target" class="icon-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between align-end mb-2">
+                            <div>
+                                <span class="text-xs font-bold text-secondary uppercase tracking-widest block mb-1">Progresso Atual</span>
+                                <h3 class="text-2xl font-bold text-primary m-0">R$ ${atingido.toFixed(2)} <span class="text-sm font-medium text-secondary">de R$ ${meta.toFixed(2)}</span></h3>
+                            </div>
+                            <div class="text-xl font-bold ${textClass}">${percent.toFixed(1)}%</div>
+                        </div>
+                        <div class="progress-bar bg-placeholder rounded-full overflow-hidden w-100" style="height: 8px;">
+                            <div class="progress-fill ${colorClass} h-100 transition-all duration-500" style="width: ${percent}%;"></div>
+                        </div>
+                        ${percent >= 100 ? `<p class="text-success text-sm mt-3 mb-0 flex align-center gap-1 font-bold"><i data-lucide="award" class="icon-sm"></i> Meta atingida com sucesso!</p>` : ''}
+                    </div>
                 </div>
-                <div class="text-xl font-bold ${colorClass.replace('bg-', 'text-')}">${percent.toFixed(1)}%</div>
             </div>
-            <div class="progress-bar bg-placeholder rounded-full h-2 overflow-hidden w-100">
-                <div class="progress-fill ${colorClass} h-100 transition-all" style="width: ${percent}%;"></div>
-            </div>
-            ${percent >= 100 ? '<p class="text-success text-sm mt-2"><i data-lucide="award" class="icon-sm"></i> Parabéns! A meta deste mês foi atingida.</p>' : ''}
         `;
     }
 
@@ -179,30 +194,46 @@ export class metasController {
             const [yyyy, mm] = item.mes_ano.split('-');
             const mesFormatado = `${mm}/${yyyy}`;
             
-            // Calcula faturamento real pro mês da linha
             const atingido = await this.getFaturamentoReal(item.mes_ano, tenantId);
             const percent = item.valor_alvo > 0 ? (atingido / item.valor_alvo) * 100 : 0;
             
-            // eslint-disable-next-line no-useless-assignment
-            let statusBadge = '';
+            let statusConfig = { bgClass: 'bg-danger', lightClass: 'bg-danger-light', textClass: 'text-danger' };
             if (percent >= 100) {
-                statusBadge = '<span class="status-badge bg-success-light text-success">Atingida</span>';
+                statusConfig = { bgClass: 'bg-success', lightClass: 'bg-success-light', textClass: 'text-success' };
             } else if (item.mes_ano === `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, '0')}`) {
-                statusBadge = '<span class="status-badge bg-primary-light text-primary">Em Andamento</span>';
-            } else {
-                statusBadge = '<span class="status-badge bg-danger-light text-danger">Não Atingida</span>';
+                statusConfig = { bgClass: 'bg-primary', lightClass: 'bg-primary-light', textClass: 'text-primary' };
             }
 
             html += `
-                <tr>
-                    <td class="font-medium text-primary">${mesFormatado}</td>
-                    <td class="text-sm text-secondary">R$ ${parseFloat(item.valor_alvo).toFixed(2)}</td>
-                    <td class="text-sm font-bold text-primary">R$ ${atingido.toFixed(2)} <span class="text-xs text-secondary font-normal">(${percent.toFixed(0)}%)</span></td>
-                    <td class="text-center">${statusBadge}</td>
-                    <td class="text-right">
-                        <button class="btn btn-danger-outline text-xs py-1 px-3 rounded cursor-pointer btn-excluir-meta flex align-center justify-end gap-1" data-id="${item.id}">
-                            <i data-lucide="trash-2" class="icon-sm"></i> Excluir
-                        </button>
+                <tr class="hover-bg-surface transition-colors">
+                    <td class="py-3 px-3 border-bottom-dashed w-100">
+                        <div class="flex align-center gap-3">
+                            <div class="${statusConfig.lightClass} ${statusConfig.textClass} rounded-full flex justify-center align-center shadow-sm flex-shrink-0" style="width: 36px; height: 36px;">
+                                <i data-lucide="calendar" class="icon-sm"></i>
+                            </div>
+                            <div class="flex flex-column flex-1" style="min-width: 0;">
+                                <div class="flex justify-between align-center mb-1">
+                                    <div class="flex flex-column truncate pr-2">
+                                        <span class="font-bold text-primary text-sm truncate">${mesFormatado}</span>
+                                        <span class="text-xs text-secondary truncate">Meta: R$ ${parseFloat(item.valor_alvo).toFixed(2)}</span>
+                                    </div>
+                                    <div class="flex flex-column align-end flex-shrink-0">
+                                        <span class="text-xs font-bold ${statusConfig.textClass}">R$ ${atingido.toFixed(2)}</span>
+                                        <span class="text-xs text-secondary">${percent.toFixed(0)}%</span>
+                                    </div>
+                                </div>
+                                <div class="w-100 bg-placeholder rounded-full overflow-hidden" style="height: 4px;">
+                                    <div class="${statusConfig.bgClass} rounded-full transition-all duration-500" style="width: ${Math.min(percent, 100)}%; height: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-right py-3 px-3 border-bottom-dashed" style="width: 1%;">
+                        <div class="flex justify-end align-center">
+                            <button class="btn btn-outline border-dashed text-danger hover-border-danger hover-bg-danger-light transition-colors text-xs px-2 rounded-md cursor-pointer btn-excluir-meta flex align-center justify-center font-bold" style="min-width: 32px; height: 32px;" data-id="${item.id}" title="Excluir Meta">
+                                <i data-lucide="trash-2" class="icon-xs"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `;

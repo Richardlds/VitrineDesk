@@ -1,4 +1,4 @@
-﻿/* VitrineDesk - Autenticação */
+/* VitrineDesk - Autenticação */
 import { supabase } from './config.js';
 import { showToast } from './utils.js';
 
@@ -55,8 +55,9 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
         name: shopName.trim(),
         slug: slug,
         type: type || 'barbearia',
-        approval_status: 'pending',
-        is_active: false,
+        approval_status: 'approved',
+        is_active: true,
+        subscription_status: 'active',
         settings: {
           razao_social: razaoSocial || '',
           cnpj: document || '',
@@ -94,11 +95,8 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
       }]);
     }
 
-    // Desloga imediatamente o usuário que acabou de se registrar
-    await supabase.auth.signOut();
-
-    showToast('✅ Cadastro realizado! Aguardando aprovação do administrador.', 'success');
-    setTimeout(() => window.location.href = 'login.html', 3000);
+    showToast('✅ Cadastro realizado! Entrando no sistema...', 'success');
+    setTimeout(() => window.location.href = '/admin/', 1500);
     return data;
   } catch (err) {
     showToast('Erro de conexão. Tente novamente.', 'error');
@@ -259,8 +257,9 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
       name: shopName.trim(),
       slug: slug,
       type: type || 'barbearia',
-      approval_status: 'pending',
-      is_active: false,
+      approval_status: 'approved',
+      is_active: true,
+      subscription_status: 'active',
       settings: {
         razao_social: razaoSocial || '',
         cnpj: document || '',
@@ -296,12 +295,11 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
       is_main: true
     }]);
 
-    await supabase.auth.signOut();
-    showToast('? Cadastro conclu�do! Aguardando aprova��o do administrador.', 'success');
-    setTimeout(() => window.location.href = 'login.html', 3000);
+    showToast('✅ Cadastro concluído! Entrando no sistema...', 'success');
+    setTimeout(() => window.location.href = '/admin/', 1500);
     return true;
   } catch (err) {
-    console.error('Detalhe t�cnico ao completar cadastro:', err);
+    console.error('Detalhe tcnico ao completar cadastro:', err);
     showToast('Erro ao finalizar cadastro.', 'error');
     return null;
   }

@@ -1,8 +1,8 @@
 // Interceptador de logs para produção (Silencia console.log, warn e error se não estiver rodando localmente)
 if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-  console.log = function() {};
-  console.warn = function() {};
-  console.error = function() {};
+  console.log = function () { };
+  console.warn = function () { };
+  console.error = function () { };
 }
 
 // Removido DEBUG global
@@ -174,9 +174,9 @@ export async function init() {
 
       const actionEl = e.target.closest('[data-action]');
       if (!actionEl) return;
-      
+
       const action = actionEl.getAttribute('data-action');
-      
+
       if (action === 'scrollTo') {
         e.preventDefault();
         scrollToSection(actionEl.getAttribute('data-target'));
@@ -236,7 +236,7 @@ export async function init() {
     document.body.addEventListener('change', async (e) => {
       const actionEl = e.target.closest('[data-action]');
       if (!actionEl) return;
-      
+
       const action = actionEl.getAttribute('data-action');
       if (action === 'toggleExtraService') {
         const { toggleExtraService } = await import('./booking.js');
@@ -299,33 +299,33 @@ async function loadTenant(slug) {
 
       // 🔄 FORÇAR limpeza de cache antigo
       sessionStorage.removeItem('vp_tenant');
-      
+
       try {
         sessionStorage.setItem('vp_tenant', JSON.stringify(tenant));
       } catch (e) {
         console.warn('Quota excedida no sessionStorage. Limpando imagens pesadas do cache de forma recursiva...', e);
-        
-        try {
-            const slimTenant = JSON.parse(JSON.stringify(tenant));
-            
-            // Função recursiva ultra-agressiva para limpar qualquer string gigante (base64)
-            const deepClearLargeStrings = (obj) => {
-                if (!obj || typeof obj !== 'object') return;
-                for (const key in obj) {
-                    if (typeof obj[key] === 'string' && obj[key].length > 5000) {
-                        obj[key] = ''; // Limpa a string pesada
-                    } else if (typeof obj[key] === 'object') {
-                        deepClearLargeStrings(obj[key]);
-                    }
-                }
-            };
 
-            deepClearLargeStrings(slimTenant);
-            sessionStorage.setItem('vp_tenant', JSON.stringify(slimTenant));
+        try {
+          const slimTenant = JSON.parse(JSON.stringify(tenant));
+
+          // Função recursiva ultra-agressiva para limpar qualquer string gigante (base64)
+          const deepClearLargeStrings = (obj) => {
+            if (!obj || typeof obj !== 'object') return;
+            for (const key in obj) {
+              if (typeof obj[key] === 'string' && obj[key].length > 5000) {
+                obj[key] = ''; // Limpa a string pesada
+              } else if (typeof obj[key] === 'object') {
+                deepClearLargeStrings(obj[key]);
+              }
+            }
+          };
+
+          deepClearLargeStrings(slimTenant);
+          sessionStorage.setItem('vp_tenant', JSON.stringify(slimTenant));
         } catch (err) {
-            console.error('Falha crítica ao salvar tenant no cache:', err);
-            // Se falhar até com a versão leve, limpa tudo para evitar travamentos
-            sessionStorage.clear();
+          console.error('Falha crítica ao salvar tenant no cache:', err);
+          // Se falhar até com a versão leve, limpa tudo para evitar travamentos
+          sessionStorage.clear();
         }
       }
     }
@@ -358,7 +358,7 @@ function aplicarConfiguracoes() {
       console.warn('Tenant não carregado para aplicar configurações');
       return;
     }
-    
+
     // Atualiza flag de preços
     hidePrices = tenant.settings?.personalizacao?.hide_prices || false;
 
@@ -371,9 +371,9 @@ function aplicarConfiguracoes() {
     if (tenant.favicon_url) {
       let link = document.querySelector("link[rel~='icon']");
       if (!link) {
-          link = document.createElement('link');
-          link.rel = 'icon';
-          document.head.appendChild(link);
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
       }
       link.href = tenant.favicon_url;
     }
@@ -389,13 +389,13 @@ function aplicarConfiguracoes() {
     }
     if (tenant.accent_color) s('--accent', tenant.accent_color);
     if (tenant.border_color) s('--border', tenant.border_color);
-    
+
     s('--bg-dark', pers.bg_color || tenant.bg_color || '#0a0a0f');
     s('--text-main', pers.text_color || tenant.text_color || '#fafafa');
     s('--text-muted', pers.text_muted_color || tenant.text_muted_color || '#9ca3af');
     s('--card-bg', pers.card_bg_color || tenant.card_bg_color || (pers.card_style === 'glass' ? 'rgba(255,255,255,0.05)' : 'var(--bg-dark)'));
     s('--bg-card', pers.card_bg_color || tenant.card_bg_color || (pers.card_style === 'glass' ? 'rgba(255,255,255,0.05)' : 'var(--bg-dark)'));
-    
+
     // Tema Claro / Escuro
     if (tenant.theme_mode === 'light') {
       s('--bg-dark', tenant.bg_color || '#ffffff');
@@ -416,7 +416,7 @@ function aplicarConfiguracoes() {
 
       const fontName = tenant.font_family.charAt(0).toUpperCase() + tenant.font_family.slice(1);
       const fontUrl = `https://fonts.googleapis.com/css2?family=${fontName.replace(' ', '+')}:wght@300;400;500;600;700;800&display=swap`;
-      
+
       const link = document.createElement('link');
       link.id = 'dynamic-font';
       link.rel = 'stylesheet';
@@ -427,12 +427,12 @@ function aplicarConfiguracoes() {
       s('--font-body', font);
       s('--font-title', font);
     }
-    
+
     if (tenant.font_size) {
       s('font-size', tenant.font_size);
       s('--base-font-size', tenant.font_size);
     }
-    
+
     if (pers.logo_size) {
       s('--logo-size', pers.logo_size);
     }
@@ -716,11 +716,14 @@ function configurarWhatsApp() {
     const btn = document.getElementById('whatsapp-float');
     if (!btn) return;
 
-    if (tenant.whatsapp_enabled === false) {
+    const pers = tenant.settings || {};
+
+    if (pers.whatsapp_enabled === false) {
       btn.style.display = 'none';
       return;
     }
 
+    // O numero do whatsapp fica na raiz do tenant
     if (!tenant.whatsapp) {
       btn.style.display = 'none';
       return;
@@ -728,29 +731,29 @@ function configurarWhatsApp() {
 
     const numero = tenant.whatsapp.replace(/\D/g, '');
     let url = `https://wa.me/55${numero}`;
-    const msg = tenant.whatsapp_message || 'Olá, gostaria de agendar um horário!';
+    const msg = pers.whatsapp_message || 'Olá, gostaria de agendar um horário!';
     url += `?text=${encodeURIComponent(msg)}`;
     btn.href = url;
     btn.target = '_blank';
     btn.rel = 'noopener';
     btn.style.display = 'flex';
 
-    if (tenant.whatsapp_color) {
-      btn.style.backgroundColor = tenant.whatsapp_color;
+    if (pers.whatsapp_color) {
+      btn.style.backgroundColor = pers.whatsapp_color;
     }
 
-    if (tenant.whatsapp_size) {
-      btn.style.width = tenant.whatsapp_size + 'px';
-      btn.style.height = tenant.whatsapp_size + 'px';
+    if (pers.whatsapp_size) {
+      btn.style.width = pers.whatsapp_size + 'px';
+      btn.style.height = pers.whatsapp_size + 'px';
     }
 
-    if (tenant.whatsapp_position === 'left') {
+    if (pers.whatsapp_position === 'left') {
       btn.classList.add('pos-left');
     }
 
-    if (tenant.whatsapp_animation === 'bounce') {
+    if (pers.whatsapp_animation === 'bounce') {
       btn.classList.add('bounce');
-    } else if (tenant.whatsapp_animation === 'pulse') {
+    } else if (pers.whatsapp_animation === 'pulse') {
       btn.classList.add('pulse-anim');
     }
   } catch (e) {
@@ -840,14 +843,14 @@ function initBottomNav() {
 
     window.addEventListener('scroll', debounce(() => {
       let current = '';
-      
+
       sections.forEach(section => {
         const top = section.getBoundingClientRect().top;
         if (top < topbarHeight + 150) {
           current = section.id;
         }
       });
-      
+
       // Se estiver no topo (current vazio) ou em uma seção sem botão na navbar (ex: filiais, capa), 
       // força 'section-servicos' como padrão para manter o ícone colorido
       if (!current || current === 'section-filiais' || current === 'section-info' || current === 'section-social' || current === 'section-galeria' || current === 'section-depoimentos') {
@@ -911,7 +914,7 @@ export function renderBranches() {
   const branches = activeBranches || [];
   const section = document.getElementById('section-filiais');
   const grid = document.getElementById('branches-grid');
-  
+
   if (!section || !grid) return;
 
   if (branches.length === 0) {
@@ -937,10 +940,10 @@ export function renderBranches() {
     return `
       <div class="service-card reveal glass-card branch-card ${isSelected ? 'selected' : ''}" data-id="${b.id}" style="cursor:pointer; border: ${isSelected ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.05)'};">
         <div class="service-img-wrapper" style="height: 140px;">
-          ${b.image_url 
-            ? `<img src="${escapeHtml(b.image_url)}" alt="${escapeHtml(b.name)}" class="service-img" loading="lazy">` 
-            : `<div class="service-img-placeholder"><i data-lucide="map-pin"></i></div>`
-          }
+          ${b.image_url
+        ? `<img src="${escapeHtml(b.image_url)}" alt="${escapeHtml(b.name)}" class="service-img" loading="lazy">`
+        : `<div class="service-img-placeholder"><i data-lucide="map-pin"></i></div>`
+      }
         </div>
         <div class="service-card-body">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -961,9 +964,9 @@ export function renderBranches() {
     card.addEventListener('click', async () => {
       const newId = card.getAttribute('data-id');
       if (newId === selectedBranchId) return; // already selected
-      
+
       selectedBranchId = newId;
-      
+
       // Update visual selection
       document.querySelectorAll('.branch-card').forEach(c => {
         c.classList.remove('selected');

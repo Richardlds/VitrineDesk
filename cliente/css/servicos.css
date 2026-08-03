@@ -43,15 +43,18 @@
 }
 
 .services-view-controls[data-active-view="grid3"] .view-slider {
-  transform: translateX(42px); /* 38px width + 4px gap */
+  transform: translateX(42px);
+  /* 38px width + 4px gap */
 }
 
 .services-view-controls[data-active-view="grid4"] .view-slider {
-  transform: translateX(84px); /* (38px + 4px) * 2 */
+  transform: translateX(84px);
+  /* (38px + 4px) * 2 */
 }
 
 .services-view-controls[data-active-view="grid5"] .view-slider {
-  transform: translateX(126px); /* (38px + 4px) * 3 */
+  transform: translateX(126px);
+  /* (38px + 4px) * 3 */
 }
 
 .view-btn {
@@ -88,8 +91,10 @@
 .services-grid.view-grid3 {
   grid-template-columns: repeat(3, 1fr);
 }
+
 .services-grid.view-grid3 .service-name {
-  font-size: 0.75rem; /* Menor no celular para caber 3 colunas */
+  font-size: 0.75rem;
+  /* Menor no celular para caber 3 colunas */
 }
 
 .services-grid.view-grid4,
@@ -98,23 +103,41 @@
 }
 
 @media (min-width: 576px) {
+
   .services-grid.view-grid4,
-  .services-grid.view-grid5 { grid-template-columns: repeat(3, 1fr); }
-  .services-grid.view-grid3 .service-name { font-size: 0.85rem; }
+  .services-grid.view-grid5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .services-grid.view-grid3 .service-name {
+    font-size: 0.85rem;
+  }
 }
 
 @media (min-width: 768px) {
-  .services-grid { gap: 16px; }
-  .services-grid.view-grid3 .service-name { font-size: 0.95rem; }
-  
+  .services-grid {
+    gap: 16px;
+  }
+
+  .services-grid.view-grid3 .service-name {
+    font-size: 0.95rem;
+  }
+
   .services-grid.view-grid4,
-  .services-grid.view-grid5 { grid-template-columns: repeat(4, 1fr); }
+  .services-grid.view-grid5 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .services-grid.view-grid4 .service-name,
-  .services-grid.view-grid5 .service-name { font-size: 0.85rem; }
+  .services-grid.view-grid5 .service-name {
+    font-size: 0.85rem;
+  }
 }
 
 @media (min-width: 992px) {
-  .services-grid.view-grid5 { grid-template-columns: repeat(5, 1fr); }
+  .services-grid.view-grid5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
 
 /* VIEW: Lista */

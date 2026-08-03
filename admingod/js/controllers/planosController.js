@@ -4,26 +4,61 @@ export class planosController {
     constructor() {
         this.planos = [];
         this.MENU_MODULES = [
-            { id: 'principal/dashboard', name: 'Dashboard' },
-            { id: 'principal/agendamentos', name: 'Agendamentos' },
-            { id: 'principal/agenda_diaria', name: 'Agenda Diária' },
-            { id: 'cadastros/servicos', name: 'Serviços' },
-            { id: 'cadastros/equipe', name: 'Equipe' },
-            { id: 'cadastros/clientes', name: 'Clientes' },
-            { id: 'crm_vendas/planos_clientes', name: 'Planos de Clientes' },
-            { id: 'crm_vendas/cupons', name: 'Cupons' },
-            { id: 'crm_vendas/marketing', name: 'Marketing' },
-            { id: 'crm_vendas/blacklist', name: 'Blacklist' },
-            { id: 'gestao/relatorios', name: 'Relatórios' },
-            { id: 'gestao/comissoes', name: 'Comissões' },
-            { id: 'gestao/metas', name: 'Metas' },
-            { id: 'gestao/fidelidade', name: 'Fidelidade' },
-            { id: 'cadastros/filiais', name: 'Minhas Filiais' },
-            { id: 'sistema/assinatura', name: 'Minha Assinatura' },
-            { id: 'sistema/configuracoes', name: 'Configurações' },
-            { id: 'sistema/personalizacao', name: 'Personalização' },
-            { id: 'sistema/usuarios', name: 'Usuários' },
-            { id: 'sistema/suporte', name: 'Suporte' }
+            {
+                category: 'Principal',
+                items: [
+                    { id: 'principal/dashboard', name: 'Dashboard' },
+                    { id: 'principal/agendamentos', name: 'Agendamentos' },
+                    { id: 'principal/agenda_diaria', name: 'Agenda Diária' }
+                ]
+            },
+            {
+                category: 'Cadastros',
+                items: [
+                    { id: 'cadastros/servicos', name: 'Serviços' },
+                    { id: 'cadastros/equipe', name: 'Equipe' },
+                    { id: 'cadastros/clientes', name: 'Clientes' },
+                    { id: 'cadastros/filiais', name: 'Minhas Filiais' }
+                ]
+            },
+            {
+                category: 'CRM & Vendas',
+                items: [
+                    { id: 'crm_vendas/planos_clientes', name: 'Planos de Clientes' },
+                    { id: 'crm_vendas/cupons', name: 'Cupons' },
+                    { id: 'crm_vendas/marketing', name: 'Marketing' },
+                    { id: 'crm_vendas/blacklist', name: 'Blacklist' }
+                ]
+            },
+            {
+                category: 'Gestão',
+                items: [
+                    { id: 'gestao/relatorios', name: 'Relatórios' },
+                    { id: 'gestao/comissoes', name: 'Comissões' },
+                    { id: 'gestao/metas', name: 'Metas' },
+                    { id: 'gestao/fidelidade', name: 'Fidelidade' }
+                ]
+            },
+            {
+                category: 'Sistema',
+                items: [
+                    { id: 'sistema/assinatura', name: 'Minha Assinatura' },
+                    { 
+                        id: 'sistema/configuracoes', 
+                        name: 'Configurações',
+                        subItems: [
+                            { id: 'configuracoes/identidade', name: 'Aba: Identidade' },
+                            { id: 'configuracoes/contatos', name: 'Aba: Contatos' },
+                            { id: 'configuracoes/visibilidade', name: 'Aba: Visibilidade' },
+                            { id: 'configuracoes/horarios', name: 'Aba: Horários' },
+                            { id: 'configuracoes/pagamentos', name: 'Aba: Pagamentos' }
+                        ]
+                    },
+                    { id: 'sistema/personalizacao', name: 'Personalização' },
+                    { id: 'sistema/usuarios', name: 'Usuários' },
+                    { id: 'sistema/suporte', name: 'Suporte' }
+                ]
+            }
         ];
     }
 
@@ -42,14 +77,38 @@ export class planosController {
         if (!container) return;
 
         let html = '';
-        this.MENU_MODULES.forEach(module => {
+        this.MENU_MODULES.forEach(group => {
             html += `
-                <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder bg-placeholder bg-opacity-20">
-                    <span class="text-sm text-primary font-medium">${module.name}</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" class="feature-toggle" data-module="${module.id}">
-                        <span class="slider"></span>
-                    </label>
+                <div class="mb-4">
+                    <h5 class="text-primary mb-3 text-sm font-bold uppercase tracking-wide border-bottom-dashed pb-2">${group.category}</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            `;
+            group.items.forEach(module => {
+                html += `
+                    <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder bg-placeholder bg-opacity-20">
+                        <span class="text-sm text-primary font-medium">${module.name}</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="feature-toggle" data-module="${module.id}">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                `;
+                if (module.subItems && module.subItems.length > 0) {
+                    module.subItems.forEach(sub => {
+                        html += `
+                            <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder bg-placeholder bg-opacity-10" style="margin-left: 20px; border-left: 3px solid var(--color-primary);">
+                                <span class="text-sm text-secondary font-medium"><i data-lucide="corner-down-right" class="icon-sm inline-block" style="width: 14px; height: 14px;"></i> ${sub.name}</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" class="feature-toggle" data-module="${sub.id}">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        `;
+                    });
+                }
+            });
+            html += `
+                    </div>
                 </div>
             `;
         });
@@ -154,7 +213,14 @@ export class planosController {
         let html = '';
         this.planos.forEach(p => {
             const featuresAtivas = Object.keys(p.features || {}).filter(k => p.features[k] === true).length;
-            const totalFeatures = this.MENU_MODULES.length;
+            const totalFeatures = this.MENU_MODULES.reduce((acc, group) => {
+                let count = 0;
+                group.items.forEach(item => {
+                    count++;
+                    if (item.subItems) count += item.subItems.length;
+                });
+                return acc + count;
+            }, 0);
             
             const badgePadrao = p.is_default ? '<span class="badge bg-success-light text-success ml-2 px-2 py-1 rounded text-xs" style="margin-left: 8px;">Padrão</span>' : '';
             const isActive = p.active !== false;

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -12,7 +12,7 @@
     <script src="https://unpkg.com/lucide@latest" defer></script>
 
     <!-- Design System (Mobile First) -->
-    <link rel="stylesheet" href="/admin/css/design-system.css">
+    <link rel="stylesheet" href="/admin/css/design-system.css?v=3">
     <link rel="stylesheet" href="/admin/css/tickets.css">
 
     <!-- Supabase -->
@@ -167,10 +167,11 @@
                         <button class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Limpar Cache Local" onclick="if(window.showToast) window.showToast('Cache limpo!', 'success')">
                             <i data-lucide="hard-drive" class="icon-sm"></i>
                         </button>
-                        <button class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Alternar Tema" onclick="if(window.showToast) window.showToast('Dark Mode em breve!', 'info')">
-                            <i data-lucide="moon" class="icon-sm"></i>
-                        </button>
                     </div>
+                    
+                    <button id="btn-toggle-theme" class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Alternar Tema" onclick="window.toggleTheme(this)">
+                        <i data-lucide="moon" class="icon-sm" id="theme-icon"></i>
+                    </button>
                     <!-- Sino de Notificações -->
                     <div class="notification-container" style="margin-right: 8px;">
                         <button id="btn-notifications" onclick="window.openNotificationDrawer?.()"

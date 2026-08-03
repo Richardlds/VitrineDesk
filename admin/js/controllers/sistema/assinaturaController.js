@@ -62,7 +62,8 @@ export class assinaturaController {
         const planoNome = meuPlano ? meuPlano.name : 'Desconhecido';
         const planoPreco = meuPlano ? `R$ ${Number(meuPlano.price).toLocaleString('pt-BR', {minimumFractionDigits: 2})}/mês` : '';
         const vencimento = tenant?.settings?.vencimento ? new Date(tenant.settings.vencimento).toLocaleDateString('pt-BR') : 'Sem Vencimento';
-        const isActive = tenant?.subscription_status === 'active';
+        // Considera ativo se for 'active', 'trial' ou se não houver status definido mas a loja está ativa
+        const isActive = tenant?.subscription_status === 'active' || tenant?.subscription_status === 'trial' || (!tenant?.subscription_status && tenant?.is_active);
         
         const tagClass = isActive ? 'tag-active' : 'tag-inactive';
         const tagText = isActive ? 'Plano Ativo' : 'Inativo / Vencido';

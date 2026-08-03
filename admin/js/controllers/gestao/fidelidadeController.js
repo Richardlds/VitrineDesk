@@ -79,30 +79,38 @@ export class fidelidadeController {
     }
 
     updateConfigBanner() {
-        const bannerContainer = document.querySelector('.admin-section .bg-primary-light');
+        const bannerContainer = document.getElementById('fidelidade-banner-container');
         if (!bannerContainer) return;
 
         if (!this.config.is_active) {
             bannerContainer.innerHTML = `
-                <div class="flex align-center gap-3">
-                    <div class="bg-placeholder text-secondary p-3 rounded-lg flex align-center justify-center">
-                        <i data-lucide="award" class="icon-md"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-secondary text-md mb-1">Programa Desativado</h3>
-                        <p class="text-sm text-secondary">Os clientes não estão acumulando pontos atualmente.</p>
+                <div class="config-card mb-0 bg-bg-surface border-dashed">
+                    <div class="flex flex-wrap align-center gap-4 p-2">
+                        <div class="bg-placeholder text-secondary p-4 rounded-full flex align-center justify-center">
+                            <i data-lucide="award" class="icon-lg opacity-50"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-secondary text-lg mb-1">Programa Desativado</h3>
+                            <p class="text-sm text-secondary">Habilite o programa de fidelidade nas configurações para que seus clientes comecem a pontuar.</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="document.getElementById('btn-configurar-fidelidade').click()">Ativar Agora</button>
                     </div>
                 </div>
             `;
         } else {
             bannerContainer.innerHTML = `
-                <div class="flex align-center gap-3">
-                    <div class="bg-primary text-white p-3 rounded-lg flex align-center justify-center">
-                        <i data-lucide="award" class="icon-md"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-primary text-md mb-1">Regra Vigente: ${this.config.pontos_necessarios} Agendamentos = ${this.config.recompensa}</h3>
-                        <p class="text-sm text-secondary">O programa está <strong class="text-success">Ativo</strong>. Clientes já estão acumulando pontos.</p>
+                <div class="config-card mb-0" style="background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(99,102,241,0.02) 100%); border: 1px solid rgba(99,102,241,0.2);">
+                    <div class="flex flex-wrap align-center gap-4 p-2">
+                        <div class="bg-primary text-white p-4 rounded-full flex align-center justify-center shadow-sm">
+                            <i data-lucide="award" class="icon-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex align-center gap-2 mb-1">
+                                <span class="bg-success-light text-success text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide">Ativo</span>
+                                <h3 class="text-primary text-lg mb-0 m-0">Meta: ${this.config.pontos_necessarios} Agendamentos</h3>
+                            </div>
+                            <p class="text-sm text-secondary m-0">Recompensa: <strong class="text-primary">${this.config.recompensa}</strong></p>
+                        </div>
                     </div>
                 </div>
             `;
@@ -151,43 +159,59 @@ export class fidelidadeController {
         if (!data || data.length === 0) {
             this.tableBody.innerHTML = `
                 <tr>
-                    <td colspan="4" class="text-center text-secondary py-3">Nenhum cliente encontrado.</td>
+                    <td colspan="3" class="text-center py-5">
+                        <div class="flex flex-column align-center justify-center text-secondary">
+                            <i data-lucide="users" class="icon-lg opacity-50 mb-2"></i>
+                            <p>Nenhum cliente encontrado.</p>
+                        </div>
+                    </td>
                 </tr>
             `;
+            if (window.lucide) window.lucide.createIcons();
             return;
         }
 
         let html = '';
+        const meta = this.config.pontos_necessarios || 10;
+        
         data.forEach(item => {
             const pontos = item.pontos || 0;
             const resgateDisponivel = this.config.is_active && pontos > 0;
+            const percentual = Math.min((pontos / meta) * 100, 100);
+            const isCompleted = pontos >= meta;
+            
             const btnResgatar = resgateDisponivel
-                ? `<button class="btn btn-success text-xs py-1 px-3 rounded cursor-pointer btn-resgatar flex align-center gap-1" data-id="${item.id}" data-pontos="${pontos}">
-                     <i data-lucide="gift" class="icon-sm"></i> Resgatar
+                ? `<button class="btn bg-success-light text-success hover:bg-success hover:text-white transition-colors text-xs px-3 rounded-md cursor-pointer btn-resgatar flex align-center justify-center gap-1 font-bold" style="height: 32px;" data-id="${item.id}" data-pontos="${pontos}">
+                     <i data-lucide="gift" class="icon-xs"></i><span class="d-none d-sm-inline">Resgatar</span>
                    </button>`
                 : '';
 
             html += `
-                <tr>
-                    <td>
+                <tr class="hover-bg-surface transition-colors">
+                    <td class="py-3 px-3 border-bottom-dashed w-100">
                         <div class="flex align-center gap-3">
-                            <div class="bg-primary-light text-primary rounded-full flex justify-center align-center" style="width: 36px; height: 36px; min-width: 36px;">
-                                <i data-lucide="user" class="icon-sm"></i>
+                            <div class="bg-bg-surface border border-dashed border-border rounded-full flex justify-center align-center shadow-sm flex-shrink-0" style="width: 36px; height: 36px;">
+                                <i data-lucide="user" class="text-secondary icon-sm"></i>
                             </div>
-                            <span class="font-medium text-primary">${item.nome}</span>
+                            <div class="flex flex-column flex-1" style="min-width: 0;">
+                                <div class="flex justify-between align-center mb-1">
+                                    <div class="flex flex-column truncate pr-2">
+                                        <span class="font-bold text-primary text-sm truncate">${item.nome}</span>
+                                        <span class="text-xs text-secondary truncate">${item.telefone || 'S/ telefone'}</span>
+                                    </div>
+                                    <span class="text-xs font-bold ${isCompleted ? 'text-success' : 'text-primary'} flex-shrink-0">${pontos}/${meta} <span class="d-none d-sm-inline">PTS</span></span>
+                                </div>
+                                <div class="w-100 bg-placeholder rounded-full overflow-hidden" style="height: 4px;">
+                                    <div class="${isCompleted ? 'bg-success' : 'bg-primary'} rounded-full transition-all duration-500" style="width: ${percentual}%; height: 100%;"></div>
+                                </div>
+                            </div>
                         </div>
                     </td>
-                    <td class="text-sm text-secondary">${item.telefone || '-'}</td>
-                    <td class="text-center">
-                        <span class="status-badge ${pontos >= this.config.pontos_necessarios ? 'bg-success-light text-success' : 'bg-primary-light text-primary'}">
-                            ${pontos} / ${this.config.pontos_necessarios} PTS
-                        </span>
-                    </td>
-                    <td class="text-right">
+                    <td class="text-right py-3 px-3 border-bottom-dashed" style="width: 1%;">
                         <div class="flex justify-end align-center gap-2">
                             ${btnResgatar}
-                            <button class="btn btn-primary text-xs py-1 px-3 rounded cursor-pointer btn-add-ponto flex align-center gap-1" data-id="${item.id}" data-pontos="${pontos}">
-                                <i data-lucide="plus-circle" class="icon-sm"></i> Ponto
+                            <button class="btn btn-outline border-dashed text-primary hover-border-primary hover-bg-primary-light transition-colors text-xs px-2 rounded-md cursor-pointer btn-add-ponto flex align-center justify-center font-bold" style="min-width: 32px; height: 32px;" data-id="${item.id}" data-pontos="${pontos}" title="Adicionar 1 ponto">
+                                <i data-lucide="plus" class="icon-xs"></i>
                             </button>
                         </div>
                     </td>
@@ -215,6 +239,8 @@ export class fidelidadeController {
                 this.openModalResgate(id, pontos);
             });
         });
+        
+        if (window.lucide) window.lucide.createIcons();
     }
     
     openModalResgate(clienteId, pontosAtuais) {

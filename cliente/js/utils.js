@@ -133,16 +133,36 @@ export function getSupaPublicUrl(path) {
 // ────────────────────────── Web Audio API (Sons de Notificação) ──────────────────────────
 let __globalAudioCtx = null;
 
-export function playNotificationSound(type = 'info') {
-    try {
+const getAudioContext = () => {
+    if (!__globalAudioCtx) {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        
-        if (!__globalAudioCtx) {
+        if (AudioContext) {
             __globalAudioCtx = new AudioContext();
         }
-        const ctx = __globalAudioCtx;
-        
+    }
+    return __globalAudioCtx;
+};
+
+// Desbloquear áudio no primeiro clique do usuário
+const unlockAudio = () => {
+    const ctx = getAudioContext();
+    if (ctx && ctx.state === 'suspended') {
+        ctx.resume();
+    }
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
+    document.removeEventListener('keydown', unlockAudio);
+};
+
+document.addEventListener('click', unlockAudio);
+document.addEventListener('touchstart', unlockAudio);
+document.addEventListener('keydown', unlockAudio);
+
+window.playNotificationSound = function (type = 'info') {
+    try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
         if (ctx.state === 'suspended') {
             ctx.resume();
         }
@@ -203,16 +223,9 @@ export function playNotificationSound(type = 'info') {
             osc.stop(ctx.currentTime + 0.2);
         }
     } catch (e) {
-        // Ignorar erros de áudio silenciosamente
+        console.error("Web Audio API error:", e);
     }
-}
-
-// Desbloquear áudio no primeiro clique do usuário para garantir autoplay policy
-document.addEventListener('click', () => {
-    if (__globalAudioCtx && __globalAudioCtx.state === 'suspended') {
-        __globalAudioCtx.resume();
-    }
-}, { once: true });
+};
 
 
 // ────────────────────────── Toast Notifications ──────────────────────────
