@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
@@ -10,688 +9,586 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Vitrine</title>
 
-  <!-- Favicon placeholder (atualizado dinamicamente) -->
+  <!-- Favicon dinâmico -->
   <link rel="icon" href="data:," type="image/x-icon">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/header.css">
-  <link rel="stylesheet" href="css/servicos.css">
-  <link rel="stylesheet" href="css/booking.css">
-  <link rel="stylesheet" href="css/auth.css">
-  <link rel="stylesheet" href="css/agendamentos.css">
-  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/base.css?v=3.0.0">
+  <link rel="stylesheet" href="css/header.css?v=3.0.0">
+  <link rel="stylesheet" href="css/servicos.css?v=3.0.0">
+  <link rel="stylesheet" href="css/booking.css?v=3.0.0">
+  <link rel="stylesheet" href="css/auth.css?v=3.0.0">
+  <link rel="stylesheet" href="css/agendamentos.css?v=3.0.0">
+  <link rel="stylesheet" href="css/responsive.css?v=3.0.0">
 </head>
-
 <body>
 
-  <!-- ═══════════════════ LOADING SCREEN ═══════════════════ -->
-  <div id="loading-screen" class="flex-center loading-screen">
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen" class="flex-center loading-screen" aria-live="polite" aria-busy="true">
     <div class="spinner spinner-lg"></div>
     <span class="text-muted">Carregando vitrine...</span>
   </div>
 
-  <!-- ═══════════════════ APP CONTAINER ═══════════════════ -->
+  <!-- APP CONTAINER -->
   <div id="app" class="hidden">
 
-    <!-- ═══════ HERO SECTION (Capa + Header Integrados) ═══════ -->
-    <div class="hero-wrapper">
-
-      <!-- O ID store-cover é manipulado pelo JS. Se oculto, some apenas o background. -->
-      <div class="store-cover-wrapper" id="store-cover">
-        <img id="cover-img" src="" alt="Capa da loja" class="hero-bg-img">
+    <!-- HEADER / HERO -->
+    <header class="hero-wrapper" aria-label="Cabeçalho e Capa">
+      <div class="store-cover-wrapper" id="store-cover" aria-hidden="true">
+        <img id="cover-img" src="" alt="" class="hero-bg-img">
         <div class="hero-overlay"></div>
       </div>
 
-      <!-- Topbar Transparente -->
-      <header class="hero-topbar">
+      <nav class="hero-topbar" aria-label="Navegação Principal">
         <div class="container topbar-container flex align-center justify-between">
-
-          <!-- Brand na Topbar -->
-          <a href="#" class="brand-wrapper flex align-center gap-2 text-none" data-action="scrollTo"
-            data-target="section-servicos">
-            <div class="logo-container">
+          <a href="#" class="brand-wrapper flex align-center gap-2 text-none" data-action="scrollTo" data-target="section-servicos" aria-label="Ir para Serviços">
+            <div class="logo-container" aria-hidden="true">
               <img id="logo-img" src="" alt="Logo">
               <div class="logo-glow"></div>
             </div>
             <div class="shop-info flex flex-column">
               <h1 class="shop-name" id="shop-name">Carregando...</h1>
-              <span class="shop-status-badge flex align-center gap-1 text-sm text-muted" id="status-badge">
+              <span class="shop-status-badge flex align-center gap-1 text-sm text-muted" id="status-badge" aria-live="polite">
                 <span class="status-dot"></span> Verificando...
               </span>
             </div>
           </a>
 
           <div class="topbar-actions">
-            <nav class="desktop-nav" id="desktop-nav">
-              <a href="#section-servicos" class="desktop-nav-link" data-action="scrollTo"
-                data-target="section-servicos">Serviços</a>
-              <a href="#section-equipe" class="desktop-nav-link" data-action="scrollTo"
-                data-target="section-equipe">Equipe</a>
-              <a href="#section-horarios" class="desktop-nav-link" data-action="scrollTo"
-                data-target="section-horarios">Horários</a>
-              <a href="#section-info" class="desktop-nav-link" data-action="scrollTo"
-                data-target="section-info">Contato</a>
-            </nav>
+            <ul class="desktop-nav list-none m-0 p-0 flex align-center gap-4" id="desktop-nav" role="menubar">
+              <li role="none"><a href="#section-servicos" class="desktop-nav-link" data-action="scrollTo" data-target="section-servicos" role="menuitem">Serviços</a></li>
+              <li role="none"><a href="#section-equipe" class="desktop-nav-link" data-action="scrollTo" data-target="section-equipe" role="menuitem">Equipe</a></li>
+              <li role="none"><a href="#section-horarios" class="desktop-nav-link" data-action="scrollTo" data-target="section-horarios" role="menuitem">Horários</a></li>
+              <li role="none"><a href="#section-info" class="desktop-nav-link" data-action="scrollTo" data-target="section-info" role="menuitem">Contato</a></li>
+            </ul>
 
-            <button class="btn btn-primary btn-auth guest-only" id="btn-auth" data-action="openAuth" data-tab="login"
-              title="Entrar">
-              <i data-lucide="user"></i> <span class="auth-text">Entrar</span>
+            <button class="btn btn-primary btn-auth guest-only" id="btn-auth" data-action="openAuth" data-tab="login" title="Entrar na sua conta" aria-label="Entrar na sua conta">
+              <i data-lucide="user" aria-hidden="true"></i> <span class="auth-text">Entrar</span>
             </button>
 
-            <!-- Menu do usuário logado (Area do Cliente) -->
-            <button class="user-menu hidden" id="user-menu" data-action="openClientArea" title="Minha Conta">
-              <div class="user-avatar-small" id="user-avatar-letter">U</div>
+            <!-- Menu User -->
+            <button class="user-menu hidden" id="user-menu" data-action="openClientArea" title="Minha Conta" aria-label="Minha Conta">
+              <div class="user-avatar-small" id="user-avatar-letter" aria-hidden="true">U</div>
             </button>
-
           </div>
         </div>
-      </header>
-    </div>
+      </nav>
+    </header>
 
-    <!-- ═══════ BANNER PROMOCIONAL ═══════ -->
-    <div class="promo-banner-full" id="banner-promo">
+    <!-- BANNER PROMOCIONAL -->
+    <aside class="promo-banner-full" id="banner-promo" aria-label="Banner Promocional">
       <div class="promo-banner-content">
         <span class="promo-banner-text" id="banner-promo-text">Promoção!</span>
       </div>
-    </div>
+    </aside>
 
-    <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+    <!-- MAIN CONTENT -->
     <main class="main-content">
 
-
-      <!-- ========================================== WIDGET PRÓXIMOS AGENDAMENTOS ========================================== -->
-      <section class="section section-upcoming-appointments hidden" id="section-upcoming-appointments">
+      <!-- WIDGET PRÓXIMOS AGENDAMENTOS -->
+      <section class="section section-upcoming-appointments hidden" id="section-upcoming-appointments" aria-labelledby="upcoming-label">
         <div class="container">
-          <div class="glass-card upcoming-widget" id="upcoming-widget-card" data-action="openClientAreaAndTab"
-            data-target="tab-agendamentos">
+          <article class="glass-card upcoming-widget cursor-pointer" id="upcoming-widget-card" data-action="openClientAreaAndTab" data-target="tab-agendamentos" tabindex="0" role="button" aria-label="Ver detalhes do próximo atendimento">
             <div class="upcoming-info flex flex-column gap-1">
-              <span class="upcoming-label">Próximo Atendimento</span>
-              <h4 id="upcoming-service-name" class="upcoming-title">Carregando...</h4>
-              <span id="upcoming-date-time" class="upcoming-datetime flex align-center gap-1">
-                <i data-lucide="calendar" class="icon-sm"></i> Aguarde...
+              <span class="upcoming-label" id="upcoming-label">Próximo Atendimento</span>
+              <h4 id="upcoming-service-name" class="upcoming-title m-0">Carregando...</h4>
+              <span id="upcoming-date-time" class="upcoming-datetime flex align-center gap-1 text-sm text-muted mt-1">
+                <i data-lucide="calendar" class="icon-sm" aria-hidden="true"></i> Aguarde...
               </span>
             </div>
-            <div class="upcoming-action">
+            <div class="upcoming-action" aria-hidden="true">
               <i data-lucide="chevron-right" class="icon-primary"></i>
             </div>
-          </div>
+          </article>
         </div>
       </section>
 
-      <!-- ========================================== FILIAIS ========================================== -->
-      <section class="section hidden" id="section-filiais">
+      <!-- FILIAIS -->
+      <section class="section hidden" id="section-filiais" aria-labelledby="filiais-title">
         <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Nossas Unidades</h2>
+          <header class="section-header">
+            <h2 class="section-title" id="filiais-title">Nossas Unidades</h2>
             <p class="section-subtitle">Selecione onde deseja ser atendido</p>
-          </div>
+          </header>
           <div class="services-grid" id="branches-grid">
-            <!-- Renderizado via JS -->
+            <!-- JS -->
           </div>
         </div>
       </section>
 
-      <!-- ========================================== SERVIÇOS ========================================== -->
-      <section class="section" id="section-servicos">
+      <!-- SERVIÇOS -->
+      <section class="section" id="section-servicos" aria-labelledby="servicos-title">
         <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Nossos Serviços</h2>
+          <header class="section-header">
+            <h2 class="section-title" id="servicos-title">Nossos Serviços</h2>
             <p class="section-subtitle">Escolha o serviço e agende online</p>
-          </div>
+          </header>
 
-          <!-- Barra de filtros de categoria e visualização -->
-          <div class="services-toolbar">
-            <div class="services-filters" id="services-filters">
-              <button class="service-filter-btn active" data-category="todos">Todos</button>
+          <nav class="services-toolbar" aria-label="Filtros e visualização de serviços">
+            <div class="services-filters" id="services-filters" role="tablist">
+              <button class="service-filter-btn active" data-category="todos" role="tab" aria-selected="true">Todos</button>
             </div>
-
-            <div class="services-view-controls" id="services-view-controls" data-active-view="list">
-              <div class="view-slider"></div>
-              <button class="view-btn active" data-action="toggleServicesView" data-view="list" title="Lista">
-                <i data-lucide="list"></i>
-              </button>
-              <button class="view-btn" data-action="toggleServicesView" data-view="grid3" title="Grade 3 Colunas">
-                <i data-lucide="layout-grid"></i>
-              </button>
-              <button class="view-btn" data-action="toggleServicesView" data-view="grid4" title="Grade 4 Colunas">
-                <i data-lucide="grid-3x3"></i>
-              </button>
-              <button class="view-btn" data-action="toggleServicesView" data-view="grid5" title="Grade 5 Colunas">
-                <i data-lucide="layout-dashboard"></i>
-              </button>
+            <div class="services-view-controls" id="services-view-controls" data-active-view="list" aria-label="Alternar visualização">
+              <div class="view-slider" aria-hidden="true"></div>
+              <button class="view-btn active" data-action="toggleServicesView" data-view="list" title="Lista" aria-pressed="true"><i data-lucide="list"></i></button>
+              <button class="view-btn" data-action="toggleServicesView" data-view="grid3" title="Grade 3" aria-pressed="false"><i data-lucide="layout-grid"></i></button>
+              <button class="view-btn" data-action="toggleServicesView" data-view="grid4" title="Grade 4" aria-pressed="false"><i data-lucide="grid-3x3"></i></button>
+              <button class="view-btn" data-action="toggleServicesView" data-view="grid5" title="Grade 5" aria-pressed="false"><i data-lucide="layout-dashboard"></i></button>
             </div>
-          </div>
+          </nav>
 
-          <div class="services-grid view-list" id="services-grid">
-            <!-- Renderizado via JS -->
+          <div class="services-grid view-list" id="services-grid" aria-live="polite">
+            <!-- JS -->
           </div>
         </div>
       </section>
 
-      <!-- ========================================== EQUIPE ========================================== -->
-      <section class="section" id="section-equipe">
+      <!-- EQUIPE -->
+      <section class="section" id="section-equipe" aria-labelledby="equipe-title">
         <div class="container">
-          <div class="glass-card section-glass">
-            <div class="section-header">
-              <h2 class="section-title">Nossa Equipe</h2>
+          <article class="glass-card section-glass">
+            <header class="section-header">
+              <h2 class="section-title" id="equipe-title">Nossa Equipe</h2>
               <p class="section-subtitle">Profissionais prontos para atender você</p>
-            </div>
+            </header>
             <div class="team-grid" id="team-grid">
-              <!-- Renderizado via JS -->
+              <!-- JS -->
             </div>
-          </div>
+          </article>
         </div>
       </section>
 
-      <!-- ========================================== GALERIA ========================================== -->
-      <section class="section" id="section-galeria">
+      <!-- GALERIA -->
+      <section class="section" id="section-galeria" aria-labelledby="galeria-title">
         <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Galeria</h2>
+          <header class="section-header">
+            <h2 class="section-title" id="galeria-title">Galeria</h2>
             <p class="section-subtitle">Veja nosso trabalho</p>
-          </div>
+          </header>
           <div class="gallery-grid" id="gallery-grid">
-            <!-- Renderizado via JS -->
+            <!-- JS -->
           </div>
         </div>
       </section>
 
-      <!-- ========================================== DEPOIMENTOS ========================================== -->
-      <section class="section" id="section-depoimentos">
+      <!-- DEPOIMENTOS -->
+      <section class="section" id="section-depoimentos" aria-labelledby="depoimentos-title">
         <div class="container">
-          <div class="glass-card section-glass">
-            <div class="section-header">
-              <h2 class="section-title">Depoimentos</h2>
+          <article class="glass-card section-glass">
+            <header class="section-header">
+              <h2 class="section-title" id="depoimentos-title">Depoimentos</h2>
               <p class="section-subtitle">O que nossos clientes dizem</p>
-            </div>
+            </header>
             <div class="testimonials-grid" id="testimonials-grid">
-              <!-- Renderizado via JS -->
+              <!-- JS -->
             </div>
-          </div>
+          </article>
         </div>
       </section>
 
-      <!-- ========================================== HORÁRIOS ========================================== -->
-      <section class="section" id="section-horarios">
+      <!-- HORÁRIOS -->
+      <section class="section" id="section-horarios" aria-labelledby="horarios-title">
         <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Horário de Funcionamento</h2>
-          </div>
-          <div class="glass-card">
-            <table class="hours-table" id="hours-table">
-              <!-- Renderizado via JS -->
+          <header class="section-header">
+            <h2 class="section-title" id="horarios-title">Horário de Funcionamento</h2>
+          </header>
+          <article class="glass-card">
+            <table class="hours-table" id="hours-table" aria-label="Tabela de horários de funcionamento">
+              <!-- JS -->
             </table>
-          </div>
+          </article>
         </div>
       </section>
 
-      <!-- ========================================== PLANOS ========================================== -->
-      <section class="section hidden" id="section-planos">
+      <!-- PLANOS (HOME) -->
+      <section class="section hidden" id="section-planos" aria-labelledby="planos-title">
         <div class="container">
-          <div class="glass-card section-glass">
-            <div class="section-header">
-              <h2 class="section-title">Planos</h2>
-              <p class="section-subtitle">Escolha o plano ideal para você</p>
+          <article class="glass-card section-glass">
+            <header class="section-header">
+              <h2 class="section-title" id="planos-title">Planos e Assinaturas</h2>
+              <p class="section-subtitle">Economize assinando nossos planos exclusivos</p>
+            </header>
+            <div class="services-grid view-list" id="home-plans-grid">
+              <!-- JS -->
             </div>
-
-            <div class="plans-grid"
-              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; align-items: start;"
-              id="home-plans-grid">
-              <!-- Renderizado via JS -->
-            </div>
-          </div>
+          </article>
         </div>
       </section>
 
-      <!-- ========================================== INFORMAÇÕES / MAPA ========================================== -->
-      <section class="section" id="section-info">
+      <!-- INFORMAÇÕES / MAPA -->
+      <section class="section" id="section-info" aria-labelledby="info-title">
         <div class="container">
-          <div class="glass-card section-glass">
-            <div class="section-header">
-              <h2 class="section-title">Localização</h2>
-            </div>
+          <article class="glass-card section-glass">
+            <header class="section-header">
+              <h2 class="section-title" id="info-title">Localização</h2>
+            </header>
             <div class="info-layout">
-              <div class="info-details">
-                <div class="info-item">
-                  <div class="info-icon"><i data-lucide="map-pin"></i></div>
+              <address class="info-details font-normal">
+                <div class="info-item flex gap-3 align-start mb-4">
+                  <div class="info-icon text-primary"><i data-lucide="map-pin" aria-hidden="true"></i></div>
                   <div class="info-text">
-                    <h4>Endereço</h4>
-                    <p id="info-address">-</p>
+                    <h4 class="m-0 text-md">Endereço</h4>
+                    <p id="info-address" class="text-secondary text-sm mt-1 m-0">-</p>
                   </div>
                 </div>
-                <div class="info-item">
-                  <div class="info-icon"><i data-lucide="phone"></i></div>
+                <div class="info-item flex gap-3 align-start">
+                  <div class="info-icon text-primary"><i data-lucide="phone" aria-hidden="true"></i></div>
                   <div class="info-text">
-                    <h4>Telefone / WhatsApp</h4>
-                    <p id="info-phone">-</p>
+                    <h4 class="m-0 text-md">Telefone / WhatsApp</h4>
+                    <p id="info-phone" class="text-secondary text-sm mt-1 m-0">-</p>
                   </div>
                 </div>
-              </div>
-              <div class="map-wrapper glass-card map-embed" id="map-embed">
-                <!-- Mapa renderizado via JS -->
+              </address>
+              <div class="map-wrapper glass-card map-embed" id="map-embed" aria-label="Mapa de Localização">
+                <!-- JS -->
               </div>
             </div>
-          </div>
+          </article>
         </div>
       </section>
 
-      <!-- ========================================== PLANOS E ASSINATURAS ========================================== -->
-      <section class="section hidden" id="section-planos">
+      <!-- REDES SOCIAIS -->
+      <section class="section" id="section-social" aria-labelledby="social-title">
         <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Planos e Assinaturas</h2>
-            <p class="section-subtitle">Economize assinando nossos planos exclusivos</p>
-          </div>
-          <div class="services-grid view-list" id="home-plans-grid">
-            <!-- Renderizado via JS -->
-          </div>
-        </div>
-      </section>
-
-      <!-- ========================================== REDES SOCIAIS ========================================== -->
-      <section class="section" id="section-social">
-        <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Redes Sociais</h2>
-          </div>
+          <header class="section-header">
+            <h2 class="section-title" id="social-title">Redes Sociais</h2>
+          </header>
           <div class="social-links-grid" id="social-links-container">
-            <!-- Renderizado via JS -->
+            <!-- JS -->
           </div>
         </div>
       </section>
 
     </main>
 
-    <!-- ========================================== FOOTER ========================================== -->
+    <!-- FOOTER -->
     <footer class="footer-custom">
-      <div class="container footer-container">
-        <p class="footer-logo" id="footer-logo-text">VitrineDesk</p>
-        <p class="footer-copyright text-muted">© <span id="footer-year"></span> Todos os direitos reservados</p>
+      <div class="container footer-container text-center py-4">
+        <p class="footer-logo font-bold text-lg m-0" id="footer-logo-text">VitrineDesk</p>
+        <p class="footer-copyright text-muted text-sm mt-2 m-0">© <span id="footer-year"></span> Todos os direitos reservados</p>
       </div>
     </footer>
 
-    <!-- ========================================== WHATSAPP FLOAT ========================================== -->
-    <a class="whatsapp-float-btn bounce" id="whatsapp-float" href="#" target="_blank" rel="noopener">
-      <i data-lucide="message-circle"></i>
+    <!-- WHATSAPP FLOAT -->
+    <a class="whatsapp-float-btn bounce" id="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Falar conosco no WhatsApp">
+      <i data-lucide="message-circle" aria-hidden="true"></i>
     </a>
 
-    <!-- ========================================== MOBILE BOTTOM NAV ========================================== -->
-    <nav class="mobile-bottom-nav" id="bottom-nav">
-      <button class="mobile-nav-item active" data-target="section-servicos">
-        <i data-lucide="scissors" class="mobile-nav-icon"></i>
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="mobile-bottom-nav" id="bottom-nav" aria-label="Navegação Inferior Mobile">
+      <button class="mobile-nav-item active" data-target="section-servicos" aria-label="Ir para Serviços">
+        <i data-lucide="scissors" class="mobile-nav-icon" aria-hidden="true"></i>
         <span>Serviços</span>
       </button>
-      <button class="mobile-nav-item" data-target="section-equipe">
-        <i data-lucide="users" class="mobile-nav-icon"></i>
+      <button class="mobile-nav-item" data-target="section-equipe" aria-label="Ir para Equipe">
+        <i data-lucide="users" class="mobile-nav-icon" aria-hidden="true"></i>
         <span>Equipe</span>
       </button>
-      <button class="mobile-nav-item" data-target="section-horarios">
-        <i data-lucide="clock" class="mobile-nav-icon"></i>
+      <button class="mobile-nav-item" data-target="section-horarios" aria-label="Ir para Horários">
+        <i data-lucide="clock" class="mobile-nav-icon" aria-hidden="true"></i>
         <span>Horários</span>
       </button>
-      <button class="mobile-nav-item" data-action="openClientArea">
-        <i data-lucide="calendar-check" class="mobile-nav-icon"></i>
+      <button class="mobile-nav-item" data-action="openClientArea" aria-label="Abrir Minha Agenda">
+        <i data-lucide="calendar-check" class="mobile-nav-icon" aria-hidden="true"></i>
         <span>Agenda</span>
       </button>
     </nav>
 
-    <!-- Modal Termos de Uso -->
-    <div id="modal-termos" class="modal-overlay flex-center">
-      <div class="modal-content glass-card modal-termos-content">
-        <span class="close-btn" data-close-modal>&times;</span>
-        <h3 class="modal-termos-title">Termos de Uso e Responsabilidade</h3>
-        <div id="termos-conteudo" class="modal-termos-text">
+    <!-- MODAL TERMOS -->
+    <div id="modal-termos" class="modal-overlay flex-center" role="dialog" aria-modal="true" aria-labelledby="modal-termos-title">
+      <article class="modal-content glass-card modal-termos-content">
+        <button class="close-btn btn-icon-circular absolute top-3 right-3" data-close-modal aria-label="Fechar termos"><i data-lucide="x"></i></button>
+        <h3 id="modal-termos-title" class="modal-termos-title mt-0 mb-4 text-xl">Termos de Uso e Responsabilidade</h3>
+        <div id="termos-conteudo" class="modal-termos-text premium-scroll max-h-[60vh] overflow-y-auto pr-2">
           Carregando termos...
         </div>
-        <div class="text-right mt-3">
-          <button class="btn btn-primary" data-action="closeTermos">Entendi</button>
+        <div class="text-right mt-4 pt-3 border-t border-glass">
+          <button class="btn btn-primary px-6" data-action="closeTermos">Entendi</button>
         </div>
-      </div>
+      </article>
     </div>
   </div>
 
-  <!-- Modal Auth, Modal Area Cliente, Bookings, etc (MANTIDOS E ENVELOPADOS NO MESMO ESTILO) -->
-  <div class="modal-overlay" id="booking-modal">
-    <div class="modal-content glass-modal booking-modal-content">
+  <!-- BOOKING MODAL -->
+  <div class="modal-overlay" id="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-service-name">
+    <article class="modal-content glass-modal booking-modal-content flex flex-column h-full">
 
-      <!-- Premium Header com Botões de Ação -->
-      <div class="booking-top-nav">
-        <button class="btn-icon-circular hidden" id="btn-back-booking" title="Voltar"><i
-            data-lucide="arrow-left"></i></button>
-        <div class="booking-progress-pill">
-          <span class="pulse-dot"></span> Etapa <span id="current-step-text">1</span> de 5
+      <!-- Top Nav Booking -->
+      <header class="booking-top-nav flex align-center justify-between p-3 border-b border-glass sticky top-0 bg-glass z-10">
+        <button class="btn-icon-circular hidden" id="btn-back-booking" title="Voltar etapa" aria-label="Voltar"><i data-lucide="arrow-left"></i></button>
+        <div class="booking-progress-pill flex align-center gap-2 px-3 py-1 bg-glass-light rounded-full text-sm font-medium">
+          <span class="pulse-dot w-2 h-2 rounded-full bg-primary" aria-hidden="true"></span>
+          Etapa <span id="current-step-text">1</span> de 5
         </div>
-        <button class="btn-icon-circular" data-action="closeBooking" title="Fechar"><i data-lucide="x"></i></button>
-      </div>
+        <button class="btn-icon-circular" data-action="closeBooking" title="Cancelar agendamento" aria-label="Cancelar"><i data-lucide="x"></i></button>
+      </header>
 
-      <!-- Informações do Serviço em Destaque -->
-      <div class="booking-service-hero">
-        <h3 class="bsh-title" id="booking-service-name">Nome do Serviço</h3>
-        <div class="bsh-meta">
-          <span class="bsh-price" id="booking-service-price">R$ 0,00</span>
-          <span class="bsh-dot">•</span>
-          <span class="bsh-duration"><i data-lucide="clock"></i> <span id="booking-service-duration">0 min</span></span>
+      <!-- Service Info -->
+      <section class="booking-service-hero p-4 text-center border-b border-glass" aria-label="Serviço Selecionado">
+        <h3 class="bsh-title text-xl font-bold m-0 text-gradient" id="booking-service-name">Nome do Serviço</h3>
+        <div class="bsh-meta flex align-center justify-center gap-2 mt-2 text-secondary text-sm">
+          <span class="bsh-price font-semibold text-primary" id="booking-service-price">R$ 0,00</span>
+          <span class="bsh-dot opacity-50">•</span>
+          <span class="bsh-duration flex align-center gap-1"><i data-lucide="clock" class="icon-xs"></i> <span id="booking-service-duration">0 min</span></span>
         </div>
-      </div>
+      </section>
 
-      <div class="booking-body-container">
+      <!-- Body Form -->
+      <div class="booking-body-container flex-1 overflow-y-auto premium-scroll p-4">
         <!-- Step 1: Profissionais -->
-        <div class="booking-step active" id="step-profissionais">
-          <h4 class="step-title">Com quem será o atendimento?</h4>
-          <div class="prof-grid premium-scroll" id="prof-grid">
-            <!-- Renderizado via JS -->
+        <section class="booking-step active" id="step-profissionais" aria-labelledby="step1-title">
+          <h4 id="step1-title" class="step-title text-lg mb-4 text-center font-medium">Com quem será o atendimento?</h4>
+          <div class="prof-grid premium-scroll display-grid gap-3" id="prof-grid">
+            <!-- JS -->
           </div>
-        </div>
+        </section>
 
         <!-- Step 2: Data -->
-        <div class="booking-step" id="step-data">
-          <h4 class="step-title">Escolha a data ideal</h4>
-          <div class="calendar-wrapper modern-calendar">
-            <div class="calendar-header">
-              <button class="btn-icon" id="cal-prev"><i data-lucide="chevron-left"></i></button>
-              <div class="calendar-month-year" id="calendar-month-year">Mês Ano</div>
-              <button class="btn-icon" id="cal-next"><i data-lucide="chevron-right"></i></button>
-            </div>
-            <div class="calendar-days-header">
+        <section class="booking-step" id="step-data" aria-labelledby="step2-title">
+          <h4 id="step2-title" class="step-title text-lg mb-4 text-center font-medium">Escolha a data ideal</h4>
+          <div class="calendar-wrapper modern-calendar glass-card p-4 rounded-xl">
+            <header class="calendar-header flex align-center justify-between mb-4">
+              <button class="btn-icon-circular hover-bg-glass" id="cal-prev" aria-label="Mês anterior"><i data-lucide="chevron-left"></i></button>
+              <div class="calendar-month-year font-bold text-md" id="calendar-month-year" aria-live="polite">Mês Ano</div>
+              <button class="btn-icon-circular hover-bg-glass" id="cal-next" aria-label="Próximo mês"><i data-lucide="chevron-right"></i></button>
+            </header>
+            <div class="calendar-days-header display-grid grid-cols-7 text-center text-xs text-muted font-bold mb-2">
               <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
             </div>
-            <div class="calendar-grid" id="calendar-grid">
-              <!-- Renderizado via JS -->
+            <div class="calendar-grid display-grid grid-cols-7 gap-1" id="calendar-grid">
+              <!-- JS -->
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Step 3: Horários e Extras -->
-        <div class="booking-step" id="step-horarios">
-
-          <h4 class="step-title mt-4">Qual o melhor horário?</h4>
-          <div class="time-slots modern-slots premium-scroll" id="time-slots-grid">
-            <!-- Renderizado via JS -->
+        <!-- Step 3: Horários -->
+        <section class="booking-step" id="step-horarios" aria-labelledby="step3-title">
+          <h4 id="step3-title" class="step-title mt-4 text-lg mb-4 text-center font-medium">Qual o melhor horário?</h4>
+          <div class="time-slots modern-slots premium-scroll display-grid grid-cols-3 gap-2" id="time-slots-grid">
+            <!-- JS -->
           </div>
-        </div>
-
+        </section>
 
         <!-- Step 4: Adicionais -->
-        <div class="booking-step" id="step-extras">
-          <h4 class="step-title">Deseja turbinar seu atendimento?</h4>
-          <div class="extras-list" id="extras-list">
-            <!-- Renderizado via JS -->
+        <section class="booking-step" id="step-extras" aria-labelledby="step4-title">
+          <h4 id="step4-title" class="step-title text-lg mb-4 text-center font-medium">Deseja turbinar seu atendimento?</h4>
+          <div class="extras-list display-flex flex-column gap-3" id="extras-list">
+            <!-- JS -->
           </div>
-        </div>
+        </section>
 
-        <!-- Step 5: Resumo e Cupom -->
-        <div class="booking-step" id="step-resumo">
-          <h4 class="step-title">Quase lá! Confira os detalhes</h4>
-
-          <div class="booking-summary-ticket" id="booking-summary">
-            <!-- Renderizado via JS -->
-          </div>
-
-          <div class="coupon-wrapper mt-3">
-            <div class="modern-input-group">
-              <i data-lucide="tag" class="input-icon"></i>
-              <input type="text" id="coupon-code" class="text-uppercase" placeholder="Tem um cupom de desconto?">
-              <button class="btn-apply-coupon" id="btn-apply-coupon">Aplicar</button>
+        <!-- Step 5: Resumo -->
+        <section class="booking-step" id="step-resumo" aria-labelledby="step5-title">
+          <h4 id="step5-title" class="step-title text-lg mb-4 text-center font-medium">Quase lá! Confira os detalhes</h4>
+          <article class="booking-summary-ticket glass-card p-4 rounded-xl mb-4 border border-primary-alpha" id="booking-summary">
+            <!-- JS -->
+          </article>
+          <div class="coupon-wrapper mt-4">
+            <div class="modern-input-group flex gap-2">
+              <div class="input-with-icon flex-1 relative">
+                <i data-lucide="tag" class="input-icon absolute left-3 top-1/2 translate-y-half text-muted"></i>
+                <input type="text" id="coupon-code" class="text-uppercase w-full pl-10 pr-3 py-3 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" placeholder="Tem um cupom?">
+              </div>
+              <button class="btn-apply-coupon btn btn-outline px-4" id="btn-apply-coupon">Aplicar</button>
             </div>
-            <div id="coupon-message" class="coupon-msg"></div>
+            <div id="coupon-message" class="coupon-msg text-sm mt-2" aria-live="polite"></div>
           </div>
-
-          <div class="modern-input-group mt-3 note-group">
-            <i data-lucide="message-square" class="input-icon align-top"></i>
-            <textarea id="booking-notes" rows="2"
-              placeholder="Alguma observação para o profissional? (opcional)"></textarea>
+          <div class="modern-input-group mt-4 note-group relative">
+            <i data-lucide="message-square" class="input-icon absolute left-3 top-3 text-muted"></i>
+            <textarea id="booking-notes" rows="3" class="w-full pl-10 pr-3 py-3 rounded-lg bg-glass border border-glass text-foreground focus-border-primary resize-none" placeholder="Alguma observação para o profissional? (opcional)"></textarea>
           </div>
-        </div>
+        </section>
       </div>
 
-      <!-- Footer / Botões Finais -->
-      <div class="modal-footer booking-footer modern-footer">
-        <!-- Next button logic is hidden as it auto-advances, but we keep the structure -->
-        <button class="btn btn-primary btn-hidden hidden" id="btn-next-booking">Continuar</button>
-        <button class="btn btn-glow btn-primary hidden" id="btn-submit-booking">
+      <!-- Footer Action -->
+      <footer class="modal-footer booking-footer modern-footer p-4 border-t border-glass bg-glass sticky bottom-0 z-10">
+        <button class="btn btn-primary btn-block btn-hidden hidden py-3 text-md font-medium shadow-glow" id="btn-next-booking">Continuar</button>
+        <button class="btn btn-glow btn-primary btn-block hidden py-3 text-md font-medium shadow-glow flex justify-center gap-2" id="btn-submit-booking">
           Confirmar Agendamento <i data-lucide="check-circle"></i>
         </button>
-      </div>
-
-    </div>
+      </footer>
+    </article>
   </div>
 
 
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <article class="modal-content glass-card modal-auth-width p-6 relative">
+      <button class="btn-close-absolute btn-icon-circular absolute top-4 right-4" data-close-auth aria-label="Fechar Login"><i data-lucide="x"></i></button>
+      <h2 id="auth-title" class="sr-only">Autenticação</h2>
 
-  <!-- Modal Auth (Login/Register) -->
-  <div class="modal-overlay" id="auth-modal">
-    <div class="modal-content glass-card modal-auth-width">
-
-      <!-- Botão Fechar Absoluto (Canto Superior Direito) -->
-      <button class="btn-close-absolute" data-close-auth><i data-lucide="x"></i></button>
-
-      <!-- Toggle Login / Cadastro (Pill) -->
-      <div class="auth-toggle-wrapper mt-2 mb-4">
-        <div class="auth-toggle">
-          <button class="auth-tab active" data-tab="login">Entrar</button>
-          <button class="auth-tab" data-tab="register">Criar Conta</button>
-          <div class="auth-toggle-slider"></div>
+      <div class="auth-toggle-wrapper mt-2 mb-6 bg-glass-light p-1 rounded-full relative">
+        <div class="auth-toggle flex relative z-10">
+          <button class="auth-tab flex-1 py-2 text-center rounded-full active transition-colors font-medium" data-tab="login">Entrar</button>
+          <button class="auth-tab flex-1 py-2 text-center rounded-full transition-colors font-medium" data-tab="register">Criar Conta</button>
         </div>
       </div>
 
-      <div class="auth-form-panel active" id="auth-login">
-        <!-- Social Login -->
+      <!-- LOGIN -->
+      <section class="auth-form-panel active" id="auth-login">
         <div class="mb-4">
-          <button type="button" class="btn btn-outline btn-block" id="btn-google-login">
-            <svg style="width:18px;height:18px;margin-right:8px;" viewBox="0 0 48 48">
-              <path fill="#EA4335"
-                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z">
-              </path>
-              <path fill="#4285F4"
-                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z">
-              </path>
-              <path fill="#FBBC05"
-                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z">
-              </path>
-              <path fill="#34A853"
-                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z">
-              </path>
-            </svg>
+          <button type="button" class="btn btn-outline btn-block py-3 flex justify-center gap-2 hover-bg-glass" id="btn-google-login">
+            <svg style="width:20px;height:20px;" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
             Entrar com Google
           </button>
         </div>
-        <div
-          style="text-align:center; color: var(--text-muted); margin-bottom:1rem; font-size:0.85rem; display:flex; align-items:center; gap:8px;">
-          <hr style="flex:1; border-color:var(--border);"><span style="white-space:nowrap;">OU USE SEU E-MAIL</span>
-          <hr style="flex:1; border-color:var(--border);">
+        <div class="divider text-center text-xs text-muted mb-4 flex align-center gap-3 before:flex-1 before:h-px before:bg-glass after:flex-1 after:h-px after:bg-glass">
+          <span>OU USE SEU E-MAIL</span>
         </div>
-
-        <form id="form-login" novalidate>
-          <div class="input-group">
-            <input type="email" id="login-email" required autocomplete="email">
-            <label>E-mail</label>
-            <span class="validation-icon success-icon"><i data-lucide="check-circle"></i></span>
-            <span class="validation-icon error-icon"><i data-lucide="x-circle"></i></span>
+        <form id="form-login" novalidate class="flex flex-column gap-4">
+          <div class="input-group floating-label relative">
+            <input type="email" id="login-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="email" placeholder=" ">
+            <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">E-mail</label>
           </div>
-          <div class="input-group">
-            <input type="password" id="login-senha" required autocomplete="current-password" minlength="6">
-            <label>Senha</label>
+          <div class="input-group floating-label relative">
+            <input type="password" id="login-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="current-password" minlength="6" placeholder=" ">
+            <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Senha</label>
           </div>
-          <button type="submit" class="btn btn-primary btn-block btn-glow mt-2 py-3 text-md font-medium">
-            Acessar Minha Conta <i data-lucide="arrow-right" class="icon-sm"></i>
+          <button type="submit" class="btn btn-primary btn-block btn-glow mt-4 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
+            Acessar Minha Conta <i data-lucide="arrow-right"></i>
           </button>
         </form>
-      </div>
+      </section>
 
-      <div class="auth-form-panel" id="auth-register">
-        <!-- Social Login -->
+      <!-- REGISTER -->
+      <section class="auth-form-panel" id="auth-register">
         <div class="mb-4">
-          <button type="button" class="btn btn-outline btn-block" id="btn-google-register">
-            <svg style="width:18px;height:18px;margin-right:8px;" viewBox="0 0 48 48">
-              <path fill="#EA4335"
-                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z">
-              </path>
-              <path fill="#4285F4"
-                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z">
-              </path>
-              <path fill="#FBBC05"
-                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z">
-              </path>
-              <path fill="#34A853"
-                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z">
-              </path>
-            </svg>
+          <button type="button" class="btn btn-outline btn-block py-3 flex justify-center gap-2 hover-bg-glass" id="btn-google-register">
+            <svg style="width:20px;height:20px;" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
             Criar conta com Google
           </button>
         </div>
-        <div
-          style="text-align:center; color: var(--text-muted); margin-bottom:1rem; font-size:0.85rem; display:flex; align-items:center; gap:8px;">
-          <hr style="flex:1; border-color:var(--border);"><span style="white-space:nowrap;">OU PREENCHA OS DADOS</span>
-          <hr style="flex:1; border-color:var(--border);">
+        <div class="divider text-center text-xs text-muted mb-4 flex align-center gap-3 before:flex-1 before:h-px before:bg-glass after:flex-1 after:h-px after:bg-glass">
+          <span>OU PREENCHA OS DADOS</span>
         </div>
-
-        <form id="form-register" novalidate>
-          <div class="input-group mb-3">
-            <input type="text" id="register-nome" required autocomplete="name">
-            <label>Nome completo</label>
+        <form id="form-register" novalidate class="flex flex-column gap-3">
+          <div class="input-group floating-label relative">
+            <input type="text" id="register-nome" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="name" placeholder=" ">
+            <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Nome completo</label>
           </div>
-          <div class="input-group mb-3">
-            <input type="email" id="register-email" required autocomplete="email">
-            <label>E-mail</label>
-            <span class="validation-icon success-icon"><i data-lucide="check-circle"></i></span>
-            <span class="validation-icon error-icon"><i data-lucide="x-circle"></i></span>
+          <div class="input-group floating-label relative">
+            <input type="email" id="register-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="email" placeholder=" ">
+            <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">E-mail</label>
           </div>
-          <div class="input-group mb-3">
-            <input type="password" id="register-senha" required autocomplete="new-password" minlength="6">
-            <label>Criar Senha (mín. 6)</label>
+          <div class="input-group floating-label relative">
+            <input type="password" id="register-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="new-password" minlength="6" placeholder=" ">
+            <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Criar Senha (mín. 6)</label>
           </div>
-          <div class="grid grid-cols-2 gap-3 mb-3">
-            <div class="input-group mb-0">
-              <input type="tel" id="register-telefone" data-mask="telefone" autocomplete="tel"
-                placeholder="(11) 90000-0000" required minlength="14">
-              <label>WhatsApp</label>
-              <span class="validation-icon success-icon"><i data-lucide="check-circle"></i></span>
-              <span class="validation-icon error-icon"><i data-lucide="x-circle"></i></span>
+          <div class="display-grid grid-cols-2 gap-3">
+            <div class="input-group floating-label relative">
+              <input type="tel" id="register-telefone" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" data-mask="telefone" autocomplete="tel" required minlength="14" placeholder=" ">
+              <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">WhatsApp</label>
             </div>
-            <div class="input-group mb-0">
-              <input type="text" id="register-cpf" data-mask="cpf" maxlength="14" required placeholder="000.000.000-00">
-              <label>CPF</label>
-              <span class="validation-icon success-icon"><i data-lucide="check-circle"></i></span>
-              <span class="validation-icon error-icon"><i data-lucide="x-circle"></i></span>
+            <div class="input-group floating-label relative">
+              <input type="text" id="register-cpf" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" data-mask="cpf" maxlength="14" required placeholder=" ">
+              <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">CPF</label>
             </div>
           </div>
-          <div class="form-group flex align-center gap-3 mb-5 mt-4">
-            <input type="checkbox" id="register-termos" required class="checkbox-modern">
+          <div class="form-group flex align-center gap-3 mt-2">
+            <input type="checkbox" id="register-termos" required class="checkbox-modern accent-primary w-5 h-5 rounded cursor-pointer">
             <label for="register-termos" class="text-sm text-secondary cursor-pointer">
-              Aceito os <a href="#" id="link-termos-uso" class="text-primary font-medium">Termos de Uso</a>
+              Aceito os <a href="#" id="link-termos-uso" class="text-primary font-bold hover-underline">Termos de Uso</a>
             </label>
           </div>
-          <button type="submit" class="btn btn-primary btn-block btn-glow py-3 text-md font-medium">
-            Finalizar Cadastro <i data-lucide="check" class="icon-sm"></i>
+          <button type="submit" class="btn btn-primary btn-block btn-glow mt-4 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
+            Finalizar Cadastro <i data-lucide="check"></i>
           </button>
         </form>
-      </div>
-    </div>
+      </section>
+    </article>
   </div>
 
 
+  <!-- DRAWER AREA DO CLIENTE -->
+  <div class="drawer-overlay" id="client-area-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <aside class="drawer-content glass-card h-full w-full max-w-sm absolute right-0 flex flex-column bg-background border-l border-glass">
+      <header class="drawer-header p-4 border-b border-glass flex justify-between align-center">
+        <h3 id="drawer-title" class="drawer-title m-0 text-xl font-bold">Área do Cliente</h3>
+        <button class="btn-icon-circular hover-bg-glass" data-close-drawer aria-label="Fechar Painel"><i data-lucide="x"></i></button>
+      </header>
 
-  <!-- ========================================== DRAWER AREA DO CLIENTE ========================================== -->
-  <div class="drawer-overlay" id="client-area-drawer">
-    <div class="drawer-content glass-card">
-      <div class="drawer-header">
-        <h3 class="drawer-title">Área do Cliente</h3>
-        <button class="btn-icon-circular" data-close-drawer title="Fechar"><i data-lucide="x"></i></button>
-      </div>
+      <nav class="drawer-tabs flex p-2 bg-glass-light border-b border-glass sticky top-0 z-10" aria-label="Abas da Área do Cliente">
+        <button class="drawer-tab active flex-1 py-2 text-center rounded-lg text-sm font-medium transition-colors" data-target="tab-dados">Meus Dados</button>
+        <button class="drawer-tab flex-1 py-2 text-center rounded-lg text-sm font-medium transition-colors" data-target="tab-agendamentos">Agendamentos</button>
+        <button class="drawer-tab flex-1 py-2 text-center rounded-lg text-sm font-medium transition-colors" data-target="tab-assinaturas">Assinaturas</button>
+      </nav>
 
-      <div class="drawer-tabs">
-        <button class="drawer-tab active" data-target="tab-dados">Meus Dados</button>
-        <button class="drawer-tab" data-target="tab-agendamentos">Agendamentos</button>
-        <button class="drawer-tab" data-target="tab-assinaturas">Assinaturas</button>
-        <div class="drawer-tab-slider"></div>
-      </div>
-
-      <div class="drawer-body premium-scroll">
-        <!-- Aba de Dados do Cliente -->
-        <div class="drawer-panel active" id="tab-dados">
-          <div class="client-profile-header mb-4 flex flex-column align-center text-center">
-            <div class="client-avatar" id="client-avatar-wrapper" style="cursor: pointer; position: relative;">
-              <i data-lucide="user" id="client-avatar-icon"></i>
-              <img id="client-avatar-img" class="hidden" alt="Avatar">
-              <div class="client-avatar-edit-overlay">
-                <i data-lucide="camera"></i>
+      <div class="drawer-body flex-1 overflow-y-auto premium-scroll p-4">
+        <!-- Aba: Dados -->
+        <section class="drawer-panel active" id="tab-dados">
+          <div class="client-profile-header mb-6 flex flex-column align-center text-center">
+            <div class="client-avatar relative w-20 h-20 rounded-full bg-glass flex-center border-2 border-primary overflow-hidden cursor-pointer group" id="client-avatar-wrapper" aria-label="Alterar foto de perfil">
+              <i data-lucide="user" class="text-primary w-10 h-10" id="client-avatar-icon"></i>
+              <img id="client-avatar-img" class="hidden w-full h-full object-cover" alt="Sua Foto">
+              <div class="client-avatar-edit-overlay absolute inset-0 bg-black-alpha flex-center opacity-0 group-hover-opacity-100 transition-opacity">
+                <i data-lucide="camera" class="text-white"></i>
               </div>
-              <input type="file" id="client-avatar-upload" hidden accept="image/jpeg, image/png, image/webp">
+              <input type="file" id="client-avatar-upload" hidden accept="image/jpeg, image/png, image/webp" aria-hidden="true">
             </div>
-            <h4 class="client-name mt-2" id="client-name-display">Carregando...</h4>
-            <span class="client-status text-sm text-muted" id="client-store-display">Cliente VitrineDesk</span>
-
-            <div id="profile-active-plan-badge" class="hidden mt-2"
-              style="background: rgba(var(--primary-rgb), 0.15); border: 1px solid var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--primary);">
-              <i data-lucide="star" style="width: 14px; height: 14px; margin-bottom: 2px;"></i> <span
-                id="profile-active-plan-name">Plano VIP</span>
+            <h4 class="client-name mt-3 text-lg font-bold m-0" id="client-name-display">Carregando...</h4>
+            <span class="client-status text-sm text-muted mt-1 block" id="client-store-display">Cliente VitrineDesk</span>
+            <div id="profile-active-plan-badge" class="hidden mt-3 inline-flex align-center gap-1 bg-primary-alpha border border-primary text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+              <i data-lucide="star" class="icon-xs"></i> <span id="profile-active-plan-name">Plano VIP</span>
             </div>
           </div>
 
-          <div class="client-info-form mt-4">
-            <form id="form-update-profile" novalidate>
-              <div class="input-group">
-                <input type="text" id="drawer-client-name" required autocomplete="name">
-                <label>Nome Completo</label>
-              </div>
-              <div class="input-group">
-                <input type="email" id="drawer-client-email" required autocomplete="email">
-                <label>E-mail</label>
-              </div>
-              <div class="input-group">
-                <input type="tel" id="drawer-client-phone" data-mask="telefone" autocomplete="tel"
-                  placeholder="(11) 90000-0000" required minlength="14">
-                <label>WhatsApp</label>
-              </div>
-              <div class="input-group input-readonly">
-                <input type="text" id="drawer-client-cpf" data-mask="cpf" readonly>
-                <label>CPF</label>
-              </div>
-
-              <div class="drawer-actions mt-4">
-                <button type="submit" class="btn btn-primary btn-block mb-3" id="btn-save-drawer-profile">
-                  <i data-lucide="save"></i> Salvar Alterações
-                </button>
-                <button type="button" class="btn btn-danger btn-block btn-outline" data-action="logout">
-                  <i data-lucide="log-out"></i> Sair da Minha Conta
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Aba de Agendamentos -->
-        <div class="drawer-panel" id="tab-agendamentos">
-          <div class="appointment-filters">
-            <button class="filter-btn active" data-filter="todos">Todos</button>
-            <button class="filter-btn" data-filter="confirmed">Confirmados</button>
-            <button class="filter-btn" data-filter="pending">Pendentes</button>
-            <button class="filter-btn" data-filter="completed">Concluídos</button>
-            <button class="filter-btn" data-filter="cancelled">Cancelados</button>
-          </div>
-          <div id="appointments-list" class="appointments-list mt-3">
-            <!-- Renderizado via JS -->
-          </div>
-        </div>
-
-        <!-- Aba de Assinaturas -->
-        <div class="drawer-panel" id="tab-assinaturas">
-          <div class="flex flex-column gap-3">
-            <div id="minhas-assinaturas-container">
-              <h4 class="text-primary mb-2">Meu Plano Atual</h4>
-              <div id="active-subscription-card" class="glass-card text-center p-3 text-secondary text-sm">
-                Carregando...
-              </div>
+          <form id="form-update-profile" novalidate class="flex flex-column gap-4">
+            <div class="input-group floating-label relative">
+              <input type="text" id="drawer-client-name" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="name" placeholder=" ">
+              <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Nome Completo</label>
             </div>
+            <div class="input-group floating-label relative">
+              <input type="email" id="drawer-client-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="email" placeholder=" ">
+              <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">E-mail</label>
+            </div>
+            <div class="input-group floating-label relative">
+              <input type="tel" id="drawer-client-phone" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" data-mask="telefone" autocomplete="tel" required minlength="14" placeholder=" ">
+              <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">WhatsApp</label>
+            </div>
+            <div class="input-group floating-label relative opacity-70 cursor-not-allowed">
+              <input type="text" id="drawer-client-cpf" class="w-full p-4 rounded-lg bg-glass border border-glass text-muted" data-mask="cpf" readonly placeholder=" ">
+              <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">CPF</label>
+            </div>
+            <div class="drawer-actions mt-4 pt-4 border-t border-glass flex flex-column gap-3">
+              <button type="submit" class="btn btn-primary py-3 font-bold flex justify-center gap-2" id="btn-save-drawer-profile">
+                <i data-lucide="save"></i> Salvar Alterações
+              </button>
+              <button type="button" class="btn btn-outline border-danger text-danger py-3 font-bold flex justify-center gap-2 hover-bg-danger-alpha" data-action="logout">
+                <i data-lucide="log-out"></i> Sair da Conta
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Aba: Agendamentos -->
+        <section class="drawer-panel" id="tab-agendamentos">
+          <nav class="appointment-filters flex gap-2 overflow-x-auto pb-2 premium-scroll mb-4" aria-label="Filtrar Agendamentos">
+            <button class="filter-btn active whitespace-nowrap px-4 py-2 rounded-full border border-glass text-sm" data-filter="todos">Todos</button>
+            <button class="filter-btn whitespace-nowrap px-4 py-2 rounded-full border border-glass text-sm" data-filter="confirmed">Confirmados</button>
+            <button class="filter-btn whitespace-nowrap px-4 py-2 rounded-full border border-glass text-sm" data-filter="pending">Pendentes</button>
+            <button class="filter-btn whitespace-nowrap px-4 py-2 rounded-full border border-glass text-sm" data-filter="completed">Concluídos</button>
+            <button class="filter-btn whitespace-nowrap px-4 py-2 rounded-full border border-glass text-sm" data-filter="cancelled">Cancelados</button>
+          </nav>
+          <div id="appointments-list" class="appointments-list display-grid gap-3" aria-live="polite">
+            <!-- JS -->
           </div>
-        </div>
+        </section>
+
+        <!-- Aba: Assinaturas -->
+        <section class="drawer-panel" id="tab-assinaturas">
+          <div id="minhas-assinaturas-container">
+            <h4 class="text-primary font-bold mb-3 text-lg">Meu Plano Atual</h4>
+            <article id="active-subscription-card" class="glass-card p-5 text-center text-secondary rounded-xl border border-glass shadow-sm">
+              Carregando...
+            </article>
+          </div>
+        </section>
       </div>
-    </div>
-  </div>
+    </aside>
   </div>
 
-  <div id="toast-container"></div>
+  <!-- TOASTS -->
+  <div id="toast-container" aria-live="polite"></div>
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -712,7 +609,7 @@
   <script>
     try { document.getElementById('footer-year').textContent = new Date().getFullYear(); } catch (e) { }
   </script>
+  <!-- Bcrypt for client side compat (if used) -->
   <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
 </body>
-
 </html>
