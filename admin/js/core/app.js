@@ -248,6 +248,7 @@ class AdminApp {
                 }
                 
                 window.globalTenant = t;
+                window.globalPlan = p;
                 window.dispatchEvent(new CustomEvent('tenantUpdated', { detail: t }));
 
                 return freshData;
@@ -264,6 +265,32 @@ class AdminApp {
                 setTimeout(fetchFreshData, 100);
             }
             window.globalTenant = tenant;
+            window.globalPlan = plan;
+            
+            // Função Global de Travas
+            window.checkPlanLimit = function(limitKey, currentCount, labelName) {
+                const limits = window.globalPlan && window.globalPlan.features ? window.globalPlan.features.limits : null;
+                if (!window.globalPlan || !limits) return true; // Se não tem plano ou limites configurados, libera (comportamento permissivo caso dê erro de load).
+                const limit = limits[limitKey];
+                
+                // Se não existe limite definido ou limite é -1 (ilimitado), libera
+                if (limit === undefined || limit === null || limit === '' || limit < 0) return true;
+                
+                // Se chegou no limite
+                if (currentCount >= limit) {
+                    const upsellModal = document.getElementById('modal-upsell-limit');
+                    if (upsellModal) {
+                        const lbl = document.getElementById('upsell-limit-label');
+                        if(lbl) lbl.textContent = limit + " " + (labelName || "itens");
+                        upsellModal.classList.remove('d-none');
+                    } else {
+                        // Fallback
+                        if(window.showToast) window.showToast('Limite atingido do plano: ' + limit, 'error');
+                    }
+                    return false; // Bloqueia
+                }
+                return true; // Libera
+            };
             // --- FIM SWR ---
 
             let planFeatures = plan?.features || {};
@@ -1250,10 +1277,13 @@ const getAudioContext = () => {
 
 // Desbloquear áudio no primeiro clique do usuário
 const unlockAudio = () => {
-    const ctx = getAudioContext();
-    if (ctx && ctx.state === 'suspended') {
-        ctx.resume();
-    }
+    try {
+        const ctx = getAudioContext();
+        if (ctx && ctx.state === 'suspended') {
+            const p = ctx.resume();
+            if (p && p.catch) p.catch(() => {});
+        }
+    } catch(e) {}
     document.removeEventListener('click', unlockAudio);
     document.removeEventListener('touchstart', unlockAudio);
     document.removeEventListener('keydown', unlockAudio);
@@ -1348,7 +1378,6 @@ window.playNotificationSound = function(profile = 1) {
 
 window.testSound = function(profileNumber) {
     window.playNotificationSound(profileNumber);
-    console.log("Tocando perfil de som:", profileNumber);
 };
 
 window.showToast = function (message, type = 'success', onClick = null) {

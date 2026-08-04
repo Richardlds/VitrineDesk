@@ -37,7 +37,25 @@ export class planos_clientesController {
             inputFile.addEventListener('change', (e) => this.handleImagePreview(e));
         }
 
-        // Tabs
+        // Tabs Modal Plano
+        const modalTabs = document.querySelectorAll('#modal-plano .tab-plano-btn');
+        modalTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const targetId = e.currentTarget.getAttribute('data-tab-target');
+                if(!targetId) return;
+                
+                // Hide all contents
+                document.querySelectorAll('#modal-plano .tab-plano-content').forEach(el => el.style.display = 'none');
+                // Remove active from all tabs
+                document.querySelectorAll('#modal-plano .tab-plano-btn').forEach(el => el.classList.remove('active'));
+                
+                // Show target and activate tab
+                document.getElementById(targetId).style.display = 'block';
+                e.currentTarget.classList.add('active');
+            });
+        });
+
+        // Tabs da pagina principal
         const tabBtns = document.querySelectorAll('.tab-btn');
         tabBtns.forEach(btn => {
             btn.addEventListener('click', (e) => this.switchTab(e.currentTarget));

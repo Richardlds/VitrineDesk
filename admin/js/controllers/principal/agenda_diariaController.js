@@ -47,7 +47,7 @@ export class agenda_diariaController {
                 if (data.settings.closing_time) this.storeSettings.closeHour = parseInt(data.settings.closing_time.split(':')[0]);
             }
         } catch (error) {
-            console.log('Configurações da loja não encontradas, usando padrão 08:00 - 20:00.');
+            console.warn('[AgendaDiaria] Configurações da loja não encontradas. Usando horário padrão: 08:00–20:00.');
         }
     }
 

@@ -299,4 +299,126 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Chama fetchPlans imediatamente ao carregar o módulo
+  fetchPlans();
 });
+
+// =============================================================================
+// PLANS: Carrega e renderiza os planos dinâmicos do Supabase na landing page.
+// Separado do DOMContentLoaded para poder ser reutilizado se necessário.
+// =============================================================================
+async function fetchPlans() {
+    const SUPABASE_URL = 'https://ioadqdpxbuqdlwamqtxm.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvYWRxZHB4YnVxZGx3YW1xdHhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDg5NjksImV4cCI6MjA5NjgyNDk2OX0.LFbTj_GK_gPFtvtFr5O_nMIi8cWDn2Pl57YSrsAaTCU';
+
+    if (!window.supabase) return;
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    try {
+        const { data: plans, error } = await supabaseClient
+            .from('plans')
+            .select('*')
+            .order('price', { ascending: true });
+
+        if (error) throw error;
+
+        const grid = document.getElementById('pricing-grid-dynamic');
+        if (!grid) return;
+
+        if (!plans || plans.length === 0) {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">Nenhum plano disponível no momento.</div>';
+            return;
+        }
+
+        let html = '';
+        plans.forEach((plan, index) => {
+            const feats = plan.features || {};
+            const priceMonthly = plan.price || 0;
+
+            // Usa o preço anual salvo ou calcula fallback de -20%
+            let priceAnnual = feats.price_annual;
+            if (priceAnnual === undefined || priceAnnual === null) {
+                priceAnnual = Math.round(priceMonthly * 0.8);
+            }
+
+            const isPremium = plan.is_default || index === 1;
+            const delay = index * 0.1;
+            let featuresHtml = '';
+
+            // Benefícios customizados cadastrados no painel God
+            if (plan.benefits) {
+                plan.benefits.split('\n').filter(b => b.trim() !== '').forEach(ben => {
+                    featuresHtml += `<li><i data-lucide="check"></i> <span class="fw-bold">${ben.trim()}</span></li>`;
+                });
+            }
+
+            const limits = feats.limits || {};
+
+            // Convenção: max_employees >= 0 significa limitado; caso contrário, ilimitado
+            if (limits.max_employees !== undefined && limits.max_employees >= 0) {
+                const val = limits.max_employees;
+                featuresHtml += `<li><i data-lucide="check"></i> ${val === 1 ? '1 Profissional' : 'Até ' + val + ' Profissionais'}</li>`;
+            } else {
+                featuresHtml += `<li><i data-lucide="infinity" class="text-accent"></i> <span class="fw-bold text-accent">Equipe Ilimitada</span></li>`;
+            }
+
+            if (limits.max_services !== undefined && limits.max_services >= 0) {
+                const val = limits.max_services;
+                featuresHtml += `<li><i data-lucide="check"></i> ${val === 1 ? '1 Serviço' : 'Até ' + val + ' Serviços'}</li>`;
+            } else {
+                featuresHtml += `<li><i data-lucide="infinity" class="text-accent"></i> <span class="fw-bold text-accent">Serviços Ilimitados</span></li>`;
+            }
+
+            if (limits.max_clients !== undefined && limits.max_clients >= 0) {
+                featuresHtml += `<li><i data-lucide="check"></i> Até ${limits.max_clients} Clientes</li>`;
+            } else {
+                featuresHtml += `<li><i data-lucide="infinity" class="text-accent"></i> <span class="fw-bold text-accent">Clientes Ilimitados</span></li>`;
+            }
+
+            if (feats.app_agendamento === true) {
+                featuresHtml += `<li><i data-lucide="check"></i> App de Agendamento</li>`;
+            } else {
+                featuresHtml += `<li class="dim"><i data-lucide="minus"></i> App de Agendamento</li>`;
+            }
+
+            if (feats.financeiro === true) {
+                featuresHtml += `<li><i data-lucide="check"></i> Gestão Financeira</li>`;
+            } else {
+                featuresHtml += `<li class="dim"><i data-lucide="minus"></i> Gestão Financeira</li>`;
+            }
+
+            html += `
+                <article class="plan-card ${isPremium ? 'featured' : ''} reveal" style="transition-delay: ${delay}s; opacity: 1; transform: translateY(0);">
+                    ${isPremium ? '<div class="plan-badge">Recomendado</div>' : ''}
+                    <div class="plan-name">${plan.name}</div>
+                    <div class="plan-desc">${plan.description || 'Para elevar seu negócio.'}</div>
+                    <div class="plan-price">
+                        <span class="currency">R$</span><span class="price-val" data-monthly="${priceMonthly}" data-annual="${priceAnnual}">${priceMonthly}</span>
+                    </div>
+                    <div class="plan-period">/mês · cobrado mensalmente</div>
+                    <div class="plan-sep"></div>
+                    <ul class="plan-features">
+                        ${featuresHtml}
+                    </ul>
+                    <a href="/login.html?register=true&plan_id=${plan.id}" class="btn ${isPremium ? 'btn-primary' : 'btn-outline'} btn-full">
+                        ${isPremium ? 'Assinar ' + plan.name : 'Iniciar Agora'}
+                    </a>
+                </article>
+            `;
+        });
+
+        grid.innerHTML = html;
+        if (window.lucide) window.lucide.createIcons();
+
+        // Aplica o estado atual do toggle (Mensal/Anual) nos novos cards
+        const isAnnual = document.getElementById('btn-annual')?.classList.contains('active');
+        if (typeof window.togglePricing === 'function') {
+            window.togglePricing(isAnnual ? 'annual' : 'monthly');
+        }
+
+    } catch (err) {
+        console.error('[fetchPlans] Erro ao buscar planos:', err);
+        const grid = document.getElementById('pricing-grid-dynamic');
+        if (grid) grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">Erro ao carregar planos.</div>';
+    }
+}

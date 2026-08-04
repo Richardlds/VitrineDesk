@@ -31,10 +31,12 @@ export class filiaisController {
             
             // Se não houver filiais, mostra apenas um estado vazio
             if (!data || data.length === 0) {
+                 this.filiaisCount = 0;
                  grid.innerHTML = '<div class="col-span-12 text-center text-secondary py-4">Nenhuma filial cadastrada.</div>';
                  return;
             }
 
+            this.filiaisCount = data.length;
             this.renderFiliais(data);
         } catch (error) {
             console.error('Erro ao carregar filiais:', error);
@@ -102,6 +104,9 @@ export class filiaisController {
         const form = document.getElementById('form-filial');
 
         if (btnNova) btnNova.addEventListener('click', () => {
+            if (!window.checkPlanLimit('max_branches', this.filiaisCount || 0, 'filiais')) {
+                return;
+            }
             if (form) form.reset();
             if (modal) modal.classList.remove('d-none');
         });

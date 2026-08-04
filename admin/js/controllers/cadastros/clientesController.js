@@ -251,7 +251,14 @@ export class clientesController {
         const btnExcluir = document.getElementById('btn-excluir-cliente');
         const btnDesativar = document.getElementById('btn-desativar-cliente');
 
-        if (btnNovo) btnNovo.addEventListener('click', () => this.openModal());
+        if (btnNovo) {
+            btnNovo.addEventListener('click', () => {
+                if (!window.checkPlanLimit('max_clients', this.totalItems || 0, 'clientes')) {
+                    return;
+                }
+                this.openModal();
+            });
+        }
         if (btnClose) btnClose.addEventListener('click', () => modal.classList.add('d-none'));
 
         if (form) {

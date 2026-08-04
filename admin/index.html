@@ -240,6 +240,31 @@
             </main>
         </div>
     </div>
+    <!-- Modal Upsell Global -->
+    <div id="modal-upsell-limit" class="modal-overlay d-none" style="z-index: 9999;">
+        <div class="modal-content config-card modal-card-md" style="max-width: 450px; text-align: center; padding: 2.5rem 2rem;">
+            <div class="mb-4 flex justify-center">
+                <div class="bg-primary-light text-primary p-3 rounded-xl" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="rocket" style="width: 30px; height: 30px;"></i>
+                </div>
+            </div>
+            
+            <h3 class="text-xl font-bold text-primary mb-2">Limite Atingido! 🚀</h3>
+            <p class="text-secondary text-sm mb-4 line-height-1-6">
+                Seu plano atual permite apenas <strong id="upsell-limit-label" class="text-primary">X itens</strong>. 
+                Para continuar crescendo sua empresa e adicionar mais, faça um upgrade no seu plano.
+            </p>
+            
+            <div class="flex flex-col gap-3">
+                <button class="btn btn-primary w-100 py-3 rounded-lg font-bold" onclick="document.getElementById('modal-upsell-limit').classList.add('d-none'); document.querySelector('[data-tab=\'sistema/assinatura\']').click();">
+                    Ver Planos & Upgrade
+                </button>
+                <button class="btn bg-transparent border-none text-secondary font-medium w-100 py-2 cursor-pointer hover:text-primary transition-colors" onclick="document.getElementById('modal-upsell-limit').classList.add('d-none');">
+                    Agora não
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

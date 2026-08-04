@@ -1,556 +1,493 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.supabase.co https://unpkg.com; img-src 'self' data: https:; frame-src 'self';">
-    <title>VitrineDesk - O Sistema Completo para Agendamentos e Gestão</title>
-    
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-    <meta name="description" content="A plataforma SaaS completa para negócios baseados em serviços e agendamentos. Automatize sua gestão.">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.supabase.co; img-src 'self' data: https:;">
+  <title>VitrineDesk — O sistema completo para agendamentos e gestão</title>
+  <meta name="description" content="A plataforma SaaS para salões, barbearias e clínicas. Automatize agendamentos, gerencie equipe e acompanhe métricas em tempo real.">
 
-    <!-- CSS Base -->
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/landing.css?v=2.0.1">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/landing.css?v=7.0.0">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <!-- Background Elements -->
-    <div class="lp-bg-elements" aria-hidden="true">
-        <div class="lp-orb lp-orb-1"></div>
-        <div class="lp-orb lp-orb-2"></div>
+
+  <!-- Fundo Decorativo -->
+  <div class="lp-bg" aria-hidden="true">
+    <div class="lp-grid"></div>
+    <div class="lp-orb lp-orb-1"></div>
+    <div class="lp-orb lp-orb-2"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════════════════════ -->
+  <header class="lp-header">
+    <div class="container">
+      <nav class="nav-inner" aria-label="Navegação principal">
+        <!-- Logo -->
+        <a href="/" class="nav-logo" aria-label="VitrineDesk">
+          <div class="nav-logo-mark">
+            <i data-lucide="zap" aria-hidden="true"></i>
+          </div>
+          <span>VitrineDesk</span>
+        </a>
+
+        <!-- Hamburguer (mobile) -->
+        <button class="nav-hamburger" id="btn-nav-toggle" aria-label="Abrir menu" aria-expanded="false">
+          <i data-lucide="menu" id="nav-icon"></i>
+        </button>
+
+        <!-- Menu -->
+        <div class="nav-menu" id="nav-menu">
+          <ul class="nav-links">
+            <li><a href="#funcionalidades">Plataforma</a></li>
+            <li><a href="#como-funciona">Como Funciona</a></li>
+            <li><a href="#planos">Preços</a></li>
+          </ul>
+          <div class="nav-actions">
+            <a href="/login.html" class="btn btn-ghost">Entrar</a>
+            <a href="/login.html?register=true" class="btn btn-primary">Começar Grátis</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ═══════════════════════════════════════════════════════════
+         HERO
+    ═══════════════════════════════════════════════════════════ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-inner">
+
+          <!-- Texto -->
+          <div class="hero-content reveal">
+            <span class="hero-badge">
+              <span class="badge-dot" aria-hidden="true"></span>
+              Novo: Gestão financeira integrada
+            </span>
+            <h1 id="hero-title" class="hero-title">
+              Sua operação,<br>
+              <span class="gradient-text">no automático.</span>
+            </h1>
+            <p class="hero-sub">
+              VitrineDesk é a infraestrutura completa para salões, barbearias e clínicas. Do agendamento ao financeiro, tudo em um só lugar — sem planilha, sem WhatsApp caótico.
+            </p>
+            <div class="hero-cta">
+              <a href="/login.html?register=true" class="btn btn-primary btn-lg">
+                Teste Grátis por 14 dias
+                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+              </a>
+              <a href="#planos" class="btn btn-outline btn-lg">Ver Planos</a>
+            </div>
+            <p class="hero-note">
+              <i data-lucide="shield-check"></i>
+              Sem cartão de crédito. Sem burocracia.
+            </p>
+          </div>
+
+          <!-- Visual -->
+          <div class="hero-visual reveal" style="transition-delay:.15s">
+            <div class="app-window">
+              <div class="app-titlebar">
+                <span class="app-dot red"></span>
+                <span class="app-dot yellow"></span>
+                <span class="app-dot green"></span>
+                <span class="app-title">Dashboard — VitrineDesk</span>
+              </div>
+              <div class="app-body">
+                <div class="kpi-row">
+                  <div class="kpi-card">
+                    <div class="kpi-label">Receita Hoje</div>
+                    <div class="kpi-val">R$ 1.840</div>
+                    <div class="kpi-trend">↑ 12% vs ontem</div>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-label">Agendamentos</div>
+                    <div class="kpi-val up">24</div>
+                    <div class="kpi-trend">↑ 3 novos</div>
+                  </div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <span class="chart-title">Faturamento semanal</span>
+                    <span class="chart-badge">+18%</span>
+                  </div>
+                  <div class="chart-bars">
+                    <div class="cb s1"></div>
+                    <div class="cb s2"></div>
+                    <div class="cb s3"></div>
+                    <div class="cb s4"></div>
+                    <div class="cb s5"></div>
+                    <div class="cb s6"></div>
+                    <div class="cb s7"></div>
+                  </div>
+                </div>
+                <div class="app-notif">
+                  <div class="notif-avatar">
+                    <i data-lucide="bell" aria-hidden="true"></i>
+                  </div>
+                  <div class="notif-body">
+                    <strong>Novo agendamento confirmado</strong>
+                    <span>Corte VIP — Rafael S. às 15:30</span>
+                  </div>
+                  <span class="notif-pill">Agora</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         LOGOS
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="logos-strip">
+      <div class="container">
+        <p class="logos-label">Confiado por negócios em todo o Brasil</p>
+        <div class="logos-row">
+          <svg viewBox="0 0 160 30"><text x="80" y="21" font-family="Arial" font-weight="700" font-size="15" fill="currentColor" text-anchor="middle">BarberShop Premium</text></svg>
+          <svg viewBox="0 0 140 30"><text x="70" y="21" font-family="Arial" font-weight="700" font-size="15" fill="currentColor" text-anchor="middle">Studio Elegance</text></svg>
+          <svg viewBox="0 0 110 30"><text x="55" y="21" font-family="Arial" font-weight="700" font-size="15" fill="currentColor" text-anchor="middle">Clínica Zen</text></svg>
+          <svg viewBox="0 0 130 30"><text x="65" y="21" font-family="Arial" font-weight="700" font-size="15" fill="currentColor" text-anchor="middle">Tattoo Art Co.</text></svg>
+          <svg viewBox="0 0 120 30"><text x="60" y="21" font-family="Arial" font-weight="700" font-size="15" fill="currentColor" text-anchor="middle">Nails & Spa</text></svg>
+        </div>
+      </div>
     </div>
 
-    <!-- Header & Navbar -->
-    <header class="lp-header">
-        <div class="container lp-nav-container">
-            <a href="/" class="lp-logo" aria-label="VitrineDesk - Página Inicial">
-                <i data-lucide="zap" aria-hidden="true"></i> VitrineDesk
-            </a>
-            
-            <!-- Botão Menu Mobile -->
-            <button class="lp-mobile-menu-btn d-none" aria-label="Abrir menu de navegação" aria-expanded="false" id="btn-mobile-menu">
-                <i data-lucide="menu" aria-hidden="true"></i>
+    <!-- ═══════════════════════════════════════════════════════════
+         STATS
+    ═══════════════════════════════════════════════════════════ -->
+    <section class="stats-section" aria-label="Números do VitrineDesk">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item reveal">
+            <div class="stat-num">+500</div>
+            <div class="stat-desc">Estabelecimentos ativos</div>
+          </div>
+          <div class="stat-item reveal" style="transition-delay:.1s">
+            <div class="stat-num">98%</div>
+            <div class="stat-desc">Taxa de satisfação</div>
+          </div>
+          <div class="stat-item reveal" style="transition-delay:.2s">
+            <div class="stat-num">40h</div>
+            <div class="stat-desc">Economizadas por mês</div>
+          </div>
+          <div class="stat-item reveal" style="transition-delay:.3s">
+            <div class="stat-num">3min</div>
+            <div class="stat-desc">Para configurar tudo</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="divider"></div></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FEATURES
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="funcionalidades" class="features-section" aria-labelledby="feat-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Plataforma</span>
+          <h2 id="feat-title" class="section-title">
+            Tudo que você precisa,<br>
+            <span class="gradient-text">integrado e pronto.</span>
+          </h2>
+          <p class="section-sub">Substitua 4 sistemas diferentes por uma plataforma unificada, construída para o seu ritmo de trabalho.</p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feat-card reveal">
+            <div class="feat-icon"><i data-lucide="calendar-check" aria-hidden="true"></i></div>
+            <h3>Agenda Inteligente</h3>
+            <p>Clientes agendam 24/7 pela sua vitrine online. Notificações automáticas e sem conflito de horários — nunca mais um cancelamento surpresa.</p>
+          </article>
+
+          <article class="feat-card reveal" style="transition-delay:.05s">
+            <div class="feat-icon"><i data-lucide="bar-chart-3" aria-hidden="true"></i></div>
+            <h3>Métricas em Tempo Real</h3>
+            <p>Dashboard com faturamento do dia, ticket médio, serviços mais vendidos e muito mais. Decida com dados, não com intuição.</p>
+          </article>
+
+          <article class="feat-card reveal" style="transition-delay:.1s">
+            <div class="feat-icon"><i data-lucide="users" aria-hidden="true"></i></div>
+            <h3>Gestão de Equipe</h3>
+            <p>Cadastre profissionais, defina horários e comissões. O sistema calcula automaticamente quanto cada um recebe no fechamento do mês.</p>
+          </article>
+
+          <article class="feat-card reveal" style="transition-delay:.15s">
+            <div class="feat-icon"><i data-lucide="wallet" aria-hidden="true"></i></div>
+            <h3>Financeiro Integrado</h3>
+            <p>Controle entradas, despesas e fluxo de caixa sem sair da plataforma. Relatórios prontos para exportar quando precisar.</p>
+          </article>
+
+          <article class="feat-card reveal" style="transition-delay:.2s">
+            <div class="feat-icon"><i data-lucide="star" aria-hidden="true"></i></div>
+            <h3>CRM & Fidelidade</h3>
+            <p>Identifique clientes recorrentes, crie programas de pontos e envie promoções personalizadas. Retenção que funciona no automático.</p>
+          </article>
+
+          <article class="feat-card reveal" style="transition-delay:.25s">
+            <div class="feat-icon"><i data-lucide="smartphone" aria-hidden="true"></i></div>
+            <h3>App do Cliente</h3>
+            <p>Seu cliente agenda direto pelo celular, recebe lembretes e acompanha o histórico de atendimentos. Experiência premium do início ao fim.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         DESTAQUE — COMO FUNCIONA
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="como-funciona" class="highlight-section" aria-labelledby="hl-title">
+      <div class="container">
+        <div class="highlight-box reveal">
+          <div class="highlight-text">
+            <span class="section-label">Como funciona</span>
+            <h2 id="hl-title">
+              Sua equipe,<br>
+              <span class="gradient-text">organizada e produtiva.</span>
+            </h2>
+            <p>Adicione os profissionais, configure os serviços e horários. O VitrineDesk cuida do resto — agendamentos, comissões e relatórios.</p>
+            <ul class="highlight-list">
+              <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Configuração em menos de 10 minutos</li>
+              <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Suporte em português via chat</li>
+              <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Migração de dados incluída</li>
+              <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Sem contrato de fidelidade</li>
+            </ul>
+          </div>
+          <div class="highlight-visual">
+            <div class="hv-card">
+              <div class="hv-row">
+                <div class="hv-avatar">R</div>
+                <div class="hv-info">
+                  <strong>Rafael Santos</strong>
+                  <span>Barbeiro Sênior</span>
+                </div>
+                <span class="hv-tag">R$ 1.840 hoje</span>
+              </div>
+              <div class="hv-row">
+                <div class="hv-avatar" style="background:rgba(99,102,241,0.15)">L</div>
+                <div class="hv-info">
+                  <strong>Lucas Mendes</strong>
+                  <span>Estilista</span>
+                </div>
+                <span class="hv-tag">R$ 1.120 hoje</span>
+              </div>
+              <div class="hv-row">
+                <div class="hv-avatar" style="background:rgba(168,85,247,0.15)">A</div>
+                <div class="hv-info">
+                  <strong>Ana Lima</strong>
+                  <span>Manicure</span>
+                </div>
+                <span class="hv-tag pending">3 pendentes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><div class="divider"></div></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PRICING
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="planos" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Preços</span>
+          <h2 id="pricing-title" class="section-title">
+            Simples e transparente.<br>
+            <span class="gradient-text">Sem surpresas.</span>
+          </h2>
+          <p class="section-sub">Escolha o plano que cabe no seu momento. Mude quando quiser.</p>
+        </div>
+
+        <!-- Toggle Mensal / Anual -->
+        <div style="text-align:center" class="reveal" style="transition-delay:.1s">
+          <div class="pricing-toggle-wrapper">
+            <div class="pricing-indicator" id="pricing-indicator"></div>
+            <button class="pricing-toggle-btn active" id="btn-monthly" onclick="window.togglePricing('monthly')">Mensal</button>
+            <button class="pricing-toggle-btn" id="btn-annual" onclick="window.togglePricing('annual')">
+              Anual
+              <span class="badge-save">−20%</span>
             </button>
-            
-            <!-- Navegação -->
-            <nav class="lp-nav-menu" id="nav-menu" aria-label="Navegação principal">
-                <ul class="lp-nav-links">
-                    <li><a href="#funcionalidades">Funcionalidades</a></li>
-                    <li><a href="#solucoes">Soluções</a></li>
-                    <li><a href="#planos">Planos</a></li>
-                </ul>
-                <div class="lp-nav-actions">
-                    <a href="/login.html" class="lp-btn lp-btn-outline" aria-label="Entrar no sistema">Entrar</a>
-                    <a href="/login.html?register=true" class="lp-btn lp-btn-primary" aria-label="Criar conta grátis">Criar Loja Grátis</a>
-                </div>
-            </nav>
+          </div>
         </div>
-    </header>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="lp-section lp-hero" aria-labelledby="hero-title">
-            <div class="container lp-hero-container">
-                <div class="reveal">
-                    <div class="lp-hero-badge" role="text">
-                        <i data-lucide="star" aria-hidden="true"></i> Plataforma #1 de Agendamento Online
-                    </div>
-                </div>
-                
-                <h1 id="hero-title" class="lp-title reveal" style="transition-delay: 0.1s;">
-                    Gerencie seus agendamentos<br>com uma <span class="lp-title-gradient">Vitrine Premium</span>
-                </h1>
-                
-                <p class="lp-subtitle reveal" style="transition-delay: 0.2s;">
-                    O sistema completo para barbearias, salões e clínicas que desejam automatizar reservas, encantar clientes e faturar mais no piloto automático.
-                </p>
-                
-                <div class="lp-hero-actions reveal" style="transition-delay: 0.3s;">
-                    <a href="/login.html?register=true" class="lp-btn lp-btn-primary lp-btn-large">
-                        Comece Gratuitamente <i data-lucide="arrow-right" aria-hidden="true"></i>
-                    </a>
-                    <a href="#funcionalidades" class="lp-btn lp-btn-outline lp-btn-large">
-                        Ver Funcionalidades
-                    </a>
-                </div>
-                
-                <!-- Mockup Image -->
-                <div class="lp-mockup-container reveal" style="transition-delay: 0.4s;">
-                    <figure class="lp-mockup">
-                        <img src="/assets/bannerindex.png" alt="Prévia do Painel Administrativo da VitrineDesk" onerror="this.src='https://placehold.co/1200x675/1e1e2e/6366f1?text=VitrineDesk+Dashboard'">
-                    </figure>
-                </div>
-            </div>
-        </section>
-
-        <!-- Social Proof -->
-        <section class="lp-trusted" aria-label="Marcas que confiam em nós">
-            <div class="container lp-trusted-container">
-                <p class="lp-trusted-text">Aprovado por milhares de profissionais em todo o Brasil</p>
-                <div class="lp-trusted-logos">
-                    <svg viewBox="0 0 100 30" aria-label="BarberShop" role="img"><path d="M10 20h20v-5H10zM10 10h20V5H10z" fill="currentColor"/><text x="35" y="20" font-family="Arial" font-weight="bold" font-size="16" fill="currentColor">BarberShop</text></svg>
-                    <svg viewBox="0 0 100 30" aria-label="Studio Beauty" role="img"><path d="M15 25a10 10 0 1 0 0-20 10 10 0 0 0 0 20z" fill="currentColor"/><text x="35" y="20" font-family="Arial" font-weight="bold" font-size="16" fill="currentColor">Studio Beauty</text></svg>
-                    <svg viewBox="0 0 100 30" aria-label="Clínica Zen" role="img"><path d="M5 5l10 20 10-20z" fill="currentColor"/><text x="35" y="20" font-family="Arial" font-weight="bold" font-size="16" fill="currentColor">Clínica Zen</text></svg>
-                    <svg viewBox="0 0 100 30" aria-label="Tattoo Art" role="img"><rect x="10" y="5" width="20" height="20" rx="5" fill="currentColor"/><text x="35" y="20" font-family="Arial" font-weight="bold" font-size="16" fill="currentColor">Tattoo Art</text></svg>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Bento Grid -->
-        <section id="funcionalidades" class="lp-section" aria-labelledby="funcionalidades-title">
-            <div class="container">
-                <header class="lp-section-header reveal">
-                    <h2 id="funcionalidades-title" class="lp-section-title">Tudo que você precisa. <span class="lp-title-gradient">Sem complicação.</span></h2>
-                    <p class="lp-section-subtitle">Uma suíte completa de ferramentas desenhada para alavancar sua operação diária.</p>
-                             <style>
-                    .lp-z-row {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 3rem;
-                        margin-bottom: 8rem;
-                        align-items: center;
-                    }
-                    .lp-z-text { flex: 1; }
-                    .lp-z-text h3 {
-                        font-size: 2.5rem;
-                        font-weight: 700;
-                        margin-bottom: 1.5rem;
-                        line-height: 1.2;
-                        color: #fff;
-                    }
-                    .lp-z-text p {
-                        font-size: 1.15rem;
-                        color: var(--lp-text-secondary);
-                        line-height: 1.6;
-                    }
-                    .lp-z-visual { 
-                        flex: 1; 
-                        width: 100%;
-                        background: var(--lp-bg-card); 
-                        border: 1px solid var(--lp-border-glass); 
-                        border-radius: var(--lp-radius-lg); 
-                        padding: 3rem; 
-                        display: flex; 
-                        align-items: center; 
-                        justify-content: center; 
-                        position: relative; 
-                        overflow: hidden;
-                        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-                        backdrop-filter: blur(12px);
-                    }
-                    @media (min-width: 992px) {
-                        .lp-z-row {
-                            flex-direction: row;
-                            gap: 6rem;
-                        }
-                        .lp-z-row.reverse {
-                            flex-direction: row-reverse;
-                        }
-                    }
-                </style>
-
-                <div class="lp-features-zpattern" style="margin-top: 5rem;">
-                    
-                    <!-- Feature 1: Agenda -->
-                    <div class="lp-z-row reveal">
-                        <div class="lp-z-text">
-                            <div style="width: 56px; height: 56px; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--lp-accent); border-radius: var(--lp-radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 20px var(--lp-accent-glow);">
-                                <i data-lucide="calendar-check-2" style="color: var(--lp-accent); width: 28px; height: 28px;"></i>
-                            </div>
-                            <h3>Agendamento Inteligente</h3>
-                            <p>Adeus planilhas e mensagens no WhatsApp fora de hora. Seus clientes acessam sua vitrine online, escolhem o serviço, o profissional e o horário, e tudo cai direto na sua agenda, 24 horas por dia.</p>
-                        </div>
-                        <div class="lp-z-visual">
-                            <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--lp-border-glass); border-radius: var(--lp-radius-md); padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                                    <div style="font-weight: 600; font-size: 1.2rem; color: #fff;">Agenda: Hoje</div>
-                                    <div style="display: flex; gap: 0.5rem;">
-                                        <div style="width: 30px; height: 30px; border-radius: 50%; background: var(--lp-bg-card-hover); display: flex; align-items: center; justify-content: center;"><i data-lucide="calendar" style="width: 16px; height: 16px; color: var(--lp-accent);"></i></div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                    <div style="background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, transparent 100%); border-left: 4px solid var(--lp-accent); padding: 1rem; border-radius: 4px;">
-                                        <div style="font-weight: 600; font-size: 1rem; color: #fff;">Corte + Barba Premium</div>
-                                        <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
-                                            <span style="font-size: 0.85rem; color: var(--lp-text-secondary);">João Silva</span>
-                                            <span style="font-size: 0.85rem; color: var(--lp-accent); font-weight: bold;">09:00 - 10:00</span>
-                                        </div>
-                                    </div>
-                                    <div style="background: rgba(255,255,255,0.02); border-left: 4px solid var(--lp-text-secondary); padding: 1rem; border-radius: 4px;">
-                                        <div style="font-weight: 600; font-size: 1rem; color: #fff;">Luzes e Coloração</div>
-                                        <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
-                                            <span style="font-size: 0.85rem; color: var(--lp-text-secondary);">Mariana Costa</span>
-                                            <span style="font-size: 0.85rem; color: var(--lp-text-secondary); font-weight: bold;">10:30 - 12:00</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Feature 2: Analytics -->
-                    <div class="lp-z-row reverse reveal">
-                        <div class="lp-z-text">
-                            <div style="width: 56px; height: 56px; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--lp-accent); border-radius: var(--lp-radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 20px var(--lp-accent-glow);">
-                                <i data-lucide="layout-dashboard" style="color: var(--lp-accent); width: 28px; height: 28px;"></i>
-                            </div>
-                            <h3>Dashboard Analytics</h3>
-                            <p>Tenha total controle financeiro e operacional. Saiba seu faturamento diário, mensal, e quais serviços geram mais lucro.</p>
-                        </div>
-                        <div class="lp-z-visual">
-                            <div style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%; max-width: 400px;">
-                                <div style="display: flex; gap: 1rem;">
-                                    <div style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--lp-border-glass); border-radius: var(--lp-radius-sm); padding: 1.5rem;">
-                                        <div style="color: var(--lp-text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">Faturamento Hoje</div>
-                                        <div style="color: #fff; font-size: 1.5rem; font-weight: bold;">R$ 1.450</div>
-                                        <div style="color: var(--lp-success); font-size: 0.75rem; margin-top: 0.5rem;">+12% vs ontem</div>
-                                    </div>
-                                    <div style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--lp-border-glass); border-radius: var(--lp-radius-sm); padding: 1.5rem;">
-                                        <div style="color: var(--lp-text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">Agendamentos</div>
-                                        <div style="color: #fff; font-size: 1.5rem; font-weight: bold;">24</div>
-                                        <div style="color: var(--lp-success); font-size: 0.75rem; margin-top: 0.5rem;">Total do dia</div>
-                                    </div>
-                                </div>
-                                <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--lp-border-glass); border-radius: var(--lp-radius-md); padding: 1.5rem; height: 120px; display: flex; align-items: flex-end; gap: 0.75rem;">
-                                    <div style="flex: 1; background: var(--lp-bg-card-hover); height: 40%; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="flex: 1; background: var(--lp-bg-card-hover); height: 60%; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="flex: 1; background: var(--lp-accent); height: 100%; border-radius: 4px 4px 0 0; box-shadow: 0 -5px 15px var(--lp-accent-glow);"></div>
-                                    <div style="flex: 1; background: var(--lp-bg-card-hover); height: 75%; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="flex: 1; background: var(--lp-bg-card-hover); height: 50%; border-radius: 4px 4px 0 0;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Feature 3: Equipe -->
-                    <div class="lp-z-row reveal">
-                        <div class="lp-z-text">
-                            <div style="width: 56px; height: 56px; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--lp-accent); border-radius: var(--lp-radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 20px var(--lp-accent-glow);">
-                                <i data-lucide="users" style="color: var(--lp-accent); width: 28px; height: 28px;"></i>
-                            </div>
-                            <h3>Gestão de Equipe</h3>
-                            <p>Adicione profissionais, comissionamentos e defina os horários de trabalho e pausas de cada membro do seu time.</p>
-                        </div>
-                        <div class="lp-z-visual">
-                            <div style="display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 400px;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); padding: 1.25rem; border-radius: var(--lp-radius-sm); border: 1px solid var(--lp-border-glass);">
-                                    <div style="display: flex; align-items: center; gap: 1rem;">
-                                        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--lp-accent) 0%, #a855f7 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white;">RS</div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #fff;">Richard S.</div>
-                                            <div style="font-size: 0.85rem; color: var(--lp-text-secondary);">Barbeiro Master</div>
-                                        </div>
-                                    </div>
-                                    <div style="padding: 0.25rem 0.75rem; background: rgba(16, 185, 129, 0.1); color: var(--lp-success); border-radius: 50px; font-size: 0.75rem; font-weight: bold;">Atendendo</div>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); padding: 1.25rem; border-radius: var(--lp-radius-sm); border: 1px solid var(--lp-border-glass);">
-                                    <div style="display: flex; align-items: center; gap: 1rem;">
-                                        <div style="width: 48px; height: 48px; border-radius: 50%; background: #475569; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white;">ML</div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #fff;">Maria L.</div>
-                                            <div style="font-size: 0.85rem; color: var(--lp-text-secondary);">Colorista</div>
-                                        </div>
-                                    </div>
-                                    <div style="padding: 0.25rem 0.75rem; background: rgba(245, 158, 11, 0.1); color: var(--lp-warning); border-radius: 50px; font-size: 0.75rem; font-weight: bold;">Em Pausa</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Feature 4: Mobile -->
-                    <div class="lp-z-row reverse reveal">
-                        <div class="lp-z-text">
-                            <div style="width: 56px; height: 56px; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--lp-accent); border-radius: var(--lp-radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 20px var(--lp-accent-glow);">
-                                <i data-lucide="smartphone" style="color: var(--lp-accent); width: 28px; height: 28px;"></i>
-                            </div>
-                            <h3>Vitrine Mobile-First</h3>
-                            <p>Seus clientes terão uma experiência de compra impecável no celular, sem precisar instalar nenhum aplicativo.</p>
-                        </div>
-                        <div class="lp-z-visual">
-                            <div style="width: 220px; height: 320px; background: #07070a; border: 8px solid #222; border-radius: 30px; position: relative; overflow: hidden; padding: 1rem; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-                                <div style="width: 60px; height: 6px; background: #222; border-radius: 10px; margin: 0 auto 1.5rem;"></div>
-                                <div style="text-align: center; margin-bottom: 1.5rem;">
-                                    <div style="width: 40px; height: 40px; background: var(--lp-accent); border-radius: 50%; margin: 0 auto 0.5rem; display: flex; align-items: center; justify-content: center;"><i data-lucide="zap" style="color: white; width: 20px; height: 20px;"></i></div>
-                                    <div style="font-size: 0.9rem; font-weight: bold; color: white;">Studio Premium</div>
-                                </div>
-                                <div style="background: var(--lp-bg-card-hover); height: 40px; border-radius: 8px; margin-bottom: 0.75rem; display: flex; align-items: center; padding: 0 1rem; font-size: 0.75rem; color: white;">Escolha um serviço...</div>
-                                <div style="background: var(--lp-bg-card-hover); height: 40px; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; padding: 0 1rem; font-size: 0.75rem; color: white;">Qualquer profissional</div>
-                                <div style="background: var(--lp-accent-gradient); height: 40px; border-radius: 50px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; color: white; box-shadow: 0 4px 15px var(--lp-accent-glow);">Agendar Agora</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Feature 5: CRM -->
-                    <div class="lp-z-row reveal">
-                        <div class="lp-z-text">
-                            <div style="width: 56px; height: 56px; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--lp-accent); border-radius: var(--lp-radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 0 20px var(--lp-accent-glow);">
-                                <i data-lucide="message-circle" style="color: var(--lp-accent); width: 28px; height: 28px;"></i>
-                            </div>
-                            <h3>Integração CRM Automática</h3>
-                            <p>Ferramentas prontas para encantar e fidelizar: adicione pontos aos clientes automaticamente e tenha uma visão clara do histórico de consumo.</p>
-                        </div>
-                        <div class="lp-z-visual">
-                            <div style="background: linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(0,0,0,0.5) 100%); border: 1px solid rgba(99, 102, 241, 0.5); border-radius: var(--lp-radius-lg); padding: 2.5rem; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(99,102,241,0.15); width: 100%; max-width: 400px;">
-                                <div style="position: absolute; right: -30px; top: -30px; opacity: 0.1;"><i data-lucide="award" style="width: 200px; height: 200px;"></i></div>
-                                <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-                                        <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i data-lucide="crown" style="color: var(--lp-warning);"></i></div>
-                                        <div>
-                                            <div style="font-weight: 700; font-size: 1.25rem; color: #fff;">Cliente VIP</div>
-                                            <div style="font-size: 0.85rem; color: var(--lp-text-secondary);">João Silva</div>
-                                        </div>
-                                    </div>
-                                    <div style="margin-bottom: 1.5rem;">
-                                        <div style="font-size: 0.9rem; color: #fff; margin-bottom: 0.5rem;">Progresso Fidelidade</div>
-                                        <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 10px; overflow: hidden;">
-                                            <div style="width: 80%; height: 100%; background: var(--lp-accent-gradient); border-radius: 10px; box-shadow: 0 0 10px var(--lp-accent-glow);"></div>
-                                        </div>
-                                        <div style="font-size: 0.75rem; color: var(--lp-text-secondary); margin-top: 0.5rem; text-align: right;">8/10 Pontos (Faltam 2!)</div>
-                                    </div>
-                                    <div style="display: flex; gap: 0.5rem;">
-                                        <div style="padding: 0.5rem 1rem; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--lp-success); color: var(--lp-success); border-radius: 50px; font-size: 0.75rem; font-weight: bold;">Prêmio Desbloqueado em Breve!</div>
-                                    </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-            <div class="container">
-                <header class="lp-section-header reveal">
-                    <h2 id="solucoes-title" class="lp-section-title">Fácil de configurar. <span class="lp-title-gradient">Rápido de faturar.</span></h2>
-                    <p class="lp-section-subtitle">Você no controle total do seu negócio em apenas 3 passos simples.</p>
-                </header>
-                
-                <div class="lp-steps">
-                    <article class="lp-step-card reveal">
-                        <div class="lp-step-number" aria-hidden="true">1</div>
-                        <h3>Crie sua Conta</h3>
-                        <p>Registre-se gratuitamente, personalize sua vitrine com sua logo, cores e defina seus horários de funcionamento.</p>
-                    </article>
-                    <article class="lp-step-card reveal" style="transition-delay: 0.1s;">
-                        <div class="lp-step-number" aria-hidden="true">2</div>
-                        <h3>Cadastre seus Serviços</h3>
-                        <p>Adicione os serviços que você presta, os valores, o tempo de duração e a equipe responsável.</p>
-                    </article>
-                    <article class="lp-step-card reveal" style="transition-delay: 0.2s;">
-                        <div class="lp-step-number" aria-hidden="true">3</div>
-                        <h3>Compartilhe o Link</h3>
-                        <p>Coloque o link na sua bio do Instagram ou envie por WhatsApp e veja a agenda encher sozinha.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- Pricing -->
-        <section id="planos" class="lp-section" aria-labelledby="planos-title">
-            <div class="container">
-                <header class="lp-section-header reveal">
-                    <h2 id="planos-title" class="lp-section-title">Planos transparentes. <span class="lp-title-gradient">Sem surpresas.</span></h2>
-                    <p class="lp-section-subtitle">Cresça no seu ritmo. Escolha o plano ideal para o momento da sua empresa.</p>
-                </header>
-                
-                <div class="lp-pricing-grid">
-                    <!-- Free Plan -->
-                    <article class="lp-price-card reveal">
-                        <h3>Iniciante</h3>
-                        <p class="lp-price-desc">Perfeito para autônomos começando.</p>
-                        <div class="lp-price-amount">R$ 0<span>/mês</span></div>
-                        
-                        <ul class="lp-features-list" aria-label="Recursos do plano iniciante">
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Vitrine Online Pessoal</li>
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Agendamentos Ilimitados</li>
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> 1 Profissional</li>
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Lembretes Manuais</li>
-                        </ul>
-                        
-                        <a href="/login.html?register=true" class="lp-btn lp-btn-outline lp-btn-block">Começar Grátis</a>
-                    </article>
-                    
-                    <!-- Pro Plan -->
-                    <article class="lp-price-card featured reveal" style="transition-delay: 0.1s;">
-                        <div class="lp-price-badge">Recomendado</div>
-                        <h3>Profissional</h3>
-                        <p class="lp-price-desc">Para equipes e negócios que querem escalar.</p>
-                        <div class="lp-price-amount">R$ 79<span>/mês</span></div>
-                        
-                        <ul class="lp-features-list" aria-label="Recursos do plano profissional">
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Tudo do plano Iniciante</li>
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Profissionais Ilimitados</li>
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Dashboard Financeiro Completo</li>
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Automações de WhatsApp</li>
-                            <li><i data-lucide="check-circle-2" aria-hidden="true"></i> Gestão de CRM e Metas</li>
-                        </ul>
-                        
-                        <a href="/login.html?register=true" class="lp-btn lp-btn-primary lp-btn-block">Assinar Profissional</a>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- FAQ -->
-        <section id="faq" class="lp-section" aria-labelledby="faq-title">
-            <div class="container">
-                <header class="lp-section-header reveal">
-                    <h2 id="faq-title" class="lp-section-title">Perguntas Frequentes</h2>
-                </header>
-                
-                <div class="lp-faq reveal">
-                    <details class="lp-faq-item" name="faq">
-                        <summary class="lp-faq-question">
-                            Preciso instalar algum aplicativo? <i data-lucide="chevron-down" aria-hidden="true"></i>
-                        </summary>
-                        <div class="lp-faq-answer">
-                            Não! O VitrineDesk funciona 100% na nuvem e no navegador. Nem você e nem seus clientes precisam baixar nada. A plataforma é perfeitamente adaptada para funcionar em qualquer smartphone.
-                        </div>
-                    </details>
-                    
-                    <details class="lp-faq-item" name="faq">
-                        <summary class="lp-faq-question">
-                            O plano gratuito é grátis para sempre? <i data-lucide="chevron-down" aria-hidden="true"></i>
-                        </summary>
-                        <div class="lp-faq-answer">
-                            Sim. O plano Iniciante foi feito para ajudar profissionais que estão começando e não tem custos ocultos. Você só muda para o plano Profissional quando precisar das ferramentas avançadas de equipe e CRM.
-                        </div>
-                    </details>
-                    
-                    <details class="lp-faq-item" name="faq">
-                        <summary class="lp-faq-question">
-                            Consigo usar meu próprio domínio? <i data-lucide="chevron-down" aria-hidden="true"></i>
-                        </summary>
-                        <div class="lp-faq-answer">
-                            Por padrão sua loja recebe um link como vitrinedesk.com/suamarca. A funcionalidade de domínio próprio estará disponível em breve para assinantes do plano Profissional.
-                        </div>
-                    </details>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA Final -->
-        <section class="lp-cta-section reveal" aria-labelledby="cta-title">
-            <div class="container">
-                <div class="lp-cta-box">
-                    <h2 id="cta-title" class="lp-section-title">Pronto para transformar sua agenda?</h2>
-                    <p class="lp-subtitle" style="color: var(--lp-text-primary);">Junte-se a milhares de negócios que já automatizaram suas vendas.</p>
-                    <a href="/login.html?register=true" class="lp-btn lp-btn-primary lp-btn-large">
-                        Criar Minha Loja Agora
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="lp-footer">
-        <div class="container">
-            <div class="lp-footer-grid">
-                <div class="lp-footer-brand">
-                    <a href="/" class="lp-logo" aria-label="VitrineDesk - Página Inicial">
-                        <i data-lucide="zap" aria-hidden="true"></i> VitrineDesk
-                    </a>
-                    <p class="lp-footer-desc">
-                        A plataforma definitiva para conectar serviços incríveis a clientes satisfeitos.
-                    </p>
-                </div>
-                
-                <nav class="lp-footer-nav" aria-label="Navegação do rodapé: Produto">
-                    <h4 id="footer-nav-produto">Produto</h4>
-                    <ul aria-labelledby="footer-nav-produto">
-                        <li><a href="#funcionalidades">Funcionalidades</a></li>
-                        <li><a href="#planos">Preços</a></li>
-                        <li><a href="#solucoes">Casos de Uso</a></li>
-                    </ul>
-                </nav>
-                
-                <nav class="lp-footer-nav" aria-label="Navegação do rodapé: Recursos">
-                    <h4 id="footer-nav-recursos">Recursos</h4>
-                    <ul aria-labelledby="footer-nav-recursos">
-                        <li><a href="#">Central de Ajuda</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Tutoriais</a></li>
-                    </ul>
-                </nav>
-                
-                <nav class="lp-footer-nav" aria-label="Navegação do rodapé: Empresa">
-                    <h4 id="footer-nav-empresa">Empresa</h4>
-                    <ul aria-labelledby="footer-nav-empresa">
-                        <li><a href="#">Sobre Nós</a></li>
-                        <li><a href="#">Contato</a></li>
-                        <li><a href="#">Termos de Uso</a></li>
-                        <li><a href="#">Privacidade</a></li>
-                    </ul>
-                </nav>
-            </div>
-            
-            <div class="lp-footer-bottom">
-                <p>&copy; 2026 VitrineDesk. Todos os direitos reservados.</p>
-                <div class="lp-footer-social" aria-label="Redes Sociais">
-                    <a href="#" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-                    </a>
-                    <a href="#" aria-label="Twitter">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-                    </a>
-                    <a href="#" aria-label="LinkedIn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-                    </a>
-                </div>
-            </div>
+        <!-- Grid de planos (preenchido via JS) -->
+        <div class="pricing-grid" id="pricing-grid-dynamic">
+          <div class="pricing-loading">
+            <i data-lucide="loader-2" class="animate-spin" style="width:40px;height:40px;color:var(--accent-2)"></i>
+          </div>
         </div>
-    </footer>
+      </div>
+    </section>
 
-    <!-- Interatividade -->
-    <script>
-        // Inicializa ícones Lucide
-        lucide.createIcons();
+    <!-- ═══════════════════════════════════════════════════════════
+         CTA FINAL
+    ═══════════════════════════════════════════════════════════ -->
+    <section class="cta-section" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="cta-box reveal">
+          <h2 id="cta-title">
+            Pronto para crescer<br>
+            <span class="gradient-text">sem complicação?</span>
+          </h2>
+          <p>Crie sua conta agora. Sem cartão, sem contrato. Configure tudo em 5 minutos.</p>
+          <div class="cta-actions">
+            <a href="/login.html?register=true" class="btn btn-primary btn-lg">
+              Criar Conta Grátis
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </a>
+            <a href="#planos" class="btn btn-outline btn-lg">Comparar Planos</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-        // Reveal Animations
-        const revealElements = document.querySelectorAll('.reveal');
-        const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
-        const revealOnScroll = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
-            });
-        }, revealOptions);
-        
-        revealElements.forEach(el => revealOnScroll.observe(el));
-        
-        // Verifica elementos já visíveis no load inicial
-        setTimeout(() => {
-            revealElements.forEach(el => {
-                if (el.getBoundingClientRect().top < window.innerHeight) {
-                    el.classList.add('active');
-                }
-            });
-        }, 100);
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════ -->
+  <footer class="lp-footer" aria-label="Rodapé">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo">
+            <div class="nav-logo-mark"><i data-lucide="zap"></i></div>
+            <span>VitrineDesk</span>
+          </a>
+          <p>Infraestrutura completa para negócios de serviços e agendamentos.</p>
+        </div>
+        <nav class="footer-nav" aria-label="Links do produto">
+          <h5>Produto</h5>
+          <ul>
+            <li><a href="#funcionalidades">Funcionalidades</a></li>
+            <li><a href="#planos">Preços</a></li>
+            <li><a href="#como-funciona">Como Funciona</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-nav" aria-label="Links da empresa">
+          <h5>Empresa</h5>
+          <ul>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="#">Suporte</a></li>
+            <li><a href="#">Termos de Uso</a></li>
+            <li><a href="#">Privacidade</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 VitrineDesk. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
 
-        // Mobile Menu Toggle
-        const btnMobileMenu = document.getElementById('btn-mobile-menu');
-        const navMenu = document.getElementById('nav-menu');
-        
-        if(btnMobileMenu && navMenu) {
-            btnMobileMenu.addEventListener('click', () => {
-                const isExpanded = btnMobileMenu.getAttribute('aria-expanded') === 'true';
-                btnMobileMenu.setAttribute('aria-expanded', !isExpanded);
-                navMenu.classList.toggle('active');
-            });
-            
-            // Fechar ao clicar em um link
-            navMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    btnMobileMenu.setAttribute('aria-expanded', 'false');
-                    navMenu.classList.remove('active');
-                });
-            });
+  <!-- ═══════════════════════════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════════════════════════ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Inicializa ícones
+    lucide.createIcons();
+
+    // ──────────────────────────────────────────────────────────
+    // NAV MOBILE TOGGLE
+    // ──────────────────────────────────────────────────────────
+    const btnNavToggle = document.getElementById('btn-nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    btnNavToggle.addEventListener('click', () => {
+      const isOpen = navMenu.classList.toggle('open');
+      btnNavToggle.setAttribute('aria-expanded', isOpen);
+      // Troca ícone hamburguer <> X
+      const icon = btnNavToggle.querySelector('i');
+      icon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
+      lucide.createIcons({ nodes: [icon] });
+    });
+
+    // Fecha ao clicar em link do menu
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+        btnNavToggle.setAttribute('aria-expanded', 'false');
+        const icon = btnNavToggle.querySelector('i');
+        icon.setAttribute('data-lucide', 'menu');
+        lucide.createIcons({ nodes: [icon] });
+      });
+    });
+
+    // ──────────────────────────────────────────────────────────
+    // REVEAL ANIMATIONS
+    // ──────────────────────────────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObs = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('active');
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => revealObs.observe(el));
+
+    // Revela imediatamente os elementos já visíveis
+    setTimeout(() => {
+      revealEls.forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight) {
+          el.classList.add('active');
         }
-    </script>
+      });
+    }, 50);
+
+    // ──────────────────────────────────────────────────────────
+    // PRICING TOGGLE
+    // Exposto globalmente para os onclick dos botões HTML
+    // ──────────────────────────────────────────────────────────
+    window.togglePricing = function(mode) {
+      const btnM = document.getElementById('btn-monthly');
+      const btnA = document.getElementById('btn-annual');
+      const ind  = document.getElementById('pricing-indicator');
+      const vals = document.querySelectorAll('.price-val');
+
+      if (mode === 'monthly') {
+        btnM.classList.add('active'); btnA.classList.remove('active');
+        ind.style.transform = 'translateX(0)';
+        ind.style.width = btnM.offsetWidth + 'px';
+        vals.forEach(el => { el.textContent = el.dataset.monthly; });
+      } else {
+        btnA.classList.add('active'); btnM.classList.remove('active');
+        ind.style.transform = `translateX(${btnM.offsetWidth}px)`;
+        ind.style.width = btnA.offsetWidth + 'px';
+        vals.forEach(el => { el.textContent = el.dataset.annual; });
+      }
+    };
+
+    // Inicializa largura do indicador após render
+    window.addEventListener('load', () => {
+      const btnM = document.getElementById('btn-monthly');
+      const ind  = document.getElementById('pricing-indicator');
+      if (btnM && ind) ind.style.width = btnM.offsetWidth + 'px';
+    });
+  </script>
+
+  <!-- Landing page: planos dinâmicos e restante da lógica -->
+  <script src="/js/landing.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
+import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
 
 export class equipeController {
     constructor(stateManager) {
@@ -60,6 +60,7 @@ export class equipeController {
             const { data, error } = await query;
 
             if (error) throw error;
+            this.profissionaisCount = data ? data.length : 0;
             this.renderTable(data);
             
             if (window.lucide) {
@@ -164,7 +165,15 @@ export class equipeController {
         const inputFoto = document.getElementById('input-foto-equipe');
         const previewContainer = document.getElementById('preview-foto-equipe');
 
-        if (btnNovo) btnNovo.addEventListener('click', () => this.openModal());
+        if (btnNovo) {
+            btnNovo.addEventListener('click', () => {
+                // Validate Plan Limit for Employees
+                if (!window.checkPlanLimit('max_employees', this.profissionaisCount || 0, 'funcionários')) {
+                    return;
+                }
+                this.openModal();
+            });
+        }
         if (btnClose) btnClose.addEventListener('click', () => modal.classList.add('d-none'));
 
         if (inputFoto) {

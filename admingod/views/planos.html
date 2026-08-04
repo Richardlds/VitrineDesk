@@ -22,6 +22,7 @@
                     <tr>
                         <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Nome do Plano</th>
                         <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Preço Mensal</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Preço Anual</th>
                         <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Recursos (Menus Liberados)</th>
                         <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Status</th>
                         <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Ações</th>
@@ -41,9 +42,17 @@
 
 <!-- Modal Plano -->
 <div id="modal-plano" class="modal-overlay d-none">
-    <div class="modal-content config-card modal-card-lg" style="max-height: 90vh; overflow-y: auto; width: 90%; max-width: 800px;">
-        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
-            <h3 id="modal-plano-title" class="text-primary m-0">Novo Plano</h3>
+    <div class="modal-content config-card modal-card-lg" style="max-height: 90vh; overflow-y: auto; width: 90%; max-width: 700px; padding: 2rem;">
+        <div class="flex justify-between align-center mb-3">
+            <div class="flex align-center gap-3">
+                <div class="bg-primary-light text-primary p-2 rounded-lg">
+                    <i data-lucide="layers"></i>
+                </div>
+                <div>
+                    <h3 id="modal-plano-title" class="m-0 text-lg font-bold text-primary">Novo Plano</h3>
+                    <p class="text-xs text-secondary m-0">Configure as regras de acesso da plataforma.</p>
+                </div>
+            </div>
             <button id="btn-close-modal-plano" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors">
                 <i data-lucide="x"></i>
             </button>
@@ -51,48 +60,130 @@
         
         <input type="hidden" id="plano-id">
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-                <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome do Plano</label>
-                <input type="text" id="plano-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: Pro, Premium, Grátis">
+        <!-- Tabs Header -->
+        <div class="flex gap-4 border-bottom-dashed mb-4" style="border-bottom: 1px solid var(--border-color); overflow-x: auto;">
+            <button type="button" class="tab-plano-btn active" data-tab-target="tab-god-basico" style="white-space: nowrap;">Básico</button>
+            <button type="button" class="tab-plano-btn" data-tab-target="tab-god-precos" style="white-space: nowrap;">Preço & Regras</button>
+            <button type="button" class="tab-plano-btn" data-tab-target="tab-god-modulos" style="white-space: nowrap;">Módulos</button>
+            <button type="button" class="tab-plano-btn" data-tab-target="tab-god-limites" style="white-space: nowrap;">Limites</button>
+        </div>
+
+        <div class="custom-scrollbar" style="max-height: 65vh; overflow-y: auto; padding-right: 0.5rem;">
+            
+            <!-- ABA 1: BÁSICO -->
+            <div id="tab-god-basico" class="tab-plano-content active">
+                <div class="bg-placeholder p-4 rounded-xl border-dashed mb-4">
+                    <div class="mb-3">
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Nome do Plano</label>
+                        <input type="text" id="plano-nome" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary transition-colors" placeholder="Ex: Pro, Premium, Grátis">
+                    </div>
+                    <div>
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Descrição de Venda (Subtítulo)</label>
+                        <textarea id="plano-descricao" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary resize-none transition-colors" rows="2" placeholder="Ex: Ideal para estúdios grandes. Acesso a relatórios premium."></textarea>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="font-bold text-sm text-primary mb-1 flex align-center justify-between">
+                        Benefícios do Plano
+                        <span class="bg-primary-light text-primary text-xs px-2 py-1 rounded">1 por linha</span>
+                    </label>
+                    <textarea id="plano-beneficios" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary custom-scrollbar resize-none transition-colors" rows="4" placeholder="Ex:&#10;Acesso ilimitado à plataforma&#10;Suporte técnico 24/7&#10;Multi-filiais"></textarea>
+                    <p class="text-xs text-muted mt-1">Esses itens aparecerão na landing page e painel do lojista com ícones de 'check'.</p>
+                </div>
             </div>
-            <div>
-                <label class="font-medium text-sm text-secondary mb-1 inline-block">Preço Mensal (R$)</label>
-                <input type="number" step="0.01" id="plano-preco" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: 99.90">
+
+            <!-- ABA 2: PREÇO & REGRAS -->
+            <div id="tab-god-precos" class="tab-plano-content" style="display: none;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Preço Mensal (R$)</label>
+                        <div class="relative w-100">
+                            <span class="absolute left-3 text-secondary font-medium" style="top: 50%; transform: translateY(-50%);">R$</span>
+                            <input type="number" step="0.01" id="plano-preco" class="w-100 bg-white border-solid border-1 rounded-lg pl-9 pr-3 py-2 text-primary outline-none focus:border-primary font-bold transition-colors" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Preço Anual (R$) <span class="text-xs font-normal text-muted ml-1">(Opc. -20% desc.)</span></label>
+                        <div class="relative w-100">
+                            <span class="absolute left-3 text-secondary font-medium" style="top: 50%; transform: translateY(-50%);">R$</span>
+                            <input type="number" step="0.01" id="plano-preco-anual" class="w-100 bg-white border-solid border-1 rounded-lg pl-9 pr-3 py-2 text-primary outline-none focus:border-primary font-bold transition-colors" placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4 bg-primary-light p-3 rounded-lg border-solid border-1 border-primary" style="border-color: rgba(99, 102, 241, 0.2);">
+                    <div class="flex align-center gap-3">
+                        <input type="checkbox" id="plano-default" class="cursor-pointer" style="width: 18px; height: 18px; accent-color: var(--primary-color);">
+                        <div>
+                            <label for="plano-default" class="text-sm font-bold text-primary cursor-pointer block">Plano Padrão (Default)</label>
+                            <span class="text-xs text-secondary">Novos clientes serão alocados automaticamente neste plano.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 3: MÓDULOS -->
+            <div id="tab-god-modulos" class="tab-plano-content" style="display: none;">
+                <div class="mb-4">
+                    <h4 class="text-primary font-bold text-sm mb-1 flex align-center gap-2">
+                        <i data-lucide="shield-check" class="icon-sm"></i> Módulos & Permissões
+                    </h4>
+                    <p class="text-xs text-muted mb-3">Marque as telas e menus que os lojistas deste plano terão acesso.</p>
+
+                    <div id="plano-features-container" class="bg-placeholder border-dashed p-3 rounded-xl grid gap-2" style="max-height: 300px; overflow-y: auto; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                        <!-- Renderizado via JS -->
+                        <div class="flex align-center justify-center py-4" style="grid-column: 1 / -1;">
+                            <i data-lucide="loader" class="animate-spin text-secondary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 4: LIMITES -->
+            <div id="tab-god-limites" class="tab-plano-content" style="display: none;">
+                <div class="bg-placeholder p-4 rounded-xl border-dashed mb-4">
+                    <p class="text-xs text-muted mb-3">Defina as restrições de uso para este plano. (Deixe vazio ou 0 para ilimitado)</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="font-bold text-sm text-primary mb-1 inline-block">Máx. de Funcionários/Equipe</label>
+                            <input type="number" min="0" id="plano-limite-funcionarios" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary transition-colors" placeholder="Ex: 5">
+                        </div>
+                        <div>
+                            <label class="font-bold text-sm text-primary mb-1 inline-block">Máx. de Serviços</label>
+                            <input type="number" min="0" id="plano-limite-servicos" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary transition-colors" placeholder="Ex: 50">
+                        </div>
+                        <div>
+                            <label class="font-bold text-sm text-primary mb-1 inline-block">Máx. de Filiais</label>
+                            <input type="number" min="0" id="plano-limite-filiais" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary transition-colors" placeholder="Ex: 1">
+                        </div>
+                        <div>
+                            <label class="font-bold text-sm text-primary mb-1 inline-block">Máx. de Clientes</label>
+                            <input type="number" min="0" id="plano-limite-clientes" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary transition-colors" placeholder="Ex: 500">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-3 mt-2 border-top-dashed">
+                <button id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-lg font-bold flex align-center justify-center gap-2">
+                    <i data-lucide="save"></i> Salvar Plano
+                </button>
             </div>
         </div>
-
-        <div class="mb-4">
-            <label class="font-medium text-sm text-secondary mb-1 inline-block">Descrição do Plano (Visível para o lojista)</label>
-            <textarea id="plano-descricao" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary custom-scrollbar" rows="3" placeholder="Ex: Ideal para grandes lojas. Acesso a todos os relatórios e ferramentas premium."></textarea>
-        </div>
-
-        <div class="mb-4">
-            <label class="font-medium text-sm text-secondary mb-1 inline-block">Benefícios do Plano (Um por linha)</label>
-            <textarea id="plano-beneficios" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary custom-scrollbar" rows="4" placeholder="Ex:
-Acesso aos recursos da plataforma
-Suporte técnico 24/7
-Gerenciamento de Multi-filiais"></textarea>
-            <p class="text-xs text-secondary mt-1">Esses itens aparecerão como tópicos com um 'check' na tela do lojista.</p>
-        </div>
-        
-        <div class="mb-4 flex align-center gap-2">
-            <input type="checkbox" id="plano-default" class="cursor-pointer">
-            <label for="plano-default" class="text-sm text-secondary cursor-pointer">Definir como plano padrão para novos lojistas</label>
-        </div>
-
-        <h4 class="text-primary mb-3 mt-4 border-bottom-dashed pb-2">Módulos & Permissões do Lojista</h4>
-        <p class="text-xs text-secondary mb-3">Marque as telas (menus) que os lojistas deste plano terão acesso. O que estiver desmarcado ficará invisível no painel deles.</p>
-
-        <div id="plano-features-container">
-            <!-- Renderizado via JS -->
-        </div>
-        
-        <button id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-md font-bold flex align-center justify-center gap-2">
-            <i data-lucide="save"></i> Salvar Plano
-        </button>
     </div>
 </div>
+
+<style>
+.tab-plano-btn {
+    background: transparent; border: none; border-bottom: 2px solid transparent;
+    padding: 0.5rem 1rem; color: var(--text-secondary); font-weight: 600;
+    cursor: pointer; transition: all 0.2s; font-size: 0.9rem; margin-bottom: -1px;
+}
+.tab-plano-btn:hover { color: var(--primary-color); }
+.tab-plano-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+</style>
 
 <!-- Modal Tutorial Stripe Plataforma -->
 <div id="modal-tutorial-stripe-god" class="modal-overlay d-none">

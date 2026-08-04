@@ -123,6 +123,24 @@ export class planosController {
             });
         }
 
+        // Setup Tabs for Modal Plano
+        const modalTabs = document.querySelectorAll('#modal-plano .tab-plano-btn');
+        modalTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const targetId = e.currentTarget.getAttribute('data-tab-target');
+                if(!targetId) return;
+                
+                // Hide all contents
+                document.querySelectorAll('#modal-plano .tab-plano-content').forEach(el => el.style.display = 'none');
+                // Remove active from all tabs
+                document.querySelectorAll('#modal-plano .tab-plano-btn').forEach(el => el.classList.remove('active'));
+                
+                // Show target and activate tab
+                document.getElementById(targetId).style.display = 'block';
+                e.currentTarget.classList.add('active');
+            });
+        });
+
         const btnCloseTutorial = document.getElementById('btn-close-tutorial-stripe-god');
         if (btnCloseTutorial) {
             btnCloseTutorial.addEventListener('click', () => {
@@ -139,6 +157,11 @@ export class planosController {
                 document.getElementById('plano-descricao').value = '';
                 document.getElementById('plano-beneficios').value = '';
                 document.getElementById('plano-default').checked = false;
+                document.getElementById('plano-preco-anual').value = '';
+                document.getElementById('plano-limite-funcionarios').value = '';
+                document.getElementById('plano-limite-servicos').value = '';
+                document.getElementById('plano-limite-filiais').value = '';
+                document.getElementById('plano-limite-clientes').value = '';
                 document.getElementById('modal-plano-title').textContent = 'Novo Plano';
                 document.querySelectorAll('.feature-toggle').forEach(chk => chk.checked = false);
                 document.getElementById('modal-plano').classList.remove('d-none');
@@ -206,13 +229,14 @@ export class planosController {
         if (!tbody) return;
 
         if (this.planos.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-secondary">Nenhum plano cadastrado.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-secondary">Nenhum plano cadastrado.</td></tr>`;
             return;
         }
 
         let html = '';
         this.planos.forEach(p => {
-            const featuresAtivas = Object.keys(p.features || {}).filter(k => p.features[k] === true).length;
+            // Exclui price_annual do contador pois é um campo de preço, não um módulo funcional
+            const featuresAtivas = Object.keys(p.features || {}).filter(k => p.features[k] === true && k !== 'price_annual').length;
             const totalFeatures = this.MENU_MODULES.reduce((acc, group) => {
                 let count = 0;
                 group.items.forEach(item => {
@@ -226,10 +250,16 @@ export class planosController {
             const isActive = p.active !== false;
             const statusLabel = isActive ? '<span class="badge bg-success-light text-success px-2 py-1 rounded text-xs">Ativo</span>' : '<span class="badge bg-danger-light text-danger px-2 py-1 rounded text-xs">Inativo</span>';
 
+            let priceAnnual = p.features && p.features.price_annual !== undefined ? p.features.price_annual : null;
+            if (priceAnnual === null) {
+                priceAnnual = (p.price || 0) * 0.8;
+            }
+
             html += `
                 <tr class="border-bottom-dashed border-placeholder hover:bg-hover transition-colors">
                     <td class="py-3 px-4 font-bold text-primary">${p.name} ${badgePadrao}</td>
                     <td class="py-3 px-4 text-success font-medium">R$ ${parseFloat(p.price || 0).toFixed(2).replace('.', ',')}</td>
+                    <td class="py-3 px-4 text-success font-medium">R$ ${parseFloat(priceAnnual).toFixed(2).replace('.', ',')}</td>
                     <td class="py-3 px-4 text-center text-sm text-secondary">
                         <span class="badge bg-primary-light text-primary px-2 py-1 rounded">${featuresAtivas}/${totalFeatures} Liberados</span>
                     </td>
@@ -263,13 +293,21 @@ export class planosController {
 
         document.getElementById('plano-id').value = plano.id;
         document.getElementById('plano-nome').value = plano.name;
-        document.getElementById('plano-preco').value = plano.price;
+        document.getElementById('plano-preco').value = plano.price || '';
         document.getElementById('plano-descricao').value = plano.description || '';
         document.getElementById('plano-beneficios').value = plano.benefits || '';
         document.getElementById('plano-default').checked = plano.is_default === true;
         document.getElementById('modal-plano-title').textContent = 'Editar Plano';
-
+        
         const features = plano.features || {};
+        document.getElementById('plano-preco-anual').value = features.price_annual !== undefined ? features.price_annual : '';
+        
+        const limits = features.limits || {};
+        document.getElementById('plano-limite-funcionarios').value = limits.max_employees !== undefined ? limits.max_employees : '';
+        document.getElementById('plano-limite-servicos').value = limits.max_services !== undefined ? limits.max_services : '';
+        document.getElementById('plano-limite-filiais').value = limits.max_branches !== undefined ? limits.max_branches : '';
+        document.getElementById('plano-limite-clientes').value = limits.max_clients !== undefined ? limits.max_clients : '';
+
         document.querySelectorAll('.feature-toggle').forEach(chk => {
             const module = chk.getAttribute('data-module');
             chk.checked = features[module] === true;
@@ -282,16 +320,33 @@ export class planosController {
         const id = document.getElementById('plano-id').value;
         const name = document.getElementById('plano-nome').value.trim();
         const price = document.getElementById('plano-preco').value;
+        const priceAnnual = document.getElementById('plano-preco-anual').value;
         const description = document.getElementById('plano-descricao').value.trim();
         const benefits = document.getElementById('plano-beneficios').value.trim();
         const isDefault = document.getElementById('plano-default').checked;
+        
+        const limitFunc = document.getElementById('plano-limite-funcionarios').value;
+        const limitServ = document.getElementById('plano-limite-servicos').value;
+        const limitFil = document.getElementById('plano-limite-filiais').value;
+        const limitCli = document.getElementById('plano-limite-clientes').value;
 
         if (!name) {
             if (window.showToast) window.showToast('Preencha o nome do plano', 'error');
             return;
         }
 
-        const features = {};
+        // Convenção de limites: -1 = ilimitado. Campos vazios no form são tratados como sem restrição.
+        const features = {
+            limits: {
+                max_employees: limitFunc ? parseInt(limitFunc) : -1,
+                max_services: limitServ ? parseInt(limitServ) : -1,
+                max_branches: limitFil ? parseInt(limitFil) : -1,
+                max_clients: limitCli ? parseInt(limitCli) : -1
+            }
+        };
+        if (priceAnnual) {
+            features.price_annual = parseFloat(priceAnnual);
+        }
         document.querySelectorAll('.feature-toggle').forEach(chk => {
             const module = chk.getAttribute('data-module');
             features[module] = chk.checked;
@@ -341,14 +396,17 @@ export class planosController {
                 error = res.error;
             }
 
-            if (error) throw error;
+            if (error) {
+                console.error('Erro detalhado do Supabase:', error);
+                throw new Error(error.message || JSON.stringify(error));
+            }
 
             if (window.showToast) window.showToast('Plano salvo com sucesso!', 'success');
             document.getElementById('modal-plano').classList.add('d-none');
             await this.loadPlanos();
         } catch (error) {
             console.error('Erro ao salvar plano:', error);
-            if (window.showToast) window.showToast('Erro ao salvar plano. ' + (error.message || ''), 'error');
+            if (window.showToast) window.showToast(error.message || 'Erro ao salvar plano', 'error');
         } finally {
             btnSalvar.innerHTML = originalHtml;
             if (window.lucide) window.lucide.createIcons();

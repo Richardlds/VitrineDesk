@@ -145,10 +145,13 @@ const getAudioContext = () => {
 
 // Desbloquear áudio no primeiro clique do usuário
 const unlockAudio = () => {
-    const ctx = getAudioContext();
-    if (ctx && ctx.state === 'suspended') {
-        ctx.resume();
-    }
+    try {
+        const ctx = getAudioContext();
+        if (ctx && ctx.state === 'suspended') {
+            const p = ctx.resume();
+            if (p && p.catch) p.catch(() => {});
+        }
+    } catch(e) {}
     document.removeEventListener('click', unlockAudio);
     document.removeEventListener('touchstart', unlockAudio);
     document.removeEventListener('keydown', unlockAudio);

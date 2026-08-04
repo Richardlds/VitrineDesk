@@ -72,6 +72,80 @@
                     </tr>
                 </thead>
                 <tbody id="assinantes-table-body">
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <h2 class="mb-1 text-primary">Planos e Assinaturas</h2>
+            <p class="text-secondary text-sm">Gerencie os planos que você oferece e acompanhe seus assinantes.</p>
+        </div>
+        <button id="btn-novo-plano" class="btn btn-primary flex align-center gap-2 cursor-pointer">
+            <i data-lucide="plus"></i> Novo Plano
+        </button>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="flex flex-wrap gap-2 border-bottom-dashed mb-4 pb-2">
+        <button type="button" class="tab-btn active px-4 py-2 border-none rounded-t-md bg-placeholder text-primary font-medium cursor-pointer transition-colors" data-tab="tab-planos" style="border-bottom: 2px solid var(--color-primary);">
+            <i data-lucide="package" class="icon-sm mr-1" style="vertical-align: middle;"></i> Planos Criados
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-assinantes">
+            <i data-lucide="users" class="icon-sm mr-1" style="vertical-align: middle;"></i> Assinantes
+        </button>
+    </div>
+
+    <!-- Tab 1: Tabela de Planos -->
+    <div id="tab-planos" class="tab-content config-card mb-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="planos-table">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Plano</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Mensalidade</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Desconto / Grátis</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Assinantes</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="planos-table-body">
+                    <!-- Skeletons injetados via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tab 2: Assinantes -->
+    <div id="tab-assinantes" class="tab-content config-card mb-0 d-none">
+        <div class="flex justify-between align-center mb-3">
+            <h4 class="text-primary font-medium m-0">Lista de Assinantes</h4>
+            <div class="flex gap-2">
+                <select id="filter-assinantes-status" class="bg-placeholder border-none rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                    <option value="todos">Todos os Status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="suspenso">Suspensos</option>
+                    <option value="cancelado">Cancelados</option>
+                </select>
+                <div class="search-box bg-placeholder rounded-md px-3 py-2 flex align-center w-100" style="max-width: 250px;">
+                    <i data-lucide="search" class="icon-sm text-muted mr-2"></i>
+                    <input type="text" id="search-assinantes" placeholder="Buscar cliente..." class="bg-transparent border-none outline-none text-sm text-primary w-100">
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="data-table w-100">
+                <thead>
+                    <tr>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Cliente</th>
+                        <th class="text-left text-secondary text-sm font-medium py-3 px-3">Plano</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Início</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Vencimento</th>
+                        <th class="text-center text-secondary text-sm font-medium py-3 px-3">Status</th>
+                        <th class="text-right text-secondary text-sm font-medium py-3 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="assinantes-table-body">
                     <!-- Skeletons / Lista injetada via JS -->
                 </tbody>
             </table>
@@ -80,79 +154,128 @@
 
     <!-- Modal de Cadastro / Edição -->
     <div id="modal-plano" class="modal-overlay d-none">
-        <div class="modal-content config-card" style="max-width: 500px;">
-            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
-                <h3 id="modal-plano-title">Criar Plano de Assinatura</h3>
-                <button id="btn-close-modal-plano" class="btn bg-transparent border-none text-secondary cursor-pointer">
+        <div class="modal-content config-card" style="max-width: 600px; padding: 2rem;">
+            <div class="flex justify-between align-center mb-3">
+                <div class="flex align-center gap-3">
+                    <div class="bg-primary-light text-primary p-2 rounded-lg">
+                        <i data-lucide="award"></i>
+                    </div>
+                    <div>
+                        <h3 id="modal-plano-title" class="m-0 text-lg font-bold text-primary">Criar Plano de Assinatura</h3>
+                        <p class="text-xs text-secondary m-0">Configure as regras e benefícios do plano.</p>
+                    </div>
+                </div>
+                <button id="btn-close-modal-plano" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors">
                     <i data-lucide="x"></i>
                 </button>
             </div>
             
-            <form id="form-plano">
-                <div class="mb-3">
-                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Foto do Plano (Opcional)</label>
-                    <div class="flex align-center gap-3">
-                        <div id="preview-plano-img" class="bg-placeholder border-dashed rounded-md flex justify-center align-center overflow-hidden" style="width: 80px; height: 80px;">
-                            <i data-lucide="image" class="text-muted"></i>
+            <!-- Tabs Header -->
+            <div class="flex gap-4 border-bottom-dashed mb-4" style="border-bottom: 1px solid var(--border-color);">
+                <button type="button" class="tab-plano-btn active" data-tab-target="tab-basico">Básico</button>
+                <button type="button" class="tab-plano-btn" data-tab-target="tab-regras">Regras & Preço</button>
+                <button type="button" class="tab-plano-btn" data-tab-target="tab-servicos">Serviços</button>
+            </div>
+
+            <form id="form-plano" class="custom-scrollbar" style="max-height: 65vh; overflow-y: auto; padding-right: 0.5rem;">
+                
+                <!-- ABA 1: BÁSICO -->
+                <div id="tab-basico" class="tab-plano-content active">
+                    <div class="flex align-center gap-4 mb-4 bg-placeholder p-3 rounded-lg border-dashed">
+                        <div id="preview-plano-img" class="bg-white border-solid border-1 rounded-xl flex justify-center align-center overflow-hidden shadow-sm" style="width: 80px; height: 80px; flex-shrink: 0;">
+                            <i data-lucide="image" class="text-muted icon-lg"></i>
                         </div>
-                        <div>
+                        <div class="flex-1">
+                            <label class="font-bold text-sm text-primary mb-1 inline-block">Capa do Plano</label>
+                            <p class="text-xs text-secondary mb-2">Uma imagem atrativa ajuda a vender mais. (Recomendado 400x400px)</p>
                             <input type="file" id="input-plano-foto" accept="image/*" class="d-none">
-                            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('input-plano-foto').click()">Selecionar Foto</button>
-                            <p class="text-xs text-muted mt-1">Recomendado: 400x400px (JPG/PNG)</p>
+                            <button type="button" class="btn btn-outline btn-sm font-medium w-100" onclick="document.getElementById('input-plano-foto').click()">
+                                <i data-lucide="upload-cloud" class="icon-sm"></i> Fazer Upload
+                            </button>
                             <input type="hidden" id="input-plano-image-url">
                         </div>
                     </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome do Plano</label>
-                    <input type="text" id="input-plano-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Clube VIP" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Descrição Curta (Opcional)</label>
-                    <textarea id="input-plano-descricao" rows="2" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm resize-none" placeholder="Descrição rápida do plano..."></textarea>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Vantagens / Benefícios</label>
-                    <p class="text-xs text-muted mb-2">Insira as vantagens customizadas deste plano (uma por linha). Elas aparecerão como "checks" no cartão do plano.</p>
-                    <textarea id="input-plano-vantagens" rows="4" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm resize-none" placeholder="Ex:&#10;Acesso ilimitado ao sistema&#10;Suporte prioritário 24/7&#10;Brinde exclusivo mensal"></textarea>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Mensalidade (R$)</label>
-                    <input type="number" id="input-plano-preco" step="0.01" min="1" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 50.00" required>
-                </div>
-                
-                <div class="grid grid-md-2 mb-4 gap-3">
-                    <div>
-                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Desconto em Outros Serviços (%)</label>
-                        <input type="number" id="input-plano-desconto" min="0" max="100" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 20">
+                    
+                    <div class="mb-3">
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Nome do Plano</label>
+                        <input type="text" id="input-plano-nome" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none text-sm transition-colors focus:border-primary" placeholder="Ex: Clube VIP Beleza" required>
                     </div>
-                    <div>
-                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Agend. Grátis/mês (Serviços Inclusos)</label>
-                        <input type="number" id="input-plano-gratis" min="0" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 2">
+
+                    <div class="mb-3">
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Descrição de Venda (Subtítulo)</label>
+                        <textarea id="input-plano-descricao" rows="2" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none text-sm resize-none focus:border-primary" placeholder="Convença seu cliente em uma frase..."></textarea>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label class="font-bold text-sm text-primary mb-1 flex align-center justify-between">
+                            Benefícios / Vantagens 
+                            <span class="bg-primary-light text-primary text-xs px-2 py-1 rounded">1 por linha</span>
+                        </label>
+                        <textarea id="input-plano-vantagens" rows="4" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none text-sm resize-none focus:border-primary" placeholder="Ex:&#10;Acesso ilimitado à academia&#10;Suporte via WhatsApp&#10;Avaliação mensal grátis"></textarea>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label class="font-medium text-sm text-secondary mb-2 inline-block">Serviços Incluídos</label>
-                    <p class="text-xs text-muted mb-2">Selecione os serviços que o cliente poderá agendar gratuitamente (usando sua cota de agendamentos grátis).</p>
-                    <div id="plano-servicos-list" class="bg-placeholder border-dashed rounded-md p-3" style="max-height: 200px; overflow-y: auto;">
-                        <p class="text-sm text-secondary">Carregando serviços...</p>
+                <!-- ABA 2: REGRAS E PREÇOS -->
+                <div id="tab-regras" class="tab-plano-content" style="display: none;">
+                    <div class="flex gap-3 mb-4" style="flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label class="font-bold text-sm text-primary mb-1 inline-block">Mensalidade (R$)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-2 text-secondary font-medium">R$</span>
+                                <input type="number" id="input-plano-preco" step="0.01" min="1" class="w-100 bg-white border-solid border-1 rounded-lg pl-8 pr-3 py-2 text-primary outline-none text-sm focus:border-primary font-bold" placeholder="0.00" required>
+                            </div>
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label class="font-bold text-sm text-primary mb-1 inline-block">Agend. Grátis/mês</label>
+                            <input type="number" id="input-plano-gratis" min="0" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none text-sm focus:border-primary" placeholder="Quantos inclusos?">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Desconto Global em Serviços (%)</label>
+                        <div class="relative">
+                            <input type="number" id="input-plano-desconto" min="0" max="100" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none text-sm focus:border-primary" placeholder="Ex: 20">
+                            <span class="absolute right-3 top-2 text-secondary font-medium">%</span>
+                        </div>
+                        <p class="text-xs text-muted mt-1">Desconto aplicado em todos os serviços agendados por fora da cota grátis.</p>
                     </div>
                 </div>
 
-                <div class="flex gap-2">
-                    <button type="button" id="btn-inativar-plano" class="btn bg-danger-light text-danger w-100 py-3 rounded-lg cursor-pointer d-none border-none">
+                <!-- ABA 3: SERVIÇOS INCLUSOS -->
+                <div id="tab-servicos" class="tab-plano-content" style="display: none;">
+                    <div class="mb-4 bg-placeholder p-3 rounded-xl border-dashed">
+                        <label class="font-bold text-sm text-primary mb-1 flex align-center gap-2">
+                            <i data-lucide="scissors" class="icon-sm text-primary"></i> Serviços Inclusos na Cota
+                        </label>
+                        <p class="text-xs text-muted mb-3">Selecione quais serviços o cliente pode agendar gratuitamente usando sua cota mensal.</p>
+                        <div id="plano-servicos-list" class="bg-white border-solid border-1 rounded-lg p-2 custom-scrollbar" style="max-height: 250px; overflow-y: auto;">
+                            <div class="flex align-center justify-center py-4">
+                                <i data-lucide="loader" class="animate-spin text-secondary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações -->
+                <div class="flex gap-3 pt-3 mt-4 border-top-dashed">
+                    <button type="button" id="btn-inativar-plano" class="btn bg-danger-light text-danger py-2 px-4 rounded-lg cursor-pointer d-none border-none hover:bg-danger hover:text-white transition-colors font-medium">
                         Desativar
                     </button>
-                    <button type="submit" id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-lg cursor-pointer flex align-center justify-center">
-                        Salvar e Criar no Stripe
+                    <button type="submit" id="btn-salvar-plano" class="btn btn-primary py-2 flex-1 rounded-lg font-bold flex align-center justify-center gap-2">
+                        <i data-lucide="save"></i> Salvar Plano
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+.tab-plano-btn {
+    background: transparent; border: none; border-bottom: 2px solid transparent;
+    padding: 0.5rem 1rem; color: var(--text-secondary); font-weight: 600;
+    cursor: pointer; transition: all 0.2s; font-size: 0.9rem; margin-bottom: -1px;
+}
+.tab-plano-btn:hover { color: var(--primary-color); }
+.tab-plano-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+</style>

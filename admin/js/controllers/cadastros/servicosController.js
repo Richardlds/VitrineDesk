@@ -60,6 +60,7 @@ export class servicosController {
             const { data, error } = await query;
 
             if (error) throw error;
+            this.servicosCount = data ? data.length : 0;
             this.renderTable(data);
             
             if (window.lucide) {
@@ -154,7 +155,13 @@ export class servicosController {
         const btnDesativar = document.getElementById('btn-desativar');
 
         if (btnNovo) {
-            btnNovo.addEventListener('click', () => this.openModal());
+            btnNovo.addEventListener('click', () => {
+                // Validate Plan Limit for Services
+                if (!window.checkPlanLimit('max_services', this.servicosCount || 0, 'serviços')) {
+                    return;
+                }
+                this.openModal();
+            });
         }
 
         if (btnClose) {
