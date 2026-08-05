@@ -635,6 +635,15 @@ function updateBookingSummary() {
       `;
     }
 
+    if (totalDuration > 0) {
+      html += `
+        <div class="summary-row">
+          <span>Tempo Estimado</span>
+          <span class="text-secondary">${totalDuration} min</span>
+        </div>
+      `;
+    }
+
     if (bookingState.extras && bookingState.extras.length > 0) {
       html += bookingState.extras.map(e => `
         <div class="flex-between">

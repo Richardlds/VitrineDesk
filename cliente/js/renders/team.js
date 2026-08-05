@@ -6,9 +6,6 @@ export async function renderTeam(tenant) {
     const grid = document.getElementById('team-grid');
     if (!grid) return;
 
-    // Show skeleton loading
-    showSkeleton('team-grid', 'team', 3);
-
     const data = await supaFetch(
       `/rest/v1/profissionais?tenant_id=eq.${tenant.id}&select=*&order=nome.asc`
     );
@@ -17,9 +14,6 @@ export async function renderTeam(tenant) {
     
     // Filtrar inativos (tratando null como ativo)
     allProfessionals = allProfessionals.filter(p => p.ativo !== false);
-
-    // Remove skeleton loading
-    hideSkeleton('team-grid');
 
     // Filtrar pela filial selecionada na página principal
     if (selectedBranchId) {

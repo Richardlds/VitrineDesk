@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -27,7 +27,7 @@
   <main class="auth-container">
     <div class="auth-card reveal active">
       <!-- Logo -->
-      <a href="/" class="auth-logo extracted-style-357"><i data-lucide="zap" class="w-8 h-8 text-primary"></i> VitrineDesk</a>
+      <a href="/" class="auth-logo"><i data-lucide="zap" class="w-8 h-8 text-primary"></i> VitrineDesk</a>
       
       <!-- Tabs -->
       <div class="auth-tabs">
@@ -44,13 +44,13 @@
         <div class="auth-divider"><span>ou com e-mail</span></div>
         <div class="input-group">
           <input type="text" id="login-email" required placeholder=" " autocomplete="username">
-          <label class="extracted-style-1" for="login-email"><i class="extracted-style-401" data-lucide="mail"></i> Email, CPF ou CNPJ</label>
+          <label for="login-email"><i data-lucide="mail"></i> Email, CPF ou CNPJ</label>
           <span class="error-msg" id="login-email-err"></span>
         </div>
         <div class="input-group">
           <input type="password" id="login-password" required placeholder=" " autocomplete="current-password">
-          <label class="extracted-style-1" for="login-password"><i class="extracted-style-401" data-lucide="lock"></i> Senha</label>
-          <button type="button" class="toggle-password extracted-style-402" tabindex="-1"><i class="extracted-style-403" data-lucide="eye"></i></button>
+          <label for="login-password"><i data-lucide="lock"></i> Senha</label>
+          <button type="button" class="toggle-password" tabindex="-1"><i data-lucide="eye"></i></button>
           <span class="error-msg" id="login-password-err"></span>
         </div>
         <a href="#" class="forgot-link">Esqueceu a senha?</a>
@@ -66,28 +66,28 @@
         <div class="auth-divider"><span>ou com e-mail</span></div>
         <div class="input-group">
           <input type="text" id="reg-name" required placeholder=" ">
-          <label class="extracted-style-1" for="reg-name"><i class="extracted-style-401" data-lucide="store"></i> Nome da Loja (Nome Fantasia)</label>
+          <label for="reg-name"><i data-lucide="store"></i> Nome da Loja (Nome Fantasia)</label>
           <span class="error-msg" id="reg-name-err"></span>
         </div>
-        <div class="input-group extracted-style-4" id="reg-razao-social-group">
+        <div class="input-group d-none" id="reg-razao-social-group">
           <input type="text" id="reg-razao-social" placeholder=" ">
-          <label class="extracted-style-1" for="reg-razao-social"><i class="extracted-style-401" data-lucide="building"></i> Razão Social</label>
+          <label for="reg-razao-social"><i data-lucide="building"></i> Razão Social</label>
           <span class="error-msg" id="reg-razao-social-err"></span>
         </div>
         <div class="input-group">
           <input type="text" id="reg-document" required placeholder=" ">
-          <label class="extracted-style-1" for="reg-document"><i class="extracted-style-401" data-lucide="file-text"></i> CPF ou CNPJ</label>
+          <label for="reg-document"><i data-lucide="file-text"></i> CPF ou CNPJ</label>
           <span class="error-msg" id="reg-document-err"></span>
         </div>
         <div class="input-group">
           <input type="email" id="reg-email" required placeholder=" " autocomplete="username">
-          <label class="extracted-style-1" for="reg-email"><i class="extracted-style-401" data-lucide="mail"></i> Email</label>
+          <label for="reg-email"><i data-lucide="mail"></i> Email</label>
           <span class="error-msg" id="reg-email-err"></span>
         </div>
         <div class="input-group">
           <input type="password" id="reg-password" required placeholder=" " minlength="6" autocomplete="new-password">
-          <label class="extracted-style-1" for="reg-password"><i class="extracted-style-401" data-lucide="lock"></i> Senha</label>
-          <button type="button" class="toggle-password extracted-style-402" tabindex="-1"><i class="extracted-style-403" data-lucide="eye"></i></button>
+          <label for="reg-password"><i data-lucide="lock"></i> Senha</label>
+          <button type="button" class="toggle-password" tabindex="-1"><i data-lucide="eye"></i></button>
           <div class="password-strength">
             <div class="strength-bar"></div>
             <div class="strength-bar"></div>
@@ -102,65 +102,65 @@
       <a href="/" class="back-link">← Voltar para home</a>
       
       <!-- Link for Support -->
-      <a class="extracted-style-404" href="#" id="link-support">Precisando de ajuda? Fale com o Suporte</a>
+      <a class="support-link" href="#" id="link-support">Precisando de ajuda? Fale com o Suporte</a>
 
       <!-- Container do Toast específico para o Login (posicionado abaixo do card) -->
-      <div class="extracted-style-405" id="toast-container"></div>
+      <div class="toast-container" id="toast-container"></div>
     </div>
   </main>
 
   <!-- Modal de Suporte -->
   <div class="modal" id="modal-support">
-    <div class="modal-content extracted-style-406">
+    <div class="modal-content">
       <div class="modal-header">
         <h3>Abrir Chamado de Suporte</h3>
         <button class="close-btn" data-close-modal>×</button>
       </div>
       <div class="modal-body">
-        <p class="extracted-style-407">Está com problemas para acessar ou criar sua loja? Preencha os campos abaixo e entraremos em contato.</p>
-        <form class="extracted-style-23" id="form-support">
+        <p class="modal-desc">Está com problemas para acessar ou criar sua loja? Preencha os campos abaixo e entraremos em contato.</p>
+        <form class="support-form" id="form-support">
           <div class="input-group">
             <input type="email" id="support-email" required placeholder=" ">
-            <label class="extracted-style-1" for="support-email"><i class="extracted-style-401" data-lucide="mail"></i> Seu E-mail</label>
+            <label for="support-email"><i data-lucide="mail"></i> Seu E-mail</label>
           </div>
           <div class="input-group">
             <input type="text" id="support-subject" required placeholder=" ">
-            <label class="extracted-style-1" for="support-subject"><i class="extracted-style-401" data-lucide="edit-3"></i> Assunto</label>
+            <label for="support-subject"><i data-lucide="edit-3"></i> Assunto</label>
           </div>
           <div class="input-group">
             <textarea id="support-msg" rows="4" required placeholder=" "></textarea>
             <label for="support-msg">Mensagem detalhada</label>
           </div>
-          <button type="submit" class="btn btn-primary btn-block extracted-style-408" id="btn-support-submit">Enviar Mensagem</button>
+          <button type="submit" class="btn btn-primary btn-block" id="btn-support-submit">Enviar Mensagem</button>
         </form>
       </div>
     </div>
   </div>
   <!-- Modal Complete Registration Google -->
   <div class="modal" id="modal-complete-registration" style="display: none;">
-    <div class="modal-content extracted-style-406">
+    <div class="modal-content">
       <div class="modal-header">
         <h3>Complete seu Cadastro</h3>
       </div>
       <div class="modal-body">
-        <p class="extracted-style-407">Precisamos de mais alguns dados para criar a sua loja.</p>
-        <form class="extracted-style-23" id="form-complete-google">
+        <p class="modal-desc">Precisamos de mais alguns dados para criar a sua loja.</p>
+        <form class="support-form" id="form-complete-google">
           <div class="input-group">
             <input type="text" id="google-reg-name" required placeholder=" ">
-            <label class="extracted-style-1" for="google-reg-name"><i class="extracted-style-401" data-lucide="store"></i> Nome da Loja (Nome Fantasia)</label>
+            <label for="google-reg-name"><i data-lucide="store"></i> Nome da Loja (Nome Fantasia)</label>
             <span class="error-msg" id="google-reg-name-err"></span>
           </div>
-          <div class="input-group extracted-style-4" id="google-reg-razao-social-group">
+          <div class="input-group d-none" id="google-reg-razao-social-group">
             <input type="text" id="google-reg-razao-social" placeholder=" ">
-            <label class="extracted-style-1" for="google-reg-razao-social"><i class="extracted-style-401" data-lucide="building"></i> Razão Social</label>
+            <label for="google-reg-razao-social"><i data-lucide="building"></i> Razão Social</label>
             <span class="error-msg" id="google-reg-razao-social-err"></span>
           </div>
           <div class="input-group">
             <input type="text" id="google-reg-document" required placeholder=" ">
-            <label class="extracted-style-1" for="google-reg-document"><i class="extracted-style-401" data-lucide="file-text"></i> CPF ou CNPJ</label>
+            <label for="google-reg-document"><i data-lucide="file-text"></i> CPF ou CNPJ</label>
             <span class="error-msg" id="google-reg-document-err"></span>
           </div>
-          <button type="submit" class="btn btn-primary btn-block extracted-style-408" id="btn-complete-google-submit">Criar Minha Loja</button>
+          <button type="submit" class="btn btn-primary btn-block" id="btn-complete-google-submit">Criar Minha Loja</button>
         </form>
       </div>
     </div>

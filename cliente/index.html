@@ -274,24 +274,39 @@
       <i data-lucide="message-circle" aria-hidden="true"></i>
     </a>
 
-    <!-- MOBILE BOTTOM NAV -->
-    <nav class="mobile-bottom-nav" id="bottom-nav" aria-label="Navegação Inferior Mobile">
-      <button class="mobile-nav-item active" data-target="section-servicos" aria-label="Ir para Serviços">
-        <i data-lucide="scissors" class="mobile-nav-icon" aria-hidden="true"></i>
-        <span>Serviços</span>
-      </button>
-      <button class="mobile-nav-item" data-target="section-equipe" aria-label="Ir para Equipe">
-        <i data-lucide="users" class="mobile-nav-icon" aria-hidden="true"></i>
-        <span>Equipe</span>
-      </button>
-      <button class="mobile-nav-item" data-target="section-horarios" aria-label="Ir para Horários">
-        <i data-lucide="clock" class="mobile-nav-icon" aria-hidden="true"></i>
-        <span>Horários</span>
-      </button>
-      <button class="mobile-nav-item" data-action="openClientArea" aria-label="Abrir Minha Agenda">
-        <i data-lucide="calendar-check" class="mobile-nav-icon" aria-hidden="true"></i>
-        <span>Agenda</span>
-      </button>
+    <!-- MOBILE BOTTOM NAVBAR (Uiverse Premium) -->
+    <nav id="navbody" class="mobile-only" aria-label="Navegação Inferior Mobile">
+      <form action="#">
+        <ul class="ul">
+          <input checked name="rad" class="radio" id="choose1" type="radio" />
+          <label for="choose1" class="mobile-nav-item" data-target="section-servicos">
+            <li class="li">
+              <i data-lucide="scissors" class="svg"></i>
+            </li>
+          </label>
+          
+          <input class="radio" name="rad" id="choose2" type="radio" />
+          <label for="choose2" class="mobile-nav-item" data-target="section-equipe">
+            <li class="li">
+              <i data-lucide="users" class="svg"></i>
+            </li>
+          </label>
+          
+          <input class="radio" name="rad" id="choose3" type="radio" />
+          <label for="choose3" class="mobile-nav-item" data-target="section-horarios">
+            <li class="li">
+              <i data-lucide="clock" class="svg"></i>
+            </li>
+          </label>
+          
+          <input class="radio" name="rad" id="choose4" type="radio" />
+          <label for="choose4" class="mobile-nav-item" data-action="openClientArea">
+            <li class="li">
+              <i data-lucide="calendar-check" class="svg"></i>
+            </li>
+          </label>
+        </ul>
+      </form>
     </nav>
 
     <!-- MODAL TERMOS -->
@@ -589,6 +604,8 @@
 
   <!-- TOASTS -->
   <div id="toast-container" aria-live="polite"></div>
+
+
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

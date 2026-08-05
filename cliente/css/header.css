@@ -10,7 +10,8 @@
   top: 0;
   z-index: 100;
   height: 64px;
-  background: var(--header-bg, rgba(10, 10, 15, 0.65)); /* Glassmorphism base */
+  background: var(--header-bg, rgba(10, 10, 15, 0.65));
+  /* Glassmorphism base */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -84,7 +85,8 @@
 
 .shop-name {
   font-family: var(--font-title);
-  font-size: 0.95rem; /* Menor no mobile para não quebrar layout */
+  font-size: 0.95rem;
+  /* Menor no mobile para não quebrar layout */
   font-weight: 800;
   color: #fff;
   line-height: 1.1;
@@ -92,7 +94,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0;
-  background: linear-gradient(to right, #fff, rgba(255,255,255,0.7));
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.7));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -169,7 +171,8 @@
 }
 
 .btn-auth .auth-text {
-  display: none; /* Oculta o texto no mobile, mostra apenas ícone, ou mostra ambos se couber. Vamos ocultar e deixar só o ícone minimalista */
+  display: none;
+  /* Oculta o texto no mobile, mostra apenas ícone, ou mostra ambos se couber. Vamos ocultar e deixar só o ícone minimalista */
 }
 
 .btn-auth:active {
@@ -185,7 +188,8 @@
 .btn-user-avatar {
   width: 38px;
   height: 38px;
-  border-radius: 12px; /* squircle */
+  border-radius: 12px;
+  /* squircle */
   background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.3), rgba(255, 255, 255, 0.05));
   border: 1px solid rgba(var(--primary-rgb), 0.5);
   display: flex;
@@ -196,7 +200,7 @@
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .btn-user-avatar:active {
@@ -208,7 +212,7 @@
   .topbar {
     height: 72px;
   }
-  
+
   .logo-container {
     width: 44px;
     height: 44px;
@@ -225,14 +229,14 @@
   .btn-auth {
     padding: 0 20px;
   }
-  
+
   .desktop-nav {
     display: flex;
     align-items: center;
     gap: 16px;
     margin-right: 16px;
   }
-  
+
   .desktop-nav-link {
     color: var(--header-text, var(--text-muted));
     font-weight: 500;
@@ -242,7 +246,7 @@
     transition: all 0.3s ease;
     text-decoration: none;
   }
-  
+
   .desktop-nav-link:hover,
   .desktop-nav-link.active {
     color: #fff;
@@ -457,7 +461,10 @@
 
 .store-cover-wrapper {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
 }
 
@@ -471,7 +478,7 @@
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(var(--primary-rgb), 0.7) 0%, rgba(0,0,0,0.4) 50%, var(--bg-dark) 100%);
+  background: linear-gradient(to bottom, rgba(var(--primary-rgb), 0.7) 0%, rgba(0, 0, 0, 0.4) 50%, var(--bg-dark) 100%);
 }
 
 .hero-topbar {
@@ -481,7 +488,7 @@
   padding: 16px 0;
   background: var(--bg-dark);
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .hero-brand-container {
@@ -510,8 +517,15 @@
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero-brand-card .logo-container {
@@ -519,14 +533,14 @@
   height: 80px;
   margin-bottom: 16px;
   border-radius: 50%;
-  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .hero-brand-card .shop-name {
   font-size: 2rem;
   font-weight: 800;
   margin-bottom: 8px;
-  background: linear-gradient(to right, #fff, rgba(255,255,255,0.7));
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.7));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -534,8 +548,8 @@
 .hero-brand-card .shop-status-badge {
   font-size: 0.9rem;
   padding: 6px 16px;
-  background: rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .section-glass {
@@ -550,9 +564,11 @@
     padding: 24px;
     width: 90%;
   }
+
   .hero-brand-card .shop-name {
     font-size: 1.5rem;
   }
+
   .hero-wrapper {
     min-height: 350px;
   }
@@ -590,4 +606,80 @@
   justify-content: center;
   font-weight: 700;
   font-size: 1.1rem;
+}
+
+/* MOBILE BOTTOM NAVBAR */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: flex;
+    position: fixed;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+  }
+}
+
+#navbody {
+  width: 90vw;
+  max-width: 350px;
+  height: 50px;
+  background-color: var(--bg-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 40px;
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  align-items: center;
+  justify-content: center;
+}
+
+#navbody .ul {
+  list-style: none;
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0px;
+  margin: 0;
+  height: 100%;
+}
+
+#navbody .ul .li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#navbody .radio {
+  display: none;
+}
+
+#navbody .svg {
+  width: 28px;
+  height: 28px;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 10px;
+  box-sizing: content-box;
+  transition: var(--transition-fast);
+  color: var(--text-muted);
+}
+
+#navbody .ul .li .svg:hover {
+  color: var(--primary);
+  transform: translateY(-4px);
+  opacity: 1;
+}
+
+#navbody .radio:checked+label .li .svg {
+  color: var(--primary);
+  fill-rule: evenodd;
+  opacity: 1;
+  filter: drop-shadow(0 0 12px var(--primary-glow));
 }

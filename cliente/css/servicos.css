@@ -8,9 +8,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+  width: 100%;
 }
 
 .services-view-controls {
@@ -156,7 +157,6 @@
   transition: var(--transition);
   border: 1px solid var(--border);
   background: var(--card-bg);
-  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
 }
@@ -179,56 +179,62 @@
 }
 
 .view-list .service-img-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  flex: 1;
-  overflow: visible;
-  border-radius: 0;
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .view-list .service-img,
 .view-list .service-img-placeholder {
-  width: 80px;
-  height: 80px;
-  flex: 0 0 80px;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.view-list .service-overlay {
+.view-list .service-body {
   position: static;
   background: transparent;
   flex: 1;
   padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.view-list .service-info {
+  flex: 1;
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
   gap: 4px;
 }
 
+.view-list .service-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  margin-top: 0 !important;
+}
+
 .view-list .service-name {
-  font-size: 1rem;
+  font-size: 0.9rem;
   white-space: normal;
   overflow: visible;
   line-height: 1.2;
 }
 
 .view-list .service-price {
-  font-size: 1rem;
-  margin-top: 2px;
+  font-size: 0.9rem;
+  margin-top: 0;
 }
 
-.view-list .service-btn-agendar {
-  position: static;
-  opacity: 1;
-  transform: none;
-  margin: 0 8px;
-  border-radius: 8px;
-  width: 44px;
-  height: 44px;
+.view-list .service-footer button {
+  padding: 4px 8px !important;
+  font-size: 0.75rem !important;
 }
 
 .view-list .service-card:hover {
@@ -239,7 +245,8 @@
 .service-img-wrapper {
   position: relative;
   width: 100%;
-  flex: 1;
+  height: 140px;
+  flex: none;
   overflow: hidden;
 }
 
@@ -254,67 +261,15 @@
   transform: scale(1.08);
 }
 
-/* Overlay gradiente sobre a imagem */
-.service-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 10px 10px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+/* Removido o overlay e botão agendar flutuante, pois o novo layout utiliza .service-body */
 
 .service-name {
   font-family: var(--font-title);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #fff;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.service-duration {
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.service-price {
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--primary);
-  margin-top: 2px;
-}
-
-/* Botão agendar (aparece no hover no desktop) */
-.service-btn-agendar {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: var(--transition);
-  cursor: pointer;
-  border: none;
-  box-shadow: var(--neon-glow);
-  z-index: 3;
-}
-
-.service-card:hover .service-btn-agendar {
-  opacity: 1;
-  transform: scale(1);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 /* Placeholder se não tem imagem */
@@ -332,8 +287,14 @@
 /* ────────────────────────── Equipe Grid ────────────────────────── */
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+}
+
+@media (min-width: 576px) {
+  .team-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
 }
 
 .team-card {
@@ -596,12 +557,19 @@
   display: flex;
   gap: 8px;
   margin-bottom: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   flex: 1 1 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+.services-filters::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .service-filter-btn {
+  white-space: nowrap;
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -765,3 +733,10 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4);
 }
+@media (max-width: 576px) {
+  .services-view-controls .view-btn[data-view='grid4'],
+  .services-view-controls .view-btn[data-view='grid5'] {
+    display: none;
+  }
+}
+

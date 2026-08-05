@@ -5,16 +5,10 @@ export function renderTestimonials(tenant) {
     const grid = document.getElementById('testimonials-grid');
     if (!grid) return;
 
-    // Show skeleton loading
-    showSkeleton('testimonials-grid', 'testimonials', 3);
-
     let depoimentos = tenant.depoimentos;
     if (typeof depoimentos === 'string') {
       try { depoimentos = JSON.parse(depoimentos); } catch (e) { depoimentos = []; }
     }
-
-    // Remove skeleton loading
-    hideSkeleton('testimonials-grid');
 
     if (!depoimentos || depoimentos.length === 0) {
       document.getElementById('section-depoimentos')?.classList.add('section-hidden');

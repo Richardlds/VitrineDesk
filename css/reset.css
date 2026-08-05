@@ -1,28 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-light: #818cf8;
-  --primary-glow: rgba(99, 102, 241, 0.3);
+  --primary: #8B5CF6; /* Violeta Premium */
+  --primary-hover: #A855F7;
+  --primary-light: rgba(139, 92, 246, 0.15);
+  --primary-glow: rgba(139, 92, 246, 0.4);
   
-  --accent: #06b6d4;
-  --accent-glow: rgba(6, 182, 212, 0.3);
+  --accent: #EC4899; /* Pink Premium */
+  --accent-glow: rgba(236, 72, 153, 0.3);
   
-  --bg-primary: #030305;
-  --bg-secondary: #08080a;
-  --bg-surface: rgba(10, 10, 14, 0.7);
-  --bg-card: rgba(255, 255, 255, 0.02);
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --glass-blur: blur(16px);
+  --bg-primary: #05050A; /* Dark Mode Absoluto */
+  --bg-secondary: rgba(15, 15, 19, 0.8);
+  --bg-surface: rgba(15, 15, 19, 0.7);
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-glass: rgba(255, 255, 255, 0.02);
+  --glass-blur: blur(24px);
   
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
+  --text-primary: #F8F9FA;
+  --text-secondary: #A1A1AA;
+  --text-muted: #52525B;
   
   --border-subtle: rgba(255, 255, 255, 0.05);
   --border-default: rgba(255, 255, 255, 0.1);
-  --border-glow: rgba(99, 102, 241, 0.4);
+  --border-glow: rgba(139, 92, 246, 0.4);
   
   --success: #10b981;
   --warning: #f59e0b;

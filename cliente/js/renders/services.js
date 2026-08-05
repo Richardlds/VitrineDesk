@@ -8,9 +8,6 @@ export async function renderServices(tenant, openBookingModalCb) {
     const grid = document.getElementById('services-grid');
     if (!grid) return;
 
-    // Show skeleton loading
-    showSkeleton('services-grid', 'services', 6);
-
     const data = await supaFetch(
       `/rest/v1/services?tenant_id=eq.${tenant.id}&select=*`
     );
@@ -39,9 +36,6 @@ export async function renderServices(tenant, openBookingModalCb) {
 
     allServices = filteredServices;
 
-    // Remove skeleton loading
-    hideSkeleton('services-grid');
-
     if (allServices.length === 0) {
       grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><i data-lucide="scissors"></i></div><p class="empty-state-text">Nenhum serviço disponível no momento</p></div>';
       if (window.lucide) lucide.createIcons();
@@ -54,25 +48,37 @@ export async function renderServices(tenant, openBookingModalCb) {
       const preco = service.preco || service.price || 0;
       const duracao = service.duracao || service.duration || 30;
       const img = service.imagem_url || service.image_url || '';
+      const categoryRaw = service.categoria || service.category || 'Outros';
+      const showPhotos = !categoryRaw.includes('|NO_PHOTOS');
+      const cleanCategory = categoryRaw.replace('|NO_PHOTOS', '');
+
+      // Override the category string to be clean for filters and data attributes
+      service.category = cleanCategory;
+
+      let imageHtml = '';
+      if (showPhotos) {
+        imageHtml = img 
+          ? `<img src="${escapeHtml(img)}" alt="" class="service-img" loading="lazy">`
+          : `<div class="service-img-placeholder"><i data-lucide="scissors"></i></div>`;
+      }
 
       // Set global window functions temporarily if needed by inline handlers, but better approach is attaching listeners.
       // Assuming openBookingModal is exposed globally or passed down.
       return `
-        <div class="service-card reveal glass-card" data-action="openBooking" data-service='${JSON.stringify(service).replace(/'/g, "&apos;")}' data-category="${escapeHtml(service.categoria || service.category || 'Outros')}">
-          <div class="service-img-wrapper">
-            ${img
-          ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(nome)}" class="service-img" loading="lazy">`
-          : `<div class="service-img-placeholder"><i data-lucide="scissors"></i></div>`
-        }
-            <div class="service-overlay">
-              <span class="service-name">${escapeHtml(nome)}</span>
-              <span class="service-duration"><i data-lucide="clock"></i> ${duracao} min</span>
-              ${!hidePrices ? `<span class="service-price">${formatCurrency(preco)}</span>` : ''}
+        <div class="service-card reveal glass-card" data-action="openBooking" data-service='${JSON.stringify(service).replace(/'/g, "&apos;")}' data-category="${escapeHtml(cleanCategory)}">
+          ${showPhotos ? `<div class="service-img-wrapper">${imageHtml}</div>` : ''}
+          <div class="service-body p-3 flex flex-column gap-2" style="flex: 1; justify-content: space-between;">
+            <div class="service-info flex flex-column gap-1">
+              <span class="service-name text-md font-bold text-primary" style="line-height: 1.2;">${escapeHtml(nome)}</span>
+              <span class="service-duration text-xs text-secondary flex align-center gap-1"><i data-lucide="clock" style="width:14px;height:14px;"></i> ${duracao} min</span>
+            </div>
+            <div class="service-footer flex justify-between align-center mt-2">
+              ${!hidePrices ? `<span class="service-price text-lg font-bold">${formatCurrency(preco)}</span>` : '<span></span>'}
+              <button class="btn border-none cursor-pointer flex align-center justify-center rounded-md" style="background: rgba(var(--primary-rgb), 0.15); color: var(--primary); padding: 6px 12px; font-weight: 600; font-size: 0.85rem;" title="Agendar">
+                Agendar
+              </button>
             </div>
           </div>
-          <button class="service-btn-agendar btn-glass" title="Agendar">
-            <i data-lucide="calendar-plus"></i>
-          </button>
         </div>
       `;
     }).join('');
@@ -94,7 +100,8 @@ export function renderServiceFilters() {
 
   const categorias = new Set();
   allServices.filter(s => !s.is_extra).forEach(s => {
-    const cat = s.categoria || s.category || 'Outros';
+    let cat = s.categoria || s.category || 'Outros';
+    cat = cat.replace('|NO_PHOTOS', '');
     if (cat) categorias.add(cat);
   });
 
@@ -131,7 +138,9 @@ function filtrarServicos(categoria) {
     } catch (e) {
       serviceData = {};
     }
-    const serviceCat = serviceData.category || serviceData.categoria || 'Outros';
+    let serviceCat = serviceData.category || serviceData.categoria || 'Outros';
+    serviceCat = serviceCat.replace('|NO_PHOTOS', '');
+    
     if (categoria === 'todos' || serviceCat === categoria) {
       card.classList.remove('service-hidden');
     } else {

@@ -337,6 +337,7 @@ export class servicosController {
         const inputPreco = document.getElementById('input-preco');
         const inputStatus = document.getElementById('input-status');
         const inputCategoria = document.getElementById('input-categoria');
+        const inputShowPhotos = document.getElementById('input-show-photos');
         
         const btnExcluir = document.getElementById('btn-excluir');
         const btnDesativar = document.getElementById('btn-desativar');
@@ -360,7 +361,14 @@ export class servicosController {
                     inputDuracao.value = data.duration || '';
                     inputPreco.value = data.price || '';
                     inputStatus.value = data.is_active === false ? 'inativo' : 'ativo';
-                    if (inputCategoria) inputCategoria.value = data.category || data.categoria || '';
+                    let categoryName = data.category || data.categoria || '';
+                    let shouldShowPhotos = true;
+                    if (categoryName.includes('|NO_PHOTOS')) {
+                        shouldShowPhotos = false;
+                        categoryName = categoryName.replace('|NO_PHOTOS', '');
+                    }
+                    if (inputCategoria) inputCategoria.value = categoryName;
+                    if (inputShowPhotos) inputShowPhotos.checked = shouldShowPhotos;
                     
                     this.setPreviewImage(data.image_url || data.imagem_url || null);
                     
@@ -377,6 +385,7 @@ export class servicosController {
                 title.textContent = "Cadastrar Serviço";
                 form.reset();
                 inputStatus.value = 'ativo';
+                if (inputShowPhotos) inputShowPhotos.checked = true;
                 btnExcluir.classList.add('d-none');
                 btnDesativar.classList.add('d-none');
                 this.setPreviewImage(null);
@@ -407,12 +416,18 @@ export class servicosController {
                     if (uploadedUrl) imageUrl = uploadedUrl;
                 }
                 
+                let finalCategory = document.getElementById('input-categoria') ? document.getElementById('input-categoria').value : '';
+                const showPhotosChecked = document.getElementById('input-show-photos') ? document.getElementById('input-show-photos').checked : true;
+                if (!showPhotosChecked) {
+                    finalCategory += '|NO_PHOTOS';
+                }
+
                 const payload = {
                     name: document.getElementById('input-nome').value,
                     duration: parseInt(document.getElementById('input-duracao').value) || 0,
                     price: parseFloat(document.getElementById('input-preco').value) || 0,
                     is_active: document.getElementById('input-status').value === 'ativo',
-                    category: document.getElementById('input-categoria') ? document.getElementById('input-categoria').value : '',
+                    category: finalCategory,
                     tenant_id: tenantId,
                     image_url: imageUrl
                 };
