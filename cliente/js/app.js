@@ -218,6 +218,23 @@ export async function init() {
       } else if (action === 'closeTermos') {
         const modal = document.getElementById('modal-termos');
         if (modal) modal.classList.remove('active');
+      } else if (action === 'openPrivacidade') {
+        const modal = document.getElementById('modal-termos');
+        const title = document.getElementById('modal-termos-title');
+        const content = document.getElementById('termos-conteudo');
+        if (modal && title && content) {
+          title.textContent = 'Política de Privacidade e Cookies';
+          content.innerHTML = `
+            <p class="mb-3">Sua privacidade é importante para nós. Esta política explica como coletamos, usamos e protegemos suas informações pessoais.</p>
+            <h4 class="mb-2 mt-4 text-primary">1. Coleta de Dados</h4>
+            <p class="mb-3 text-sm">Coletamos informações que você fornece diretamente, como nome, e-mail e telefone ao criar uma conta ou agendamento.</p>
+            <h4 class="mb-2 mt-4 text-primary">2. Uso de Cookies</h4>
+            <p class="mb-3 text-sm">Utilizamos cookies e o armazenamento local do navegador para manter sua sessão (login) segura e lembrar das suas preferências de interface. Nós não vendemos seus dados para anunciantes de terceiros.</p>
+            <h4 class="mb-2 mt-4 text-primary">3. Segurança e Direitos</h4>
+            <p class="mb-3 text-sm">Todos os dados sensíveis são criptografados. Você tem o direito de solicitar a exclusão da sua conta e de todos os seus dados a qualquer momento entrando em contato diretamente com o estabelecimento.</p>
+          `;
+          modal.classList.add('active');
+        }
       } else if (action === 'toggleServicesView') {
         const view = actionEl.getAttribute('data-view');
         const viewControls = document.getElementById('services-view-controls');
@@ -570,10 +587,10 @@ function updateHeader() {
       if (tenant.logo_url) {
         logoImg.src = tenant.logo_url;
         logoImg.alt = tenant.name || 'Logo';
-        logoImg.classList.remove('hidden');
-        logoImg.onerror = function () { this.classList.add('hidden'); };
+        logoImg.style.display = 'block';
+        logoImg.onerror = function () { this.style.display = 'none'; };
       } else {
-        logoImg.classList.add('hidden');
+        logoImg.style.display = 'none';
       }
     }
 
@@ -593,9 +610,9 @@ function updateHeader() {
 
 
     // 🏪 NOME DA LOJA
-    const shopName = document.getElementById('shop-name');
-    if (shopName) {
-      shopName.textContent = tenant.name || '';
+    const shopNameNav = document.getElementById('shop-name-nav');
+    if (shopNameNav) {
+      shopNameNav.textContent = tenant.name || '';
     }
 
     // 🏷️ NOME NO FOOTER E COPYRIGHT
@@ -625,21 +642,89 @@ function updateHeader() {
       link.href = tenant.favicon_url;
     }
 
-    // 📸 GALERIA
-    const galleryGrid = document.getElementById('gallery-grid');
-    const gallerySection = document.getElementById('section-galeria');
-    if (galleryGrid && tenant.galeria && tenant.galeria.length > 0) {
-      const validImages = tenant.galeria.filter(url => url && url.startsWith('http'));
-      if (validImages.length > 0) {
-        galleryGrid.innerHTML = validImages.slice(0, 8).map((url, i) => `
-          <div class="gallery-item reveal">
-            <img src="${url}" alt="Galeria ${i + 1}" loading="lazy" onerror="this.parentElement.style.display='none'">
-          </div>
+    // 🎪 BANNERS
+    const bannersGrid = document.getElementById('banners-grid');
+    const bannersSection = document.getElementById('section-banners');
+    
+    // Ler do formato de banners
+    let banners = tenant.settings?.personalizacao?.banners || [];
+
+    if (bannersGrid && banners.length > 0) {
+      const validBanners = banners.filter(url => url && typeof url === 'string' && url.startsWith('http'));
+      if (validBanners.length > 0) {
+        bannersGrid.innerHTML = validBanners.map((url, i) => `
+          <img src="${url}" alt="Banner ${i + 1}" loading="lazy" class="reveal">
         `).join('');
-        if (gallerySection) gallerySection.classList.remove('section-hidden');
+        if (bannersSection) bannersSection.classList.remove('section-hidden');
+        
+        // Autoplay e Controles do carrossel
+        if (validBanners.length > 1) {
+          const btnPrev = document.getElementById('banner-prev');
+          const btnNext = document.getElementById('banner-next');
+          const dotsContainer = document.getElementById('banner-dots');
+          
+          if (btnPrev) btnPrev.classList.remove('hidden');
+          if (btnNext) btnNext.classList.remove('hidden');
+          if (dotsContainer) {
+            dotsContainer.classList.remove('hidden');
+            dotsContainer.innerHTML = validBanners.map((_, i) => `<div class="banner-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`).join('');
+          }
+
+          let currentIndex = 0;
+          
+          const updateScroll = (index) => {
+            if (!bannersGrid) return;
+            currentIndex = index;
+            bannersGrid.scrollTo({
+              left: bannersGrid.clientWidth * currentIndex,
+              behavior: 'smooth'
+            });
+            if (dotsContainer) {
+               Array.from(dotsContainer.children).forEach((dot, i) => {
+                   dot.classList.toggle('active', i === currentIndex);
+               });
+            }
+          };
+
+          const nextSlide = () => updateScroll((currentIndex + 1) % validBanners.length);
+          const prevSlide = () => updateScroll((currentIndex - 1 + validBanners.length) % validBanners.length);
+
+          if (btnNext) btnNext.onclick = () => { clearInterval(window.bannersInterval); nextSlide(); };
+          if (btnPrev) btnPrev.onclick = () => { clearInterval(window.bannersInterval); prevSlide(); };
+          if (dotsContainer) {
+             dotsContainer.onclick = (e) => {
+                if (e.target.classList.contains('banner-dot')) {
+                   clearInterval(window.bannersInterval);
+                   updateScroll(parseInt(e.target.dataset.index));
+                }
+             };
+          }
+
+          // Escutar scroll manual para atualizar dots
+          bannersGrid.addEventListener('scroll', () => {
+             const index = Math.round(bannersGrid.scrollLeft / bannersGrid.clientWidth);
+             if (index !== currentIndex) {
+                 currentIndex = index;
+                 if (dotsContainer) {
+                     Array.from(dotsContainer.children).forEach((dot, i) => {
+                         dot.classList.toggle('active', i === currentIndex);
+                     });
+                 }
+             }
+          }, { passive: true });
+
+          if (window.bannersInterval) clearInterval(window.bannersInterval);
+          window.bannersInterval = setInterval(nextSlide, 4500);
+          
+          // Pausar auto-play ao interagir
+          bannersGrid.addEventListener('touchstart', () => clearInterval(window.bannersInterval), {passive: true});
+          bannersGrid.addEventListener('mouseenter', () => clearInterval(window.bannersInterval), {passive: true});
+        }
+      } else {
+        if (bannersSection) bannersSection.classList.add('section-hidden');
       }
     } else {
-      if (gallerySection) gallerySection.classList.add('section-hidden');
+      if (bannersSection) bannersSection.classList.add('section-hidden');
     }
 
     // 📱 REDES SOCIAIS
@@ -700,8 +785,8 @@ function updateStatusBadge() {
       aberto = horaAtual >= abertura && horaAtual < fechamento;
     }
 
-    badge.className = `shop-status-badge ${aberto ? 'status-open' : 'status-closed'}`;
-    badge.innerHTML = `<span class="status-dot"></span> ${aberto ? 'Aberto agora' : 'Fechado'}`;
+    badge.className = `badge ${aberto ? 'badge--open' : 'badge--closed'}`;
+    badge.innerHTML = `<span class="badge__dot" aria-hidden="true"></span> ${aberto ? 'Aberto agora' : 'Fechado'}`;
   } catch (e) {
     console.error('Erro ao atualizar status:', e);
   }
@@ -716,7 +801,7 @@ function configurarWhatsApp() {
     const btn = document.getElementById('whatsapp-float');
     if (!btn) return;
 
-    const pers = tenant.settings || {};
+    const pers = (tenant.settings && tenant.settings.personalizacao) ? tenant.settings.personalizacao : (tenant.settings || {});
 
     if (pers.whatsapp_enabled === false) {
       btn.style.display = 'none';
@@ -736,7 +821,7 @@ function configurarWhatsApp() {
     btn.href = url;
     btn.target = '_blank';
     btn.rel = 'noopener';
-    btn.style.display = 'flex';
+    btn.style.display = 'grid';
 
     if (pers.whatsapp_color) {
       btn.style.backgroundColor = pers.whatsapp_color;
@@ -901,9 +986,59 @@ function debounce(func, wait) {
   };
 }
 
-// ────────────────────────── Iniciar ao carregar ──────────────────────────// 🚀 Iniciar ao carregar 🚀
-document.addEventListener('DOMContentLoaded', init);
+// ────────────────────────── View Toggles (List / Grid) ──────────────────────────
+function setupViewToggles() {
+  const btnList = document.getElementById('btn-view-list');
+  const btnGrid = document.getElementById('btn-view-grid');
+  const servicesGrid = document.getElementById('services-grid');
+  if (!btnList || !btnGrid || !servicesGrid) return;
 
+  const currentView = localStorage.getItem('vitrinedesk_view_mode') || 'list';
+
+  const setView = (mode) => {
+    if (mode === 'grid') {
+      servicesGrid.classList.remove('view-list');
+      servicesGrid.classList.add('view-grid');
+      btnGrid.classList.add('active');
+      btnList.classList.remove('active');
+    } else {
+      servicesGrid.classList.remove('view-grid');
+      servicesGrid.classList.add('view-list');
+      btnList.classList.add('active');
+      btnGrid.classList.remove('active');
+    }
+    localStorage.setItem('vitrinedesk_view_mode', mode);
+  };
+
+  setView(currentView);
+
+  btnList.addEventListener('click', () => setView('list'));
+  btnGrid.addEventListener('click', () => setView('grid'));
+}
+
+// ────────────────────────── Iniciar ao carregar ──────────────────────────// 🚀 Iniciar ao carregar 🚀
+document.addEventListener('DOMContentLoaded', () => {
+  setupViewToggles();
+  initCookieConsent();
+  init();
+});
+
+function initCookieConsent() {
+  const banner = document.getElementById('cookie-banner');
+  const btnAccept = document.getElementById('btn-accept-cookies');
+  if (!banner || !btnAccept) return;
+
+  const hasAccepted = localStorage.getItem('cookie_consent');
+  if (!hasAccepted) {
+    banner.style.display = 'block';
+  }
+
+  btnAccept.addEventListener('click', () => {
+    localStorage.setItem('cookie_consent', 'true');
+    banner.style.animation = 'slideDownFade 0.5s ease forwards';
+    setTimeout(() => { banner.style.display = 'none'; }, 500);
+  });
+}
 export function getBranchById(branchId) {
   if (!activeBranches) return null;
   const b = activeBranches.find(x => x.id === branchId);

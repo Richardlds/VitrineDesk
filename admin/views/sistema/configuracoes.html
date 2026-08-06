@@ -160,21 +160,33 @@
                             da loja pública.</p>
 
                         <h4 class="text-primary font-bold mb-3 flex align-center gap-2 border-bottom-dashed pb-2">
-                            <i data-lucide="map-pin" class="text-secondary icon-sm"></i> Endereço
+                            <i data-lucide="map-pin" class="text-secondary icon-sm"></i> Endereço e Localização
                         </h4>
                         <div class="mb-3">
                             <label class="font-medium text-sm text-secondary mb-1 inline-block">Endereço
-                                Completo</label>
-                            <input type="text" id="input-config-endereco"
-                                class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
-                                placeholder="Rua das Flores, 123 - Centro">
+                                Completo ou HTML</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="input-config-endereco"
+                                    class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
+                                    placeholder="Rua das Flores, 123 - Centro, São Paulo">
+                                <button type="button" id="btn-test-map" class="btn btn-secondary border-dashed" style="white-space: nowrap;" title="Atualizar Preview"><i data-lucide="refresh-cw" class="icon-sm"></i></button>
+                            </div>
+                            <p class="text-xs text-secondary mt-1">Digite o endereço ou cole o código <code>&lt;iframe&gt;</code> do Google Maps.</p>
                         </div>
+
                         <div class="mb-4">
-                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Link do Google
-                                Maps</label>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Pré-visualização do Mapa na Vitrine</label>
+                            <div id="admin-map-preview" class="w-100 bg-placeholder border-dashed rounded-md flex justify-center align-center overflow-hidden relative" style="min-height: 240px; background: color-mix(in srgb, var(--bg-surface) 50%, transparent);">
+                                <span class="text-secondary text-sm">O mapa aparecerá aqui</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 pt-3 border-top-dashed border-placeholder">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Link Curto (Botão "Abrir no Maps")</label>
                             <input type="url" id="input-config-mapa"
                                 class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
-                                placeholder="https://maps.google.com/...">
+                                placeholder="https://maps.app.goo.gl/...">
+                            <p class="text-xs text-secondary mt-1">Cole aqui o link de compartilhamento curto. Usado para o botão externo, pois o Google bloqueia links curtos no mapa visual.</p>
                         </div>
 
                         <h4 class="text-primary font-bold mb-3 flex align-center gap-2 border-bottom-dashed pb-2">

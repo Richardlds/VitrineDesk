@@ -4,256 +4,219 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="description" content="Agende seu horário online de forma rápida e prática.">
-  <meta name="theme-color" content="#07070a">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0a0b12">
   <title>Vitrine</title>
-
-  <!-- Favicon dinâmico -->
+  
   <link rel="icon" href="data:," type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/base.css?v=3.0.0">
-  <link rel="stylesheet" href="css/header.css?v=3.0.0">
-  <link rel="stylesheet" href="css/servicos.css?v=3.0.0">
-  <link rel="stylesheet" href="css/booking.css?v=3.0.0">
-  <link rel="stylesheet" href="css/auth.css?v=3.0.0">
-  <link rel="stylesheet" href="css/agendamentos.css?v=3.0.0">
-  <link rel="stylesheet" href="css/responsive.css?v=3.0.0">
+  <link rel="stylesheet" href="css/base.css?v=4.0.0">
+  <link rel="stylesheet" href="css/lovable.css?v=4.0.0">
+  <link rel="stylesheet" href="css/booking.css?v=4.0.0">
+  <link rel="stylesheet" href="css/auth.css?v=4.0.0">
+  <link rel="stylesheet" href="css/agendamentos.css?v=4.0.0">
 </head>
 <body>
 
   <!-- LOADING SCREEN -->
-  <div id="loading-screen" class="flex-center loading-screen" aria-live="polite" aria-busy="true">
-    <div class="spinner spinner-lg"></div>
-    <span class="text-muted">Carregando vitrine...</span>
+  <div id="loading-screen" class="loading-screen" aria-live="polite" aria-busy="true" style="position:fixed; inset:0; background:var(--bg-dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px;">
+    <div style="width: 40px; height: 40px; border: 4px solid rgba(255, 255, 255, 0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+    <span class="muted">Carregando vitrine...</span>
   </div>
 
-  <!-- APP CONTAINER -->
   <div id="app" class="hidden">
+    
+    <!-- ============ NAV ============ -->
+    <nav class="topnav" aria-label="Navegação principal">
+      <div class="topnav__inner">
+        <button
+          class="icon-btn topnav__burger"
+          type="button"
+          aria-label="Abrir menu"
+          data-open="drawer-menu"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+        <div class="topnav__brand-container flex align-center gap-3">
+          <img id="logo-img" class="topnav__logo" src="" alt="Logo da Loja" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: none;" />
+          <div class="flex flex-column">
+            <span class="topnav__brand" id="shop-name-nav" style="line-height: 1.1;">Carregando...</span>
+            <span id="status-badge" class="badge badge--open" style="font-size: 0.65rem; padding: 2px 6px; margin-top: 2px; width: fit-content;">
+              <span class="badge__dot status-dot" aria-hidden="true"></span> Verificando...
+            </span>
+          </div>
+        </div>
+        <ul class="topnav__links">
+          <li><a href="#" data-action="scrollTo" data-target="section-servicos">Serviços</a></li>
+          <li><a href="#" data-action="scrollTo" data-target="section-equipe">Equipe</a></li>
+          <li><a href="#" data-action="scrollTo" data-target="section-galeria">Galeria</a></li>
+          <li><a href="#" data-action="scrollTo" data-target="section-depoimentos">Avaliações</a></li>
+          <li><a href="#" data-action="scrollTo" data-target="section-horarios">Horários</a></li>
+          <li><a href="#" data-action="scrollTo" data-target="section-info">Local</a></li>
+        </ul>
 
-    <!-- HEADER / HERO -->
-    <header class="hero-wrapper" aria-label="Cabeçalho e Capa">
-      <div class="store-cover-wrapper" id="store-cover" aria-hidden="true">
-        <img id="cover-img" src="" alt="" class="hero-bg-img">
-        <div class="hero-overlay"></div>
+        <div class="topnav__actions">
+          <button id="btn-auth" class="btn btn--primary btn--sm guest-only" type="button" data-action="openAuth" data-tab="login">Entrar</button>
+          <button id="user-menu" class="avatar-btn logged-only hidden" type="button" aria-label="Menu do usuário" data-action="openClientArea">
+             <div class="user-avatar-small bg-primary flex-center text-white" style="width:100%; height:100%; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;" id="user-avatar-letter" aria-hidden="true">U</div>
+          </button>
+        </div>
       </div>
+    </nav>
 
-      <nav class="hero-topbar" aria-label="Navegação Principal">
-        <div class="container topbar-container flex align-center justify-between">
-          <a href="#" class="brand-wrapper flex align-center gap-2 text-none" data-action="scrollTo" data-target="section-servicos" aria-label="Ir para Serviços">
-            <div class="logo-container" aria-hidden="true">
-              <img id="logo-img" src="" alt="Logo">
-              <div class="logo-glow"></div>
-            </div>
-            <div class="shop-info flex flex-column">
-              <h1 class="shop-name" id="shop-name">Carregando...</h1>
-              <span class="shop-status-badge flex align-center gap-1 text-sm text-muted" id="status-badge" aria-live="polite">
-                <span class="status-dot"></span> Verificando...
-              </span>
-            </div>
-          </a>
+    <!-- ============ BANNER PROMO ============ -->
+    <div id="banner-promo" class="promo hidden" role="status">
+      <span class="promo__dot" aria-hidden="true"></span>
+      <p id="banner-promo-text">Carregando...</p>
+    </div>
 
-          <div class="topbar-actions">
-            <ul class="desktop-nav list-none m-0 p-0 flex align-center gap-4" id="desktop-nav" role="menubar">
-              <li role="none"><a href="#section-servicos" class="desktop-nav-link" data-action="scrollTo" data-target="section-servicos" role="menuitem">Serviços</a></li>
-              <li role="none"><a href="#section-equipe" class="desktop-nav-link" data-action="scrollTo" data-target="section-equipe" role="menuitem">Equipe</a></li>
-              <li role="none"><a href="#section-horarios" class="desktop-nav-link" data-action="scrollTo" data-target="section-horarios" role="menuitem">Horários</a></li>
-              <li role="none"><a href="#section-info" class="desktop-nav-link" data-action="scrollTo" data-target="section-info" role="menuitem">Contato</a></li>
-            </ul>
+    <!-- WIDGET PRÓXIMOS AGENDAMENTOS -->
+    <section class="section section-upcoming-appointments hidden" id="section-upcoming-appointments" aria-labelledby="upcoming-label" style="padding-bottom:0; padding-top:20px;">
+      <article class="card upcoming-widget cursor-pointer" id="upcoming-widget-card" data-action="openClientAreaAndTab" data-target="tab-agendamentos" tabindex="0" role="button" aria-label="Ver detalhes do próximo atendimento" style="padding: 16px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary);">
+        <div class="upcoming-info">
+          <span class="upcoming-label text-primary" id="upcoming-label" style="font-size: 0.75rem; text-transform: uppercase; font-weight: bold;">Próximo Atendimento</span>
+          <h4 id="upcoming-service-name" class="upcoming-title m-0" style="font-size: 1.1rem; font-weight: 600;">Carregando...</h4>
+          <span id="upcoming-date-time" class="upcoming-datetime muted mt-1" style="font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
+             Aguarde...
+          </span>
+        </div>
+        <div class="upcoming-action">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </article>
+    </section>
 
-            <button class="btn btn-primary btn-auth guest-only" id="btn-auth" data-action="openAuth" data-tab="login" title="Entrar na sua conta" aria-label="Entrar na sua conta">
-              <i data-lucide="user" aria-hidden="true"></i> <span class="auth-text">Entrar</span>
-            </button>
 
-            <!-- Menu User -->
-            <button class="user-menu hidden" id="user-menu" data-action="openClientArea" title="Minha Conta" aria-label="Minha Conta">
-              <div class="user-avatar-small" id="user-avatar-letter" aria-hidden="true">U</div>
-            </button>
+
+    <main>
+
+      <!-- ============ BANNERS ============ -->
+      <section id="section-banners" class="section section-hidden" aria-labelledby="t-banners" style="padding-top: 0; padding-bottom: 20px;">
+        <div class="banner-wrapper">
+          <div id="banners-grid" class="banner-carousel">
+            <!-- JS INJECTS BANNERS HERE -->
+          </div>
+          <button id="banner-prev" class="banner-nav-btn prev hidden" aria-label="Anterior">❮</button>
+          <button id="banner-next" class="banner-nav-btn next hidden" aria-label="Próximo">❯</button>
+          <div id="banner-dots" class="banner-dots hidden"></div>
+        </div>
+      </section>
+
+      <!-- ============ SERVIÇOS ============ -->
+      <section id="section-servicos" class="section" aria-labelledby="t-servicos">
+        <div class="section__head" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 id="t-servicos">Serviços</h2>
+            <p class="section__sub">Escolha o serviço e siga para o agendamento</p>
+          </div>
+          
+          <div class="view-toggles" style="display: flex; gap: 8px;">
+             <button id="btn-view-list" class="icon-btn active" title="Visualização em Lista"><i data-lucide="list"></i></button>
+             <button id="btn-view-grid" class="icon-btn" title="Visualização em Grade"><i data-lucide="layout-grid"></i></button>
           </div>
         </div>
-      </nav>
-    </header>
 
-    <!-- BANNER PROMOCIONAL -->
-    <aside class="promo-banner-full" id="banner-promo" aria-label="Banner Promocional">
-      <div class="promo-banner-content">
-        <span class="promo-banner-text" id="banner-promo-text">Promoção!</span>
-      </div>
-    </aside>
+        <div id="services-filters" class="filters" role="tablist" aria-label="Categorias">
+          <!-- JS INJECTS BUTTONS HERE. -->
+        </div>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-
-      <!-- WIDGET PRÓXIMOS AGENDAMENTOS -->
-      <section class="section section-upcoming-appointments hidden" id="section-upcoming-appointments" aria-labelledby="upcoming-label">
-        <div class="container">
-          <article class="glass-card upcoming-widget cursor-pointer" id="upcoming-widget-card" data-action="openClientAreaAndTab" data-target="tab-agendamentos" tabindex="0" role="button" aria-label="Ver detalhes do próximo atendimento">
-            <div class="upcoming-info flex flex-column gap-1">
-              <span class="upcoming-label" id="upcoming-label">Próximo Atendimento</span>
-              <h4 id="upcoming-service-name" class="upcoming-title m-0">Carregando...</h4>
-              <span id="upcoming-date-time" class="upcoming-datetime flex align-center gap-1 text-sm text-muted mt-1">
-                <i data-lucide="calendar" class="icon-sm" aria-hidden="true"></i> Aguarde...
-              </span>
-            </div>
-            <div class="upcoming-action" aria-hidden="true">
-              <i data-lucide="chevron-right" class="icon-primary"></i>
-            </div>
-          </article>
+        <div id="services-grid" class="grid grid--services view-list">
+          <!-- JS INJECTS SERVICES HERE -->
         </div>
       </section>
 
-      <!-- FILIAIS -->
-      <section class="section hidden" id="section-filiais" aria-labelledby="filiais-title">
-        <div class="container">
-          <header class="section-header">
-            <h2 class="section-title" id="filiais-title">Nossas Unidades</h2>
-            <p class="section-subtitle">Selecione onde deseja ser atendido</p>
-          </header>
-          <div class="services-grid" id="branches-grid">
-            <!-- JS -->
-          </div>
+      <!-- ============ EQUIPE ============ -->
+      <section id="section-equipe" class="section" aria-labelledby="t-equipe">
+        <div class="section__head">
+          <h2 id="t-equipe">Nossa equipe</h2>
+          <p class="section__sub">Profissionais prontos para te atender</p>
+        </div>
+
+        <div id="team-grid" class="grid grid--team">
+           <!-- JS INJECTS TEAM HERE -->
         </div>
       </section>
 
-      <!-- SERVIÇOS -->
-      <section class="section" id="section-servicos" aria-labelledby="servicos-title">
-        <div class="container">
-          <header class="section-header">
-            <h2 class="section-title" id="servicos-title">Nossos Serviços</h2>
-            <p class="section-subtitle">Escolha o serviço e agende online</p>
-          </header>
+      <!-- ============ GALERIA ============ -->
+      <section id="section-galeria" class="section" aria-labelledby="t-galeria">
+        <div class="section__head">
+          <h2 id="t-galeria">Galeria</h2>
+          <p class="section__sub">Um pouco do nosso trabalho</p>
+        </div>
 
-          <nav class="services-toolbar" aria-label="Filtros e visualização de serviços">
-            <div class="services-filters" id="services-filters" role="tablist">
-              <button class="service-filter-btn active" data-category="todos" role="tab" aria-selected="true">Todos</button>
-            </div>
-            <div class="services-view-controls" id="services-view-controls" data-active-view="list" aria-label="Alternar visualização">
-              <div class="view-slider" aria-hidden="true"></div>
-              <button class="view-btn active" data-action="toggleServicesView" data-view="list" title="Lista" aria-pressed="true"><i data-lucide="list"></i></button>
-              <button class="view-btn" data-action="toggleServicesView" data-view="grid3" title="Grade 3" aria-pressed="false"><i data-lucide="layout-grid"></i></button>
-              <button class="view-btn" data-action="toggleServicesView" data-view="grid4" title="Grade 4" aria-pressed="false"><i data-lucide="grid-3x3"></i></button>
-              <button class="view-btn" data-action="toggleServicesView" data-view="grid5" title="Grade 5" aria-pressed="false"><i data-lucide="layout-dashboard"></i></button>
-            </div>
-          </nav>
-
-          <div class="services-grid view-list" id="services-grid" aria-live="polite">
-            <!-- JS -->
-          </div>
+        <div id="gallery-grid" class="gallery">
+          <!-- JS INJECTS GALLERY HERE -->
         </div>
       </section>
 
-      <!-- EQUIPE -->
-      <section class="section" id="section-equipe" aria-labelledby="equipe-title">
-        <div class="container">
-          <article class="glass-card section-glass">
-            <header class="section-header">
-              <h2 class="section-title" id="equipe-title">Nossa Equipe</h2>
-              <p class="section-subtitle">Profissionais prontos para atender você</p>
-            </header>
-            <div class="team-grid" id="team-grid">
-              <!-- JS -->
-            </div>
-          </article>
+      <!-- ============ DEPOIMENTOS ============ -->
+      <section id="section-depoimentos" class="section" aria-labelledby="t-depo">
+        <div class="section__head">
+          <h2 id="t-depo">O que dizem</h2>
+          <p class="section__sub">Avaliações de clientes reais</p>
+        </div>
+
+        <div id="testimonials-grid" class="carousel" tabindex="0" aria-label="Depoimentos de clientes">
+           <!-- JS INJECTS TESTIMONIALS HERE -->
         </div>
       </section>
 
-      <!-- GALERIA -->
-      <section class="section" id="section-galeria" aria-labelledby="galeria-title">
-        <div class="container">
-          <header class="section-header">
-            <h2 class="section-title" id="galeria-title">Galeria</h2>
-            <p class="section-subtitle">Veja nosso trabalho</p>
-          </header>
-          <div class="gallery-grid" id="gallery-grid">
-            <!-- JS -->
-          </div>
+      <!-- ============ HORÁRIOS ============ -->
+      <section id="section-horarios" class="section" aria-labelledby="t-horarios">
+        <div class="section__head">
+          <h2 id="t-horarios">Horários de funcionamento</h2>
+          <p class="section__sub">Confira antes de agendar</p>
+        </div>
+
+        <div class="card hours">
+          <table class="hours__table" id="hours-table">
+            <!-- JS INJECTS THE WHOLE THEAD AND TBODY HERE -->
+          </table>
         </div>
       </section>
 
-      <!-- DEPOIMENTOS -->
-      <section class="section" id="section-depoimentos" aria-labelledby="depoimentos-title">
-        <div class="container">
-          <article class="glass-card section-glass">
-            <header class="section-header">
-              <h2 class="section-title" id="depoimentos-title">Depoimentos</h2>
-              <p class="section-subtitle">O que nossos clientes dizem</p>
-            </header>
-            <div class="testimonials-grid" id="testimonials-grid">
-              <!-- JS -->
-            </div>
-          </article>
+      <!-- ============ MAPA E CONTATO ============ -->
+      <section id="section-info" class="section" aria-labelledby="t-mapa">
+        <div class="section__head">
+          <h2 id="t-mapa">Contato e Localização</h2>
+          <p class="section__sub">Estamos pertinho de você</p>
         </div>
-      </section>
 
-      <!-- HORÁRIOS -->
-      <section class="section" id="section-horarios" aria-labelledby="horarios-title">
-        <div class="container">
-          <header class="section-header">
-            <h2 class="section-title" id="horarios-title">Horário de Funcionamento</h2>
-          </header>
-          <article class="glass-card">
-            <table class="hours-table" id="hours-table" aria-label="Tabela de horários de funcionamento">
-              <!-- JS -->
-            </table>
-          </article>
-        </div>
-      </section>
-
-      <!-- PLANOS (HOME) -->
-      <section class="section hidden" id="section-planos" aria-labelledby="planos-title">
-        <div class="container">
-          <article class="glass-card section-glass">
-            <header class="section-header">
-              <h2 class="section-title" id="planos-title">Planos e Assinaturas</h2>
-              <p class="section-subtitle">Economize assinando nossos planos exclusivos</p>
-            </header>
-            <div class="services-grid view-list" id="home-plans-grid">
-              <!-- JS -->
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- INFORMAÇÕES / MAPA -->
-      <section class="section" id="section-info" aria-labelledby="info-title">
-        <div class="container">
-          <article class="glass-card section-glass">
-            <header class="section-header">
-              <h2 class="section-title" id="info-title">Localização</h2>
-            </header>
-            <div class="info-layout">
-              <address class="info-details font-normal">
-                <div class="info-item flex gap-3 align-start mb-4">
-                  <div class="info-icon text-primary"><i data-lucide="map-pin" aria-hidden="true"></i></div>
-                  <div class="info-text">
-                    <h4 class="m-0 text-md">Endereço</h4>
-                    <p id="info-address" class="text-secondary text-sm mt-1 m-0">-</p>
-                  </div>
-                </div>
-                <div class="info-item flex gap-3 align-start">
-                  <div class="info-icon text-primary"><i data-lucide="phone" aria-hidden="true"></i></div>
-                  <div class="info-text">
-                    <h4 class="m-0 text-md">Telefone / WhatsApp</h4>
-                    <p id="info-phone" class="text-secondary text-sm mt-1 m-0">-</p>
-                  </div>
-                </div>
-              </address>
-              <div class="map-wrapper glass-card map-embed" id="map-embed" aria-label="Mapa de Localização">
-                <!-- JS -->
+        <div class="card map-card">
+          <div class="map-card__info">
+            <div id="info-phone-container" class="info-row hidden">
+              <div class="info-icon"><i data-lucide="phone"></i></div>
+              <div class="info-content">
+                <span class="info-label">WhatsApp</span>
+                <div id="info-phone" class="info-value"></div>
               </div>
             </div>
-          </article>
+            
+            <div id="info-address-container" class="info-row">
+              <div class="info-icon"><i data-lucide="map-pin"></i></div>
+              <div class="info-content">
+                <span class="info-label">Endereço</span>
+                <div id="info-address" class="info-value">-</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="map-embed" class="map__embed">
+            <div class="map__placeholder">Mapa será carregado aqui</div>
+          </div>
         </div>
       </section>
-
+      
       <!-- REDES SOCIAIS -->
       <section class="section" id="section-social" aria-labelledby="social-title">
-        <div class="container">
-          <header class="section-header">
-            <h2 class="section-title" id="social-title">Redes Sociais</h2>
-          </header>
-          <div class="social-links-grid" id="social-links-container">
+        <div class="section__head text-center" style="display:flex; justify-content:center; align-items:center;">
+          <div id="social-links-container" class="footer__social" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
             <!-- JS -->
           </div>
         </div>
@@ -261,55 +224,42 @@
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="footer-custom">
-      <div class="container footer-container text-center py-4">
-        <p class="footer-logo font-bold text-lg m-0" id="footer-logo-text">VitrineDesk</p>
-        <p class="footer-copyright text-muted text-sm mt-2 m-0">© <span id="footer-year"></span> Todos os direitos reservados</p>
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <p id="footer-logo-text" class="footer__logo">VitrineDesk</p>
+      <div id="social-links" class="footer__social">
+        <!-- Ignored, social-links-container handles this usually -->
       </div>
+      <p class="footer__note muted">© <span id="footer-year"></span> Feito com VitrineDesk · Agendamentos online</p>
     </footer>
 
-    <!-- WHATSAPP FLOAT -->
-    <a class="whatsapp-float-btn bounce" id="whatsapp-float" href="#" target="_blank" rel="noopener" aria-label="Falar conosco no WhatsApp">
-      <i data-lucide="message-circle" aria-hidden="true"></i>
+    <!-- ============ WHATSAPP FLUTUANTE ============ -->
+    <a id="whatsapp-float" class="wa" href="#" aria-label="Falar no WhatsApp" style="display:none;">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 11.9A7.9 7.9 0 0 1 8.3 19l-4.1 1.1L5.4 16A7.9 7.9 0 1 1 20 11.9Z" />
+        <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l.8-1.6-2-.8-.9.9a4.6 4.6 0 0 1-1.9-1.9l.9-.9-.8-2L9 9.5Z" />
+      </svg>
     </a>
 
-    <!-- MOBILE BOTTOM NAVBAR (Uiverse Premium) -->
-    <nav id="navbody" class="mobile-only" aria-label="Navegação Inferior Mobile">
-      <form action="#">
-        <ul class="ul">
-          <input checked name="rad" class="radio" id="choose1" type="radio" />
-          <label for="choose1" class="mobile-nav-item" data-target="section-servicos">
-            <li class="li">
-              <i data-lucide="scissors" class="svg"></i>
-            </li>
-          </label>
-          
-          <input class="radio" name="rad" id="choose2" type="radio" />
-          <label for="choose2" class="mobile-nav-item" data-target="section-equipe">
-            <li class="li">
-              <i data-lucide="users" class="svg"></i>
-            </li>
-          </label>
-          
-          <input class="radio" name="rad" id="choose3" type="radio" />
-          <label for="choose3" class="mobile-nav-item" data-target="section-horarios">
-            <li class="li">
-              <i data-lucide="clock" class="svg"></i>
-            </li>
-          </label>
-          
-          <input class="radio" name="rad" id="choose4" type="radio" />
-          <label for="choose4" class="mobile-nav-item" data-action="openClientArea">
-            <li class="li">
-              <i data-lucide="calendar-check" class="svg"></i>
-            </li>
-          </label>
-        </ul>
-      </form>
-    </nav>
+  </div>
 
-    <!-- MODAL TERMOS -->
+  <!-- COOKIE CONSENT BANNER -->
+  <div id="cookie-banner" class="cookie-banner glass-card" style="display: none;">
+    <div class="cookie-banner__content flex align-center gap-4">
+      <div class="cookie-banner__icon">
+        <i data-lucide="cookie" class="text-primary"></i>
+      </div>
+      <div class="cookie-banner__text">
+        <p class="text-sm m-0">Usamos cookies para personalizar a sua experiência. Ao continuar, você concorda com a nossa <a href="#" class="text-primary" style="text-decoration: underline;" data-action="openPrivacidade">Política de Privacidade</a>.</p>
+      </div>
+      <div class="cookie-banner__actions flex gap-2">
+        <button id="btn-accept-cookies" class="btn btn--primary btn--sm" style="white-space: nowrap;">Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE MODALS (PRESERVED FROM ORIGINAL HTML) -->
+  <!-- MODAL TERMOS -->
     <div id="modal-termos" class="modal-overlay flex-center" role="dialog" aria-modal="true" aria-labelledby="modal-termos-title">
       <article class="modal-content glass-card modal-termos-content">
         <button class="close-btn btn-icon-circular absolute top-3 right-3" data-close-modal aria-label="Fechar termos"><i data-lucide="x"></i></button>
@@ -322,8 +272,6 @@
         </div>
       </article>
     </div>
-  </div>
-
   <!-- BOOKING MODAL -->
   <div class="modal-overlay" id="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-service-name">
     <article class="modal-content glass-modal booking-modal-content flex flex-column h-full">
@@ -426,6 +374,7 @@
   </div>
 
 
+  
   <!-- AUTH MODAL -->
   <div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
     <article class="modal-content glass-card modal-auth-width p-6 relative">
@@ -514,6 +463,7 @@
   </div>
 
 
+  
   <!-- DRAWER AREA DO CLIENTE -->
   <div class="drawer-overlay" id="client-area-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
     <aside class="drawer-content glass-card h-full w-full max-w-sm absolute right-0 flex flex-column bg-background border-l border-glass">
@@ -602,10 +552,39 @@
     </aside>
   </div>
 
+  
   <!-- TOASTS -->
   <div id="toast-container" aria-live="polite"></div>
 
 
+
+  <!-- ============ MOBILE TAB BAR ============ -->
+  <div class="mobile-tab-bar">
+    <a href="#" class="tab-item" aria-label="Início" data-action="scrollTo" data-target="section-servicos">
+      <i data-lucide="home"></i>
+    </a>
+    <a href="#" class="tab-item" aria-label="Galeria" data-action="scrollTo" data-target="section-galeria">
+      <i data-lucide="image"></i>
+    </a>
+    <a href="#" class="tab-item tab-item--center" aria-label="Agendar" data-action="scrollTo" data-target="section-servicos">
+      <div class="tab-item__circle">
+        <i data-lucide="calendar-plus"></i>
+      </div>
+    </a>
+    <a href="#" class="tab-item" aria-label="Local" data-action="scrollTo" data-target="section-info">
+      <i data-lucide="map-pin"></i>
+    </a>
+    
+    <!-- Perfil (Visitante) -->
+    <a href="#" class="tab-item guest-only" data-action="openAuth" data-tab="login" aria-label="Entrar">
+      <i data-lucide="user"></i>
+    </a>
+    
+    <!-- Perfil (Logado) -->
+    <a href="#" class="tab-item logged-only hidden" data-action="openClientArea" aria-label="Meu Perfil">
+      <div class="user-avatar-small bg-primary flex-center text-white" style="width:24px; height:24px; border-radius:50%; font-size:0.75rem; font-weight:bold;" id="tab-avatar-letter" aria-hidden="true">U</div>
+    </a>
+  </div>
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

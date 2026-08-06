@@ -138,6 +138,10 @@ export class configuracoesController {
             setChk('toggle-hide-horarios', vis.hide_horarios);
             setChk('toggle-hide-planos', vis.hide_planos);
 
+            if (this.updateMapPreview) {
+                this.updateMapPreview();
+            }
+
             // Aba Horários
             const horarios = settings.horarios || {};
             this.diasDaSemana.forEach(dia => {
@@ -194,6 +198,39 @@ export class configuracoesController {
                 e.preventDefault();
                 await this.salvarConfiguracoes();
             });
+        }
+
+        const endInput = document.getElementById('input-config-endereco');
+        const btnTestMap = document.getElementById('btn-test-map');
+        const previewMap = document.getElementById('admin-map-preview');
+
+        this.updateMapPreview = () => {
+            if(!endInput || !previewMap) return;
+            let val = endInput.value.trim();
+            if(!val) {
+                previewMap.innerHTML = '<span class="text-secondary text-sm">O mapa aparecerá aqui</span>';
+                return;
+            }
+            if (val.toLowerCase().startsWith('<iframe')) {
+                previewMap.innerHTML = val;
+                const iframe = previewMap.querySelector('iframe');
+                if (iframe) {
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100%';
+                    iframe.style.border = '0';
+                    iframe.style.minHeight = '240px';
+                }
+            } else if (val.startsWith('http://') || val.startsWith('https://')) {
+                previewMap.innerHTML = '<span class="text-warning text-sm text-center p-3">Links diretos (https://...) não podem ser embutidos por segurança do Google.<br>Use o código HTML de incorporação ou digite o endereço em texto.</span>';
+            } else {
+                previewMap.innerHTML = `<iframe src="https://maps.google.com/maps?q=${encodeURIComponent(val)}&output=embed" width="100%" height="100%" style="border:0; min-height: 240px;" allowfullscreen></iframe>`;
+            }
+        };
+
+        if (endInput && btnTestMap) {
+            btnTestMap.addEventListener('click', this.updateMapPreview);
+            endInput.addEventListener('blur', this.updateMapPreview);
+            endInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') { e.preventDefault(); this.updateMapPreview(); } });
         }
     }
 

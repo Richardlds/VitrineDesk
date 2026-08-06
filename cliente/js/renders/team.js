@@ -29,14 +29,15 @@ export async function renderTeam(tenant) {
     }
 
     grid.innerHTML = allProfessionals.map(prof => `
-      <div class="team-card reveal glass-card">
+      <article class="card member reveal">
         ${prof.foto_url
-        ? `<img src="${escapeHtml(prof.foto_url)}" alt="${escapeHtml(prof.nome)}" class="team-avatar" loading="lazy">`
-        : `<div class="team-avatar-placeholder"><i data-lucide="user"></i></div>`
+        ? `<img src="${escapeHtml(prof.foto_url)}" alt="${escapeHtml(prof.nome)}" class="member__avatar" loading="lazy">`
+        : `<div class="member__avatar" style="display:flex; align-items:center; justify-content:center; background:color-mix(in oklab, var(--primary) 20%, transparent); color:var(--primary);"><i data-lucide="user"></i></div>`
       }
-        <h4 class="team-name">${escapeHtml(prof.nome || 'Profissional')}</h4>
-        <p class="team-role">${escapeHtml(prof.cargo || prof.especialidade || '')}</p>
-      </div>
+        <h3>${escapeHtml(prof.nome || 'Profissional')}</h3>
+        <p class="muted">${escapeHtml(prof.cargo || prof.especialidade || '')}</p>
+        <span class="chip chip--ghost">5,0 ★</span>
+      </article>
     `).join('');
     if (window.lucide) lucide.createIcons();
     return allProfessionals;

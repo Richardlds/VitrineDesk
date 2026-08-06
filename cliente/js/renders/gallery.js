@@ -17,11 +17,7 @@ export function renderGallery(tenant) {
 
     grid.innerHTML = galeria.slice(0, 6).map((img, i) => {
       const url = typeof img === 'string' ? img : img.url || img.src || '';
-      return `
-        <div class="gallery-item reveal">
-          <img src="${url}" alt="Galeria ${i + 1}" loading="lazy">
-        </div>
-      `;
+      return `<img src="${url}" alt="Galeria ${i + 1}" loading="lazy" class="reveal">`;
     }).join('');
   } catch (e) {
     console.error('Erro ao renderizar galeria:', e);

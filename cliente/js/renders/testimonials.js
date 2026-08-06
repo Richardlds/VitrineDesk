@@ -18,15 +18,14 @@ export function renderTestimonials(tenant) {
     grid.innerHTML = depoimentos.map(dep => {
       const estrelas = dep.nota || dep.rating || 5;
       return `
-        <div class="testimonial-card reveal glass-card">
-          <div class="testimonial-stars" style="display:flex; gap:2px; color:#fbbf24;">
-            ${Array.from({ length: 5 }, (_, i) =>
-        `<i data-lucide="star" style="width:16px; height:16px; opacity:${i < estrelas ? 1 : 0.2}" fill="${i < estrelas ? 'currentColor' : 'none'}"></i>`
-      ).join('')}
-          </div>
-          <p class="testimonial-text">"${escapeHtml(dep.texto || dep.text || '')}"</p>
-          <span class="testimonial-author">— ${escapeHtml(dep.autor || dep.author || 'Cliente')}</span>
-        </div>
+        <article class="card quote reveal">
+          <p class="quote__stars" aria-label="${estrelas} de 5 estrelas">${'★'.repeat(Math.round(estrelas))}${'☆'.repeat(5 - Math.round(estrelas))}</p>
+          <blockquote>${escapeHtml(dep.texto || dep.text || '')}</blockquote>
+          <footer class="quote__foot">
+            <div style="width:40px;height:40px;border-radius:50%;background:color-mix(in oklab, var(--primary) 20%, transparent);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:bold;">${escapeHtml((dep.autor || dep.author || 'C')[0].toUpperCase())}</div>
+            <div><strong>${escapeHtml(dep.autor || dep.author || 'Cliente')}</strong></div>
+          </footer>
+        </article>
       `;
     }).join('');
     if (window.lucide) lucide.createIcons();

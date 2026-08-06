@@ -360,9 +360,9 @@ export async function updateProfile(e) {
       showToast('Perfil atualizado com sucesso!', 'success');
 
       // Atualizar avatares
-      const avatarLetters = document.querySelectorAll('#user-avatar-letter, .client-avatar i');
+      const avatarLetters = document.querySelectorAll('#user-avatar-letter, #tab-avatar-letter, .client-avatar i');
       avatarLetters.forEach(avatar => {
-        if (avatar.id === 'user-avatar-letter') {
+        if (avatar.id === 'user-avatar-letter' || avatar.id === 'tab-avatar-letter') {
           avatar.textContent = (nome || 'U')[0].toUpperCase();
         }
       });
@@ -401,12 +401,17 @@ export function updateAuthUI(logged) {
     const body = document.body;
     const btnAuth = document.getElementById('btn-auth');
     const userMenu = document.getElementById('user-menu');
+    
+    // Tab bar elements
+    const guestTabs = document.querySelectorAll('.mobile-tab-bar .guest-only');
+    const loggedTabs = document.querySelectorAll('.mobile-tab-bar .logged-only');
 
     if (logged) {
       body.classList.add('is-logged');
       const cliente = getLoggedClient();
+      const letra = (cliente?.nome || 'U')[0].toUpperCase();
 
-      // Esconder botão "Entrar", mostrar avatar
+      // Esconder botão "Entrar", mostrar avatar (Topnav)
       if (btnAuth) btnAuth.classList.add('hidden');
       if (userMenu) {
         userMenu.classList.remove('hidden');

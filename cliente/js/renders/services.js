@@ -51,35 +51,32 @@ export async function renderServices(tenant, openBookingModalCb) {
       const categoryRaw = service.categoria || service.category || 'Outros';
       const showPhotos = !categoryRaw.includes('|NO_PHOTOS');
       const cleanCategory = categoryRaw.replace('|NO_PHOTOS', '');
+      const desc = service.descricao || service.description || '';
 
-      // Override the category string to be clean for filters and data attributes
       service.category = cleanCategory;
 
       let imageHtml = '';
       if (showPhotos) {
         imageHtml = img 
-          ? `<img src="${escapeHtml(img)}" alt="" class="service-img" loading="lazy">`
-          : `<div class="service-img-placeholder"><i data-lucide="scissors"></i></div>`;
+          ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(nome)}" class="service__img" loading="lazy">`
+          : `<div class="service__img--placeholder"><i data-lucide="scissors"></i></div>`;
       }
 
-      // Set global window functions temporarily if needed by inline handlers, but better approach is attaching listeners.
-      // Assuming openBookingModal is exposed globally or passed down.
       return `
-        <div class="service-card reveal glass-card" data-action="openBooking" data-service='${JSON.stringify(service).replace(/'/g, "&apos;")}' data-category="${escapeHtml(cleanCategory)}">
-          ${showPhotos ? `<div class="service-img-wrapper">${imageHtml}</div>` : ''}
-          <div class="service-body p-3 flex flex-column gap-2" style="flex: 1; justify-content: space-between;">
-            <div class="service-info flex flex-column gap-1">
-              <span class="service-name text-md font-bold text-primary" style="line-height: 1.2;">${escapeHtml(nome)}</span>
-              <span class="service-duration text-xs text-secondary flex align-center gap-1"><i data-lucide="clock" style="width:14px;height:14px;"></i> ${duracao} min</span>
-            </div>
-            <div class="service-footer flex justify-between align-center mt-2">
-              ${!hidePrices ? `<span class="service-price text-lg font-bold">${formatCurrency(preco)}</span>` : '<span></span>'}
-              <button class="btn border-none cursor-pointer flex align-center justify-center rounded-md" style="background: rgba(var(--primary-rgb), 0.15); color: var(--primary); padding: 6px 12px; font-weight: 600; font-size: 0.85rem;" title="Agendar">
-                Agendar
-              </button>
-            </div>
+        <article class="card service service-card reveal" data-action="openBooking" data-service='${JSON.stringify(service).replace(/'/g, "&apos;")}' data-category="${escapeHtml(cleanCategory)}">
+          ${showPhotos ? imageHtml : ''}
+          <div class="service__body">
+            <header class="service__head">
+              <h3 class="truncate">${escapeHtml(nome)}</h3>
+              <span class="chip chip--ghost"><i data-lucide="clock" class="icon-xs" style="width:12px;height:12px;"></i> ${duracao} min</span>
+            </header>
+            ${desc ? `<p class="muted truncate" style="max-height: 48px; white-space: normal; -webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -webkit-box;">${escapeHtml(desc)}</p>` : ''}
+            <footer class="service__foot">
+              ${!hidePrices ? `<span class="price">${formatCurrency(preco)}</span>` : '<span></span>'}
+              <button class="btn btn--primary btn--sm" type="button" style="pointer-events:none;">Agendar</button>
+            </footer>
           </div>
-        </div>
+        </article>
       `;
     }).join('');
 
@@ -111,18 +108,22 @@ export function renderServiceFilters() {
   }
 
   container.classList.remove('hidden');
-  let html = '<button class="service-filter-btn active" data-category="todos">Todos</button>';
+  let html = '<button class="chip chip--active" data-category="todos" type="button" role="tab" aria-selected="true">Todos</button>';
 
   categorias.forEach(cat => {
-    html += `<button class="service-filter-btn" data-category="${cat}">${cat}</button>`;
+    html += `<button class="chip" data-category="${cat}" type="button" role="tab" aria-selected="false">${cat}</button>`;
   });
 
   container.innerHTML = html;
 
-  container.querySelectorAll('.service-filter-btn').forEach(btn => {
+  container.querySelectorAll('.chip').forEach(btn => {
     btn.addEventListener('click', () => {
-      container.querySelectorAll('.service-filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      container.querySelectorAll('.chip').forEach(b => {
+        b.classList.remove('chip--active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('chip--active');
+      btn.setAttribute('aria-selected', 'true');
       filtrarServicos(btn.dataset.category);
     });
   });

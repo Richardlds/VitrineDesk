@@ -8,6 +8,7 @@ export class personalizacaoController {
         this.faviconUrl = null;
         this.coverUrl = null;
         this.galeria = [];
+        this.banners = [];
     }
 
     async init() {
@@ -41,9 +42,16 @@ export class personalizacaoController {
             this.coverUrl = data.cover_url || null;
             this.galeria = data.galeria || [];
 
+            let loadedBanners = [];
+            if (data?.settings?.personalizacao?.banners) {
+                loadedBanners = data.settings.personalizacao.banners;
+            }
+            this.banners = loadedBanners;
+
             this.setPreview('preview-logo', 'icon-logo', this.logoUrl);
             this.setPreview('preview-favicon', 'icon-favicon', this.faviconUrl);
             this.setPreview('preview-cover', 'icon-cover', this.coverUrl);
+            this.renderBanners();
             this.renderGallery();
 
             if (data && data.settings && data.settings.personalizacao) {
@@ -195,8 +203,7 @@ export class personalizacaoController {
 
         const previewCover = document.getElementById('preview-cover');
         const inputCover = document.getElementById('input-cover');
-        const btnUploadCover = document.getElementById('btn-upload-cover');
-        const btnRemoverCover = document.getElementById('btn-remover-cover');
+        const btnUploadCover = document.getElementById('preview-cover'); // The div itself acts as button
 
         if (btnUploadCover && inputCover) {
             btnUploadCover.addEventListener('click', () => inputCover.click());
@@ -204,8 +211,29 @@ export class personalizacaoController {
                 this.handleFileSelect(e, (base64, file) => {
                     this.coverUrl = base64;
                     this.coverFile = file;
-                    if (previewCover) previewCover.style.backgroundImage = `url('${base64}')`;
+                    if (previewCover) {
+                        previewCover.style.backgroundImage = `url('${base64}')`;
+                        const iconCover = document.getElementById('icon-cover');
+                        if(iconCover) iconCover.classList.add('d-none');
+                    }
                 });
+            });
+        }
+
+        // Banners
+        const bannersContainer = document.getElementById('banners-container');
+        if (bannersContainer) {
+            bannersContainer.addEventListener('click', (e) => {
+                const slot = e.target.closest('.banner-slot');
+                if (slot) {
+                    const idx = parseInt(slot.dataset.index);
+                    if (idx < this.banners.length) {
+                        if (confirm('Deseja remover este banner?')) {
+                            this.banners.splice(idx, 1);
+                            this.renderBanners();
+                        }
+                    }
+                }
             });
         }
 
@@ -279,6 +307,55 @@ export class personalizacaoController {
                 preview.style.backgroundImage = 'none';
                 if (icon) icon.classList.remove('d-none');
             }
+        }
+    }
+
+    renderBanners() {
+        const container = document.getElementById('banners-container');
+        if (!container) return;
+
+        let html = '<input type="file" id="input-banners" accept="image/*" class="d-none">';
+        for (let i = 0; i < 5; i++) {
+            if (i < this.banners.length) {
+                const item = this.banners[i];
+                const bgUrl = item.isNew ? item.preview : item;
+                const bgStr = `background-image: url('${bgUrl}'); background-size: cover; background-position: center;`;
+
+                html += `
+                    <div class="bg-placeholder rounded-md flex justify-center align-center border-dashed cursor-pointer relative banner-slot" data-index="${i}" style="${bgStr}; height: 100px;">
+                        <div class="absolute top-0 right-0 bg-danger text-white rounded-bl-md flex justify-center align-center w-24px h-24px hover:bg-danger-hover transition-colors" title="Remover"><i data-lucide="trash-2" class="w-3 h-3"></i></div>
+                    </div>
+                `;
+            } else if (i === this.banners.length) {
+                const hoverStyle = `onmouseover="this.style.backgroundColor='rgba(99,102,241,0.1)'" onmouseout="this.style.backgroundColor=''"`;
+                html += `
+                    <div class="bg-placeholder rounded-md flex justify-center align-center border-dashed cursor-pointer relative banner-slot" data-index="${i}" ${hoverStyle} style="height: 100px;" onclick="document.getElementById('input-banners').click()">
+                        <i data-lucide="plus" class="text-secondary"></i>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="bg-placeholder rounded-md flex justify-center align-center border-dashed relative banner-slot" style="opacity: 0.5; cursor: not-allowed; height: 100px;">
+                    </div>
+                `;
+            }
+        }
+        container.innerHTML = html;
+        if (window.lucide) window.lucide.createIcons();
+
+        // Re-bind input after innerHTML reset
+        const inputBanners = document.getElementById('input-banners');
+        if (inputBanners) {
+            const newFileInput = inputBanners.cloneNode(true);
+            inputBanners.parentNode.replaceChild(newFileInput, inputBanners);
+            newFileInput.addEventListener('change', (e) => {
+                this.handleFileSelect(e, (base64, file) => {
+                    if (this.banners.length < 5) {
+                        this.banners.push({ preview: base64, file: file, isNew: true });
+                        this.renderBanners();
+                    }
+                });
+            });
         }
     }
 
@@ -371,6 +448,17 @@ export class personalizacaoController {
                 if (url) this.coverUrl = url;
             }
 
+            // Upload dos Banners
+            const uploadPromisesBanners = this.banners.map(async (item) => {
+                if (item.isNew && item.file) {
+                    const url = await uploadImageToSupabase(item.file, 'tenant-images', tenantId);
+                    return url ? url : null;
+                }
+                return item;
+            });
+            const resultsBanners = await Promise.all(uploadPromisesBanners);
+            this.banners = resultsBanners.filter(item => item !== null);
+
             // Upload das fotos da Galeria
             const uploadPromises = this.galeria.map(async (item) => {
                 if (item.isNew && item.file) {
@@ -415,7 +503,8 @@ export class personalizacaoController {
                 whatsapp: document.getElementById('input-whatsapp-number')?.value,
                 whatsapp_message: document.getElementById('input-whatsapp-message')?.value,
                 whatsapp_animation: document.getElementById('input-whatsapp-animation')?.value || 'none',
-                whatsapp_size: document.getElementById('input-whatsapp-size')?.value || 60
+                whatsapp_size: document.getElementById('input-whatsapp-size')?.value || 60,
+                banners: this.banners
             };
 
             const updatePayload = {

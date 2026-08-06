@@ -30,20 +30,30 @@ export async function renderHours(tenant) {
     const hoje = new Date().getDay();
     const diaHojeKey = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'][hoje];
 
-    table.innerHTML = dias.map(dia => {
+    const tbodyHtml = dias.map(dia => {
       const h = horarios[dia.key];
       const isToday = dia.key === diaHojeKey;
       const horario = h
-        ? (h.fechado ? 'Fechado' : `${h.abertura || '08:00'} - ${h.fechamento || '18:00'}`)
-        : '-';
+        ? (h.fechado ? '<span class="muted">Fechado</span>' : `${h.abertura || '08:00'} – ${h.fechamento || '18:00'}`)
+        : '<span class="muted">-</span>';
 
       return `
         <tr class="${isToday ? 'today' : ''}">
-          <td>${dia.label}</td>
+          <th scope="row">${dia.label}</th>
           <td>${horario}</td>
         </tr>
       `;
     }).join('');
+
+    table.innerHTML = `
+      <caption class="sr-only">Horários de funcionamento por dia da semana</caption>
+      <thead>
+        <tr><th scope="col">Dia</th><th scope="col">Horário</th></tr>
+      </thead>
+      <tbody id="hours-body">
+        ${tbodyHtml}
+      </tbody>
+    `;
   } catch (e) {
     console.error('Erro ao renderizar horários:', e);
   }

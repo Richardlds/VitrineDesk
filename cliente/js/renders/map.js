@@ -2,65 +2,110 @@ import { showSkeleton, hideSkeleton } from '../utils.js';
 
 export async function renderMap(tenant) {
   try {
-    // Show skeleton para o mapa
     const mapContainer = document.getElementById('map-embed');
-    if (mapContainer) {
-      showSkeleton('map-embed', 'map');
+    const addressEl = document.getElementById('info-address');
+    const phoneEl = document.getElementById('info-phone');
+
+    if (mapContainer) showSkeleton('map-embed', 'map');
+
+    const settings = tenant.settings || {};
+    const rawEndereco = settings.endereco || tenant.endereco; // fallback pro tenant direto por segurança
+    const rawMapaUrl = settings.mapa_url || tenant.social?.google_maps;
+
+    // 1. WhatsApp Formatting
+    if (phoneEl && tenant.whatsapp) {
+      let phone = tenant.whatsapp.replace(/\D/g, '');
+      if (phone.startsWith('55')) phone = phone.substring(2);
+      if (phone.length === 11) phone = `(${phone.substring(0,2)}) ${phone.substring(2,7)}-${phone.substring(7)}`;
+      else if (phone.length === 10) phone = `(${phone.substring(0,2)}) ${phone.substring(2,6)}-${phone.substring(6)}`;
+      else phone = tenant.whatsapp;
+      phoneEl.innerHTML = `<i data-lucide="phone" class="icon-xs inline-block mr-1"></i> ${phone}`;
+      if (window.lucide) window.lucide.createIcons({ root: phoneEl.parentElement });
+      document.getElementById('info-phone-container')?.classList.remove('hidden');
+    } else if (phoneEl) {
+      document.getElementById('info-phone-container')?.classList.add('hidden');
     }
 
-    const addressEl = document.getElementById('info-address');
-    if (addressEl && tenant.endereco) {
-      let endereco = tenant.endereco;
-      if (typeof endereco === 'string') {
-        try { endereco = JSON.parse(endereco); } catch (e) { /* string simples */ }
+    // 2. Parse Address
+    let addressText = '';
+    let mapEmbedHtml = '';
+    let isUrl = false;
+
+    if (rawEndereco) {
+      let endRaw = rawEndereco;
+      if (typeof endRaw === 'string') {
+        try { endRaw = JSON.parse(endRaw); } catch (e) {}
       }
 
-      if (typeof endereco === 'object') {
-        const parts = [endereco.rua, endereco.numero, endereco.bairro, endereco.cidade, endereco.estado].filter(Boolean);
-        addressEl.textContent = parts.join(', ');
-      } else {
-        addressEl.textContent = endereco;
+      if (typeof endRaw === 'object' && endRaw !== null) {
+        addressText = [endRaw.rua, endRaw.numero, endRaw.bairro, endRaw.cidade, endRaw.estado].filter(Boolean).join(', ');
+        mapEmbedHtml = `<iframe src="https://maps.google.com/maps?q=${encodeURIComponent(addressText)}&output=embed" allowfullscreen></iframe>`;
+      } else if (typeof endRaw === 'string') {
+        endRaw = endRaw.trim();
+        if (endRaw.toLowerCase().startsWith('<iframe')) {
+          addressText = '';
+          mapEmbedHtml = endRaw;
+        } else if (endRaw.startsWith('http://') || endRaw.startsWith('https://')) {
+          isUrl = true;
+          addressText = '';
+          mapEmbedHtml = ''; // Link direto não carrega em iframe por segurança (X-Frame-Options)
+        } else {
+          addressText = endRaw;
+          mapEmbedHtml = `<iframe src="https://maps.google.com/maps?q=${encodeURIComponent(addressText)}&output=embed" allowfullscreen></iframe>`;
+        }
+      }
+    }
+
+    // 3. Render Address & Maps Button
+    if (addressEl) {
+      addressEl.innerHTML = ''; // Limpar
+      
+      const textSpan = document.createElement('span');
+      textSpan.textContent = addressText || 'Endereço disponível no mapa';
+      if (!addressText && !mapEmbedHtml && !rawMapaUrl) {
+         textSpan.textContent = '-'; // Se não tiver nada, bota tracinho
+      }
+      if (!addressText) textSpan.classList.add('muted');
+      addressEl.appendChild(textSpan);
+
+      // Descobrir qual link do Maps usar
+      let mapsLink = rawMapaUrl;
+      if (isUrl && !mapsLink) mapsLink = rawEndereco;
+
+      if (mapsLink && !mapsLink.toLowerCase().trim().startsWith('javascript:')) {
+        addressEl.appendChild(document.createElement('br'));
+        const btn = document.createElement('a');
+        btn.href = mapsLink;
+        btn.target = '_blank';
+        btn.rel = 'noopener noreferrer';
+        btn.className = 'btn btn--primary map-btn mt-2 inline-flex align-center gap-2';
+        btn.innerHTML = '<i data-lucide="map" class="icon-sm"></i> Abrir no Maps';
+        addressEl.appendChild(btn);
       }
       
-      if (tenant.social?.google_maps) {
-          const mapUrl = tenant.social.google_maps;
-          if (!mapUrl.toLowerCase().trim().startsWith('javascript:')) {
-              addressEl.appendChild(document.createElement('br'));
-              const mapBtn = document.createElement('a');
-              mapBtn.href = mapUrl;
-              mapBtn.target = '_blank';
-              mapBtn.className = 'btn btn-primary map-btn';
-              mapBtn.innerHTML = '<i data-lucide="map" class="icon-sm"></i> Abrir no Maps';
-              addressEl.appendChild(mapBtn);
-              if (window.lucide) window.lucide.createIcons({ root: addressEl });
-          }
-      }
+      if (window.lucide) window.lucide.createIcons({ root: addressEl });
     }
 
-    const phoneEl = document.getElementById('info-phone');
-    if (phoneEl && tenant.whatsapp) {
-      phoneEl.textContent = tenant.whatsapp;
-    }
-
-    if (mapContainer && tenant.endereco) {
-      let endStr = '';
-      if (typeof tenant.endereco === 'string') {
-        endStr = tenant.endereco;
-      } else if (typeof tenant.endereco === 'object') {
-        const e = tenant.endereco;
-        endStr = [e.rua, e.numero, e.bairro, e.cidade, e.estado].filter(Boolean).join(', ');
-      }
-
-      if (endStr) {
-        mapContainer.innerHTML = `<iframe src="https://maps.google.com/maps?q=${encodeURIComponent(endStr)}&output=embed" allowfullscreen loading="lazy" onload="document.getElementById('map-embed').classList.remove('skeleton-loading')"></iframe>`;
+    // 4. Render Iframe
+    if (mapContainer) {
+      if (mapEmbedHtml) {
+        mapContainer.style.display = 'block';
+        hideSkeleton('map-embed'); // Remove o esqueleto imediatamente para não quebrar a visibilidade
+        
+        // Remove loading="lazy" and onload do mapEmbedHtml que geramos, caso existam, 
+        // pois podem bugar no Chrome/Edge com a intervention de lazy load.
+        mapEmbedHtml = mapEmbedHtml.replace('loading="lazy"', '');
+        mapEmbedHtml = mapEmbedHtml.replace(/onload="[^"]*"/, '');
+        
+        mapContainer.innerHTML = mapEmbedHtml;
       } else {
         hideSkeleton('map-embed');
+        mapContainer.style.display = 'none';
       }
-    } else if (mapContainer) {
-      hideSkeleton('map-embed');
     }
+
   } catch (e) {
-    console.error('Erro ao renderizar mapa:', e);
+    console.error('Erro ao renderizar mapa e contato:', e);
   }
 }
 
