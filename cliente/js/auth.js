@@ -544,7 +544,14 @@ export function initAuth() {
 
     // Form registro
     const formRegister = document.getElementById('form-register');
-        
+    if (formRegister) {
+      formRegister.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = formRegister.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader" class="lucide-spin"></i> Criando...';
+        if (window.lucide) lucide.createIcons({ root: btn });
         try {
           const termosCheck = document.getElementById('register-termos');
           if (termosCheck && !termosCheck.checked) {
