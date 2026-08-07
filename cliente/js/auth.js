@@ -128,7 +128,8 @@ export async function loginCliente(email, senha) {
   }
 }
 
-export async function loginComGoogle() {
+export async function loginComGoogle(e) {
+  if (e) e.preventDefault();
   try {
     const supabase = getSupabaseAuthClient();
     if (!supabase) {
@@ -843,8 +844,8 @@ async function checkGoogleOAuthSession() {
 
       if (!tenantId) return;
 
-      // 1. Verifica se já existe
-      const busca = await supaFetch(`/rest/v1/clientes?email=eq.${encodeURIComponent(email)}&select=*`);
+      // 1. Verifica se já existe para ESTE tenant específico
+      const busca = await supaFetch(`/rest/v1/clientes?email=eq.${encodeURIComponent(email)}&tenant_id=eq.${tenantId}&select=*`);
       
       let clienteFinal = null;
 
@@ -882,17 +883,19 @@ async function checkGoogleOAuthSession() {
       if (clienteFinal) {
         saveClientSession(clienteFinal);
         updateAuthUI(true);
-        // Opcionalmente podemos deslogar da auth do supabase para não dar conflito,
-        // mas é melhor deixar a sessão lá para eventuais refresh tokens
-        if (window.location.hash.includes('access_token')) {
-          // Limpa hash da url pra ficar bonitinho
-          window.history.replaceState(null, '', window.location.pathname + window.location.search);
-          showToast(`Bem-vindo(a), ${clienteFinal.nome}!`, 'success');
+        // O Supabase remove o access_token do hash automaticamente, então vamos sempre dar boas-vindas
+        // se a URL ainda tiver # ou se acabamos de fazer o fluxo
+        showToast(`Bem-vindo(a), ${clienteFinal.nome}!`, 'success');
+        
+        // Limpa a URL se tiver hash vazio
+        if (window.location.hash === '' || window.location.hash === '#') {
+           window.history.replaceState(null, '', window.location.pathname + window.location.search);
         }
       }
     }
   } catch (e) {
     console.error('Erro no sync do Google OAuth:', e);
+    showToast('Falha ao sincronizar perfil do Google. Tente novamente.', 'error');
   }
 }
 
