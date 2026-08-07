@@ -506,6 +506,14 @@ export function initAuth() {
     // Verificar sessão Google (OAuth redirect callback)
     checkGoogleOAuthSession();
 
+    // Verificar Token de Recuperação de Senha
+    const urlParams = new URLSearchParams(window.location.search);
+    const resetToken = urlParams.get('reset_token');
+    if (resetToken) {
+      window._resetToken = resetToken;
+      setTimeout(() => openAuthModal('reset'), 500); // Aguarda a pagina carregar um pouco e abre o modal na aba reset
+    }
+
     // Abas de auth
     document.querySelectorAll('.auth-tab').forEach(tab => {
       tab.addEventListener('click', () => openAuthModal(tab.dataset.tab));
@@ -588,6 +596,86 @@ export function initAuth() {
           if (result) {
             closeAuthModal();
           }
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          if (window.lucide) lucide.createIcons({ root: btn });
+        }
+      });
+    }
+
+    // Form Esqueci a Senha
+    const formForgot = document.getElementById('form-forgot');
+    if (formForgot) {
+      formForgot.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = formForgot.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader" class="lucide-spin"></i> Enviando...';
+        if (window.lucide) lucide.createIcons({ root: btn });
+        try {
+          const email = document.getElementById('forgot-email')?.value?.trim();
+          if (!email) { showToast('Preencha o e-mail', 'warning'); return; }
+          const tenantId = getTenantId();
+          
+          await supaFetch('/rest/v1/rpc/request_password_reset', {
+            method: 'POST',
+            body: { p_email: email.toLowerCase(), p_tenant_id: tenantId }
+          });
+          
+          // Mostramos a mensagem de sucesso mesmo se falhar para evitar enumeração de emails
+          showToast('Se o e-mail existir, você receberá um link de recuperação em instantes.', 'info');
+          openAuthModal('login');
+        } catch(err) {
+          console.error(err);
+          showToast('Se o e-mail existir, você receberá um link de recuperação em instantes.', 'info');
+          openAuthModal('login');
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          if (window.lucide) lucide.createIcons({ root: btn });
+        }
+      });
+    }
+
+    // Form Nova Senha (Reset)
+    const formReset = document.getElementById('form-reset');
+    if (formReset) {
+      formReset.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = formReset.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader" class="lucide-spin"></i> Salvando...';
+        if (window.lucide) lucide.createIcons({ root: btn });
+        try {
+          const novaSenha = document.getElementById('reset-senha')?.value;
+          if (!novaSenha || novaSenha.length < 6) { 
+             showToast('A senha deve ter no mínimo 6 caracteres', 'warning'); 
+             return; 
+          }
+          if (!window._resetToken) {
+             showToast('Token inválido ou expirado.', 'error');
+             return;
+          }
+          
+          const result = await supaFetch('/rest/v1/rpc/redefinir_senha_cliente', {
+             method: 'POST',
+             body: { p_token: window._resetToken, p_nova_senha: novaSenha }
+          });
+          
+          if (result === true) {
+             showToast('Senha alterada com sucesso! Faça login.', 'success');
+             window._resetToken = null;
+             window.history.replaceState({}, document.title, window.location.pathname);
+             openAuthModal('login');
+          } else {
+             showToast('Token inválido ou expirado.', 'error');
+          }
+        } catch(err) {
+          console.error(err);
+          showToast('Token inválido ou expirado.', 'error');
         } finally {
           btn.disabled = false;
           btn.innerHTML = originalText;

@@ -30,6 +30,11 @@
 
   <div id="app" class="hidden">
     
+    <!-- ============ CAPA (BANNER) ============ -->
+    <div id="store-cover" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: var(--cover-height, 280px); z-index: -1;">
+      <img id="cover-img" src="" alt="Capa da Loja" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.35; mask-image: linear-gradient(to bottom, black 40%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);" />
+    </div>
+    
     <!-- ============ NAV ============ -->
     <nav class="topnav" aria-label="Navegação principal">
       <div class="topnav__inner">
@@ -408,7 +413,10 @@
             <input type="password" id="login-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="current-password" minlength="6" placeholder=" ">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Senha</label>
           </div>
-          <button type="submit" class="btn btn-primary btn-block btn-glow mt-4 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
+          <div class="text-right mt-1">
+            <a href="#" class="text-sm text-primary hover:underline font-medium" onclick="document.querySelector('[data-tab=\'forgot\']').click(); return false;">Esqueceu a senha?</a>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-glow mt-2 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
             Acessar Minha Conta <i data-lucide="arrow-right"></i>
           </button>
         </form>
@@ -454,8 +462,57 @@
               Aceito os <a href="#" id="link-termos-uso" class="text-primary font-bold hover-underline">Termos de Uso</a>
             </label>
           </div>
-          <button type="submit" class="btn btn-primary btn-block btn-glow mt-4 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
-            Finalizar Cadastro <i data-lucide="check"></i>
+          <button type="submit" class="btn btn-primary btn-block btn-glow mt-4 py-3 text-md font-bold shadow-glow flex justify-center gap-2" id="btn-submit-register">
+            Criar Minha Conta <i data-lucide="user-plus"></i>
+          </button>
+        </form>
+      </section>
+
+      <!-- BOTÃO OCULTO PARA ABRIR A ABA DE ESQUECI A SENHA VIA JS -->
+      <button class="auth-tab hidden" data-tab="forgot"></button>
+      <button class="auth-tab hidden" data-tab="reset"></button>
+
+      <!-- FORGOT PASSWORD -->
+      <section class="auth-form-panel" id="auth-forgot">
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-light text-primary mb-4">
+            <i data-lucide="key" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Recuperar Senha</h3>
+          <p class="text-sm text-muted">Digite seu e-mail abaixo e enviaremos um link para você redefinir sua senha.</p>
+        </div>
+        <form id="form-forgot" novalidate class="flex flex-column gap-4">
+          <div class="input-group floating-label relative">
+            <input type="email" id="forgot-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="email" placeholder=" ">
+            <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">E-mail</label>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-glow mt-2 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
+            Enviar Link de Recuperação <i data-lucide="mail"></i>
+          </button>
+          <div class="text-center mt-4">
+            <a href="#" class="text-sm text-muted hover:text-primary transition-colors" onclick="document.querySelector('[data-tab=\'login\']').click(); return false;">
+              <i data-lucide="arrow-left" class="inline w-4 h-4 align-middle mr-1"></i> Voltar para o Login
+            </a>
+          </div>
+        </form>
+      </section>
+
+      <!-- RESET PASSWORD (NOVA SENHA) -->
+      <section class="auth-form-panel" id="auth-reset">
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-light text-primary mb-4">
+            <i data-lucide="lock" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Criar Nova Senha</h3>
+          <p class="text-sm text-muted">Digite sua nova senha de acesso.</p>
+        </div>
+        <form id="form-reset" novalidate class="flex flex-column gap-4">
+          <div class="input-group floating-label relative">
+            <input type="password" id="reset-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required minlength="6" placeholder=" ">
+            <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Nova Senha (mín. 6)</label>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-glow mt-2 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
+            Salvar Nova Senha <i data-lucide="check"></i>
           </button>
         </form>
       </section>

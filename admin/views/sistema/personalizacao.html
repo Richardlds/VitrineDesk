@@ -61,6 +61,26 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="font-medium text-sm text-secondary mb-2 inline-block">Capa (Fundo do Cabeçalho)</label>
+                        <div class="flex flex-column gap-3">
+                            <div class="flex align-center gap-3">
+                                <div id="preview-cover"
+                                    class="bg-placeholder rounded-md flex justify-center align-center border-dashed bg-center bg-cover bg-no-repeat cursor-pointer"
+                                    style="width: 160px; height: 60px;" title="Clique para alterar a Capa">
+                                    <i data-lucide="upload" class="text-secondary" id="icon-cover"></i>
+                                </div>
+                                <div>
+                                    <button onclick="document.getElementById('input-cover').click()"
+                                        class="btn border-none bg-primary-light text-primary py-2 px-3 rounded-md cursor-pointer text-sm font-medium">Fazer
+                                        Upload</button>
+                                    <input type="file" id="input-cover" accept="image/*" class="d-none">
+                                </div>
+                            </div>
+                            <p class="text-xs text-secondary mt-1">Recomendado: 1920x400px</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="font-medium text-sm text-secondary mb-2 inline-block">Logo Oficial</label>
                         <div class="flex flex-column gap-3">
                             <div class="flex align-center gap-3">
