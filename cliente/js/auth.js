@@ -3,6 +3,7 @@ import { loadMyAppointments } from './agendamentos.js';
 
 // ────────────────────────── Estado ──────────────────────────
 let currentClient = null;
+let pendingGoogleUser = null; // Guarda os dados vindos do Google até completar o form
 
 import { getTenantId } from './app.js';
 
@@ -516,8 +517,6 @@ export function initAuth() {
     const btnGoogleRegister = document.getElementById('btn-google-register');
     if (btnGoogleRegister) btnGoogleRegister.addEventListener('click', loginComGoogle);
 
-
-
     const formLogin = document.getElementById('form-login');
     if (formLogin) {
       formLogin.addEventListener('submit', async (e) => {
@@ -545,14 +544,6 @@ export function initAuth() {
 
     // Form registro
     const formRegister = document.getElementById('form-register');
-    if (formRegister) {
-      formRegister.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = formRegister.querySelector('button[type="submit"]');
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<i data-lucide="loader" class="lucide-spin"></i> Criando...';
-        if (window.lucide) lucide.createIcons({ root: btn });
         
         try {
           const termosCheck = document.getElementById('register-termos');
@@ -860,24 +851,23 @@ async function checkGoogleOAuthSession() {
           clienteFinal.foto_url = avatar_url;
         }
       } else {
-        // Não existe, cria silenciosamente
-        const novoCliente = {
-          tenant_id: tenantId,
-          nome: nome,
-          email: email,
-          senha: 'oauth_google_' + Date.now(), // Senha dummy (ignorada)
-          data_aceite_termo: new Date().toISOString()
+        // Não existe, precisamos dos dados complementares (CPF, telefone)
+        pendingGoogleUser = {
+          tenantId,
+          nome,
+          email,
+          avatar_url
         };
-
-        const result = await supaFetch('/rest/v1/clientes', {
-          method: 'POST',
-          body: novoCliente
-        });
-
-        if (result && result.length > 0) {
-          clienteFinal = result[0];
-          clienteFinal.foto_url = avatar_url; // Manually assign
-        }
+        
+        // Esconde modal de login principal se estiver aberto
+        closeAuthModal();
+        
+        // Abre o modal de complemento
+        const modalComplete = document.getElementById('modal-google-complete');
+        if (modalComplete) modalComplete.classList.add('active');
+        
+        // Interrompe o fluxo aqui até o form ser submetido
+        return;
       }
 
       if (clienteFinal) {
@@ -960,3 +950,77 @@ export async function loadProximosAgendamentos() {
 // (Removido export para window para evitar poluição global)
 
 // (Removido openClientAreaAndTab do window)
+
+// ────────────────────────── Google Cadastro Complementar ──────────────────────────
+
+export async function submitGoogleComplete(e) {
+  e.preventDefault();
+  if (!pendingGoogleUser) return;
+  
+  const form = e.target;
+  const cpfInput = form.querySelector('#google-complete-cpf').value;
+  const telInput = form.querySelector('#google-complete-telefone').value;
+
+  const numCpf = cpfInput.replace(/\D/g, '');
+  const numTel = telInput.replace(/\D/g, '');
+
+  if (!numCpf || !numTel) {
+    showToast('Preencha CPF e Telefone.', 'warning');
+    return;
+  }
+
+  if (!validarCPF(numCpf)) {
+    showToast('CPF inválido.', 'error');
+    return;
+  }
+
+  const { tenantId, nome, email, avatar_url } = pendingGoogleUser;
+
+  // Mostra loading
+  const btn = form.querySelector('button[type="submit"]');
+  const oldBtnHtml = btn.innerHTML;
+  btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Salvando...';
+  btn.disabled = true;
+
+  try {
+    const novoCliente = {
+      tenant_id: tenantId,
+      nome: nome,
+      email: email,
+      senha: 'oauth_google_' + Date.now(),
+      cpf: numCpf,
+      telefone: numTel,
+      data_aceite_termo: new Date().toISOString()
+    };
+
+    const result = await supaFetch('/rest/v1/clientes', {
+      method: 'POST',
+      body: novoCliente
+    });
+
+    if (result && result.length > 0) {
+      const clienteFinal = result[0];
+      clienteFinal.foto_url = avatar_url;
+      
+      saveClientSession(clienteFinal);
+      updateAuthUI(true);
+      showToast(`Bem-vindo(a), ${clienteFinal.nome}!`, 'success');
+      
+      const modalComplete = document.getElementById('modal-google-complete');
+      if (modalComplete) modalComplete.classList.remove('active');
+      
+      if (window.location.hash === '' || window.location.hash === '#') {
+         window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    } else {
+       showToast('Falha ao concluir cadastro', 'error');
+    }
+  } catch (err) {
+    console.error('Erro ao salvar complemento google:', err);
+    showToast('Este CPF já está cadastrado ou ocorreu um erro.', 'error');
+  } finally {
+    btn.innerHTML = oldBtnHtml;
+    btn.disabled = false;
+    if (window.lucide) window.lucide.createIcons();
+  }
+}
