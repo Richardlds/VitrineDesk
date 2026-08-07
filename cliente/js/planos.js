@@ -93,7 +93,7 @@ function renderPlanos() {
             if (activeContainer) {
                 activeContainer.innerHTML = `
                     <h5 class="text-primary font-bold text-lg mb-1">${plan.name}</h5>
-                    <p class="text-secondary text-sm mb-2">${benefitsText.join(' ? ')}</p>
+                    <p class="text-secondary text-sm mb-2">${benefitsText.join(' &bull; ')}</p>
                     <div class="flex justify-between align-center mt-3 pt-3 border-top-dashed">
                         <span class="text-xs text-muted">Válido até: ${periodEnd}</span>
                         <span class="status-badge bg-success-light text-success border-none shadow-sm">Ativo</span>
@@ -101,18 +101,18 @@ function renderPlanos() {
                 `;
             }
             
-            // Exibi??o visual estrita no perfil
+            // Exibição visual estrita no perfil
             if (profileBadge && profilePlanName) {
                 profilePlanName.textContent = plan.name;
                 profileBadge.classList.remove('hidden');
             }
         }
     } else {
-        if (activeContainer) activeContainer.innerHTML = 'Voc? ainda n?o possui nenhum plano ativo.';
+        if (activeContainer) activeContainer.innerHTML = 'Você ainda não possui nenhum plano ativo.';
         if (profileBadge) profileBadge.classList.add('hidden');
     }
 
-    // L?gica para esconder a Se??o da Home
+    // Lógica para esconder a Seção da Home
     if (tenantPlans.length === 0 || hidePlanos) {
         if (homeSection) homeSection.classList.add('hidden');
         if (listContainer) listContainer.innerHTML = '<div class="text-center text-secondary p-3">Nenhum plano disponível no momento.</div>';
@@ -120,7 +120,7 @@ function renderPlanos() {
     } else {
         if (homeSection) homeSection.classList.remove('hidden');
         
-        // Adiciona link no menu superior se n?o existir
+        // Adiciona link no menu superior se não existir
         const navLinks = document.querySelector('.nav-links');
         if (navLinks && !document.getElementById('nav-link-planos')) {
             const planosLink = document.createElement('a');

@@ -654,11 +654,11 @@ ul, ol {
 /* EFEITO PREMIUM MOBILE: FLOATING BADGE CARDS */
 @media (max-width: 767px) {
   .features-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem; /* Espaço extra para o ícone flutuante respirar */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 0.75rem; /* Gap maior vertical, menor horizontal */
     position: static;
-    padding: 1.5rem 0 1rem 0; /* Espaço superior para o primeiro ícone não cortar */
+    padding: 1.5rem 0 1rem 0;
   }
 
   .features-grid::before {
@@ -667,32 +667,32 @@ ul, ol {
 
   .feature-card {
     position: relative;
-    width: auto !important; /* Removemos 100% para evitar qualquer vazamento horizontal */
+    width: auto !important; 
     align-self: stretch;
     background: var(--bg-surface) !important;
     border: 1px solid var(--border-light) !important;
-    border-radius: 1.25rem !important;
-    padding: 3rem 1.25rem 1.5rem 1.25rem !important; /* Padding top generoso para o ícone */
+    border-radius: 1rem !important; 
+    padding: 2.5rem 0.5rem 1rem 0.5rem !important; /* Menos padding horizontal */
     margin: 0 !important;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
-    overflow: visible !important; /* Importante para o ícone flutuante não ser cortado */
+    overflow: visible !important; 
   }
 
   .feature-icon-wrapper {
     position: absolute !important;
-    top: -1.75rem !important; /* Levita na borda superior */
+    top: -1.5rem !important; 
     left: 50% !important;
     transform: translateX(-50%) !important;
-    width: 60px !important;
-    height: 60px !important;
-    border-radius: 1rem !important; /* Squircle (quadrado arredondado estilo iOS) */
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 0.75rem !important; 
     background: var(--bg-base) !important;
     border: 2px solid var(--accent-primary) !important;
-    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4) !important; /* Brilho forte embaixo do ícone */
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4) !important; 
     margin: 0 !important;
     display: flex;
     align-items: center;
@@ -700,23 +700,23 @@ ul, ol {
     z-index: 2;
   }
 
-  .feature-icon-wrapper i {
-    width: 28px !important;
-    height: 28px !important;
-    color: var(--text-primary); /* Contraste elegante no ícone */
+  .feature-icon-wrapper i, .feature-icon-wrapper svg {
+    width: 24px !important;
+    height: 24px !important;
+    color: var(--text-primary); 
   }
 
   .feature-card h3 {
-    font-size: 1.3rem;
+    font-size: 1.05rem; /* Reduzido para caber 2 colunas */
     font-weight: 800;
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.5rem 0;
     line-height: 1.2;
     color: var(--text-primary);
   }
   
   .feature-card p {
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.85rem; /* Reduzido para caber 2 colunas */
+    line-height: 1.4;
     color: var(--text-secondary);
     margin: 0;
   }

@@ -692,8 +692,12 @@ body.is-logged .logged-only {
   display: revert;
 }
 
+body.is-logged .mobile-tab-bar .logged-only {
+  display: flex !important;
+}
+
 body.is-logged .guest-only {
-  display: none;
+  display: none !important;
 }
 
 

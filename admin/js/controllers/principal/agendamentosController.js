@@ -258,12 +258,14 @@ export class agendamentosController {
                         <span class="status-badge ${statusConfig.bgClass} ${statusConfig.textClass}">${statusConfig.label}</span>
                     </td>
                     <td class="text-right">
-                        <button data-action="view" data-id="${item.id}" class="btn action-btn bg-transparent border-none text-secondary cursor-pointer" title="Ver Detalhes">
-                            <i data-lucide="eye" class="icon-sm pointer-events-none"></i>
-                        </button>
-                        <button data-action="edit" data-id="${item.id}" class="btn action-btn bg-transparent border-none text-primary cursor-pointer" title="Editar">
-                            <i data-lucide="edit" class="icon-sm pointer-events-none"></i>
-                        </button>
+                        <div class="flex justify-end gap-3">
+                            <button data-action="view" data-id="${item.id}" class="btn action-btn bg-placeholder border-none text-secondary cursor-pointer flex align-center justify-center rounded-full transition" style="width: 40px; height: 40px; padding: 0;" title="Ver Detalhes">
+                                <i data-lucide="eye" class="icon-sm pointer-events-none m-0"></i>
+                            </button>
+                            <button data-action="edit" data-id="${item.id}" class="btn action-btn bg-primary-light border-none text-primary cursor-pointer flex align-center justify-center rounded-full transition" style="width: 40px; height: 40px; padding: 0;" title="Editar">
+                                <i data-lucide="edit" class="icon-sm pointer-events-none m-0"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `;

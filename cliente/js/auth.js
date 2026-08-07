@@ -411,8 +411,14 @@ export function updateAuthUI(logged) {
       const cliente = getLoggedClient();
       const letra = (cliente?.nome || 'U')[0].toUpperCase();
 
-      // Esconder botão "Entrar", mostrar avatar (Topnav)
+      // Esconder botão "Entrar", mostrar avatar (Topnav e Mobile)
       if (btnAuth) btnAuth.classList.add('hidden');
+      
+      const mobileAvatar = document.querySelector('.mobile-tab-bar .logged-only[data-action="openClientArea"]');
+      const avatarHTML = cliente && cliente.foto_url
+        ? `<img src="${cliente.foto_url}" style="width: 24px; height: 24px; object-fit: cover; border-radius: 50%;">`
+        : `<div class="user-avatar-small bg-primary flex-center text-white" style="width:24px; height:24px; border-radius:50%; font-size:0.75rem; font-weight:bold;">${(cliente?.nome || 'U')[0].toUpperCase()}</div>`;
+
       if (userMenu) {
         userMenu.classList.remove('hidden');
         if (cliente && cliente.foto_url) {
@@ -420,6 +426,10 @@ export function updateAuthUI(logged) {
         } else {
           userMenu.innerHTML = `<div class="user-avatar-small" id="user-avatar-letter">${(cliente?.nome || 'U')[0].toUpperCase()}</div>`;
         }
+      }
+
+      if (mobileAvatar) {
+        mobileAvatar.innerHTML = avatarHTML;
       }
 
       // Carregar agendamentos (se a função existir)
@@ -676,12 +686,16 @@ export function initAuth() {
           await supaUploadAvatar(file, fileName);
           const publicUrl = getSupaPublicUrl(fileName);
 
-          // Salvar a URL no banco de dados
-          const result = await supaFetch(
-            `/rest/v1/clientes?id=eq.${cliente.id}&select=*`,
-            { method: 'PATCH', body: { foto_url: publicUrl } }
-          );
+          // Salvar a URL no Auth (user_metadata) para evitar erro 400
+          const supabaseAuth = getSupabaseAuthClient();
+          if (supabaseAuth) {
+            await supabaseAuth.auth.updateUser({
+              data: { foto_url: publicUrl, avatar_url: publicUrl }
+            }).catch(console.error);
+          }
 
+          // Atualizar estado e sessão
+          const result = [{ foto_url: publicUrl }];
           if (result && result.length > 0) {
             saveClientSession({ ...cliente, ...result[0] });
             showToast('Foto atualizada com sucesso!', 'success');
@@ -690,6 +704,12 @@ export function initAuth() {
             const headerAvatar = document.querySelector('.user-menu');
             if (headerAvatar) {
               headerAvatar.innerHTML = `<img src="${publicUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            }
+
+            // Atualiza Tab Bar Mobile
+            const mobileAvatar = document.querySelector('.mobile-tab-bar .logged-only[data-action="openClientArea"]');
+            if (mobileAvatar) {
+              mobileAvatar.innerHTML = `<img src="${publicUrl}" style="width: 24px; height: 24px; object-fit: cover; border-radius: 50%;">`;
             }
           } else {
             showToast('Erro ao atualizar foto no banco.', 'error');
@@ -831,10 +851,10 @@ async function checkGoogleOAuthSession() {
         // Já existe, atualiza foto se não tinha
         clienteFinal = busca[0];
         if (!clienteFinal.foto_url && avatar_url) {
-          await supaFetch(`/rest/v1/clientes?id=eq.${clienteFinal.id}`, {
-            method: 'PATCH',
-            body: { foto_url: avatar_url }
-          });
+          const supabaseAuth = getSupabaseAuthClient();
+          if (supabaseAuth) {
+             supabaseAuth.auth.updateUser({ data: { foto_url: avatar_url } }).catch(console.error);
+          }
           clienteFinal.foto_url = avatar_url;
         }
       } else {
@@ -844,7 +864,6 @@ async function checkGoogleOAuthSession() {
           nome: nome,
           email: email,
           senha: 'oauth_google_' + Date.now(), // Senha dummy (ignorada)
-          foto_url: avatar_url,
           data_aceite_termo: new Date().toISOString()
         };
 
@@ -855,6 +874,7 @@ async function checkGoogleOAuthSession() {
 
         if (result && result.length > 0) {
           clienteFinal = result[0];
+          clienteFinal.foto_url = avatar_url; // Manually assign
         }
       }
 

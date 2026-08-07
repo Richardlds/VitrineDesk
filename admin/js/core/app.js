@@ -1027,21 +1027,19 @@ class AdminApp {
                 if (notif.type === 'alert') { iconName = 'alert-triangle'; labelText = 'Alerta'; colorClass = 'var(--color-warning)'; }
 
                 title.textContent = labelText; // The big centered text
-                typeLabel.textContent = notif.type.toUpperCase(); // The small pill above title
+                title.textContent = labelText;
+                typeLabel.textContent = notif.type.toUpperCase();
                 typeLabel.style.color = colorClass;
                 msg.textContent = notif.message;
                 date.textContent = new Date(notif.created_at).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
                 icon.setAttribute('data-lucide', iconName);
-                icon.style.color = colorClass;
                 if (window.lucide) window.lucide.createIcons();
 
-                // Delete Logic
                 btnDelete.onclick = async () => {
                     btnDelete.innerHTML = '<i data-lucide="loader" class="animate-spin icon-xs"></i>';
                     if (window.lucide) window.lucide.createIcons();
                     try {
-                        // Se for uma notificação mock, apenas remove localmente
                         if (!id.toString().startsWith('mock-')) {
                             await supabase.from('notifications').delete().eq('id', id);
                         }
@@ -1053,10 +1051,23 @@ class AdminApp {
                     } catch (e) {
                         console.error(e);
                         if (window.showToast) window.showToast('Erro ao excluir', 'error');
-                    } finally {
                         btnDelete.innerHTML = 'Excluir';
                     }
                 };
+
+                const btnOk = document.getElementById('btn-ok-notif-popup');
+                const isTicketUpdate = isUpdate && (notif.message || '').toLowerCase().includes('chamado');
+                
+                if (isTicketUpdate) {
+                    btnOk.textContent = 'Ver Chamado';
+                    btnOk.onclick = () => {
+                        closePopup();
+                        document.querySelector('.nav-item[data-tab="sistema/suporte"]')?.click();
+                    };
+                } else {
+                    btnOk.textContent = 'Estou Ciente';
+                    btnOk.onclick = closePopup;
+                }
 
                 modalNotifPopup?.classList.remove('d-none');
                 if (window.lucide) window.lucide.createIcons();
@@ -1475,4 +1486,19 @@ window.showConfirm = function (message, confirmText = 'Confirmar', cancelText = 
 // Inicializa quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
     window.app = new AdminApp();
+
+    // Toggle profile dropdown for mobile compatibility
+    const profileTrigger = document.getElementById('profile-dropdown-trigger');
+    const profileMenu = document.querySelector('.user-dropdown-menu');
+    if (profileTrigger && profileMenu) {
+        profileTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileMenu.classList.toggle('show');
+        });
+        document.addEventListener('click', (e) => {
+            if (!profileTrigger.contains(e.target) && !profileMenu.contains(e.target)) {
+                profileMenu.classList.remove('show');
+            }
+        });
+    }
 });

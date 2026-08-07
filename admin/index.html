@@ -150,9 +150,18 @@
                         </div>
                         <!-- Filial Ativa -->
                         <div id="topbar-active-branch"
-                            class="bg-primary-light text-primary text-xs font-bold px-2 py-1 rounded-md d-none flex align-center gap-1">
-                            <i data-lucide="store" class="icon-xs"></i>
-                            <span id="topbar-active-branch-name">Matriz</span>
+                            class="d-none flex align-center gap-2 px-3 py-1 rounded-full border border-dashed border-border bg-placeholder cursor-pointer transition hover:bg-hover ml-2" 
+                            title="Trocar Filial" 
+                            onclick="document.querySelector('[data-tab=\'cadastros/filiais\']')?.click();">
+                            
+                            <div class="flex align-center justify-center rounded-full bg-primary text-white flex-shrink-0" style="width: 24px; height: 24px;">
+                                <i data-lucide="store" class="icon-xs m-0"></i>
+                            </div>
+                            <div class="flex flex-col justify-center">
+                                <span class="text-secondary uppercase font-bold" style="font-size: 9px; line-height: 1; letter-spacing: 0.5px;">Filial Ativa</span>
+                                <span id="topbar-active-branch-name" class="text-primary font-bold" style="font-size: 13px; line-height: 1.2; white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis;">Matriz</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="icon-xs text-secondary opacity-70 ml-1"></i>
                         </div>
                     </div>
                 </div>
