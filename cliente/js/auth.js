@@ -517,6 +517,9 @@ export function initAuth() {
     const btnGoogleRegister = document.getElementById('btn-google-register');
     if (btnGoogleRegister) btnGoogleRegister.addEventListener('click', loginComGoogle);
 
+    const formGoogleComplete = document.getElementById('form-google-complete');
+    if (formGoogleComplete) formGoogleComplete.addEventListener('submit', submitGoogleComplete);
+
     const formLogin = document.getElementById('form-login');
     if (formLogin) {
       formLogin.addEventListener('submit', async (e) => {
