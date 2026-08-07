@@ -715,7 +715,7 @@ ul, ol {
   }
   
   .feature-card p {
-    font-size: 0.85rem; /* Reduzido para caber 2 colunas */
+    font-size: 0.7rem; /* Reduzido conforme solicitado para caber melhor no mobile */
     line-height: 1.4;
     color: var(--text-secondary);
     margin: 0;
