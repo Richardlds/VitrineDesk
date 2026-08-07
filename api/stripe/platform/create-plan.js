@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import crypto from 'crypto';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -22,7 +23,9 @@ export default async function handler(req, res) {
       productData.description = description;
     }
     
-    const product = await stripe.products.create(productData);
+    const product = await stripe.products.create(productData, {
+      idempotencyKey: crypto.randomUUID()
+    });
 
     // 2. Create a Price (amount in cents)
     const unitAmount = Math.round(parseFloat(price) * 100);
@@ -34,6 +37,8 @@ export default async function handler(req, res) {
       recurring: {
         interval: 'month',
       },
+    }, {
+      idempotencyKey: crypto.randomUUID()
     });
 
     res.status(200).json({ 

@@ -177,6 +177,16 @@
   color: rgba(255, 255, 255, 0.25);
 }
 
+/* Autofill fix - Evitar que o navegador mude a cor do fundo e o texto suma */
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus,
+.input-group input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #1e1e28 inset !important;
+  -webkit-text-fill-color: #fff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Validação — inválido */
 .input-group.invalid input,
 .input-group.invalid select {

@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || 'https://ioadqdpxbuqdlwamqtxm.supabase.co',
@@ -32,6 +33,7 @@ export default async function handler(req, res) {
 
     const stripe = new Stripe(integration.stripe_secret_key);
 
+    const idempotencyKey = crypto.randomUUID();
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
@@ -43,6 +45,8 @@ export default async function handler(req, res) {
         tenant_id: tenantId,
         plan_id: planId
       }
+    }, {
+      idempotencyKey: idempotencyKey
     });
 
     res.status(200).json({ id: session.id, url: session.url });
