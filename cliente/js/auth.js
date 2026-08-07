@@ -287,6 +287,12 @@ export async function logoutCliente() {
 
     if (!confirm) return;
 
+    // Se o usuário logou com Google (Supabase Auth), precisamos limpar a sessão do Supabase também
+    const supabase = getSupabaseAuthClient();
+    if (supabase) {
+      await supabase.auth.signOut().catch(e => console.warn('Erro ao sair do Google Auth', e));
+    }
+
     clearClientSession();
     showToast('Você saiu da conta', 'info');
     updateAuthUI(false);
