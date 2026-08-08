@@ -131,8 +131,8 @@ export class dashboardController {
                 datasets: [{
                     label: 'Novas Lojas Criadas',
                     data: data,
-                    backgroundColor: 'rgba(99, 102, 241, 0.8)', // primary color
-                    borderColor: 'rgba(99, 102, 241, 1)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)', // primary color
+                    borderColor: 'rgba(59, 130, 246, 1)',
                     borderWidth: 1,
                     borderRadius: 4
                 }]

@@ -453,7 +453,7 @@ export class tenantsController {
                     document.getElementById('master-allow-branches').checked = tenant.settings?.allow_branches === true;
 
                     // TAB: Personalização
-                    document.getElementById('master-primary-color').value = tenant.settings?.primary_color || '#6366f1';
+                    document.getElementById('master-primary-color').value = tenant.settings?.primary_color || '#3B82F6';
                     document.getElementById('master-whatsapp').value = tenant.settings?.whatsapp || '';
                     document.getElementById('master-custom-domain').value = tenant.settings?.custom_domain || '';
                     document.getElementById('master-verified-badge').checked = tenant.settings?.verified === true;

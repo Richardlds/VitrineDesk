@@ -274,8 +274,8 @@ export function showAlert(param1, param2) {
       const html = `
         <div class="modal-overlay" id="alert-modal-custom" style="display:none; z-index:9999;">
           <div class="modal-content" style="max-width:420px; padding:28px; text-align:center;">
-            <div style="width:48px;height:48px;background:rgba(99,102,241,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-              <i data-lucide="info" style="width:24px;height:24px;color:#6366f1;"></i>
+            <div style="width:48px;height:48px;background:rgba(59, 130, 246,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+              <i data-lucide="info" style="width:24px;height:24px;color:#3B82F6;"></i>
             </div>
             <h3 id="alert-title" style="margin-bottom:10px;font-size:1.1rem;">Atenção</h3>
             <p id="alert-message" style="margin-bottom:24px;color:var(--text-secondary,#aaa);font-size:0.95rem;"></p>
@@ -480,4 +480,16 @@ export function showPrompt(titulo, mensagem, placeholder = '') {
     promptModal.classList.add('active');
     setTimeout(() => input.focus(), 100);
   });
+}
+
+// Função para prevenir XSS
+export function escapeHTML(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[&<>"']/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
 }

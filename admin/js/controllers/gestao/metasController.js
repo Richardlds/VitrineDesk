@@ -153,7 +153,7 @@ export class metasController {
         else { colorClass = 'bg-danger'; textClass = 'text-danger'; }
 
         this.progressoCard.innerHTML = `
-            <div class="config-card mb-0" style="background: linear-gradient(135deg, rgba(99,102,241,0.05) 0%, rgba(99,102,241,0.01) 100%); border: 1px solid rgba(99,102,241,0.15);">
+            <div class="config-card mb-0" style="background: linear-gradient(135deg, rgba(59, 130, 246,0.05) 0%, rgba(59, 130, 246,0.01) 100%); border: 1px solid rgba(59, 130, 246,0.15);">
                 <div class="flex flex-wrap align-center gap-4 p-2">
                     <div class="${colorClass} text-white p-4 rounded-full flex align-center justify-center shadow-sm">
                         <i data-lucide="target" class="icon-lg"></i>

@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #8B5CF6; /* Violeta Premium */
-  --primary-hover: #A855F7;
-  --primary-light: rgba(139, 92, 246, 0.15);
-  --primary-glow: rgba(139, 92, 246, 0.4);
+  --primary: #3B82F6; /* Azul Premium */
+  --primary-hover: #60A5FA;
+  --primary-light: rgba(59, 130, 246, 0.15);
+  --primary-glow: rgba(59, 130, 246, 0.4);
   
   --accent: #EC4899; /* Pink Premium */
   --accent-glow: rgba(236, 72, 153, 0.3);
@@ -22,7 +22,7 @@
   
   --border-subtle: rgba(255, 255, 255, 0.05);
   --border-default: rgba(255, 255, 255, 0.1);
-  --border-glow: rgba(139, 92, 246, 0.4);
+  --border-glow: rgba(59, 130, 246, 0.4);
   
   --success: #10b981;
   --warning: #f59e0b;

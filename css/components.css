@@ -26,7 +26,7 @@
 
 .btn-primary:hover {
   transform: scale(0.98);
-  box-shadow: 0 8px 35px rgba(99, 102, 241, 0.6), 0 0 20px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 35px rgba(59, 130, 246, 0.6), 0 0 20px rgba(255, 255, 255, 0.2);
   background: linear-gradient(135deg, var(--primary-hover), var(--primary));
   border-color: rgba(255, 255, 255, 0.4);
 }
@@ -41,7 +41,7 @@
 
 .btn-secondary:hover {
   border-color: var(--primary-light);
-  background: rgba(99, 102, 241, 0.08);
+  background: rgba(59, 130, 246, 0.08);
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
@@ -126,7 +126,7 @@
 }
 
 .badge-primary {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(59, 130, 246, 0.15);
   color: var(--primary-light);
 }
 
@@ -244,11 +244,11 @@
 }
 
 .toast.info::before {
-  background: #6366f1;
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+  background: #3B82F6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
 }
 .toast.info .toast-icon {
-  color: #6366f1;
+  color: #3B82F6;
 }
 
 .toast-message {

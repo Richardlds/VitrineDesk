@@ -521,8 +521,8 @@ export class dashboardController {
                 datasets: [{
                     label: 'Agendamentos',
                     data: dailyCounts,
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     borderWidth: 2,
                     tension: 0.4,
                     fill: true

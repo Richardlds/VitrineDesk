@@ -1,10 +1,11 @@
 <style>
     .assinatura-hero {
-        background: linear-gradient(135deg, var(--color-primary, #6366f1) 0%, #4338ca 100%);
+        background: var(--color-bg-surface, #121212);
+        border: 1px solid var(--color-border, #222222);
         border-radius: 1rem;
         padding: 2rem;
-        color: white;
-        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+        color: var(--color-text-primary, #F8F9FA);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         position: relative;
         overflow: hidden;
         margin-bottom: 2rem;
@@ -13,12 +14,11 @@
     .assinatura-hero::after {
         content: '';
         position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
-        border-radius: 50%;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
         pointer-events: none;
     }
 
@@ -28,10 +28,11 @@
         margin: 0;
         display: flex;
         align-items: center;
+        color: var(--color-text-primary, #F8F9FA);
     }
 
     .assinatura-hero-subtitle {
-        opacity: 0.9;
+        color: var(--color-text-secondary, #A1A1AA);
         font-size: 0.95rem;
         max-width: 500px;
         margin-top: 0.5rem;
@@ -39,25 +40,25 @@
     }
 
     .assinatura-tag {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(59, 130, 246, 0.15);
         padding: 0.25rem 0.75rem;
         border-radius: 20px;
         font-size: 0.75rem;
-        font-weight: bold;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        backdrop-filter: blur(4px);
         margin-left: 1rem;
     }
 
     .assinatura-tag.tag-active {
-        background: var(--color-text-primary, #f8fafc);
-        color: var(--color-primary, #6366f1);
+        color: var(--color-primary, #3B82F6);
+        border: 1px solid rgba(59, 130, 246, 0.3);
     }
 
     .assinatura-tag.tag-inactive {
-        background: var(--color-danger, #ef4444);
-        color: var(--color-text-primary, #f8fafc);
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--color-danger, #ef4444);
+        border: 1px solid rgba(239, 68, 68, 0.2);
     }
 
     .assinatura-metric-container {
@@ -67,8 +68,8 @@
     }
 
     .assinatura-metric {
-        background: rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--color-border, #222222);
         border-radius: 0.5rem;
         padding: 0.75rem 1rem;
         min-width: 150px;
@@ -78,14 +79,16 @@
         display: block;
         font-size: 0.7rem;
         text-transform: uppercase;
-        font-weight: bold;
-        opacity: 0.7;
+        font-weight: 600;
+        color: var(--color-text-secondary, #A1A1AA);
         margin-bottom: 0.25rem;
+        letter-spacing: 0.05em;
     }
 
     .assinatura-metric-value {
         font-size: 1.25rem;
         font-weight: bold;
+        color: var(--color-text-primary, #F8F9FA);
     }
 
     .assinatura-hero-content {
@@ -105,24 +108,23 @@
     }
 
     .assinatura-btn-support {
-        background: var(--color-text-primary, #f8fafc);
-        color: var(--color-primary, #6366f1);
-        border: none;
-        padding: 0.8rem 1.5rem;
+        background: transparent;
+        color: var(--color-primary, #3B82F6);
+        border: 1px solid var(--color-primary, #3B82F6);
+        padding: 0.75rem 1.5rem;
         border-radius: 0.5rem;
-        font-weight: bold;
+        font-weight: 600;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
         cursor: pointer;
         text-decoration: none;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
+        transition: all 0.2s ease;
     }
 
     .assinatura-btn-support:hover {
+        background: rgba(59, 130, 246, 0.1);
         transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     }
 
     .plan-grid {
@@ -144,21 +146,21 @@
     }
 
     .plan-card:hover {
-        border-color: var(--color-primary, #6366f1);
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.1);
+        border-color: var(--color-primary, #3B82F6);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.1);
         transform: translateY(-4px);
     }
 
     .plan-card.plan-active {
-        border: 2px solid var(--color-primary, #6366f1);
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+        border: 2px solid var(--color-primary, #3B82F6);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
     }
 
     .plan-badge {
         position: absolute;
         top: 0;
         right: 0;
-        background: var(--color-primary, #6366f1);
+        background: var(--color-primary, #3B82F6);
         color: var(--color-text-primary, #f8fafc);
         font-size: 0.75rem;
         font-weight: bold;
@@ -170,7 +172,7 @@
     .plan-price {
         font-size: 2rem;
         font-weight: 900;
-        color: var(--color-primary, #6366f1);
+        color: var(--color-primary, #3B82F6);
         margin: 1rem 0;
         display: flex;
         align-items: flex-end;

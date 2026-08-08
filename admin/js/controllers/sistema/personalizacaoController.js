@@ -122,7 +122,7 @@ export class personalizacaoController {
         // Setup Color Templates
         const templates = {
             'dark-elegance': {
-                primary: '#6366f1', secondary: '#3b82f6', accent: '#10b981',
+                primary: '#3B82F6', secondary: '#3b82f6', accent: '#10b981',
                 bgSite: '#050505', bgCards: '#121212', border: '#222222',
                 textPrimary: '#ffffff', textSecondary: '#9ca3af'
             },
@@ -327,7 +327,7 @@ export class personalizacaoController {
                     </div>
                 `;
             } else if (i === this.banners.length) {
-                const hoverStyle = `onmouseover="this.style.backgroundColor='rgba(99,102,241,0.1)'" onmouseout="this.style.backgroundColor=''"`;
+                const hoverStyle = `onmouseover="this.style.backgroundColor='rgba(59, 130, 246,0.1)'" onmouseout="this.style.backgroundColor=''"`;
                 html += `
                     <div class="bg-placeholder rounded-md flex justify-center align-center border-dashed cursor-pointer relative banner-slot" data-index="${i}" ${hoverStyle} style="height: 100px;" onclick="document.getElementById('input-banners').click()">
                         <i data-lucide="plus" class="text-secondary"></i>
@@ -376,7 +376,7 @@ export class personalizacaoController {
                     </div>
                 `;
             } else if (i === this.galeria.length) {
-                const hoverStyle = `onmouseover="this.style.backgroundColor='rgba(99,102,241,0.1)'" onmouseout="this.style.backgroundColor=''"`;
+                const hoverStyle = `onmouseover="this.style.backgroundColor='rgba(59, 130, 246,0.1)'" onmouseout="this.style.backgroundColor=''"`;
                 html += `
                     <div class="bg-placeholder rounded-md flex justify-center align-center border-dashed cursor-pointer aspect-square relative gallery-slot" data-index="${i}" ${hoverStyle} onclick="document.getElementById('input-gallery').click()">
                         <i data-lucide="plus" class="text-secondary"></i>

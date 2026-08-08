@@ -9,10 +9,10 @@
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ VariÃ¡veis CSS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   /* Cores padrão (sobrescritas dinamicamente pelo tenant) */
-  --primary: #8B5CF6;
-  --primary-rgb: 139, 92, 246;
-  --secondary: #A855F7;
-  --secondary-rgb: 168, 85, 247;
+  --primary: #3B82F6;
+  --primary-rgb: 59, 130, 246;
+  --secondary: #60A5FA;
+  --secondary-rgb: 96, 165, 250;
   --bg-dark: #05050A;
   /* Dark Mode Absoluto */
   --accent: #EC4899;
@@ -481,8 +481,8 @@ ol {
 
 .badge-completed,
 .badge-concluido {
-  background: rgba(139, 92, 246, 0.15);
-  color: #8b5cf6;
+  background: rgba(59, 130, 246, 0.15);
+  color: #3B82F6;
 }
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ AnimaÃ§Ãµes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -845,7 +845,7 @@ body.is-logged .guest-only {
 /* â•â•â•â•â•â•â• BANNER PROMOCIONAL LARGURA TOTAL â•â•â•â•â•â•â• */
 .promo-banner-full {
   width: 100%;
-  background: var(--primary, #6366f1);
+  background: var(--primary, #3B82F6);
   color: #fff;
   text-align: center;
   padding: 6px 10px;
@@ -1698,7 +1698,7 @@ body.is-logged .guest-only {
 }
 
 .maintenance-title {
-  color: #6366f1;
+  color: #3B82F6;
   margin-bottom: 10px;
 }
 
@@ -1870,13 +1870,13 @@ body.is-logged .guest-only {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary, var(--accent, #a855f7)) 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary, var(--accent, #60A5FA)) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .shadow-glow {
-  box-shadow: 0 0 20px rgba(var(--primary-rgb, 99, 102, 241), 0.35);
+  box-shadow: 0 0 20px rgba(var(--primary-rgb, 59, 130, 246), 0.35);
 }
 
 .hover-bg-glass:hover {

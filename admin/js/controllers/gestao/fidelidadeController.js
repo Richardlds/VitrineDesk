@@ -99,7 +99,7 @@ export class fidelidadeController {
             `;
         } else {
             bannerContainer.innerHTML = `
-                <div class="config-card mb-0" style="background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(99,102,241,0.02) 100%); border: 1px solid rgba(99,102,241,0.2);">
+                <div class="config-card mb-0" style="background: linear-gradient(135deg, rgba(59, 130, 246,0.1) 0%, rgba(59, 130, 246,0.02) 100%); border: 1px solid rgba(59, 130, 246,0.2);">
                     <div class="flex flex-wrap align-center gap-4 p-2">
                         <div class="bg-primary text-white p-4 rounded-full flex align-center justify-center shadow-sm">
                             <i data-lucide="award" class="icon-lg"></i>

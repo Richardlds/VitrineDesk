@@ -186,7 +186,7 @@ class SuperAdminApp {
                     }
                     .notif-card.unread { 
                         border-left: 4px solid var(--color-primary);
-                        background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+                        background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
                     }
                     
                     .drawer-action-btn {
@@ -202,7 +202,7 @@ class SuperAdminApp {
                         border-radius: 8px;
                     }
                     .drawer-action-btn.read-all:hover {
-                        background: rgba(99, 102, 241, 0.15);
+                        background: rgba(59, 130, 246, 0.15);
                         color: var(--color-primary);
                         transform: scale(1.05);
                     }

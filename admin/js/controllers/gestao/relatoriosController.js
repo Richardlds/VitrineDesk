@@ -179,13 +179,13 @@ export class relatoriosController {
                 </div>
             </div>
 
-            <div class="config-card flex flex-col justify-center mb-0 border-l-4" style="border-left-color: #8b5cf6;">
+            <div class="config-card flex flex-col justify-center mb-0 border-l-4" style="border-left-color: #3B82F6;">
                 <div class="flex justify-between align-start">
                     <div>
                         <div class="text-secondary text-sm mb-1">Clientes Únicos</div>
-                        <div class="text-xl font-bold" style="color: #8b5cf6;">${metrics.novosClientes}</div>
+                        <div class="text-xl font-bold" style="color: #3B82F6;">${metrics.novosClientes}</div>
                     </div>
-                    <div class="p-2 rounded-lg" style="background-color: #ede9fe; color: #8b5cf6;">
+                    <div class="p-2 rounded-lg" style="background-color: #DBEAFE; color: #3B82F6;">
                         <i data-lucide="users" class="icon-sm"></i>
                     </div>
                 </div>

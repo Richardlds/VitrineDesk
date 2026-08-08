@@ -17,8 +17,8 @@
 
   /* Cores - Bordas e Linhas */
   --border-light: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(139, 92, 246, 0.3);
-  /* Violeta para destaque */
+  --border-glow: rgba(59, 130, 246, 0.3);
+  /* Azul para destaque */
 
   /* Cores - Texto */
   --text-primary: #F8F9FA;
@@ -26,10 +26,10 @@
   --text-muted: #71717A;
 
   /* Cores - Brand & Acentos */
-  --accent-primary: #8B5CF6;
-  /* Violeta */
-  --accent-secondary: #A855F7;
-  /* Roxo */
+  --accent-primary: #3B82F6;
+  /* Azul */
+  --accent-secondary: #60A5FA;
+  /* Azul */
   --accent-tertiary: #EC4899;
   /* Rosa para degradês */
   --success: #10B981;
@@ -38,7 +38,7 @@
 
   /* Gradientes Premium */
   --grad-primary: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%);
-  --grad-subtle: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%);
+  --grad-subtle: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%);
 
   /* Tipografia */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -46,7 +46,7 @@
   /* Sombras e Efeitos */
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 40px rgba(139, 92, 246, 0.15);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.15);
   /* Sombra com glow sutil */
   --glass-blur: blur(12px);
 
@@ -801,7 +801,7 @@ ol {
     border-radius: 0.75rem !important;
     background: var(--bg-base) !important;
     border: 2px solid var(--accent-primary) !important;
-    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4) !important;
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4) !important;
     margin: 0 !important;
     display: flex;
     align-items: center;
@@ -1608,7 +1608,7 @@ ol {
 .plan-card:hover {
   transform: translateY(-8px) !important;
   border-color: var(--accent-primary);
-  box-shadow: 0 15px 35px -10px rgba(139, 92, 246, 0.25);
+  box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.25);
   transition-delay: 0ms !important;
 }
 

@@ -574,11 +574,11 @@ export async function checkMaintenanceMode() {
 
 /**
  * Converte hex para RGB
- * @param {string} hex - ex: '#8b5cf6'
- * @returns {string} '139, 92, 246'
+ * @param {string} hex - ex: '#3B82F6'
+ * @returns {string} '59, 130, 246'
  */
 export function hexToRgb(hex) {
-  if (!hex) return '139, 92, 246';
+  if (!hex) return '59, 130, 246';
   hex = hex.replace('#', '');
   if (hex.length === 3) {
     hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
@@ -774,4 +774,15 @@ export function hideSkeleton(containerId) {
   if (container) {
     container.classList.remove('skeleton-loading');
   }
+}
+// Função para prevenir XSS
+export function escapeHTML(str) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[&<>"']/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
 }

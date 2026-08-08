@@ -1,11 +1,12 @@
 // Supabase Config for Super Admin (VitrineDesk God)
-// ATENÇÃO: Utilizando a chave SERVICE_ROLE para contornar o RLS globalmente.
+// ATENÇÃO: Migrado para ANON_KEY. É necessário configurar RLS (Role Level Security)
+// no banco de dados Supabase para permitir acesso ao usuário AdminGod.
 
 const SUPABASE_URL = 'https://ioadqdpxbuqdlwamqtxm.supabase.co';
-const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvYWRxZHB4YnVxZGx3YW1xdHhtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTI0ODk2OSwiZXhwIjoyMDk2ODI0OTY5fQ.xpNp3X4DBiTpOYLaeN8KPb0M-NHTaQJog-vU8PelUlI';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvYWRxZHB4YnVxZGx3YW1xdHhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDg5NjksImV4cCI6MjA5NjgyNDk2OX0.LFbTj_GK_gPFtvtFr5O_nMIi8cWDn2Pl57YSrsAaTCU';
 
 // O supabase-js expõe `window.supabase` através da CDN (index.html).
-export const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+export const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
         storage: window.sessionStorage,
         autoRefreshToken: true,

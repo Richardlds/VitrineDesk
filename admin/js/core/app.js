@@ -112,7 +112,7 @@ class AdminApp {
 
                 const btn = document.createElement('button');
                 btn.id = 'btn-logout-missing-tenant';
-                btn.style.cssText = 'margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; cursor: pointer; border: none;';
+                btn.style.cssText = 'margin-top:20px; padding: 10px 20px; background:#3B82F6; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; cursor: pointer; border: none;';
                 btn.textContent = 'Sair e Voltar ao Login';
                 btn.addEventListener('click', async () => {
                     await supabase.auth.signOut();
@@ -164,7 +164,7 @@ class AdminApp {
                     container.style.cssText = 'height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg-site, #050505); color: var(--color-text-primary, #fff); font-family: sans-serif; text-align: center; padding: 20px;';
 
                     const h1 = document.createElement('h1');
-                    h1.style.cssText = 'color: var(--color-primary, #6366f1); margin-bottom: 10px;';
+                    h1.style.cssText = 'color: var(--color-primary, #3B82F6); margin-bottom: 10px;';
                     h1.textContent = '🛠️ Sistema em Manutenção';
 
                     const p = document.createElement('p');
@@ -197,7 +197,7 @@ class AdminApp {
                     const a = document.createElement('a');
                     a.href = `https://wa.me/${safeSupportWpp}?text=Ol%C3%A1%2C%20preciso%20regularizar%20minha%20assinatura!`;
                     a.target = '_blank';
-                    a.style.cssText = 'margin-top:20px; padding: 10px 20px; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold;';
+                    a.style.cssText = 'margin-top:20px; padding: 10px 20px; background:#3B82F6; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold;';
                     a.textContent = 'Falar com o Suporte';
 
                     container.appendChild(h1);
@@ -602,7 +602,7 @@ class AdminApp {
                     }
                     .notif-card.unread { 
                         border-left: 4px solid var(--color-primary);
-                        background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+                        background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
                     }
                     
                     .drawer-action-btn {
@@ -618,7 +618,7 @@ class AdminApp {
                         border-radius: 8px;
                     }
                     .drawer-action-btn.read-all:hover {
-                        background: rgba(99, 102, 241, 0.15);
+                        background: rgba(59, 130, 246, 0.15);
                         color: var(--color-primary);
                         transform: scale(1.05);
                     }

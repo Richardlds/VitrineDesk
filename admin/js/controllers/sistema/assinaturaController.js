@@ -50,7 +50,7 @@ export class assinaturaController {
                     <div style="background: var(--color-danger-light, #fee2e2); padding: 1rem; border-radius: 50%; display: inline-block; margin-bottom: 1rem;">
                         <i data-lucide="alert-triangle" style="color: var(--color-danger, #ef4444); width: 32px; height: 32px;"></i>
                     </div>
-                    <h3 class="assinatura-hero-title" style="justify-content: center; color: var(--color-primary, #6366f1); margin-bottom: 0.5rem;">Sem Assinatura</h3>
+                    <h3 class="assinatura-hero-title" style="justify-content: center; color: var(--color-primary, #3B82F6); margin-bottom: 0.5rem;">Sem Assinatura</h3>
                     <p class="text-secondary" style="margin: 0 auto; max-width: 400px; font-size: 0.95rem;">Você ainda não assinou nenhum plano. Escolha um plano abaixo para liberar recursos.</p>
                 </div>
             `;

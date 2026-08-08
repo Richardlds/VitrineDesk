@@ -140,7 +140,7 @@ export class relatoriosController {
                     labels: ['PRO', 'Starter', 'Gratuito'],
                     datasets: [{
                         data: [pro, starter, free],
-                        backgroundColor: ['#6366f1', '#06b6d4', 'rgba(255, 255, 255, 0.1)'],
+                        backgroundColor: ['#3B82F6', '#06b6d4', 'rgba(255, 255, 255, 0.1)'],
                         borderWidth: 0,
                         hoverOffset: 4
                     }]

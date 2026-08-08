@@ -1,4 +1,4 @@
-import { supaFetch, showToast } from './utils.js';
+import { supaFetch, showToast, escapeHtml } from './utils.js';
 import { getTenantId } from './app.js';
 import { getLoggedClient } from './auth.js';
 
@@ -92,7 +92,7 @@ function renderPlanos() {
 
             if (activeContainer) {
                 activeContainer.innerHTML = `
-                    <h5 class="text-primary font-bold text-lg mb-1">${plan.name}</h5>
+                    <h5 class="text-primary font-bold text-lg mb-1">${escapeHtml(plan.name)}</h5>
                     <p class="text-secondary text-sm mb-2">${benefitsText.join(' &bull; ')}</p>
                     <div class="flex justify-between align-center mt-3 pt-3 border-top-dashed">
                         <span class="text-xs text-muted">Válido até: ${periodEnd}</span>
@@ -159,7 +159,7 @@ function renderPlanos() {
             ? `<button class="btn btn-secondary btn-block btn-assinar" disabled>Plano Ativo</button>`
             : `<button class="btn btn-primary btn-block btn-assinar btn-assinar-plano" data-plan-id="${plan.id}" data-price-id="${plan.stripe_price_id}">Assinar Agora</button>`;
         
-        let imageHtml = plan.image_url ? `<div class="plan-image-wrapper"><img src="${plan.image_url}" alt="${plan.name}"></div>` : '';
+        let imageHtml = plan.image_url ? `<div class="plan-image-wrapper"><img src="${escapeHtml(plan.image_url)}" alt="${escapeHtml(plan.name)}"></div>` : '';
 
         // Lucide check icon string
         const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
@@ -170,13 +170,13 @@ function renderPlanos() {
                 ${imageHtml}
                 <div class="plan-content">
                     <div class="plan-header">
-                        <h5 class="plan-title">${plan.name}</h5>
+                        <h5 class="plan-title">${escapeHtml(plan.name)}</h5>
                         <div class="plan-price">R$ ${Number(plan.price).toFixed(2)}<span>/mês</span></div>
-                        ${plan.description ? `<p class="plan-desc">${plan.description}</p>` : ''}
+                        ${plan.description ? `<p class="plan-desc">${escapeHtml(plan.description)}</p>` : ''}
                     </div>
                     
                     <ul class="plan-benefits">
-                        ${benefits.map(b => `<li>${checkIcon}<span>${b}</span></li>`).join('')}
+                        ${benefits.map(b => `<li>${checkIcon}<span>${escapeHtml(b)}</span></li>`).join('')}
                     </ul>
                     
                     ${buttonHtml}

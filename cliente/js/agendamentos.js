@@ -23,7 +23,7 @@ export function getAgendaSettings() {
         textoConfirmarCancel: settings.agenda_texto_confirmar_cancel || 'Deseja cancelar este agendamento?',
         corConfirmado: settings.agenda_cor_confirmado || '#10b981',
         corPendente: settings.agenda_cor_pendente || '#f59e0b',
-        corConcluido: settings.agenda_cor_concluido || '#6366f1',
+        corConcluido: settings.agenda_cor_concluido || '#3B82F6',
         corCancelado: settings.agenda_cor_cancelado || '#ef4444',
         filtros: {
             todos: settings.agenda_filtro_todos !== false,

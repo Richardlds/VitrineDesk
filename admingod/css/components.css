@@ -35,7 +35,7 @@
 
 .sa-status-completed {
   color: var(--primary-light);
-  background-color: rgba(139, 92, 246, 0.15);
+  background-color: rgba(59, 130, 246, 0.15);
   border: 1px solid var(--border-glow);
   box-shadow: 0 0 10px var(--primary-glow);
 }
@@ -344,7 +344,7 @@
 }
 
 .sa-notif-modal-title-icon {
-  color: #6366f1;
+  color: #3B82F6;
 }
 
 .sa-notif-modal-close-btn {
@@ -466,7 +466,7 @@
 .sa-storage-bar-fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--primary, #6366f1);
+  background: var(--primary, #3B82F6);
   transition: width 0.5s ease, background 0.3s;
 }
 
@@ -511,7 +511,7 @@
 }
 
 .sa-template-card:hover {
-  border-color: var(--primary, #6366f1);
+  border-color: var(--primary, #3B82F6);
 }
 
 /* ============================================================
