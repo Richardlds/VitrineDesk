@@ -1,4 +1,4 @@
-import { Router } from './Router.js';
+import { Router } from './Router.js?v=2';
 import { StateManager } from './StateManager.js';
 import { supabase, getCurrentTenantId } from './supabaseClient.js';
 
@@ -226,7 +226,11 @@ class AdminApp {
                     pPromise = supabase.from('plans').select('id, name, features').eq('id', t.settings.plano_id).maybeSingle();
                 }
 
-                const activeBranchId = localStorage.getItem('active_branch_id');
+                let activeBranchId = localStorage.getItem('active_branch_id');
+                if (activeBranchId === 'null' || activeBranchId === 'undefined') {
+                    localStorage.removeItem('active_branch_id');
+                    activeBranchId = null;
+                }
                 if (activeBranchId) {
                     bPromise = supabase.from('branches').select('name').eq('id', activeBranchId).maybeSingle();
                 }
@@ -242,13 +246,34 @@ class AdminApp {
                 
                 // Update badge se SWR trouxer dado novo em background
                 const planBadge = document.getElementById('tenant-plan-badge');
-                if (planBadge && p?.name) {
-                    planBadge.textContent = p.name;
-                    planBadge.classList.remove('d-none');
+                if (planBadge) {
+                    if (p?.name) {
+                        planBadge.textContent = p.name;
+                        planBadge.classList.remove('d-none');
+                    } else {
+                        planBadge.classList.add('d-none');
+                    }
                 }
                 
                 window.globalTenant = t;
                 window.globalPlan = p;
+                
+                // Atualiza Sidebar Locks com os dados frescos
+                if (typeof window.applySidebarLocks === 'function') {
+                    window.applySidebarLocks(t, p);
+                }
+                
+                // Aplica cores admin do fresh data
+                if (t?.settings?.admin_personalizacao) {
+                    const adminPers = t.settings.admin_personalizacao;
+                    if (adminPers.primary_color) document.documentElement.style.setProperty('--color-primary', adminPers.primary_color);
+                    if (adminPers.secondary_color) document.documentElement.style.setProperty('--color-secondary', adminPers.secondary_color);
+                    if (adminPers.bg_base) document.documentElement.style.setProperty('--color-bg-base', adminPers.bg_base);
+                    if (adminPers.bg_surface) document.documentElement.style.setProperty('--color-bg-surface', adminPers.bg_surface);
+                    if (adminPers.text_primary) document.documentElement.style.setProperty('--color-text-primary', adminPers.text_primary);
+                    if (adminPers.text_secondary) document.documentElement.style.setProperty('--color-text-secondary', adminPers.text_secondary);
+                }
+
                 window.dispatchEvent(new CustomEvent('tenantUpdated', { detail: t }));
 
                 return freshData;
@@ -266,6 +291,17 @@ class AdminApp {
             }
             window.globalTenant = tenant;
             window.globalPlan = plan;
+            
+            // Aplica cores admin iniciais (cache ou rede)
+            if (tenant?.settings?.admin_personalizacao) {
+                const adminPers = tenant.settings.admin_personalizacao;
+                if (adminPers.primary_color) document.documentElement.style.setProperty('--color-primary', adminPers.primary_color);
+                if (adminPers.secondary_color) document.documentElement.style.setProperty('--color-secondary', adminPers.secondary_color);
+                if (adminPers.bg_base) document.documentElement.style.setProperty('--color-bg-base', adminPers.bg_base);
+                if (adminPers.bg_surface) document.documentElement.style.setProperty('--color-bg-surface', adminPers.bg_surface);
+                if (adminPers.text_primary) document.documentElement.style.setProperty('--color-text-primary', adminPers.text_primary);
+                if (adminPers.text_secondary) document.documentElement.style.setProperty('--color-text-secondary', adminPers.text_secondary);
+            }
             
             // Função Global de Travas
             window.checkPlanLimit = function(limitKey, currentCount, labelName) {
@@ -291,63 +327,57 @@ class AdminApp {
                 }
                 return true; // Libera
             };
-            // --- FIM SWR ---
 
-            let planFeatures = plan?.features || {};
-
-            // Exibir plano (se existir) na interface (Badge no Header Sidebar)
-            const planBadge = document.getElementById('tenant-plan-badge');
-            if (planBadge) {
-                if (plan?.name) {
-                    planBadge.textContent = plan.name;
-                    planBadge.classList.remove('d-none');
-                } else {
-                    planBadge.classList.add('d-none');
-                }
-            }
-
-            // Mesclar com os overrides do God Mode
-            const menuOverrides = tenant?.settings?.menu_overrides || {};
             window.allowedMenus = {}; // Variável global para o Router
 
-            // Todos os itens do menu (Default = allow caso não tenha plano, ou deny dependendo da regra de negócio. Assumiremos deny por segurança se o plano existir, mas allow para retrocompatibilidade se não houver plano.)
-            const allNavItems = document.querySelectorAll('.nav-item');
+            window.applySidebarLocks = function(currentTenant, currentPlan) {
+                const planFeats = currentPlan?.features || {};
+                const menuOverrides = currentTenant?.settings?.menu_overrides || {};
+                const allNavItems = document.querySelectorAll('.nav-item');
 
-            allNavItems.forEach(item => {
-                const modId = item.getAttribute('data-tab');
-                // eslint-disable-next-line no-useless-assignment
-                let isAllowed = true;
-                // Default deny if there are plans in the system but tenant has no plan/features.
-                // If tenant has no plan_id, we can either allow or deny. Let's strictly deny by default unless overridden.
-                if (tenant?.settings?.plano_id) {
-                    isAllowed = planFeatures[modId] === true;
-                } else {
-                    isAllowed = false; // Block everything if no plan is selected
-                }
+                allNavItems.forEach(item => {
+                    const modId = item.getAttribute('data-tab');
+                    let isAllowed = true;
 
-                // Overrides mandam
-                if (menuOverrides[modId] === 'allow') isAllowed = true;
-                if (menuOverrides[modId] === 'deny') isAllowed = false;
+                    if (currentTenant?.settings?.plano_id) {
+                        isAllowed = planFeats[modId] === true;
+                    } else {
+                        isAllowed = false; // Block everything if no plan is selected
+                    }
 
-                // Exceção: Dashboard e Configurações Gerais devem estar sempre liberados APENAS se o lojista não tiver um plano!
-                                if (!tenant?.settings?.plano_id) {
-                    if (modId === 'principal/dashboard' || modId === 'sistema/configuracoes') {
+                    // Overrides mandam
+                    if (menuOverrides[modId] === 'allow') isAllowed = true;
+                    if (menuOverrides[modId] === 'deny') isAllowed = false;
+
+                    // Exceção: Dashboard e Configurações Gerais devem estar sempre liberados APENAS se o lojista não tiver um plano!
+                    if (!currentTenant?.settings?.plano_id) {
+                        if (modId === 'principal/dashboard' || modId === 'sistema/configuracoes') {
+                            isAllowed = true;
+                        }
+                    }
+
+                    if (modId === 'sistema/suporte') {
                         isAllowed = true;
                     }
-                }
 
-                if (modId === 'sistema/suporte') {
-                    isAllowed = true;
-                }
+                    window.allowedMenus[modId] = isAllowed;
+                    if (!isAllowed) {
+                        item.style.opacity = '0.4';
+                        item.title = 'Plano Restrito';
+                        item.classList.add('menu-locked');
+                        item.classList.add('d-none');
+                    } else {
+                        item.style.opacity = '1';
+                        item.title = '';
+                        item.classList.remove('menu-locked');
+                        item.classList.remove('d-none');
+                    }
+                });
+            };
 
-                window.allowedMenus[modId] = isAllowed;
-
-                if (!isAllowed) {
-                    item.classList.add('d-none');
-                } else {
-                    item.classList.remove('d-none');
-                }
-            });
+            // Aplica os locks inicialmente (usando cache ou os dados que vieram do await inicial)
+            window.applySidebarLocks(tenant, plan);
+            // --- FIM SWR ---
 
             // Esconder seções vazias
             document.querySelectorAll('.nav-section').forEach(section => {
@@ -586,23 +616,23 @@ class AdminApp {
                     }
                     
                     .notif-card {
-                        background: rgba(255, 255, 255, 0.02);
+                        background: var(--color-bg-glass);
                         backdrop-filter: blur(8px);
                         -webkit-backdrop-filter: blur(8px);
-                        border: 1px solid rgba(255, 255, 255, 0.05);
+                        border: 1px solid var(--color-border);
                         border-radius: 12px; padding: 16px; margin-bottom: 12px;
                         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
                     }
                     .notif-card:hover {
                         transform: translateY(-2px);
-                        background: rgba(255, 255, 255, 0.05);
-                        border-color: rgba(255, 255, 255, 0.1);
+                        background: var(--color-bg-hover);
+                        border-color: var(--color-border-hover);
                         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
                     }
                     .notif-card.unread { 
                         border-left: 4px solid var(--color-primary);
-                        background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+                        background: linear-gradient(90deg, var(--color-primary-light) 0%, var(--color-bg-glass) 100%);
                     }
                     
                     .drawer-action-btn {
@@ -618,17 +648,17 @@ class AdminApp {
                         border-radius: 8px;
                     }
                     .drawer-action-btn.read-all:hover {
-                        background: rgba(59, 130, 246, 0.15);
+                        background: var(--color-primary-light);
                         color: var(--color-primary);
                         transform: scale(1.05);
                     }
                     .drawer-action-btn.clear-all:hover {
-                        background: rgba(239, 68, 68, 0.15);
+                        background: var(--color-danger-light);
                         color: var(--color-danger);
                         transform: scale(1.05);
                     }
                     .drawer-close-btn {
-                        background: rgba(255,255,255,0.05);
+                        background: var(--color-bg-hover);
                         border: none;
                         color: var(--color-text-secondary);
                         cursor: pointer;
@@ -873,7 +903,7 @@ class AdminApp {
                             badgeNotif.classList.add('badge-pop');
                         }
                         
-                        if (window.playNotificationSound) window.playNotificationSound(1);
+                        if (window.playNotificationSound) window.playNotificationSound(2);
                         if (cachedNotifs && Array.isArray(cachedNotifs)) {
                             cachedNotifs.unshift(newNotif);
                             if (drawerPanel && drawerPanel.classList.contains('open')) {
@@ -916,7 +946,7 @@ class AdminApp {
             void badgeNotif?.offsetWidth; // trigger reflow
             badgeNotif?.classList.add('badge-pop');
             
-            if (window.playNotificationSound) window.playNotificationSound(1);
+            if (window.playNotificationSound) window.playNotificationSound(2);
             
             if (cachedNotifs && Array.isArray(cachedNotifs)) {
                 cachedNotifs.unshift(newNotif);
@@ -948,28 +978,28 @@ class AdminApp {
 
         if (!document.getElementById('modal-notif-detail')) {
             const notifModalHtml = `
-                <div id="modal-notif-detail" class="modal-overlay d-none flex align-center justify-center" style="z-index: 100000; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
-                    <div class="flex-col relative" style="background: rgba(25, 25, 25, 0.85); width: 450px; max-width: 90vw; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(20px);">
+                <div id="modal-notif-detail" class="modal-overlay d-none flex align-center justify-center" style="z-index: 100000; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: color-mix(in srgb, var(--color-bg-base) 80%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+                    <div class="flex-col relative" style="background: var(--color-bg-surface); width: 450px; max-width: 90vw; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 60px color-mix(in srgb, var(--color-bg-base) 60%, transparent), inset 0 1px 0 var(--color-border-hover); border: 1px solid var(--color-border); backdrop-filter: blur(20px);">
                         
                         <!-- Big Icon Header -->
-                        <div class="flex justify-center align-center" style="height: 120px; background: linear-gradient(180deg, rgba(255,255,255, 0.05) 0%, transparent 100%); position: relative;">
-                            <div id="popup-notif-icon-wrapper" class="flex align-center justify-center rounded-full" style="width: 64px; height: 64px; background: rgba(255,255,255, 0.05); border: 1px solid rgba(255,255,255, 0.1); box-shadow: 0 0 20px rgba(0,0,0, 0.2);">
+                        <div class="flex justify-center align-center" style="height: 120px; background: linear-gradient(180deg, var(--color-bg-glass) 0%, transparent 100%); position: relative;">
+                            <div id="popup-notif-icon-wrapper" class="flex align-center justify-center rounded-full" style="width: 64px; height: 64px; background: var(--color-bg-glass); border: 1px solid var(--color-border-hover); box-shadow: 0 0 20px color-mix(in srgb, var(--color-bg-base) 20%, transparent);">
                                 <i id="popup-notif-icon" data-lucide="bell" style="width: 32px; height: 32px; color: var(--color-text-primary);"></i>
                             </div>
                             
-                            <button id="btn-close-notif-popup" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-white absolute rounded-full w-32px h-32px flex align-center justify-center transition-colors" style="top: 16px; right: 16px; background: rgba(255,255,255,0.05);">
+                            <button id="btn-close-notif-popup" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-white absolute rounded-full w-32px h-32px flex align-center justify-center transition-colors" style="top: 16px; right: 16px; background: var(--color-bg-glass);">
                                 <i data-lucide="x" class="icon-sm"></i>
                             </button>
                         </div>
 
                         <div class="px-8 pb-4 text-center">
-                            <span id="popup-notif-type" class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 inline-block" style="background: rgba(255,255,255, 0.1); color: var(--color-text-primary); border: 1px solid rgba(255,255,255, 0.1);">Aviso</span>
-                            <h3 id="popup-notif-title" class="font-bold text-xl text-white m-0 mb-2">Notificação</h3>
+                            <span id="popup-notif-type" class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 inline-block" style="background: var(--color-bg-glass); color: var(--color-text-primary); border: 1px solid var(--color-border-hover);">Aviso</span>
+                            <h3 id="popup-notif-title" class="font-bold text-xl m-0 mb-2" style="color: var(--color-text-primary);">Notificação</h3>
                             <span id="popup-notif-date" class="text-xs text-secondary opacity-70">00/00/0000</span>
                         </div>
                         
                         <div class="px-8 py-4">
-                            <div style="background: rgba(0, 0, 0, 0.3); border-radius: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.03);">
+                            <div style="background: color-mix(in srgb, var(--color-bg-base) 30%, transparent); border-radius: 16px; padding: 24px; border: 1px solid var(--color-border);">
                                 <p id="popup-notif-message" class="text-sm text-secondary m-0 text-center" style="white-space: pre-wrap; line-height: 1.7; font-size: 15px;"></p>
                             </div>
                         </div>

@@ -6,29 +6,31 @@
     color-scheme: dark;
     /* Brand Colors (VitrineDesk Original - Premium) */
     --color-primary: #3B82F6; /* Azul */
-    --color-primary-hover: #60A5FA; /* Azul vibrante */
-    --color-primary-light: rgba(59, 130, 246, 0.15);
-    --color-primary-glow: rgba(59, 130, 246, 0.4);
+    --color-primary-hover: color-mix(in srgb, var(--color-primary) 80%, white);
+    --color-primary-light: color-mix(in srgb, var(--color-primary) 15%, transparent);
+    --color-primary-glow: color-mix(in srgb, var(--color-primary) 40%, transparent);
 
     --color-secondary: #EC4899; /* Pink */
 
     /* Surface Colors (Premium Dark Mode) */
     --color-bg-base: #05050A; /* Fundo super escuro premium */
     --color-bg-surface: rgba(15, 15, 19, 0.7); /* Efeito translúcido para Sidebar e Modais */
-    --color-bg-glass: rgba(255, 255, 255, 0.02); /* Vidro base */
-    --color-bg-card: rgba(255, 255, 255, 0.03); 
-    --color-bg-hover: rgba(255, 255, 255, 0.06);
-    --color-border: rgba(255, 255, 255, 0.08);
-    --color-border-hover: rgba(255, 255, 255, 0.15);
-    --color-border-glow: rgba(59, 130, 246, 0.3);
+    
+    --color-bg-glass: color-mix(in srgb, var(--color-text-primary) 2%, transparent);
+    --color-bg-card: color-mix(in srgb, var(--color-bg-surface) 95%, var(--color-text-primary) 5%); 
+    --color-bg-hover: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+    
+    --color-border: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+    --color-border-hover: color-mix(in srgb, var(--color-text-primary) 15%, transparent);
+    --color-border-glow: color-mix(in srgb, var(--color-primary) 30%, transparent);
 
     /* Text Colors */
     --color-text-primary: #F8F9FA;
     --color-text-secondary: #A1A1AA;
     
     /* Skeleton */
-    --color-skeleton-1: rgba(255, 255, 255, 0.05);
-    --color-skeleton-2: rgba(255, 255, 255, 0.1);
+    --color-skeleton-1: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+    --color-skeleton-2: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
 
     /* Status Colors */
     --color-success: #10B981;
@@ -62,25 +64,9 @@
 }
 
 [data-theme="light"] {
-    /* Forçando a manter o estilo Premium escuro, ou adaptação opaca moderna */
+    /* O Light mode agora é totalmente dinâmico. Nenhuma cor estática aqui.
+       As cores são controladas pelas variáveis admin (app.js). */
     color-scheme: light;
-    
-    --color-bg-base: #F8F9FA;
-    --color-bg-surface: rgba(255, 255, 255, 0.8);
-    --color-bg-glass: rgba(255, 255, 255, 0.5);
-    --color-bg-card: rgba(255, 255, 255, 0.9);
-    --color-border: rgba(0, 0, 0, 0.08);
-
-    /* Text Colors */
-    --color-text-primary: #05050A;
-    --color-text-secondary: #52525B;
-    
-    /* Skeleton */
-    --color-skeleton-1: #e2e8f0;
-    --color-skeleton-2: #cbd5e1;
-
-    /* Glassmorphism overrides for light mode */
-    --glass-border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 /* Base Reset */

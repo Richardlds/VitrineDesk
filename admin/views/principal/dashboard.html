@@ -1,105 +1,96 @@
-<div class="admin-section">
-    <!-- Header -->
-    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
-        <div>
-            <h2 class="mb-1 text-primary">Visão Geral</h2>
-            <p class="text-secondary text-sm">Acompanhe o desempenho da sua loja em tempo real.</p>
-        </div>
-        <div class="flex align-center gap-2">
-            <button class="btn btn-outline flex align-center gap-2" id="btn-refresh-dashboard">
-                <i data-lucide="refresh-cw"></i> Atualizar
-            </button>
-            <button class="btn btn-primary flex align-center gap-2" id="btn-novo-agendamento-dash">
-                <i data-lucide="plus"></i> Novo Agendamento
-            </button>
-        </div>
+<div class="admin-section" id="dashboard-main-area">
+    
+    <div class="dashboard-header mb-4 mt-3">
+        <h2 class="text-primary">Visão Geral</h2>
+        <p class="text-secondary" style="font-size: 0.9rem;">Acompanhe os principais indicadores do seu negócio hoje.</p>
     </div>
 
-    <!-- KPIs / Metric Cards -->
-    <div class="grid grid-md-2 grid-lg-4 gap-4 mb-4" id="dashboard-kpis">
-        <!-- Skeleton Cards (default while loading) -->
-        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
-        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
-        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
-        <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
-    </div>
-
-    <!-- Main Area: Agendamentos & Próximos da Equipe -->
-    <div class="grid grid-lg-2 gap-4" id="dashboard-main-area">
-        <!-- Coluna 1: Ranking (Top Profissionais e Clientes) -->
-        <div class="config-card mb-0 flex flex-column" style="max-height: 450px; overflow-y: auto;">
-            <div class="flex flex-column flex-sm-row justify-between align-start align-sm-center mb-3 border-bottom-dashed pb-3 sticky top-0 bg-placeholder z-10 gap-2" style="margin-top:-16px; margin-left:-16px; margin-right:-16px; padding:16px;">
-                <div>
-                    <h3 class="text-primary text-md m-0 flex align-center gap-2">
-                        Destaques
-                        <i data-lucide="award" class="text-warning icon-sm"></i>
-                    </h3>
-                    <span class="text-xs text-secondary mt-1">Quem mais realizou e agendou serviços</span>
+    <!-- Cards Info -->
+    <div class="dashboard-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div class="info-card flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; cursor: default;">
+            <div class="flex justify-between align-center mb-2">
+                <span class="text-secondary font-medium" style="font-size: 0.95rem;">Faturamento Hoje</span>
+                <div class="flex align-center justify-center rounded" style="background: var(--color-success-light); width: 32px; height: 32px;">
+                    <i data-lucide="dollar-sign" class="text-success" style="width: 18px; height: 18px;"></i>
                 </div>
-                <select id="dash-ranking-filter" class="form-input bg-placeholder-dark border-none rounded-md px-2 py-1 text-primary text-sm outline-none cursor-pointer">
-                    <option value="30" style="background: var(--color-bg-base); color: var(--color-text-primary);">Últimos 30 Dias</option>
-                    <option value="7" style="background: var(--color-bg-base); color: var(--color-text-primary);">Últimos 7 Dias</option>
-                    <option value="3" style="background: var(--color-bg-base); color: var(--color-text-primary);">Últimos 3 Dias</option>
-                </select>
+            </div>
+            <h3 class="text-primary font-bold" id="dash-faturamento-hoje" style="font-size: 1.8rem; margin: 0.5rem 0;">R$ 0,00</h3>
+            <span class="flex align-center gap-1" style="font-size: 0.75rem; color: var(--color-text-secondary);"><i data-lucide="info" style="width:12px;height:12px;"></i> Hoje</span>
+        </div>
+        
+        <div class="info-card flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; cursor: default;">
+            <div class="flex justify-between align-center mb-2">
+                <span class="text-secondary font-medium" style="font-size: 0.95rem;">Agendamentos</span>
+                <div class="flex align-center justify-center rounded bg-primary-light" style="width: 32px; height: 32px;">
+                    <i data-lucide="calendar" class="text-primary" style="width: 18px; height: 18px;"></i>
+                </div>
+            </div>
+            <h3 class="text-primary font-bold" id="dash-agendamentos-hoje" style="font-size: 1.8rem; margin: 0.5rem 0;">0</h3>
+            <span style="font-size: 0.75rem; color: var(--color-text-secondary);">Para hoje</span>
+        </div>
+        
+        <div class="info-card flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; cursor: default;">
+            <div class="flex justify-between align-center mb-2">
+                <span class="text-secondary font-medium" style="font-size: 0.95rem;">Novos Clientes</span>
+                <div class="flex align-center justify-center rounded" style="background: var(--color-warning-light); width: 32px; height: 32px;">
+                    <i data-lucide="users" class="text-warning" style="width: 18px; height: 18px;"></i>
+                </div>
+            </div>
+            <h3 class="text-primary font-bold" id="dash-novos-clientes" style="font-size: 1.8rem; margin: 0.5rem 0;">0</h3>
+            <span class="flex align-center gap-1" id="dash-novos-clientes-semana" style="font-size: 0.75rem; color: var(--color-success);"><i data-lucide="trending-up" style="width:12px;height:12px;"></i> +0 na semana</span>
+        </div>
+        
+        <div class="info-card flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; cursor: default;">
+            <div class="flex justify-between align-center mb-2">
+                <span class="text-secondary font-medium" style="font-size: 0.95rem;">Ticket Médio</span>
+                <div class="flex align-center justify-center rounded" style="background: rgba(236, 72, 153, 0.15); width: 32px; height: 32px;">
+                    <i data-lucide="receipt" style="color: var(--color-secondary); width: 18px; height: 18px;"></i>
+                </div>
+            </div>
+            <h3 class="text-primary font-bold" id="dash-ticket-medio" style="font-size: 1.8rem; margin: 0.5rem 0;">R$ 0,00</h3>
+            <span style="font-size: 0.75rem; color: var(--color-text-secondary);">Média mensal</span>
+        </div>
+    </div>
+
+    <!-- Próximos Agendamentos (Ocupando largura total caso a grid principal mude ou grid flex) -->
+    <div style="margin-bottom: 2rem;">
+        <div class="dashboard-section flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem;">
+            <div class="flex justify-between align-center mb-4">
+                <h3 class="font-bold flex align-center gap-2" style="font-size: 1.1rem;"><i data-lucide="clock" class="text-primary" style="width: 20px; height: 20px;"></i> Próximos Agendamentos</h3>
+                <button class="bg-primary-light text-primary border-none rounded px-3 py-1 cursor-pointer hover:opacity-80 transition font-medium" style="font-size: 0.85rem;" onclick="document.querySelector('[data-tab=\'principal/agenda_diaria\']')?.click();">Ver Agenda Completa</button>
             </div>
             
-            <!-- Ranking de Profissionais -->
+            <div id="dashboard-agendamentos-list" class="flex-column gap-3">
+                <!-- Lista injetada via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Ranking Grid -->
+    <div class="dashboard-content-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        
+        <!-- Ranking Faturamento -->
+        <div class="dashboard-section flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem;">
             <div class="mb-4">
-                <h4 class="text-sm font-bold text-secondary uppercase mb-2">Top 3 Profissionais</h4>
-                <div id="ranking-profissionais-list" class="flex flex-column gap-2">
-                    <!-- Skeleton rows -->
-                    <div class="flex gap-3 align-center">
-                        <div class="skeleton" style="width: 32px; height: 32px; border-radius: 50%;"></div>
-                        <div class="skeleton flex-1" style="height: 24px; border-radius: 4px;"></div>
-                    </div>
-                    <div class="flex gap-3 align-center">
-                        <div class="skeleton" style="width: 32px; height: 32px; border-radius: 50%;"></div>
-                        <div class="skeleton flex-1" style="height: 24px; border-radius: 4px;"></div>
-                    </div>
-                </div>
+                <h3 class="font-bold flex align-center gap-2" style="font-size: 1.1rem;"><i data-lucide="award" class="text-warning" style="width: 20px; height: 20px;"></i> Ranking de Faturamento</h3>
+                <p class="text-secondary mt-1" style="font-size: 0.85rem;">Profissionais com maior faturamento (Mês atual)</p>
             </div>
-
-            <!-- Ranking de Clientes -->
-            <div>
-                <h4 class="text-sm font-bold text-secondary uppercase mb-2">Top 3 Clientes (Fieis)</h4>
-                <div id="ranking-clientes-list" class="flex flex-column gap-2">
-                    <!-- Skeleton rows -->
-                    <div class="flex gap-3 align-center">
-                        <div class="skeleton" style="width: 32px; height: 32px; border-radius: 50%;"></div>
-                        <div class="skeleton flex-1" style="height: 24px; border-radius: 4px;"></div>
-                    </div>
-                    <div class="flex gap-3 align-center">
-                        <div class="skeleton" style="width: 32px; height: 32px; border-radius: 50%;"></div>
-                        <div class="skeleton flex-1" style="height: 24px; border-radius: 4px;"></div>
-                    </div>
-                </div>
+            <div id="dashboard-ranking-faturamento" class="flex-column gap-3">
+                <!-- Lista injetada via JS -->
             </div>
         </div>
-
-        <!-- Coluna 2: Próximos da Equipe -->
-        <div class="config-card mb-0 flex flex-column" style="max-height: 450px; overflow-y: auto;">
-            <div class="flex justify-between align-center mb-3 border-bottom-dashed pb-3 sticky top-0 bg-placeholder z-10" style="margin-top:-16px; margin-left:-16px; margin-right:-16px; padding:16px;">
-                <h3 class="text-primary text-md m-0 flex align-center gap-2">
-                    Próximos da Equipe
-                    <i data-lucide="users" class="text-success icon-sm"></i>
-                </h3>
+        
+        <!-- Ranking Agendamentos -->
+        <div class="dashboard-section flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem;">
+            <div class="mb-4">
+                <h3 class="font-bold flex align-center gap-2" style="font-size: 1.1rem;"><i data-lucide="trophy" class="text-success" style="width: 20px; height: 20px;"></i> Ranking de Agendamentos</h3>
+                <p class="text-secondary mt-1" style="font-size: 0.85rem;">Profissionais com mais atendimentos (Mês atual)</p>
             </div>
-
-            <!-- Filtros da Equipe (Avatares) -->
-            <div class="flex overflow-x-auto gap-3 pb-3 mb-2 hide-scrollbar border-bottom-dashed" id="team-filters-container">
-                <div class="skeleton flex-shrink-0" style="width: 50px; height: 50px; border-radius: 50%;"></div>
-                <div class="skeleton flex-shrink-0" style="width: 50px; height: 50px; border-radius: 50%;"></div>
-                <div class="skeleton flex-shrink-0" style="width: 50px; height: 50px; border-radius: 50%;"></div>
-                <div class="skeleton flex-shrink-0" style="width: 50px; height: 50px; border-radius: 50%;"></div>
-            </div>
-            
-            <div id="team-next-appointments-list">
-                <!-- Skeleton rows -->
-                <div class="flex gap-3 mb-3">
-                    <div class="skeleton" style="width: 48px; height: 48px; border-radius: 50%;"></div>
-                    <div class="skeleton flex-1" style="height: 48px; border-radius: 8px;"></div>
-                </div>
+            <div id="dashboard-ranking-agendamentos" class="flex-column gap-3">
+                <!-- Lista injetada via JS -->
             </div>
         </div>
+        
     </div>
+
 </div>

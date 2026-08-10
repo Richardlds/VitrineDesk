@@ -1,9 +1,8 @@
 <div class="admin-section">
     <!-- Header -->
     <div class="mb-4">
-        <h2 class="mb-1 text-primary">Personalização (VitrineDesk)</h2>
-        <p class="text-secondary text-sm">Configure a aparência e as informações da sua vitrine de agendamentos online.
-        </p>
+        <h2 class="mb-1 text-primary">Personalização</h2>
+        <p class="text-secondary text-sm">Configure a aparência da sua vitrine online e do seu painel administrativo.</p>
     </div>
 
     <div class="grid grid-md-2 gap-4 align-start" id="vitrine-form-area">
@@ -37,6 +36,11 @@
                     class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
                     data-tab="tab-galeria">
                     <i data-lucide="layout-grid" class="icon-sm mr-1" style="vertical-align: middle;"></i> Galeria
+                </button>
+                <button type="button"
+                    class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
+                    data-tab="tab-painel-admin">
+                    <i data-lucide="monitor" class="icon-sm mr-1" style="vertical-align: middle;"></i> Painel Admin
                 </button>
             </div>
 
@@ -118,19 +122,6 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="font-medium text-sm text-secondary mb-2 inline-block">Capa (Fundo do Cabeçalho)</label>
-                        <div class="flex flex-column gap-2">
-                            <div id="preview-cover"
-                                class="bg-placeholder rounded-md flex justify-center align-center border-dashed w-100 bg-center bg-cover bg-no-repeat cursor-pointer"
-                                style="height: 100px;">
-                                <i data-lucide="upload" class="text-secondary" id="icon-cover"></i>
-                            </div>
-                            <input type="file" id="input-cover" accept="image/*" class="d-none">
-                            <div class="text-xs text-secondary mt-1">Imagem que fica atrás do nome da loja. Recomendado: 1920x400px</div>
                         </div>
                     </div>
 
@@ -480,6 +471,127 @@
                 </div>
             </div>
 
+            <!-- 6. Painel Admin -->
+            <div id="tab-painel-admin" class="tab-content d-none config-card mb-0 p-4">
+                <div class="mt-2">
+                    <p class="text-xs text-secondary mb-3">Personalize as cores do seu próprio painel administrativo para combinar com sua marca ou preferência.</p>
+
+                    <div class="mb-4 pt-3 border-top-dashed border-placeholder">
+                        <label class="font-medium text-sm text-secondary mb-3 inline-block">Templates Corporativos</label>
+                        <div class="grid-cols-2 grid-md-4 gap-3">
+                            <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-admin-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="dark-premium">
+                                <div class="flex" style="pointer-events: none;">
+                                    <span class="w-24px h-24px rounded-full" style="background: #3B82F6; border: 2px solid var(--color-bg-surface);"></span>
+                                    <span class="w-24px h-24px rounded-full" style="background: #05050A; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                </div>
+                                <span style="pointer-events: none;" class="font-bold">Dark Premium</span>
+                            </button>
+
+                            <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-admin-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="corp-blue">
+                                <div class="flex" style="pointer-events: none;">
+                                    <span class="w-24px h-24px rounded-full" style="background: #0070d2; border: 2px solid var(--color-bg-surface);"></span>
+                                    <span class="w-24px h-24px rounded-full" style="background: #F4F6F9; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                </div>
+                                <span style="pointer-events: none;" class="font-bold">Corporate Blue</span>
+                            </button>
+
+                            <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-admin-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="corp-dark">
+                                <div class="flex" style="pointer-events: none;">
+                                    <span class="w-24px h-24px rounded-full" style="background: #2f81f7; border: 2px solid var(--color-bg-surface);"></span>
+                                    <span class="w-24px h-24px rounded-full" style="background: #0d1117; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                </div>
+                                <span style="pointer-events: none;" class="font-bold">Developer Dark</span>
+                            </button>
+                            
+                            <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-admin-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="corp-indigo">
+                                <div class="flex" style="pointer-events: none;">
+                                    <span class="w-24px h-24px rounded-full" style="background: #635BFF; border: 2px solid var(--color-bg-surface);"></span>
+                                    <span class="w-24px h-24px rounded-full" style="background: #0A2540; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                </div>
+                                <span style="pointer-events: none;" class="font-bold">Fintech Indigo</span>
+                            </button>
+                            
+                            <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-admin-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="light-minimal">
+                                <div class="flex" style="pointer-events: none;">
+                                    <span class="w-24px h-24px rounded-full" style="background: #000000; border: 2px solid var(--color-bg-surface);"></span>
+                                    <span class="w-24px h-24px rounded-full" style="background: #FFFFFF; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                </div>
+                                <span style="pointer-events: none;" class="font-bold">Light Minimal</span>
+                            </button>
+                            
+                            <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-admin-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="neon-cyber">
+                                <div class="flex" style="pointer-events: none;">
+                                    <span class="w-24px h-24px rounded-full" style="background: #ff00ff; border: 2px solid var(--color-bg-surface);"></span>
+                                    <span class="w-24px h-24px rounded-full" style="background: #080010; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                </div>
+                                <span style="pointer-events: none;" class="font-bold">Neon Cyberpunk</span>
+                            </button>
+                            
+                            <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-admin-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="barber-gold">
+                                <div class="flex" style="pointer-events: none;">
+                                    <span class="w-24px h-24px rounded-full" style="background: #d4af37; border: 2px solid var(--color-bg-surface);"></span>
+                                    <span class="w-24px h-24px rounded-full" style="background: #111111; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                </div>
+                                <span style="pointer-events: none;" class="font-bold">Barber Gold</span>
+                            </button>
+                            
+                            <button type="button" class="btn bg-placeholder hover:bg-hover border-dashed text-primary text-xs py-3 px-2 rounded-md cursor-pointer transition-colors template-admin-btn flex flex-column align-center justify-center gap-2 h-100 w-100" data-template="nature-green">
+                                <div class="flex" style="pointer-events: none;">
+                                    <span class="w-24px h-24px rounded-full" style="background: #16a34a; border: 2px solid var(--color-bg-surface);"></span>
+                                    <span class="w-24px h-24px rounded-full" style="background: #f0fdf4; border: 2px solid var(--color-bg-surface); margin-left: -8px;"></span>
+                                </div>
+                                <span style="pointer-events: none;" class="font-bold">Nature Green</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid-cols-2 grid-md-3 gap-4 mb-3">
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor Primária (Botões)</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#3B82F6" class="color-picker cursor-pointer border-none bg-transparent" id="admin-color-primary-input">
+                                <span class="text-sm color-hex-display">#3B82F6</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor Secundária</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#EC4899" class="color-picker cursor-pointer border-none bg-transparent" id="admin-color-secondary-input">
+                                <span class="text-sm color-hex-display">#EC4899</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor do Texto (Títulos)</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#F8F9FA" class="color-picker cursor-pointer border-none bg-transparent" id="admin-color-text-primary-input">
+                                <span class="text-sm color-hex-display">#F8F9FA</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Fundo Base (App)</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#05050A" class="color-picker cursor-pointer border-none bg-transparent" id="admin-color-bg-base-input">
+                                <span class="text-sm color-hex-display">#05050A</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Fundo Superfície (Cards/Menu)</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#0F0F13" class="color-picker cursor-pointer border-none bg-transparent" id="admin-color-bg-surface-input">
+                                <span class="text-sm color-hex-display">#0F0F13</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Texto Secundário</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#A1A1AA" class="color-picker cursor-pointer border-none bg-transparent" id="admin-color-text-secondary-input">
+                                <span class="text-sm color-hex-display">#A1A1AA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Botão Salvar -->
             <button id="btn-save-vitrine"
                 class="btn btn-primary py-3 rounded-lg cursor-pointer w-100 mb-4 font-bold flex align-center justify-center gap-2">
@@ -500,6 +612,45 @@
                     class="btn bg-transparent text-primary py-2 px-3 mt-3 rounded-md cursor-pointer text-sm font-medium border-primary">Abrir
                     Preview</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal do Cropper -->
+<div id="modal-cropper" class="modal-overlay d-none" style="z-index: 9999;">
+    <div class="modal-content config-card" style="max-width: 600px; width: 95%;">
+        <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+            <h3 class="text-primary font-bold mb-0">Ajustar Imagem</h3>
+            <button id="btn-close-cropper" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-danger">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <div class="cropper-container mb-4 bg-placeholder rounded-lg" style="width: 100%; height: 350px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <img id="cropper-image" src="" alt="Recortar imagem" style="max-width: 100%; max-height: 100%;">
+        </div>
+        
+        <!-- Controles extras do Cropper -->
+        <div class="flex justify-center gap-2 mb-4">
+            <button id="btn-crop-zoom-in" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover" title="Mais Zoom">
+                <i data-lucide="zoom-in" class="icon-sm"></i>
+            </button>
+            <button id="btn-crop-zoom-out" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover" title="Menos Zoom">
+                <i data-lucide="zoom-out" class="icon-sm"></i>
+            </button>
+            <button id="btn-crop-rotate-left" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover ml-2" title="Girar Esquerda">
+                <i data-lucide="rotate-ccw" class="icon-sm"></i>
+            </button>
+            <button id="btn-crop-rotate-right" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover" title="Girar Direita">
+                <i data-lucide="rotate-cw" class="icon-sm"></i>
+            </button>
+        </div>
+
+        <div class="flex gap-3 justify-end pt-3 border-top-dashed border-placeholder">
+            <button id="btn-cancel-cropper" class="btn bg-transparent text-secondary border-none cursor-pointer px-4 font-medium">Cancelar</button>
+            <button id="btn-confirm-cropper" class="btn btn-primary px-4 py-2 rounded-lg cursor-pointer flex align-center gap-2">
+                <i data-lucide="check" class="icon-sm"></i> Confirmar
+            </button>
         </div>
     </div>
 </div>

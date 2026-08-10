@@ -4,7 +4,7 @@ import urllib.parse
 import os
 import threading
 
-PORT = 1899
+PORT = 8000
 
 class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path):

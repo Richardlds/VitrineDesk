@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vitrinedesk-v17';
+const CACHE_NAME = 'vitrinedesk-v18';
 
 const urlsToCache = [
     '/css/reset.css',

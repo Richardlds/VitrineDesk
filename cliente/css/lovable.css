@@ -5,29 +5,17 @@
    injeção dinâmica das cores do lojista.
    ========================================================= */
 
+/* lovable.css usa as variáveis definidas em base.css.
+   Variáveis adicionais específicas desta folha: */
 :root {
-  --primary: #7c5cff;
-  --primary-glow: #22d3ee;
-  --bg-dark: #0a0b12;
-  --bg-panel: #14161f;
-  --text-main: #f4f5fb;
-  --text-muted: #a3a8bd;
-
-  --glass: color-mix(in oklab, var(--bg-panel) 72%, transparent);
-  --glass-strong: color-mix(in oklab, var(--bg-panel) 88%, transparent);
+  --glass:       color-mix(in oklab, var(--bg-panel, var(--bg-dark)) 72%, transparent);
+  --glass-strong: color-mix(in oklab, var(--bg-panel, var(--bg-dark)) 88%, transparent);
   --border-glass: color-mix(in oklab, var(--text-main) 14%, transparent);
-  --primary-soft: color-mix(in oklab, var(--primary) 16%, transparent);
+  --ring:        0 0 0 3px color-mix(in oklab, var(--primary) 45%, transparent);
+  --shadow-glow: 0 0 0 1px var(--primary-soft), 0 22px 50px -22px color-mix(in oklab, var(--primary) 60%, transparent);
 
-  --radius: 18px;
-  --radius-sm: 12px;
   --radius-pill: 999px;
   --blur: 18px;
-  --shadow: 0 18px 46px -18px rgb(0 0 0 / 0.75);
-  --shadow-glow: 0 0 0 1px var(--primary-soft), 0 22px 50px -22px color-mix(in oklab, var(--primary) 60%, transparent);
-  --ring: 0 0 0 3px color-mix(in oklab, var(--primary) 45%, transparent);
-
-  --font-title: "Outfit", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
   --maxw: 1180px;
 }
 

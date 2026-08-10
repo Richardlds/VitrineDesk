@@ -7,11 +7,28 @@ export class Router {
         
         this.initEventListeners();
         
-        // Carrega a rota inicial padrão (Dashboard)
-        this.navigate('principal/dashboard');
+        this.initEventListeners();
+        
+        // Carrega a rota baseada no hash atual ou o Dashboard como padrão
+        this.handleHashChange(true);
+    }
+
+    handleHashChange(isInitialLoad = false) {
+        let hash = window.location.hash.replace('#/', '').replace('#', '');
+        if (!hash) {
+            hash = 'principal/dashboard';
+        }
+        
+        // Evita navegação dupla se o hashchange foi causado por um clique no nav-item
+        // O nav-item já chama navigate() diretamente, então aqui checamos se estamos na mesma rota
+        // Mas como não gravamos a rota atual de forma simples, vamos apenas chamar navigate.
+        // O navigate() cuida do cleanup.
+        this.navigate(hash);
     }
 
     initEventListeners() {
+        window.addEventListener('hashchange', () => this.handleHashChange());
+
         const navItems = document.querySelectorAll('.nav-item');
         
         navItems.forEach(item => {
@@ -24,7 +41,11 @@ export class Router {
                 const tabPath = btn.getAttribute('data-tab');
                 const titleText = btn.textContent.trim();
                 
-                this.navigate(tabPath, titleText);
+                // Em vez de chamar this.navigate direto, mudamos o hash e deixamos o evento hashchange cuidar disso
+                // Mas para manter compatibilidade com o title, chamamos navigate com o title, E mudamos o hash silenciosamente?
+                // Na verdade, só mudar o hash já aciona o hashchange que chama o navigate sem title.
+                // Mas queremos o title. Então vamos chamar o navigate.
+                window.location.hash = `#/${tabPath}`;
                 
                 // Fecha a sidebar no mobile
                 if (window.innerWidth < 992) {
@@ -90,6 +111,7 @@ export class Router {
             this.contentArea.innerHTML = html;
             if (title) {
                 this.pageTitle.textContent = title;
+                document.title = `${title} - VitrineDesk`;
             }
 
             // 4. Carregar Controller Dinamicamente (cache busting)
@@ -127,6 +149,8 @@ export class Router {
                 </div>
             `;
             if (window.lucide) window.lucide.createIcons();
+        } finally {
+            this.isNavigating = false;
         }
     }
 }

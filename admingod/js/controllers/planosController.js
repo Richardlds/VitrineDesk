@@ -8,7 +8,6 @@ export class planosController {
                 category: 'Principal',
                 items: [
                     { id: 'principal/dashboard', name: 'Dashboard' },
-                    { id: 'principal/agendamentos', name: 'Agendamentos' },
                     { id: 'principal/agenda_diaria', name: 'Agenda Diária' }
                 ]
             },
@@ -17,8 +16,7 @@ export class planosController {
                 items: [
                     { id: 'cadastros/servicos', name: 'Serviços' },
                     { id: 'cadastros/equipe', name: 'Equipe' },
-                    { id: 'cadastros/clientes', name: 'Clientes' },
-                    { id: 'cadastros/filiais', name: 'Minhas Filiais' }
+                    { id: 'cadastros/clientes', name: 'Clientes' }
                 ]
             },
             {
@@ -33,6 +31,7 @@ export class planosController {
             {
                 category: 'Gestão',
                 items: [
+                    { id: 'estoque/lista', name: 'Estoque & Catálogo' },
                     { id: 'gestao/relatorios', name: 'Relatórios' },
                     { id: 'gestao/comissoes', name: 'Comissões' },
                     { id: 'gestao/metas', name: 'Metas' },
@@ -42,6 +41,7 @@ export class planosController {
             {
                 category: 'Sistema',
                 items: [
+                    { id: 'cadastros/filiais', name: 'Minhas Filiais' },
                     { id: 'sistema/assinatura', name: 'Minha Assinatura' },
                     { 
                         id: 'sistema/configuracoes', 
@@ -158,10 +158,13 @@ export class planosController {
                 document.getElementById('plano-beneficios').value = '';
                 document.getElementById('plano-default').checked = false;
                 document.getElementById('plano-preco-anual').value = '';
-                document.getElementById('plano-limite-funcionarios').value = '';
-                document.getElementById('plano-limite-servicos').value = '';
-                document.getElementById('plano-limite-filiais').value = '';
-                document.getElementById('plano-limite-clientes').value = '';
+                const limites = {
+                    max_employees: parseInt(document.getElementById('plano-limite-funcionarios').value) || null,
+                    max_services: parseInt(document.getElementById('plano-limite-servicos').value) || null,
+                    max_branches: parseInt(document.getElementById('plano-limite-filiais').value) || null,
+                    max_clients: parseInt(document.getElementById('plano-limite-clientes').value) || null,
+                    max_inventory_items: parseInt(document.getElementById('plano-limite-estoque').value) || null
+                };
                 document.getElementById('modal-plano-title').textContent = 'Novo Plano';
                 document.querySelectorAll('.feature-toggle').forEach(chk => chk.checked = false);
                 document.getElementById('modal-plano').classList.remove('d-none');
@@ -303,10 +306,11 @@ export class planosController {
         document.getElementById('plano-preco-anual').value = features.price_annual !== undefined ? features.price_annual : '';
         
         const limits = features.limits || {};
-        document.getElementById('plano-limite-funcionarios').value = limits.max_employees !== undefined ? limits.max_employees : '';
-        document.getElementById('plano-limite-servicos').value = limits.max_services !== undefined ? limits.max_services : '';
-        document.getElementById('plano-limite-filiais').value = limits.max_branches !== undefined ? limits.max_branches : '';
-        document.getElementById('plano-limite-clientes').value = limits.max_clients !== undefined ? limits.max_clients : '';
+        document.getElementById('plano-limite-funcionarios').value = limits.max_employees !== undefined && limits.max_employees !== -1 ? limits.max_employees : '';
+        document.getElementById('plano-limite-servicos').value = limits.max_services !== undefined && limits.max_services !== -1 ? limits.max_services : '';
+        document.getElementById('plano-limite-filiais').value = limits.max_branches !== undefined && limits.max_branches !== -1 ? limits.max_branches : '';
+        document.getElementById('plano-limite-clientes').value = limits.max_clients !== undefined && limits.max_clients !== -1 ? limits.max_clients : '';
+        document.getElementById('plano-limite-estoque').value = limits.max_inventory_items !== undefined && limits.max_inventory_items !== -1 ? limits.max_inventory_items : '';
 
         document.querySelectorAll('.feature-toggle').forEach(chk => {
             const module = chk.getAttribute('data-module');
@@ -329,6 +333,7 @@ export class planosController {
         const limitServ = document.getElementById('plano-limite-servicos').value;
         const limitFil = document.getElementById('plano-limite-filiais').value;
         const limitCli = document.getElementById('plano-limite-clientes').value;
+        const limitEstoque = document.getElementById('plano-limite-estoque').value;
 
         if (!name) {
             if (window.showToast) window.showToast('Preencha o nome do plano', 'error');
@@ -341,7 +346,8 @@ export class planosController {
                 max_employees: limitFunc ? parseInt(limitFunc) : -1,
                 max_services: limitServ ? parseInt(limitServ) : -1,
                 max_branches: limitFil ? parseInt(limitFil) : -1,
-                max_clients: limitCli ? parseInt(limitCli) : -1
+                max_clients: limitCli ? parseInt(limitCli) : -1,
+                max_inventory_items: limitEstoque ? parseInt(limitEstoque) : -1
             }
         };
         if (priceAnnual) {

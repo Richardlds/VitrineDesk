@@ -29,33 +29,26 @@ export class configuracoesController {
         const container = document.getElementById('horarios-container');
         if (!container) return;
 
-        let html = '<div class="flex flex-column gap-3">';
+        let html = '<div class="flex flex-column gap-2">';
 
         this.diasDaSemana.forEach((dia, index) => {
             html += `
-                <div class="flex flex-column flex-md-row align-start align-md-center justify-between p-3 bg-placeholder border-dashed rounded-md transition-colors hover:border-primary gap-3">
-                    <div class="w-100 w-md-auto" style="min-width: 140px;">
-                        <label class="font-bold text-sm text-primary capitalize flex align-center gap-2">
-                            <i data-lucide="clock" class="icon-sm text-secondary"></i>
-                            ${this.nomesDias[index]}
-                        </label>
+                <div class="flex flex-column flex-md-row align-center justify-between p-2 pl-3 bg-surface border border-border rounded-lg transition-all hover:border-primary gap-3">
+                    <div class="flex align-center gap-2 w-100 w-md-auto" style="min-width: 140px;">
+                        <div class="w-8px h-8px rounded-full bg-primary opacity-50"></div>
+                        <span class="font-bold text-sm text-primary capitalize">${this.nomesDias[index]}</span>
                     </div>
                     
-                    <div class="flex align-center justify-between gap-3 w-100 w-md-auto flex-1">
-                        <div class="flex flex-column flex-1">
-                            <span class="text-xs text-secondary mb-1 text-center">Abertura</span>
-                            <input type="time" id="horario-inicio-${dia}" class="bg-transparent border-dashed rounded px-2 py-2 text-sm outline-none font-medium text-primary text-center focus:border-primary w-100">
-                        </div>
-                        <div class="flex flex-column flex-1">
-                            <span class="text-xs text-secondary mb-1 text-center">Fechamento</span>
-                            <input type="time" id="horario-fim-${dia}" class="bg-transparent border-dashed rounded px-2 py-2 text-sm outline-none font-medium text-primary text-center focus:border-primary w-100">
-                        </div>
+                    <div class="flex align-center justify-center gap-2 w-100 w-md-auto flex-1">
+                        <input type="time" id="horario-inicio-${dia}" class="bg-transparent border border-border rounded-md px-3 py-1 text-sm outline-none font-medium text-primary transition-colors focus:border-primary text-center" style="width: 110px;">
+                        <span class="text-xs text-secondary font-medium px-1">às</span>
+                        <input type="time" id="horario-fim-${dia}" class="bg-transparent border border-border rounded-md px-3 py-1 text-sm outline-none font-medium text-primary transition-colors focus:border-primary text-center" style="width: 110px;">
                     </div>
 
                     <div class="w-100 w-md-auto flex justify-end">
-                        <label class="flex align-center justify-center gap-2 cursor-pointer w-100 border-dashed rounded p-2 hover:bg-transparent transition-colors">
-                            <input type="checkbox" id="horario-fechado-${dia}" class="custom-checkbox accent-danger">
-                            <span class="text-sm font-bold text-danger">Fechado</span>
+                        <label class="flex align-center justify-center gap-2 cursor-pointer bg-placeholder border border-transparent rounded-md px-3 py-1 hover:border-danger transition-all">
+                            <input type="checkbox" id="horario-fechado-${dia}" class="custom-checkbox accent-danger m-0" style="width: 14px; height: 14px;">
+                            <span class="text-xs font-bold text-danger">Fechado</span>
                         </label>
                     </div>
                 </div>

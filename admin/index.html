@@ -14,6 +14,7 @@
     <!-- Design System (Mobile First) -->
     <link rel="stylesheet" href="/admin/css/design-system.css">
     <link rel="stylesheet" href="/admin/css/tickets.css">
+    <link rel="stylesheet" href="/admin/css/agenda.css">
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
@@ -21,8 +22,12 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" defer></script>
+
     <!-- Script Principal (Módulos ES6) -->
-    <script type="module" src="/admin/js/core/app.js"></script>
+    <script type="module" src="/admin/js/core/app.js?v=2"></script>
 </head>
 
 <body>
@@ -45,9 +50,6 @@
                 <div class="nav-section">Principal</div>
                 <button class="nav-item active" data-tab="principal/dashboard">
                     <i data-lucide="layout-dashboard"></i> Dashboard
-                </button>
-                <button class="nav-item" data-tab="principal/agendamentos">
-                    <i data-lucide="calendar"></i> Agendamentos
                 </button>
                 <button class="nav-item" data-tab="principal/agenda_diaria">
                     <i data-lucide="calendar-clock"></i> Agenda Diária
@@ -82,6 +84,9 @@
 
                 <!-- GESTÃO -->
                 <div class="nav-section">Gestão</div>
+                <button class="nav-item" data-tab="estoque/lista">
+                    <i data-lucide="package"></i> Estoque & Catálogo
+                </button>
                 <button class="nav-item" data-tab="gestao/relatorios">
                     <i data-lucide="bar-chart-3"></i> Relatórios
                 </button>
@@ -150,18 +155,15 @@
                         </div>
                         <!-- Filial Ativa -->
                         <div id="topbar-active-branch"
-                            class="d-none flex align-center gap-2 px-3 py-1 rounded-full border border-dashed border-border bg-placeholder cursor-pointer transition hover:bg-hover ml-2" 
+                            class="d-none flex align-center gap-2 px-2 py-1 cursor-pointer transition hover:opacity-80 ml-2" 
                             title="Trocar Filial" 
                             onclick="document.querySelector('[data-tab=\'cadastros/filiais\']')?.click();">
                             
-                            <div class="flex align-center justify-center rounded-full bg-primary text-white flex-shrink-0" style="width: 24px; height: 24px;">
+                            <div class="flex align-center justify-center rounded-full bg-primary text-white flex-shrink-0" style="width: 22px; height: 22px;">
                                 <i data-lucide="store" class="icon-xs m-0"></i>
                             </div>
-                            <div class="flex flex-col justify-center">
-                                <span class="text-secondary uppercase font-bold" style="font-size: 9px; line-height: 1; letter-spacing: 0.5px;">Filial Ativa</span>
-                                <span id="topbar-active-branch-name" class="text-primary font-bold" style="font-size: 13px; line-height: 1.2; white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis;">Matriz</span>
-                            </div>
-                            <i data-lucide="chevron-down" class="icon-xs text-secondary opacity-70 ml-1"></i>
+                            <span id="topbar-active-branch-name" class="text-primary font-bold" style="font-size: 13px; white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis;">Matriz</span>
+                            <i data-lucide="chevron-down" class="icon-xs text-secondary opacity-70"></i>
                         </div>
                     </div>
                 </div>
@@ -178,9 +180,7 @@
                         </button>
                     </div>
                     
-                    <button id="btn-toggle-theme" class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Alternar Tema" onclick="window.toggleTheme(this)">
-                        <i data-lucide="moon" class="icon-sm" id="theme-icon"></i>
-                    </button>
+
                     <!-- Sino de Notificações -->
                     <div class="notification-container" style="margin-right: 8px;">
                         <button id="btn-notifications" onclick="window.openNotificationDrawer?.()"

@@ -1,0 +1,53 @@
+<div class="admin-section">
+    <!-- Header -->
+    <div class="flex flex-col md-flex-row justify-between align-start md-align-center mb-4 gap-3">
+        <div>
+            <h2 class="mb-1 text-primary">Estoque & Catálogo</h2>
+            <p class="text-secondary text-sm">Gerencie seus produtos, peças e serviços.</p>
+        </div>
+        <div class="flex gap-2">
+            <button id="btn-novo-item" class="btn btn-primary flex align-center gap-2">
+                <i data-lucide="plus" class="icon-sm"></i> Novo Item
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="config-card mb-4 p-3 flex flex-wrap gap-3 align-center">
+        <div class="flex-1 min-w-200px">
+            <div class="search-bar w-100">
+                <i data-lucide="search" class="text-secondary"></i>
+                <input type="text" id="search-estoque" placeholder="Buscar por nome, SKU ou atributo..." class="w-100">
+            </div>
+        </div>
+        <div>
+            <select id="filter-type" class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm">
+                <option value="all">Todos os Tipos</option>
+                <option value="product">Produtos</option>
+                <option value="part">Peças</option>
+                <option value="service">Serviços</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="config-card p-0 overflow-x-auto">
+        <table class="w-100" style="border-collapse: collapse; min-width: 700px;">
+            <thead>
+                <tr class="bg-placeholder border-bottom-dashed">
+                    <th class="text-left text-secondary text-sm font-medium py-3 px-4 w-100px">SKU</th>
+                    <th class="text-left text-secondary text-sm font-medium py-3 px-4">Nome</th>
+                    <th class="text-left text-secondary text-sm font-medium py-3 px-4">Tipo</th>
+                    <th class="text-right text-secondary text-sm font-medium py-3 px-4">Preço Base</th>
+                    <th class="text-center text-secondary text-sm font-medium py-3 px-4">Estoque</th>
+                    <th class="text-right text-secondary text-sm font-medium py-3 px-4">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="estoque-table-body">
+                <tr>
+                    <td colspan="6" class="text-center text-secondary py-5">Carregando itens...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

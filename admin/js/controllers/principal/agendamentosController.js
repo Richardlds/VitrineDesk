@@ -111,7 +111,7 @@ export class agendamentosController {
                 .select('*, services(name), profissionais(nome, foto_url)', { count: 'exact' })
                 .eq('tenant_id', tenantId);
 
-            if (activeBranchId) {
+            if (activeBranchId && activeBranchId !== 'null' && activeBranchId !== 'undefined') {
                 query = query.eq('branch_id', activeBranchId);
             }
 
@@ -188,13 +188,21 @@ export class agendamentosController {
         const month = this.currentDateCalendar.getMonth();
         const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
         const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
+        
+        const activeBranchId = localStorage.getItem('active_branch_id');
 
-        const { data, error } = await supabase
+        let query = supabase
             .from('appointments')
             .select('*, services(name)')
             .eq('tenant_id', tenantId)
             .gte('appointment_date', firstDay)
             .lte('appointment_date', lastDay);
+            
+        if (activeBranchId && activeBranchId !== 'null' && activeBranchId !== 'undefined') {
+            query = query.eq('branch_id', activeBranchId);
+        }
+
+        const { data, error } = await query;
         
         if (!error) {
             this.fullDataForCalendar = data || [];
@@ -646,7 +654,7 @@ export class agendamentosController {
                 status: document.getElementById('apt-status').value
             };
             
-            if (activeBranchId) {
+            if (activeBranchId && activeBranchId !== 'null' && activeBranchId !== 'undefined') {
                 payload.branch_id = activeBranchId;
             }
             

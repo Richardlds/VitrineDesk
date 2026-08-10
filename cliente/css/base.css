@@ -8,67 +8,80 @@
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ VariÃ¡veis CSS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
-  /* Cores padrão (sobrescritas dinamicamente pelo tenant) */
-  --primary: #3B82F6;
-  --primary-rgb: 59, 130, 246;
-  --secondary: #60A5FA;
-  --secondary-rgb: 96, 165, 250;
-  --bg-dark: #05050A;
-  /* Dark Mode Absoluto */
-  --accent: #EC4899;
-  /* Pink Premium */
-
-  --border: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(var(--primary-rgb), 0.4);
-
-  --bg-card: rgba(255, 255, 255, 0.03);
-  /* Glassmorphism premium */
-  --bg-card-hover: rgba(255, 255, 255, 0.06);
-  --card-bg: rgba(255, 255, 255, 0.03);
-
-  --text-main: #f8fafc;
+  /* ── Cores base (sobrescritas dinamicamente pelo tenant via app.js) ── */
+  --primary:    #3B82F6;
+  --secondary:  #60A5FA;
+  --accent:     #EC4899;
+  --bg-dark:    #05050A;
+  --bg-panel:   #0F0F13;
+  --text-main:  #f8fafc;
   --text-muted: #94a3b8;
-  --text-foreground: #f8fafc;
 
-  --header-bg: rgba(7, 7, 10, 0.7);
-  --footer-bg: rgba(7, 7, 10, 0.8);
+  /* ── Derivadas dinâmicas via color-mix — atualizam automaticamente ── */
+  /* Bordas */
+  --border:          color-mix(in srgb, var(--text-main) 8%,  transparent);
+  --border-hover:    color-mix(in srgb, var(--text-main) 15%, transparent);
+  --border-focus:    color-mix(in srgb, var(--primary)   40%, transparent);
+  --border-strong:   color-mix(in srgb, var(--text-main) 30%, transparent);
+
+  /* Glassmorphism / Fundos de card */
+  --bg-card:         color-mix(in srgb, var(--text-main) 3%,  transparent);
+  --bg-card-hover:   color-mix(in srgb, var(--text-main) 6%,  transparent);
+  --card-bg:         var(--bg-card);
+  --bg-glass-2:      color-mix(in srgb, var(--text-main) 2%,  transparent);
+  --bg-glass-5:      color-mix(in srgb, var(--text-main) 5%,  transparent);
+  --bg-glass-8:      color-mix(in srgb, var(--text-main) 8%,  transparent);
+  --bg-glass-10:     color-mix(in srgb, var(--text-main) 10%, transparent);
+  --bg-glass-15:     color-mix(in srgb, var(--text-main) 15%, transparent);
+
+  /* Glow / Brilhos da cor primária */
+  --primary-soft:    color-mix(in srgb, var(--primary) 15%, transparent);
+  --primary-medium:  color-mix(in srgb, var(--primary) 25%, transparent);
+  --primary-strong:  color-mix(in srgb, var(--primary) 50%, transparent);
+
+  /* Glows de sombra (neon) */
+  --neon-glow:       0 0 20px  color-mix(in srgb, var(--primary) 35%, transparent);
+  --neon-glow-hover: 0 8px 30px color-mix(in srgb, var(--primary) 60%, transparent);
+
+  /* Header / Footer / Nav */
+  --header-bg:  color-mix(in srgb, var(--bg-dark) 70%, transparent);
+  --footer-bg:  color-mix(in srgb, var(--bg-dark) 80%, transparent);
   --footer-text: var(--text-muted);
+  --nav-bg:     color-mix(in srgb, var(--bg-dark) 95%, transparent);
 
   /* Feedback */
   --success: #10b981;
   --warning: #f59e0b;
-  --danger: #ef4444;
-  --info: var(--primary);
+  --danger:  #ef4444;
+  --info:    var(--primary);
 
-  /* Bordas e sombras */
-  --radius: 12px;
+  /* Bordas e raios */
+  --radius:    12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.6);
-  --neon-glow: 0 0 20px rgba(var(--primary-rgb), 0.35);
-  --neon-glow-hover: 0 8px 30px rgba(var(--primary-rgb), 0.6);
+  --shadow:    0 4px 20px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 40px rgb(0 0 0 / 0.6);
 
   /* Tipografia */
   --font-title: 'Outfit', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body:  'Inter',  system-ui, -apple-system, sans-serif;
 
   /* Transições */
-  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition:      all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   --transition-fast: all 0.15s ease;
 
   /* Espaçamento */
   --spacing-section: 80px;
-  --spacing-card: 24px;
+  --spacing-card:    24px;
 
   /* WhatsApp */
-  --whatsapp-bg: #25d366;
+  --whatsapp-bg:   #25d366;
   --whatsapp-size: 60px;
 
   /* Nav */
-  --nav-bg: rgba(7, 7, 10, 0.95);
   --nav-height: 70px;
 }
+
 
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Reset CSS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -92,15 +105,14 @@ body {
   flex-direction: column;
   font-family: var(--font-body);
   font-size: 15px;
-  /* Reduzido de 16px */
   background-color: var(--bg-dark);
   color: var(--text-main);
   line-height: 1.6;
   overflow-x: hidden;
   min-height: 100%;
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(var(--primary-rgb), 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(var(--primary-rgb), 0.05) 0%, transparent 40%);
+    radial-gradient(circle at 10% 20%, var(--primary-soft) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, color-mix(in srgb, var(--primary) 5%, transparent) 0%, transparent 40%);
   background-attachment: fixed;
 }
 
@@ -196,7 +208,7 @@ ol {
 }
 
 .glass-card:hover {
-  border-color: rgba(var(--primary-rgb), 0.2);
+  border-color: var(--primary-medium);
 }
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ BotÃµes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -229,14 +241,14 @@ ol {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-glass-5);
   color: var(--text-main);
   border: 1px solid var(--border);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(var(--primary-rgb), 0.3);
+  background: var(--bg-glass-10);
+  border-color: var(--primary-medium);
   transform: translateY(-2px);
 }
 
@@ -287,14 +299,14 @@ ol {
   pointer-events: auto;
   min-width: 300px;
   max-width: 420px;
-  background: rgba(20, 20, 30, 0.85);
+  background: color-mix(in srgb, var(--bg-dark) 85%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-hover);
   color: var(--text-main);
   padding: 16px 20px;
   border-radius: var(--radius-lg, 12px);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.03) inset;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 0.5), 0 0 20px var(--bg-glass-2) inset;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -539,15 +551,8 @@ ol {
 }
 
 @keyframes neonPulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3);
-  }
-
-  50% {
-    box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.6);
-  }
+  0%, 100% { box-shadow: 0 0 10px var(--primary-medium); }
+  50%       { box-shadow: 0 0 25px var(--primary-strong); }
 }
 
 /* Scroll reveal */
@@ -566,7 +571,7 @@ ol {
 .spinner {
   width: 24px;
   height: 24px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
+  border: 3px solid var(--border);
   border-radius: 50%;
   border-top-color: var(--primary);
   animation: spin 0.8s linear infinite;
@@ -595,7 +600,7 @@ ol {
 
 /* Skeleton loader */
 .skeleton {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 75%);
+  background: linear-gradient(90deg, var(--bg-glass-2) 25%, var(--bg-glass-8) 50%, var(--bg-glass-2) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius);
@@ -612,7 +617,7 @@ body.modal-open {
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: var(--bg-glass-15) transparent;
 }
 
 /* Webkit (Chrome, Edge, Safari) */
@@ -622,19 +627,19 @@ body.modal-open {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgb(0 0 0 / 0.2);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--bg-glass-15);
   border-radius: 4px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(var(--primary-rgb), 0.6);
+  background-color: var(--primary-strong);
   border-color: transparent;
 }
 
@@ -903,12 +908,12 @@ body.is-logged .guest-only {
   justify-content: space-between;
   cursor: pointer;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.05));
-  border: 1px solid rgba(var(--primary-rgb), 0.15);
+  background: linear-gradient(135deg, var(--primary-soft), color-mix(in srgb, var(--primary) 5%, transparent));
+  border: 1px solid var(--primary-soft);
 }
 
 .quick-booking:hover {
-  border-color: rgba(var(--primary-rgb), 0.3);
+  border-color: var(--primary-medium);
   transform: translateY(-2px);
 }
 
@@ -980,7 +985,7 @@ body.is-logged .guest-only {
   font-size: 0.8rem;
   padding: 4px 10px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-glass-5);
 }
 
 .status-dot {
@@ -1006,15 +1011,15 @@ body.is-logged .guest-only {
   align-items: center;
   gap: 16px;
   padding: 18px 20px;
-  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.03));
-  border: 1px solid rgba(var(--primary-rgb), 0.2);
+  background: linear-gradient(135deg, var(--primary-soft), color-mix(in srgb, var(--primary) 3%, transparent));
+  border: 1px solid var(--primary-medium);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: var(--transition);
 }
 
 .proximo-agendamento-card:hover {
-  border-color: rgba(var(--primary-rgb), 0.4);
+  border-color: var(--primary-strong);
   transform: translateY(-2px);
   box-shadow: var(--neon-glow);
 }
@@ -1023,7 +1028,7 @@ body.is-logged .guest-only {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(var(--primary-rgb), 0.15);
+  background: var(--primary-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1161,8 +1166,8 @@ body.is-logged .guest-only {
 
 /* Card container skeleton */
 .skeleton-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-glass-2);
+  border: 1px solid color-mix(in srgb, var(--text-main) 5%, transparent);
   border-radius: var(--radius);
   padding: 16px;
   transition: var(--transition);
@@ -1186,7 +1191,7 @@ body.is-logged .guest-only {
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid color-mix(in srgb, var(--text-main) 5%, transparent);
 }
 
 /* Profissional skeleton (booking) */
@@ -1244,22 +1249,14 @@ body.is-logged .guest-only {
 :root[data-glass-intensity="light"] .btn-glass {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  background: rgba(255, 255, 255, 0.02);
-}
-
-:root[data-theme-mode="light"][data-glass-intensity="light"] .glass-card {
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--bg-glass-2);
 }
 
 :root[data-glass-intensity="strong"] .glass-card,
 :root[data-glass-intensity="strong"] .btn-glass {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-:root[data-theme-mode="light"][data-glass-intensity="strong"] .glass-card {
-  background: rgba(0, 0, 0, 0.08);
+  background: var(--bg-glass-15);
 }
 
 /* Animações de Hover */
@@ -1298,9 +1295,9 @@ body.is-logged .guest-only {
 /* Base do skeleton com animaÃ§Ã£o shimmer */
 .skeleton {
   background: linear-gradient(90deg,
-      rgba(255, 255, 255, 0.03) 25%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.03) 75%);
+      var(--bg-glass-2) 25%,
+      var(--bg-glass-8) 50%,
+      var(--bg-glass-2) 75%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
   border-radius: var(--radius);
@@ -1472,7 +1469,7 @@ body.is-logged .guest-only {
 
 :root[data-hover-animation="glow"] .service-card:hover,
 :root[data-hover-animation="glow"] .btn:hover {
-  box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 40%, transparent);
   transform: translateY(-2px);
 }
 
@@ -1622,7 +1619,7 @@ body.is-logged .guest-only {
 }
 
 .upcoming-action {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-glass-5);
   border-radius: 50%;
   padding: 10px;
   display: flex;
@@ -1802,7 +1799,7 @@ body.is-logged .guest-only {
 .skel-card-app {
   margin-bottom: 12px;
   padding: 16px;
-  border-left: 4px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid var(--border-hover);
 }
 
 .skel-grid-4 {
@@ -1851,13 +1848,13 @@ body.is-logged .guest-only {
    PREMIUM UTILITIES (Glassmorphism & Layouts)
    ============================================================ */
 .bg-glass {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-glass-2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
 .bg-glass-light {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-glass-5);
   backdrop-filter: blur(16px);
 }
 
@@ -1876,7 +1873,7 @@ body.is-logged .guest-only {
 }
 
 .shadow-glow {
-  box-shadow: 0 0 20px rgba(var(--primary-rgb, 59, 130, 246), 0.35);
+  box-shadow: var(--neon-glow);
 }
 
 .hover-bg-glass:hover {
@@ -2362,10 +2359,10 @@ body.is-logged .guest-only {
 }
 
 .btn-glow {
-  box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.35);
+  box-shadow: var(--neon-glow);
 }
 
 .btn-glow:hover {
-  box-shadow: 0 8px 30px rgba(var(--primary-rgb), 0.6);
+  box-shadow: var(--neon-glow-hover);
   transform: translateY(-2px);
 }

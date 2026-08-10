@@ -417,9 +417,9 @@ function aplicarConfiguracoes() {
     if (tenant.theme_mode === 'light') {
       s('--bg-dark', tenant.bg_color || '#ffffff');
       s('--text-main', tenant.text_color || '#1a1a1a');
-      s('--card-bg', tenant.card_bg_color || (tenant.card_style === 'glass' ? 'rgba(0,0,0,0.05)' : '#f9f9f9'));
-      s('--bg-card', tenant.card_bg_color || (tenant.card_style === 'glass' ? 'rgba(0,0,0,0.05)' : '#f9f9f9'));
-      // Forçar cor de texto secundário para melhor leitura no tema claro se não houver cor personalizada
+      s('--card-bg', tenant.card_bg_color || (tenant.card_style === 'glass' ? 'color-mix(in srgb, var(--text-main) 5%, transparent)' : '#f9f9f9'));
+      s('--bg-card', tenant.card_bg_color || (tenant.card_style === 'glass' ? 'color-mix(in srgb, var(--text-main) 5%, transparent)' : '#f9f9f9'));
+      // Cor de texto secundário para melhor leitura no tema claro
       if (!tenant.text_muted_color) {
         s('--text-muted', 'rgba(0,0,0,0.6)');
       }
@@ -470,11 +470,8 @@ function aplicarConfiguracoes() {
         headerEl.style.zIndex = '1000';
       }
       if (pers.topbar_glass_effect) {
-        headerEl.style.background = 'rgba(10, 10, 15, 0.7)';
+        headerEl.style.background = 'color-mix(in srgb, var(--bg-dark) 70%, transparent)';
         headerEl.style.backdropFilter = 'blur(10px)';
-        if (tenant.theme_mode === 'light') {
-          headerEl.style.background = 'rgba(255, 255, 255, 0.8)';
-        }
       }
       if (pers.topbar_logo_position === 'center') {
         const topbarContainer = headerEl.querySelector('.container.flex-between');
@@ -540,7 +537,8 @@ function aplicarConfiguracoes() {
 
     // Card style (efeitos do card)
     if (pers.card_style === 'glass') {
-      root.style.setProperty('--card-bg', 'rgba(255,255,255,0.05)');
+      // color-mix calcula o glassmorphism dinamicamente a partir de --text-main
+      root.style.setProperty('--card-bg', 'var(--bg-glass-5)');
       root.setAttribute('data-glass-intensity', 'medium');
     } else if (pers.card_style === 'flat') {
       s('--shadow', 'none');
