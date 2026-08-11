@@ -1,3 +1,5 @@
+import { TUTORIALS } from './tutorials.js';
+
 export class Router {
     constructor(stateManager) {
         this.state = stateManager;
@@ -135,6 +137,16 @@ export class Router {
             // Recriar ícones Lucide recém injetados no DOM
             if (window.lucide) {
                 window.lucide.createIcons();
+            }
+
+            // Exibir Tutorial Onboarding (se existir e não tiver sido visto)
+            if (TUTORIALS[tabPath] && typeof window.showTutorial === 'function') {
+                const tenantId = localStorage.getItem('cachedTenantId') || 'local';
+                const seen = localStorage.getItem(`onboarding_${tenantId}_${tabPath}`);
+                if (!seen) {
+                    // Opcional: Não usamos await aqui para não travar a UI se o usuário interagir
+                    window.showTutorial(TUTORIALS[tabPath], tabPath, tenantId);
+                }
             }
 
         } catch (error) {

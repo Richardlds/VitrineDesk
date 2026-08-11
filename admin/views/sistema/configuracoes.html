@@ -14,20 +14,31 @@
 
                 <!-- Tabs Navigation -->
                 <div class="flex flex-wrap gap-2 border-bottom-dashed mb-4 pb-2">
-                    <button type="button" class="tab-btn active px-4 py-2 border-none rounded-t-md bg-placeholder text-primary font-medium cursor-pointer transition-colors" data-tab="tab-identidade" style="border-bottom: 2px solid var(--color-primary);">
+                    <button type="button"
+                        class="tab-btn active px-4 py-2 border-none rounded-t-md bg-placeholder text-primary font-medium cursor-pointer transition-colors"
+                        data-tab="tab-identidade" style="border-bottom: 2px solid var(--color-primary);">
                         <i data-lucide="building" class="icon-sm mr-1" style="vertical-align: middle;"></i> Identidade
                     </button>
-                    <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-contatos">
+                    <button type="button"
+                        class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
+                        data-tab="tab-contatos">
                         <i data-lucide="link" class="icon-sm mr-1" style="vertical-align: middle;"></i> Contatos
                     </button>
-                    <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-visibilidade">
+                    <button type="button"
+                        class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
+                        data-tab="tab-visibilidade">
                         <i data-lucide="eye" class="icon-sm mr-1" style="vertical-align: middle;"></i> Visibilidade
                     </button>
-                    <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-horarios">
+                    <button type="button"
+                        class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
+                        data-tab="tab-horarios">
                         <i data-lucide="clock" class="icon-sm mr-1" style="vertical-align: middle;"></i> Horários
                     </button>
-                    <button type="button" class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors" data-tab="tab-pagamentos">
-                        <i data-lucide="credit-card" class="icon-sm mr-1" style="vertical-align: middle;"></i> Pagamentos
+                    <button type="button"
+                        class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
+                        data-tab="tab-pagamentos">
+                        <i data-lucide="credit-card" class="icon-sm mr-1" style="vertical-align: middle;"></i>
+                        Pagamentos
                     </button>
                 </div>
 
@@ -169,24 +180,33 @@
                                 <input type="text" id="input-config-endereco"
                                     class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
                                     placeholder="Rua das Flores, 123 - Centro, São Paulo">
-                                <button type="button" id="btn-test-map" class="btn btn-secondary border-dashed" style="white-space: nowrap;" title="Atualizar Preview"><i data-lucide="refresh-cw" class="icon-sm"></i></button>
+                                <button type="button" id="btn-test-map" class="btn btn-secondary border-dashed"
+                                    style="white-space: nowrap;" title="Atualizar Preview"><i data-lucide="refresh-cw"
+                                        class="icon-sm"></i></button>
                             </div>
-                            <p class="text-xs text-secondary mt-1">Digite o endereço ou cole o código <code>&lt;iframe&gt;</code> do Google Maps.</p>
+                            <p class="text-xs text-secondary mt-1">Digite o endereço ou cole o código
+                                <code>&lt;iframe&gt;</code> do Google Maps.
+                            </p>
                         </div>
 
                         <div class="mb-4">
-                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Pré-visualização do Mapa na Vitrine</label>
-                            <div id="admin-map-preview" class="w-100 bg-placeholder border-dashed rounded-md flex justify-center align-center overflow-hidden relative" style="min-height: 240px; background: color-mix(in srgb, var(--bg-surface) 50%, transparent);">
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Pré-visualização do Mapa
+                                na Vitrine</label>
+                            <div id="admin-map-preview"
+                                class="w-100 bg-placeholder border-dashed rounded-md flex justify-center align-center overflow-hidden relative"
+                                style="min-height: 240px; background: color-mix(in srgb, var(--bg-surface) 50%, transparent);">
                                 <span class="text-secondary text-sm">O mapa aparecerá aqui</span>
                             </div>
                         </div>
 
                         <div class="mb-4 pt-3 border-top-dashed border-placeholder">
-                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Link Curto (Botão "Abrir no Maps")</label>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Link Curto (Botão "Abrir
+                                no Maps")</label>
                             <input type="url" id="input-config-mapa"
                                 class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
                                 placeholder="https://maps.app.goo.gl/...">
-                            <p class="text-xs text-secondary mt-1">Cole aqui o link de compartilhamento curto. Usado para o botão externo, pois o Google bloqueia links curtos no mapa visual.</p>
+                            <p class="text-xs text-secondary mt-1">Cole aqui o link de compartilhamento curto. Usado
+                                para o botão externo, pois o Google bloqueia links curtos no mapa visual.</p>
                         </div>
 
                         <h4 class="text-primary font-bold mb-3 flex align-center gap-2 border-bottom-dashed pb-2">
@@ -232,8 +252,9 @@
                             <label
                                 class="flex align-center gap-3 cursor-pointer p-3 rounded-md border-dashed bg-placeholder transition-colors hover:bg-hover">
                                 <input type="checkbox" id="toggle-hide-planos" class="custom-checkbox">
-                                <div><span class="text-sm font-bold text-primary block">Planos e Assinaturas</span><small
-                                        class="text-xs text-secondary opacity-70 block">Ocultar os planos.</small></div>
+                                <div><span class="text-sm font-bold text-primary block">Planos e
+                                        Assinaturas</span><small class="text-xs text-secondary opacity-70 block">Ocultar
+                                        os planos.</small></div>
                             </label>
                         </div>
                     </div>
@@ -254,20 +275,24 @@
                 <div id="tab-pagamentos" class="tab-content d-none config-card mb-0 p-4">
                     <div class="mt-2">
                         <div class="flex justify-between align-start mb-4 gap-3">
-                            <p class="text-sm text-secondary m-0 flex-1">Integre sua própria conta do Stripe para receber os pagamentos diretamente dos seus clientes.</p>
-                            <button type="button" id="btn-tutorial-stripe-lojista" class="btn btn-outline px-3 py-1 rounded-md text-xs font-medium flex align-center gap-2 whitespace-nowrap">
+                            <p class="text-sm text-secondary m-0 flex-1">Integre sua própria conta do Stripe para
+                                receber os pagamentos diretamente dos seus clientes.</p>
+                            <button type="button" id="btn-tutorial-stripe-lojista"
+                                class="btn btn-outline px-3 py-1 rounded-md text-xs font-medium flex align-center gap-2 whitespace-nowrap">
                                 <i data-lucide="help-circle" class="icon-sm"></i> Como configurar
                             </button>
                         </div>
 
                         <div class="mb-3">
-                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Chave Pública (Publishable Key)</label>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Chave Pública
+                                (Publishable Key)</label>
                             <input type="text" id="input-stripe-public"
                                 class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
                                 placeholder="pk_live_...">
                         </div>
                         <div class="mb-3">
-                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Chave Secreta (Secret Key)</label>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Chave Secreta (Secret
+                                Key)</label>
                             <input type="password" id="input-stripe-secret" autocomplete="new-password"
                                 class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
                                 placeholder="sk_live_...">
@@ -278,7 +303,8 @@
                                 class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm focus:border-primary"
                                 placeholder="whsec_...">
                             <small class="block text-xs text-secondary mt-2">
-                                * Cadastre a URL <strong id="webhook-url-hint"></strong> no seu Dashboard do Stripe para receber o Webhook Secret.
+                                * Cadastre a URL <strong id="webhook-url-hint"></strong> no seu Dashboard do Stripe para
+                                receber o Webhook Secret.
                             </small>
                         </div>
                     </div>
@@ -309,30 +335,42 @@
 
 <!-- Modal Tutorial Stripe Lojista -->
 <div id="modal-tutorial-stripe-lojista" class="modal-overlay d-none">
-    <div class="modal-content config-card modal-card-lg" style="max-height: 90vh; overflow-y: auto; width: 90%; max-width: 800px;">
+    <div class="modal-content config-card modal-card-lg"
+        style="max-height: 90vh; overflow-y: auto; width: 90%; max-width: 800px;">
         <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
-            <h3 class="text-primary m-0 flex align-center gap-2"><i data-lucide="info" class="text-primary"></i> Como Configurar Pagamentos (Stripe)</h3>
-            <button id="btn-close-tutorial-stripe-lojista" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors">
+            <h3 class="text-primary m-0 flex align-center gap-2"><i data-lucide="info" class="text-primary"></i> Como
+                Configurar Pagamentos (Stripe)</h3>
+            <button id="btn-close-tutorial-stripe-lojista"
+                class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors">
                 <i data-lucide="x"></i>
             </button>
         </div>
-        
+
         <div class="text-secondary text-sm line-height-1-6">
-            <p class="mb-3">Para poder cobrar os seus clientes através de <strong>Planos VIP</strong> (ou compras), você precisa vincular sua própria conta do Stripe. Assim, o dinheiro vai <strong>diretamente para a sua conta bancária</strong>.</p>
-            
+            <p class="mb-3">Para poder cobrar os seus clientes através de <strong>Planos VIP</strong> (ou compras), você
+                precisa vincular sua própria conta do Stripe. Assim, o dinheiro vai <strong>diretamente para a sua conta
+                    bancária</strong>.</p>
+
             <h4 class="text-primary mt-4 mb-2">1. Obter as Chaves (Keys)</h4>
             <ul class="pl-4 mb-3">
-                <li class="mb-1">Faça login no painel da sua conta <a href="https://dashboard.stripe.com/" target="_blank" class="text-primary font-medium">Stripe</a>.</li>
+                <li class="mb-1">Faça login no painel da sua conta <a href="https://dashboard.stripe.com/"
+                        target="_blank" class="text-primary font-medium">Stripe</a>.</li>
                 <li class="mb-1">Vá na guia <strong>Desenvolvedores &gt; Chaves de API</strong>.</li>
-                <li class="mb-1">Copie a <strong>Chave Publicável</strong> (começa com <code class="bg-placeholder px-1 rounded text-xs">pk_live_</code>) e cole no campo "Chave Pública".</li>
-                <li class="mb-1">Copie a <strong>Chave Secreta</strong> (começa com <code class="bg-placeholder px-1 rounded text-xs">sk_live_</code>) e cole no campo "Chave Secreta".</li>
+                <li class="mb-1">Copie a <strong>Chave Publicável</strong> (começa com <code
+                        class="bg-placeholder px-1 rounded text-xs">pk_live_</code>) e cole no campo "Chave Pública".
+                </li>
+                <li class="mb-1">Copie a <strong>Chave Secreta</strong> (começa com <code
+                        class="bg-placeholder px-1 rounded text-xs">sk_live_</code>) e cole no campo "Chave Secreta".
+                </li>
             </ul>
 
             <h4 class="text-primary mt-4 mb-2">2. Configurar o Webhook (Para renovações automáticas)</h4>
             <p class="mb-2">O Webhook é o que avisa ao seu sistema que o cliente pagou a mensalidade com sucesso.</p>
             <ul class="pl-4 mb-3">
-                <li class="mb-1">Ainda no painel do Stripe, vá em <strong>Desenvolvedores &gt; Webhooks</strong> e clique em <strong>Adicionar endpoint</strong>.</li>
-                <li class="mb-1">Copie o "Link para o Webhook" gerado logo abaixo do campo "Webhook Secret" na sua tela de configurações e cole na URL do Endpoint do Stripe.</li>
+                <li class="mb-1">Ainda no painel do Stripe, vá em <strong>Desenvolvedores &gt; Webhooks</strong> e
+                    clique em <strong>Adicionar endpoint</strong>.</li>
+                <li class="mb-1">Copie o "Link para o Webhook" gerado logo abaixo do campo "Webhook Secret" na sua tela
+                    de configurações e cole na URL do Endpoint do Stripe.</li>
                 <li class="mb-1">Clique em "Selecionar eventos para escutar" e adicione exatamente estes 4 eventos:
                     <ul class="pl-4 mt-1 text-xs font-mono bg-placeholder p-2 rounded">
                         <li>checkout.session.completed</li>
@@ -342,18 +380,23 @@
                     </ul>
                 </li>
                 <li class="mb-1">Clique em <strong>Adicionar endpoint</strong>.</li>
-                <li class="mb-1">Na tela que se abrir no Stripe, procure a seção "Segredo de Assinatura" e clique em "Revelar".</li>
-                <li class="mb-1">Copie esse segredo (começa com <code class="bg-placeholder px-1 rounded text-xs">whsec_</code>) e cole no campo "Webhook Secret" aqui no painel.</li>
+                <li class="mb-1">Na tela que se abrir no Stripe, procure a seção "Segredo de Assinatura" e clique em
+                    "Revelar".</li>
+                <li class="mb-1">Copie esse segredo (começa com <code
+                        class="bg-placeholder px-1 rounded text-xs">whsec_</code>) e cole no campo "Webhook Secret" aqui
+                    no painel.</li>
             </ul>
 
             <h4 class="text-primary mt-4 mb-2">3. Tudo Pronto!</h4>
             <p class="mb-3">
-                Agora, clique em <strong>Salvar Configurações</strong> no final da página. Depois disso, você já poderá ir no menu "Planos de Clientes", criar seus planos VIP e seus clientes poderão pagar!
+                Agora, clique em <strong>Salvar Configurações</strong> no final da página. Depois disso, você já poderá
+                ir no menu "Planos de Clientes", criar seus planos VIP e seus clientes poderão pagar!
             </p>
         </div>
-        
+
         <div class="mt-4 pt-3 border-top-dashed text-right">
-            <button class="btn btn-primary px-4 py-2 rounded-md font-medium" onclick="document.getElementById('modal-tutorial-stripe-lojista').classList.add('d-none')">
+            <button class="btn btn-primary px-4 py-2 rounded-md font-medium"
+                onclick="document.getElementById('modal-tutorial-stripe-lojista').classList.add('d-none')">
                 Entendi
             </button>
         </div>

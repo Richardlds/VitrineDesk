@@ -856,12 +856,12 @@ function configurarBanner() {
     const promoText = tenant.settings?.promo_bar?.text || tenant.banner_text;
 
     if (!promoActive || !promoText || !promoText.trim()) {
-      banner.style.display = 'none';
+      banner.classList.add('hidden');
       return;
     }
 
     // Mostrar banner
-    banner.style.display = 'block';
+    banner.classList.remove('hidden');
 
     // Cor de fundo
     const bgColor = tenant.settings?.promo_bar?.bg_color || tenant.banner_color;

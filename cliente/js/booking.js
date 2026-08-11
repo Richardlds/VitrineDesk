@@ -789,6 +789,27 @@ async function submitBooking() {
     if (result && result.length > 0) {
       showToast('Agendamento realizado com sucesso!', 'success');
       
+      // Enviar notificação para o lojista
+      try {
+        const client = getLoggedClient();
+        const clientName = client?.nome || 'Um cliente';
+        const dateParts = bookingState.selectedDate.split('-');
+        const dateFormatted = dateParts.length === 3 ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}` : bookingState.selectedDate;
+        const notifMsg = `Novo agendamento! ${clientName} agendou para o dia ${dateFormatted} às ${bookingState.selectedTime}.`;
+        
+        await supaFetch('/rest/v1/notifications', {
+          method: 'POST',
+          body: {
+            tenant_id: getTenantId(),
+            type: 'appointment',
+            message: notifMsg,
+            read: false
+          }
+        });
+      } catch (err) {
+        console.error('Erro ao enviar notificação', err);
+      }
+      
       // Se usou agendamento grátis do plano, incrementar o uso
       if (bookingState.planDiscountApplied === 'free_appointment' && window.activeClientSubscription) {
         try {

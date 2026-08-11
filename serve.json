@@ -3,6 +3,10 @@
     {
       "source": "/cliente/:slug",
       "destination": "/cliente/index.html"
+    },
+    {
+      "source": "/:slug",
+      "destination": "/cliente/index.html"
     }
   ]
 }

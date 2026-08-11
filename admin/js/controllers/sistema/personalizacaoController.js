@@ -241,8 +241,13 @@ export class personalizacaoController {
                     const tenantId = await getCurrentTenantId();
                     const { data } = await supabase.from('tenants').select('slug').eq('id', tenantId).single();
                     const slug = data?.slug || 'loja';
+                    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                     const baseUrl = window.location.href.split('/admin')[0];
-                    window.open(`${baseUrl}/vitrinedesk/${slug}`, '_blank');
+                    if (isLocalhost) {
+                        window.open(`/cliente/index.html?tenant=${slug}`, '_blank');
+                    } else {
+                        window.open(`${baseUrl}/${slug}`, '_blank');
+                    }
                 } catch (err) {
                     console.error('Erro ao abrir preview:', err);
                 }

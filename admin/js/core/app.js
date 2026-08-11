@@ -447,14 +447,12 @@ class AdminApp {
             const btnVitrine = document.getElementById('btn-vitrine-link');
             if (btnVitrine) {
                 btnVitrine.addEventListener('click', () => {
-                    const baseUrl = window.location.href.split('/admin')[0];
-                    const vitrineUrl = `${baseUrl}/vitrinedesk/${window.currentTenantSlug}`;
-
-                    // Abrir em nova aba
-                    window.open(vitrineUrl, '_blank');
-
-                    // Opcional: Ainda copiar para a área de transferência
-                    navigator.clipboard.writeText(vitrineUrl).catch(() => { });
+                    if (window.currentTenantSlug) {
+                        const baseUrl = window.location.origin;
+                        const vitrineUrl = `${baseUrl}/${window.currentTenantSlug}`;
+                        window.open(vitrineUrl, '_blank');
+                        navigator.clipboard.writeText(vitrineUrl).catch(() => { });
+                    }
                 });
             }
 
@@ -1520,6 +1518,104 @@ window.showConfirm = function (message, confirmText = 'Confirmar', cancelText = 
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) fechar(false);
         });
+    });
+};
+
+window.showTutorial = function (tutorialData, tabPath, tenantId) {
+    return new Promise((resolve) => {
+        const existing = document.getElementById('global-tutorial-modal');
+        if (existing) existing.remove();
+
+        const overlay = document.createElement('div');
+        overlay.id = 'global-tutorial-modal';
+        overlay.className = 'modal-overlay fade-in';
+        overlay.style.zIndex = '9999';
+
+        overlay.innerHTML = `
+            <style>
+                .tutorial-modal-ios {
+                    background: #ffffff;
+                    border-radius: 32px;
+                    max-width: 400px;
+                    text-align: center;
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+                    overflow: hidden;
+                    border: 1px solid rgba(0,0,0,0.05);
+                }
+                .tutorial-ios-header {
+                    background: linear-gradient(135deg, var(--color-primary), #3B82F6);
+                    height: 160px; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    color: white;
+                    position: relative;
+                }
+                .tutorial-ios-header::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -20px;
+                    left: 0;
+                    right: 0;
+                    height: 40px;
+                    background: #ffffff;
+                    border-radius: 50% 50% 0 0;
+                }
+                .tutorial-ios-content {
+                    padding: 20px 40px 40px;
+                    background: #ffffff;
+                    position: relative;
+                    z-index: 10;
+                }
+                .tutorial-ios-btn {
+                    background: var(--color-primary); 
+                    color: white; 
+                    border-radius: 20px; 
+                    border: none; 
+                    padding: 14px;
+                    width: 100%; 
+                    font-weight: 700; 
+                    font-size: 16px; 
+                    cursor: pointer;
+                    box-shadow: 0 8px 20px -6px rgba(var(--color-primary-rgb), 0.5);
+                    transition: all 0.2s ease;
+                }
+                .tutorial-ios-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 25px -6px rgba(var(--color-primary-rgb), 0.6);
+                }
+            </style>
+            <div class="modal-content tutorial-modal-ios slide-up p-0">
+                <div class="tutorial-ios-header">
+                    <i data-lucide="${tutorialData.icon || 'info'}" style="width: 60px; height: 60px; margin-bottom: 10px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));"></i>
+                </div>
+                <div class="tutorial-ios-content">
+                    <h2 class="mb-3 font-bold text-2xl" style="color: #111827; letter-spacing: -0.5px;">${tutorialData.title}</h2>
+                    <p class="text-md mb-8 line-height-1-6" style="color: #6B7280;">${tutorialData.description}</p>
+                    <button class="tutorial-ios-btn btn-entendi flex align-center justify-center gap-2">
+                        Entendi, vamos lá! <i data-lucide="arrow-right" class="icon-sm m-0"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        if (window.lucide) window.lucide.createIcons();
+
+        const btnEntendi = overlay.querySelector('.btn-entendi');
+
+        const fechar = () => {
+            overlay.classList.add('d-none');
+            setTimeout(() => {
+                overlay.remove();
+                if (tenantId && tabPath) {
+                    localStorage.setItem(`onboarding_${tenantId}_${tabPath}`, 'true');
+                }
+                resolve();
+            }, 200);
+        };
+
+        btnEntendi.addEventListener('click', fechar);
     });
 };
 

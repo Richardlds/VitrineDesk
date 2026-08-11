@@ -1,80 +1,176 @@
 /* ============================================================
-   AUTH.CSS — Estilos da Central de Login/Registro Ultra Premium
+   AUTH.CSS — Apple iOS Card Split-Screen Style
    ============================================================ */
 
-/* Pontinhos de fundo animados */
-.bg-particles {
-  position: fixed;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 30px 30px;
-  z-index: -2;
-  pointer-events: none;
-  animation: gridMoveAuth 40s linear infinite;
-  mask-image: radial-gradient(circle at center, #000 30%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle at center, #000 30%, transparent 100%);
-}
-
-@keyframes gridMoveAuth {
-  0% { background-position: 0 0; }
-  100% { background-position: 30px 30px; }
-}
-
-.bg-particles::after {
-  content: '';
-  position: absolute;
-  top: 10%;
-  left: 10%;
-  right: 10%;
-  bottom: 10%;
-  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 60%);
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Auth Container Centered */
-.auth-container {
+/* Fundo da Página Inteira - Escuro / Premium */
+body {
+  background: radial-gradient(ellipse at top, #20202e, #0b0b10 100%);
+  min-height: 100vh;
+  margin: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100dvh;
-  padding: 24px 16px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* Auth Split Container - The iOS Giant Widget */
+.auth-split-container {
+  display: flex;
+  width: 100%;
+  max-width: 830px;
+  min-height: 460px;
+  margin: auto;
+  /* Garante que fique perfeitamente centralizado caso flex falhe na altura */
+  border-radius: 24px;
+  background: rgba(18, 18, 24, 0.65);
+  /* Dark Glass */
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  /* Mantém tudo dentro dos cantos curvos */
   position: relative;
   z-index: 1;
 }
 
-/* Auth Card Glassmorphic */
+/* Lado Esquerdo - Showcase iOS */
+.auth-showcase {
+  flex: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* Fundo sutil com gradiente, já que o container pai é de vidro */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0) 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 28px;
+  color: white;
+}
+
+.showcase-content {
+  position: relative;
+  z-index: 2;
+  max-width: 380px;
+}
+
+.showcase-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+}
+
+.showcase-logo i {
+  color: var(--primary-light);
+}
+
+.showcase-title {
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+  background: linear-gradient(to bottom right, #ffffff, #a5b4fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.showcase-subtitle {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+
+.showcase-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateX(-20px);
+  opacity: 0;
+  animation: slideInFeature 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
+/* Lado Direito - Painel de Auth */
+.auth-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  background: var(--bg-card);
+}
+
 .auth-card {
   width: 100%;
-  max-width: 440px;
-  background: var(--bg-card);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 32px 24px;
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  max-width: 320px;
+  background: transparent;
+  padding: 12px 0;
   animation: fadeInUpAuth 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  position: relative;
 }
 
 @keyframes fadeInUpAuth {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Logo */
-.auth-logo {
-  display: block;
-  text-align: center;
-  font-size: 26px;
+/* Mobile Adjustments */
+.auth-logo-mobile {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 24px;
   font-weight: 800;
-  background: linear-gradient(135deg, #ffffff, var(--primary-light), var(--accent));
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: logoGradient 4s ease infinite;
-  margin-bottom: 32px;
+  color: var(--text-primary);
+  margin-bottom: 30px;
+}
+
+@media (max-width: 900px) {
+  .auth-split-container {
+    flex-direction: column;
+  }
+
+  .auth-showcase {
+    display: none;
+    /* Hide showcase on mobile to keep login fast */
+  }
+
+  .auth-logo-mobile {
+    display: flex;
+  }
+
+  .auth-panel {
+    background: var(--bg-main);
+  }
 }
 
 /* Tabs */
@@ -84,7 +180,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 4px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .auth-tab {
@@ -111,7 +207,7 @@
 .auth-form {
   display: none;
   flex-direction: column;
-  gap: 24px;
+  gap: 8px;
 }
 
 .auth-form.active {
@@ -128,12 +224,12 @@
 .input-group input,
 .input-group select {
   width: 100%;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
   color: var(--text-primary);
-  font-size: 15px;
+  font-size: 14px;
   transition: var(--transition);
   outline: none;
   min-height: 44px;
@@ -142,23 +238,23 @@
 /* Labels flutuantes */
 .input-group label {
   position: absolute;
-  left: 16px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-secondary);
   transition: var(--transition);
   pointer-events: none;
-  font-size: 14px;
+  font-size: 13px;
   background: transparent;
   transform-origin: left top;
 }
 
 /* Estado ativo do label */
-.input-group input:focus ~ label,
-.input-group input:not(:placeholder-shown) ~ label,
-.input-group select:focus ~ label,
-.input-group select:valid ~ label {
-  transform: translateY(-38px) scale(0.85);
+.input-group input:focus~label,
+.input-group input:not(:placeholder-shown)~label,
+.input-group select:focus~label,
+.input-group select:valid~label {
+  transform: translateY(-32px) scale(0.85);
   color: var(--primary-light);
 }
 
@@ -180,9 +276,19 @@
 }
 
 @keyframes shakeAuth {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 .error-msg {
@@ -225,20 +331,29 @@
   transition: var(--transition);
 }
 
-.strength-bar.weak { background: var(--danger); }
-.strength-bar.medium { background: var(--warning); }
-.strength-bar.strong { background: var(--success); }
+.strength-bar.weak {
+  background: var(--danger);
+}
+
+.strength-bar.medium {
+  background: var(--warning);
+}
+
+.strength-bar.strong {
+  background: var(--success);
+}
 
 /* Links de recuperação e termos */
 .forgot-link {
   align-self: flex-end;
   font-size: 13px;
-  color: var(--primary-light);
+  color: #ffffff;
+  /* Link em branco */
   transition: var(--transition);
 }
 
 .forgot-link:hover {
-  color: var(--primary-hover);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: underline;
 }
 
@@ -294,15 +409,17 @@
 }
 
 @keyframes spinBtn {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Label para select estilizado */
-.input-group select:invalid ~ .select-label {
+.input-group select:invalid~.select-label {
   color: var(--text-secondary);
 }
 
-.input-group select:valid ~ .select-label {
+.input-group select:valid~.select-label {
   transform: translateY(-38px) scale(0.85);
   color: var(--primary-light);
 }
@@ -412,34 +529,40 @@
 .auth-divider span {
   padding: 0 12px;
 }
+
 /* Utility Classes replacing extracted styles */
 .support-link {
   display: block;
   text-align: center;
   font-size: 13px;
-  color: var(--primary-light);
+  color: #ffffff;
   margin-top: 16px;
   transition: var(--transition);
 }
+
 .support-link:hover {
   text-decoration: underline;
-  color: var(--primary-hover);
+  color: rgba(255, 255, 255, 0.8);
 }
+
 .toast-container {
   margin-top: 16px;
   width: 100%;
 }
+
 .modal-desc {
   font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 24px;
   text-align: center;
 }
+
 .support-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+
 .d-none {
   display: none !important;
 }

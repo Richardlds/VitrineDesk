@@ -503,9 +503,9 @@ export function getSlugFromURL() {
     return hash.substring(2).split('?')[0].split('/')[0];
   }
 
-  // 2. Tentar Parâmetro Explicito (?slug=loja1)
+  // 2. Tentar Parâmetro Explicito (?slug=loja1 ou ?tenant=loja1)
   const params = new URLSearchParams(window.location.search);
-  let slug = params.get('slug');
+  let slug = params.get('slug') || params.get('tenant');
   if (slug) {
     // Atualiza a URL para a versão limpa com hash sem recarregar (se num localhost simples)
     if (window.history && window.history.replaceState) {
