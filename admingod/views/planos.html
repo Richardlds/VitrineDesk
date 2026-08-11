@@ -62,10 +62,10 @@
         
         <!-- Tabs Header -->
         <div class="flex gap-4 border-bottom-dashed mb-4" style="border-bottom: 1px solid var(--border-color); overflow-x: auto;">
-            <button type="button" class="tab-plano-btn active" data-tab-target="tab-god-basico" style="white-space: nowrap;">Básico</button>
-            <button type="button" class="tab-plano-btn" data-tab-target="tab-god-precos" style="white-space: nowrap;">Preço & Regras</button>
-            <button type="button" class="tab-plano-btn" data-tab-target="tab-god-modulos" style="white-space: nowrap;">Módulos</button>
-            <button type="button" class="tab-plano-btn" data-tab-target="tab-god-limites" style="white-space: nowrap;">Limites</button>
+            <button type="button" class="tab-btn active" data-tab-target="tab-god-basico" style="white-space: nowrap;">Básico</button>
+            <button type="button" class="tab-btn" data-tab-target="tab-god-precos" style="white-space: nowrap;">Preço & Regras</button>
+            <button type="button" class="tab-btn" data-tab-target="tab-god-modulos" style="white-space: nowrap;">Módulos</button>
+            <button type="button" class="tab-btn" data-tab-target="tab-god-limites" style="white-space: nowrap;">Limites</button>
         </div>
 
         <div class="custom-scrollbar" style="max-height: 65vh; overflow-y: auto; padding-right: 0.5rem;">
@@ -181,15 +181,6 @@
     </div>
 </div>
 
-<style>
-.tab-plano-btn {
-    background: transparent; border: none; border-bottom: 2px solid transparent;
-    padding: 0.5rem 1rem; color: var(--text-secondary); font-weight: 600;
-    cursor: pointer; transition: all 0.2s; font-size: 0.9rem; margin-bottom: -1px;
-}
-.tab-plano-btn:hover { color: var(--primary-color); }
-.tab-plano-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-</style>
 
 <!-- Modal Tutorial Stripe Plataforma -->
 <div id="modal-tutorial-stripe-god" class="modal-overlay d-none">

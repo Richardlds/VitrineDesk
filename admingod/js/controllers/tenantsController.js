@@ -1,4 +1,4 @@
-﻿import { supabase, impersonateTenant } from '../core/supabaseClient.js';
+import { supabase, impersonateTenant } from '../core/supabaseClient.js';
 
 export class tenantsController {
     constructor() {
@@ -16,7 +16,10 @@ export class tenantsController {
             { id: 'crm_vendas/cupons', name: 'Cupons' },
             { id: 'crm_vendas/marketing', name: 'Marketing' },
             { id: 'crm_vendas/blacklist', name: 'Blacklist' },
+            { id: 'estoque/lista', name: 'Estoque & Catálogo' },
             { id: 'gestao/relatorios', name: 'Relatórios' },
+            { id: 'gestao/lista_os', name: 'Histórico de OS' },
+            { id: 'gestao/os', name: 'Nova OS' },
             { id: 'gestao/comissoes', name: 'Comissões' },
             { id: 'gestao/metas', name: 'Metas' },
             { id: 'gestao/fidelidade', name: 'Fidelidade' },

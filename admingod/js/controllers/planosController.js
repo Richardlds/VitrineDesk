@@ -33,6 +33,8 @@ export class planosController {
                 items: [
                     { id: 'estoque/lista', name: 'Estoque & Catálogo' },
                     { id: 'gestao/relatorios', name: 'Relatórios' },
+                    { id: 'gestao/lista_os', name: 'Histórico de OS' },
+                    { id: 'gestao/os', name: 'Nova OS' },
                     { id: 'gestao/comissoes', name: 'Comissões' },
                     { id: 'gestao/metas', name: 'Metas' },
                     { id: 'gestao/fidelidade', name: 'Fidelidade' }

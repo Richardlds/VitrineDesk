@@ -1,4 +1,4 @@
-import { Router } from './Router.js?v=2';
+import { Router } from './Router.js';
 import { StateManager } from './StateManager.js';
 import { supabase, getCurrentTenantId } from './supabaseClient.js';
 
@@ -49,6 +49,7 @@ class AdminApp {
         const impersonateId = localStorage.getItem('impersonate_tenant_id');
         if (impersonateId) {
             const godBanner = document.createElement('div');
+            godBanner.id = 'god-mode-banner';
             godBanner.style.cssText = 'background: #dc2626; color: #fff; padding: 8px 16px; text-align: center; font-weight: bold; font-size: 14px; position: relative; z-index: 1000; display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%;';
 
             const span = document.createElement('span');
@@ -1456,7 +1457,16 @@ window.showToast = function (message, type = 'success', onClick = null) {
     `;
 
     document.body.appendChild(toast);
-    if (window.lucide) window.lucide.createIcons();
+    
+    // Passar o 'toast' como root evita que o lucide varra a página toda
+    // e tente modificar nós que acabaram de ser removidos (o que causa o DOMException)
+    if (window.lucide) {
+        try {
+            window.lucide.createIcons({ root: toast });
+        } catch (e) {
+            console.warn("Lucide falhou ao criar ícone no toast", e);
+        }
+    }
 
     // Fade out após 3.5s
     setTimeout(() => {

@@ -803,65 +803,95 @@ window.showToast = function (message, type = 'success', onClick = null) {
 
 // Global Confirm functionality
 window.showConfirm = function (message, onConfirm) {
-    const modal = document.getElementById('global-confirm-modal');
-    const msgEl = document.getElementById('global-confirm-message');
-    const btnOk = document.getElementById('btn-global-confirm-ok');
-    const btnCancel = document.getElementById('btn-global-confirm-cancel');
+    const existing = document.getElementById('global-confirm-modal');
+    if (existing) existing.remove();
 
-    if (!modal) {
-        console.error('Global Confirm Modal not found!');
-        return;
-    }
+    const overlay = document.createElement('div');
+    overlay.id = 'global-confirm-modal';
+    overlay.className = 'modal-overlay fade-in';
+    
+    overlay.innerHTML = `
+        <div class="modal-content config-card text-center" style="max-width: 400px; padding: 30px 20px;">
+            <div class="flex justify-center mb-3 text-warning">
+                <i data-lucide="alert-triangle" style="width: 48px; height: 48px;"></i>
+            </div>
+            <h3 class="mb-2 text-primary font-bold text-lg">Atenção</h3>
+            <p class="text-secondary text-sm mb-4">${message}</p>
+            <div class="flex gap-3 justify-center">
+                <button class="btn bg-placeholder text-secondary border-none rounded-lg px-4 py-2 cursor-pointer btn-cancelar hover:bg-hover transition-colors">
+                    Cancelar
+                </button>
+                <button class="btn bg-danger text-white border-none rounded-lg px-4 py-2 cursor-pointer btn-confirmar hover:opacity-90 transition-colors">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    `;
 
-    msgEl.textContent = message;
-    modal.classList.remove('d-none');
+    document.body.appendChild(overlay);
+    if (window.lucide) window.lucide.createIcons();
 
-    // Clean up old event listeners by cloning nodes if necessary, or just overwrite onclick
-    btnOk.onclick = () => {
-        modal.classList.add('d-none');
+    const btnConfirm = overlay.querySelector('.btn-confirmar');
+    const btnCancel = overlay.querySelector('.btn-cancelar');
+
+    btnConfirm.onclick = () => {
+        overlay.classList.add('d-none');
+        setTimeout(() => overlay.remove(), 200);
         onConfirm();
     };
 
     btnCancel.onclick = () => {
-        modal.classList.add('d-none');
+        overlay.classList.add('d-none');
+        setTimeout(() => overlay.remove(), 200);
     };
 };
 
 // Global Prompt functionality
 window.showPrompt = function (message, placeholder, onConfirm) {
-    const modal = document.getElementById('global-prompt-modal');
-    const msgEl = document.getElementById('global-prompt-message');
-    const inputEl = document.getElementById('input-global-prompt');
-    const btnOk = document.getElementById('btn-global-prompt-ok');
-    const btnCancel = document.getElementById('btn-global-prompt-cancel');
+    const existing = document.getElementById('global-prompt-modal');
+    if (existing) existing.remove();
 
-    if (!modal) {
-        console.error('Global Prompt Modal not found!');
-        return;
-    }
+    const overlay = document.createElement('div');
+    overlay.id = 'global-prompt-modal';
+    overlay.className = 'modal-overlay fade-in';
+    
+    overlay.innerHTML = `
+        <div class="modal-content config-card text-center" style="max-width: 400px; padding: 30px 20px;">
+            <h3 class="mb-2 text-primary font-bold text-lg">Atenção</h3>
+            <p class="text-secondary text-sm mb-4">${message}</p>
+            <input type="text" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary mb-4 input-prompt" placeholder="${placeholder || 'Digite aqui...'}">
+            <div class="flex gap-3 justify-center">
+                <button class="btn bg-placeholder text-secondary border-none rounded-lg px-4 py-2 cursor-pointer btn-cancelar hover:bg-hover transition-colors">
+                    Cancelar
+                </button>
+                <button class="btn bg-primary text-white border-none rounded-lg px-4 py-2 cursor-pointer btn-confirmar hover:opacity-90 transition-colors">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    `;
 
-    msgEl.textContent = message;
-    inputEl.placeholder = placeholder || 'Digite aqui...';
-    inputEl.value = '';
-    modal.classList.remove('d-none');
+    document.body.appendChild(overlay);
+    if (window.lucide) window.lucide.createIcons();
+
+    const inputEl = overlay.querySelector('.input-prompt');
+    const btnConfirm = overlay.querySelector('.btn-confirmar');
+    const btnCancel = overlay.querySelector('.btn-cancelar');
+
     inputEl.focus();
 
-    btnOk.onclick = () => {
-        modal.classList.add('d-none');
-        onConfirm(inputEl.value);
+    const closeAndReturn = (val) => {
+        overlay.classList.add('d-none');
+        setTimeout(() => overlay.remove(), 200);
+        onConfirm(val);
     };
 
-    btnCancel.onclick = () => {
-        modal.classList.add('d-none');
-        onConfirm(null);
-    };
+    btnConfirm.onclick = () => closeAndReturn(inputEl.value);
+    btnCancel.onclick = () => closeAndReturn(null);
 
     inputEl.onkeyup = (e) => {
-        if (e.key === 'Enter') {
-            btnOk.click();
-        } else if (e.key === 'Escape') {
-            btnCancel.click();
-        }
+        if (e.key === 'Enter') btnConfirm.click();
+        else if (e.key === 'Escape') btnCancel.click();
     };
 };
 

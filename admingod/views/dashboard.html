@@ -4,33 +4,9 @@
         <p class="text-secondary text-sm">Acompanhe as métricas globais de todas as lojas do VitrineDesk.</p>
     </div>
 
-    <style>
-        .god-grid-3x3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        @media (max-width: 992px) {
-            .god-grid-3x3 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        @media (max-width: 576px) {
-            .god-grid-3x3 {
-                grid-template-columns: 1fr;
-            }
-        }
-        .chart-container {
-            width: 100%;
-            height: 300px;
-            position: relative;
-        }
-    </style>
-
     <!-- Indicadores Principais (Grid 3x3 ou similar, aqui temos 6 cards + 1 gráfico grande que ocupa a linha) -->
     <!-- Para manter 3x3 real, podemos ter 9 blocos ou 6 cards e o grafico ocupando 3 colunas em baixo, o que visualmente dá 3 linhas de 3 colunas se contarmos o grafico como uma linha -->
-    <div class="god-grid-3x3">
+    <div class="grid grid-lg-3 grid-md-2 grid-sm-1 gap-4 mb-4">
         <!-- 1. Lojas Ativas -->
         <div class="config-card p-4 hover-float transition-all">
             <div class="flex justify-between align-center mb-3">
@@ -137,7 +113,7 @@
     <!-- Gráfico de Barras -->
     <div class="config-card p-5 mb-4">
         <h3 class="text-primary text-md m-0 mb-4 flex align-center gap-2"><i data-lucide="bar-chart-2" class="text-secondary icon-sm"></i> Crescimento: Lojas Cadastradas</h3>
-        <div class="chart-container">
+        <div class="w-100 position-relative" style="height: 300px;">
             <canvas id="chart-tenants"></canvas>
         </div>
     </div>

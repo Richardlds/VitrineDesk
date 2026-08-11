@@ -1,35 +1,68 @@
 <div class="admin-section">
+
     <!-- Header -->
-    <div class="flex flex-col md-flex-row justify-between align-start md-align-center mb-4 gap-3">
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
         <div>
             <div class="flex align-center gap-2 mb-1">
-                <a href="#/estoque/lista" class="text-secondary hover:text-primary transition-colors text-sm"><i data-lucide="arrow-left" class="icon-sm"></i> Voltar</a>
+                <a href="#/estoque/lista" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-2 cursor-pointer flex align-center gap-2 text-sm" aria-label="Voltar para lista">
+                    <i data-lucide="arrow-left" class="icon-sm"></i> Voltar
+                </a>
             </div>
-            <h2 class="mb-1 text-primary">Novo Item</h2>
-            <p class="text-secondary text-sm">Adicione um novo produto, peça ou serviço ao catálogo.</p>
+            <div class="flex align-center gap-2 mt-3">
+                <div class="kpi-icon-wrapper bg-primary-light">
+                    <i data-lucide="package-plus" class="icon-sm text-primary"></i>
+                </div>
+                <div>
+                    <h2 id="form-page-title" class="text-primary">Novo Item</h2>
+                    <p class="text-secondary text-sm">Adicione um novo produto, peça ou serviço ao catálogo.</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <form id="form-estoque-cadastro">
-        <div class="grid grid-md-2 gap-4 align-start">
-            
+    <form id="form-estoque-cadastro" novalidate>
+        <div class="grid grid-md-2 gap-3 align-start">
+
             <!-- Coluna 1: Informações Básicas -->
-            <div class="config-card flex flex-column gap-3 p-4">
-                <h3 class="font-bold text-primary mb-2 border-bottom-dashed pb-2">Informações Básicas</h3>
-                
-                <div>
-                    <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome do Item <span class="text-danger">*</span></label>
-                    <input type="text" id="input-name" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Roteador TP-Link AX1500" required>
+            <div class="config-card flex flex-column gap-3">
+                <div class="flex align-center gap-2 mb-2 border-bottom-dashed pb-3">
+                    <div class="kpi-icon-wrapper bg-primary-light">
+                        <i data-lucide="info" class="icon-sm text-primary"></i>
+                    </div>
+                    <h3 class="font-bold text-primary">Informações Básicas</h3>
                 </div>
-                
+
+                <div>
+                    <label for="input-name" class="font-medium text-sm text-secondary mb-1 inline-block">
+                        Nome do Item <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="input-name"
+                        class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                        placeholder="Ex: Roteador TP-Link AX1500"
+                        required
+                    >
+                </div>
+
                 <div class="grid grid-md-2 gap-3">
                     <div>
-                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Código / SKU <span class="text-danger">*</span></label>
-                        <input type="text" id="input-sku" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: TPL-AX1500" required>
+                        <label for="input-sku" class="font-medium text-sm text-secondary mb-1 inline-block">
+                            Código / SKU <span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="input-sku"
+                            class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                            placeholder="Ex: TPL-AX1500"
+                            required
+                        >
                     </div>
                     <div>
-                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Tipo <span class="text-danger">*</span></label>
-                        <select id="input-type" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" required>
+                        <label for="input-type" class="font-medium text-sm text-secondary mb-1 inline-block">
+                            Tipo <span class="text-danger">*</span>
+                        </label>
+                        <select id="input-type" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer" required>
                             <option value="product">Produto (Revenda)</option>
                             <option value="part">Peça (Uso Interno/OS)</option>
                             <option value="service">Serviço (Mão de obra)</option>
@@ -39,42 +72,70 @@
 
                 <div class="grid grid-md-2 gap-3">
                     <div>
-                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Preço Base (R$)</label>
-                        <input type="number" step="0.01" id="input-price" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="0.00" value="0.00">
+                        <label for="input-price" class="font-medium text-sm text-secondary mb-1 inline-block">
+                            Preço Base (R$)
+                        </label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            id="input-price"
+                            class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                            placeholder="0.00"
+                            value="0.00"
+                        >
                     </div>
                     <div>
-                        <label class="font-medium text-sm text-secondary mb-1 inline-block">Estoque Inicial</label>
-                        <input type="number" id="input-stock" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="0" value="0">
-                        <small class="text-secondary text-xs mt-1 d-block">Uma transação de ajuste inicial será criada.</small>
+                        <label for="input-stock" class="font-medium text-sm text-secondary mb-1 inline-block">
+                            Estoque Inicial
+                        </label>
+                        <input
+                            type="number"
+                            step="any"
+                            id="input-stock"
+                            class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm"
+                            placeholder="0"
+                            value="0"
+                        >
                     </div>
                 </div>
             </div>
 
-            <!-- Coluna 2: Atributos Dinâmicos (JSONB) -->
-            <div class="config-card flex flex-column gap-3 p-4">
-                <div class="flex justify-between align-center mb-2 border-bottom-dashed pb-2">
-                    <h3 class="font-bold text-primary">Atributos Personalizados</h3>
-                    <button type="button" id="btn-add-attribute" class="btn bg-primary-light text-primary border-none rounded p-1 cursor-pointer text-xs flex align-center gap-1 font-medium hover:opacity-80">
-                        <i data-lucide="plus" class="w-3 h-3"></i> Adicionar Campo
+            <!-- Coluna 2: Atributos Dinâmicos -->
+            <div class="config-card flex flex-column gap-3">
+                <div class="flex justify-between align-center mb-2 border-bottom-dashed pb-3">
+                    <div class="flex align-center gap-2">
+                        <div class="kpi-icon-wrapper bg-primary-light">
+                            <i data-lucide="sliders-horizontal" class="icon-sm text-primary"></i>
+                        </div>
+                        <h3 class="font-bold text-primary">Atributos Personalizados</h3>
+                    </div>
+                    <button type="button" id="btn-add-attribute" class="btn bg-primary-light text-primary border-none rounded-sm px-3 py-2 cursor-pointer text-xs flex align-center gap-2 font-medium">
+                        <i data-lucide="plus" class="icon-xs"></i> Adicionar Campo
                     </button>
                 </div>
-                
+
                 <p class="text-sm text-secondary mb-2">Crie campos extras para este item (ex: Cor, Marca, Voltagem, etc).</p>
-                
+
                 <div id="dynamic-attributes-container" class="flex flex-column gap-2 mb-2">
-                    <!-- Atributos dinâmicos serão renderizados aqui pelo JS -->
-                    <div class="text-center p-4 border-dashed rounded bg-placeholder text-secondary text-sm" id="empty-attributes-state">
-                        Nenhum atributo personalizado.
+                    <!-- Empty State -->
+                    <div id="empty-attributes-state" class="flex flex-column align-center justify-center text-center border-dashed rounded-md bg-placeholder py-5 gap-2">
+                        <i data-lucide="list-x" class="w-40px h-40px text-secondary"></i>
+                        <p class="text-secondary text-sm">Nenhum atributo personalizado.<br>Clique em <strong>Adicionar Campo</strong> para começar.</p>
                     </div>
+                    <!-- Atributos dinâmicos serão renderizados aqui pelo JS -->
                 </div>
             </div>
         </div>
 
-        <div class="flex justify-end gap-3 mt-4 pt-4 border-top-dashed">
-            <button type="button" class="btn bg-placeholder text-secondary border-none cursor-pointer px-4 py-2 font-medium" onclick="window.history.back()">Cancelar</button>
-            <button type="submit" id="btn-save-item" class="btn btn-primary px-6 py-2 rounded-lg cursor-pointer flex align-center gap-2 font-bold">
+        <!-- Rodapé / Ações -->
+        <div class="flex justify-end gap-3 mt-3 pt-3 border-top-dashed">
+            <button type="button" class="btn btn-outline cursor-pointer" onclick="window.history.back()">
+                Cancelar
+            </button>
+            <button type="submit" id="btn-save-item" class="btn btn-primary cursor-pointer flex align-center gap-2">
                 <i data-lucide="save" class="icon-sm"></i> Salvar Item
             </button>
         </div>
     </form>
+
 </div>

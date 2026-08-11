@@ -7,23 +7,23 @@ export class Router {
         
         this.initEventListeners();
         
-        this.initEventListeners();
-        
         // Carrega a rota baseada no hash atual ou o Dashboard como padrão
         this.handleHashChange(true);
     }
 
     handleHashChange(isInitialLoad = false) {
         let hash = window.location.hash.replace('#/', '').replace('#', '');
-        if (!hash) {
-            hash = 'principal/dashboard';
+        
+        // Separa a rota dos parâmetros (ex: estoque/cadastro?id=123)
+        let path = hash.split('?')[0];
+        
+        if (!path) {
+            path = 'principal/dashboard';
         }
         
-        // Evita navegação dupla se o hashchange foi causado por um clique no nav-item
-        // O nav-item já chama navigate() diretamente, então aqui checamos se estamos na mesma rota
-        // Mas como não gravamos a rota atual de forma simples, vamos apenas chamar navigate.
-        // O navigate() cuida do cleanup.
-        this.navigate(hash);
+        // O navigate() cuida do cleanup e do carregamento, 
+        // e os controllers podem ler os parâmetros olhando para window.location.hash
+        this.navigate(path);
     }
 
     initEventListeners() {
@@ -97,9 +97,8 @@ export class Router {
         `;
 
         try {
-            // 2. Fetch do HTML da View correspondente (com cache busting para o dev)
-            const ts = new Date().getTime();
-            const response = await fetch(`/admin/views/${tabPath}.html?v=${ts}`);
+            // 2. Fetch do HTML da View correspondente
+            const response = await fetch(`/admin/views/${tabPath}.html`);
             
             if (!response.ok) {
                 throw new Error(`Erro ao carregar a view: ${response.statusText}`);
@@ -114,9 +113,9 @@ export class Router {
                 document.title = `${title} - VitrineDesk`;
             }
 
-            // 4. Carregar Controller Dinamicamente (cache busting)
+            // 4. Carregar Controller Dinamicamente
             const [category, tabName] = tabPath.split('/');
-            const controllerUrl = `../controllers/${category}/${tabName}Controller.js?v=${ts}`;
+            const controllerUrl = `../controllers/${category}/${tabName}Controller.js`;
             
             const module = await import(controllerUrl);
             

@@ -1,0 +1,49 @@
+<div class="admin-section fade-in" id="section-lista-os">
+    <!-- Header -->
+    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
+        <div>
+            <div class="flex align-center gap-2 mb-1">
+                <div class="kpi-icon-wrapper bg-primary-light">
+                    <i data-lucide="clipboard-list" class="icon-sm text-primary"></i>
+                </div>
+                <h2 class="text-primary m-0">Histórico de OS</h2>
+            </div>
+            <p class="text-secondary text-sm m-0">Visualize as Ordens de Serviço emitidas</p>
+        </div>
+        <div class="flex gap-2 align-center">
+            <div class="search-bar">
+                <i data-lucide="search" class="icon-sm text-secondary"></i>
+                <input type="text" id="search-os" placeholder="Buscar por Cliente ou OS #...">
+            </div>
+            <button id="btn-nova-os-redirect" class="btn btn-primary shadow-sm flex align-center gap-2">
+                <i data-lucide="plus" class="icon-sm"></i> Nova OS
+            </button>
+        </div>
+    </div>
+
+    <!-- Lista de OS -->
+    <div class="config-card p-0">
+        <div class="table-responsive">
+            <table class="data-table w-100" id="table-lista-os">
+                <thead class="bg-placeholder">
+                    <tr>
+                        <th class="text-left py-2 px-3">OS #</th>
+                        <th class="text-left py-2 px-3">Cliente</th>
+                        <th class="text-left py-2 px-3">Data</th>
+                        <th class="text-left py-2 px-3">Status</th>
+                        <th class="text-right py-2 px-3">Valor Total</th>
+                        <th class="text-center py-2 px-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-os-tbody">
+                    <!-- Preenchido via JS -->
+                </tbody>
+            </table>
+            
+            <div id="lista-os-empty" class="d-none text-center py-5">
+                <i data-lucide="file-search" class="icon-md text-secondary mb-2 opacity-50" style="display: block; margin: 0 auto;"></i>
+                <p class="text-secondary text-sm m-0">Nenhuma OS encontrada.</p>
+            </div>
+        </div>
+    </div>
+</div>

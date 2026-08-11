@@ -9,8 +9,68 @@ export class cadastroController {
 
     async init() {
         this.bindEvents();
+
+        // Extrair ID da URL se estiver editando
+        const hash = window.location.hash;
+        if (hash.includes('?id=')) {
+            const urlParams = new URLSearchParams(hash.split('?')[1]);
+            this.editId = urlParams.get('id');
+        }
+
+        if (this.editId) {
+            await this.loadItemForEdit();
+        }
+
         if (window.lucide) {
             window.lucide.createIcons();
+        }
+    }
+
+    async loadItemForEdit() {
+        try {
+            const tenantId = await getCurrentTenantId();
+            const { data, error } = await supabase
+                .from('inventory_items')
+                .select('*')
+                .eq('id', this.editId)
+                .eq('tenant_id', tenantId)
+                .single();
+
+            if (error) throw error;
+            if (!data) return;
+
+            // Preencher Formulário
+            document.getElementById('input-name').value = data.name || '';
+            document.getElementById('input-sku').value = data.sku || '';
+            document.getElementById('input-type').value = data.type || 'product';
+            document.getElementById('input-price').value = data.base_price || 0;
+
+            // Salva o estoque original para podermos calcular a diferença no Salvar
+            const inputStock = document.getElementById('input-stock');
+            if (inputStock) {
+                this.originalStock = data.stock_quantity || 0;
+                inputStock.value = this.originalStock;
+                // Não desabilitamos mais, pois o lojista pediu para poder atualizar o estoque livremente.
+                // inputStock.disabled = true;
+                inputStock.title = "A diferença será registrada como um Ajuste Manual automaticamente.";
+            }
+
+            // Mudar Textos da UI
+            const titleEl = document.getElementById('form-page-title');
+            if (titleEl) titleEl.textContent = 'Editar Item';
+            
+            const btnSave = document.getElementById('btn-save-item');
+            if (btnSave) btnSave.innerHTML = '<i data-lucide="save" class="icon-sm"></i> Salvar Alterações';
+
+            // Carregar Atributos
+            if (data.custom_attributes) {
+                this.customAttributes = Object.entries(data.custom_attributes).map(([k, v]) => ({ key: k, value: v }));
+                this.renderAttributes();
+            }
+
+        } catch (err) {
+            console.error('Erro ao carregar item para edição:', err);
+            if (window.showToast) window.showToast('Erro ao carregar dados do item.', 'error');
         }
     }
 
@@ -110,45 +170,52 @@ export class cadastroController {
             const btnSave = document.getElementById('btn-save-item');
             if (btnSave) btnSave.disabled = true;
 
-            // Inserir Item
-            const { data: itemData, error: itemError } = await supabase
-                .from('inventory_items')
-                .insert([{
-                    tenant_id: tenantId,
-                    sku: sku,
-                    name: name,
-                    type: type,
-                    base_price: price,
-                    custom_attributes: attributesObj
-                }])
-                .select()
-                .single();
+            const itemPayload = {
+                tenant_id: tenantId,
+                sku: sku,
+                name: name,
+                type: type,
+                base_price: price,
+                stock_quantity: initialStock,
+                custom_attributes: attributesObj
+            };
+
+            let itemData, itemError;
+
+            if (this.editId) {
+                // Atualizar Item Existente
+                const result = await supabase
+                    .from('inventory_items')
+                    .update(itemPayload)
+                    .eq('id', this.editId)
+                    .eq('tenant_id', tenantId)
+                    .select()
+                    .single();
+                itemData = result.data;
+                itemError = result.error;
+            } else {
+                // Inserir Novo Item
+                const result = await supabase
+                    .from('inventory_items')
+                    .insert([itemPayload])
+                    .select()
+                    .single();
+                itemData = result.data;
+                itemError = result.error;
+            }
 
             if (itemError) {
                 console.error(itemError);
+                if (itemError.code === '23505') {
+                    throw new Error('Já existe um item cadastrado com este SKU.');
+                }
                 throw new Error(itemError.message || 'Erro ao salvar item.');
             }
 
-            // Se tem estoque inicial, criar a transação correspondente (que disparará a Trigger no DB)
-            if (initialStock > 0 || initialStock < 0) {
-                const { error: txError } = await supabase
-                    .from('inventory_transactions')
-                    .insert([{
-                        tenant_id: tenantId,
-                        item_id: itemData.id,
-                        change_quantity: initialStock,
-                        transaction_type: 'manual_adjustment',
-                        notes: 'Estoque inicial de cadastro'
-                    }]);
+            // Removida a inserção em inventory_transactions. 
+            // Agora o estoque é salvo diretamente em inventory_items através do payload principal.
 
-                if (txError) {
-                    console.error('Erro ao inserir saldo inicial:', txError);
-                    // Não dar throw para não falhar o cadastro inteiro, mas avisar.
-                    if(window.showToast) window.showToast('Item salvo, mas erro ao ajustar saldo inicial.', 'warning');
-                }
-            }
-
-            if(window.showToast) window.showToast('Item cadastrado com sucesso!', 'success');
+            if(window.showToast) window.showToast(this.editId ? 'Item atualizado com sucesso!' : 'Item cadastrado com sucesso!', 'success');
             
             // Voltar para listagem após pequeno delay
             setTimeout(() => {

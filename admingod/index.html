@@ -9,22 +9,18 @@
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
 
     <!-- Design System (Mobile First) -->
     <!-- Reutilizando CSS do novo admin para consistência visual -->
     <link rel="stylesheet" href="/admin/css/design-system.css">
-
-    <!-- God Mode Specific Styles -->
-    <link rel="stylesheet" href="/admingod/css/admingod.css">
-    <link rel="stylesheet" href="/admingod/css/components.css">
-    <link rel="stylesheet" href="/admingod/css/tickets.css">
+    <link rel="stylesheet" href="/admin/css/tickets.css">
 
     <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
     <!-- Script Principal (Módulos ES6) -->
     <script type="module" src="/admingod/js/core/app.js"></script>
@@ -35,9 +31,9 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="logo-container">
+                <div class="logo-container" style="display: flex; align-items: center; gap: 8px;">
                     <i data-lucide="zap" class="brand-icon text-danger"></i>
-                    <span class="brand-text">VitrineDesk God <span class="text-xs text-danger">⚡</span></span>
+                    <span class="brand-text">VitrineDesk God</span>
                 </div>
                 <button class="menu-toggle d-md-none" aria-label="Fechar Menu">
                     <i data-lucide="x"></i>
@@ -74,32 +70,32 @@
                     <i data-lucide="life-buoy"></i> Tickets de Suporte
                 </button>
                 <button class="nav-item" data-tab="relatorios">
-                    <i data-lucide="bar-chart-3"></i> Relatórios
+                    <i data-lucide="bar-chart-2"></i> Relatórios
                 </button>
                 <button class="nav-item" data-tab="configuracoes">
                     <i data-lucide="settings"></i> Configurações Master
                 </button>
             </nav>
-            <div class="p-4 mt-auto border-top-dashed border-border text-center">
-                <a href="#" class="nav-item text-danger mt-2" id="btn-logout" style="justify-content: center;">
+            <div class="sidebar-footer">
+                <button class="btn-logout" id="btn-logout" style="color: var(--danger);">
                     <i data-lucide="log-out"></i> Sair
-                </a>
+                </button>
             </div>
         </aside>
 
-        <!-- Main Workspace -->
-        <div class="main-content">
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
             <!-- Topbar -->
-            <header
-                class="topbar topbar-glass flex justify-between align-center px-4 py-3 border-bottom-dashed border-border w-100 gap-4">
-                <!-- Esquerda: Toggle + Marca -->
-                <div class="flex align-center gap-3" style="min-width: 200px;">
+            <header class="topbar topbar-glass flex justify-between align-center px-4 py-3 border-bottom-dashed border-border w-100 gap-4">
+                <!-- Esquerda: Toggle + Busca -->
+                <div class="flex align-center gap-3 flex-1">
                     <button class="menu-toggle d-md-none bg-transparent border-none text-primary cursor-pointer p-1" aria-label="Abrir Menu">
                         <i data-lucide="menu"></i>
                     </button>
+                    
                     <div class="flex align-center gap-2 d-none d-md-flex">
-                        <i data-lucide="zap" class="text-danger icon-sm"></i>
-                        <h1 id="page-title" class="m-0 text-lg font-bold text-primary">VitrineDesk <span class="text-xs text-secondary font-normal ml-1 border border-border px-1 rounded bg-card">God Mode</span></h1>
+                        <h2 class="text-primary m-0" id="page-title">God Mode</h2>
+                        <span class="badge bg-danger-light text-danger px-2 py-1 rounded-full text-xs font-bold border border-danger">Super Admin</span>
                     </div>
                 </div>
 
@@ -112,14 +108,10 @@
 
                 <!-- Direita: Ações Rápidas + Sino + Perfil -->
                 <div class="flex align-center gap-3">
-
                     <!-- Quick Actions -->
                     <div class="flex align-center gap-2 d-none d-sm-flex border-right-dashed border-border pr-3 mr-1">
-                        <button class="btn bg-primary text-white text-xs py-1 px-3 rounded-full flex align-center gap-1 shadow-sm hover-float cursor-pointer border-none" onclick="document.querySelector('[data-tab=\'clientes\']')?.click(); setTimeout(() => document.getElementById('btn-add-tenant')?.click(), 500);" title="Novo Lojista">
+                        <button class="btn bg-primary text-white text-xs py-1 px-3 rounded-full flex align-center gap-1 shadow-sm hover-float cursor-pointer border-none" onclick="document.querySelector('[data-tab=\'tenants\']')?.click(); setTimeout(() => document.getElementById('btn-novo-tenant')?.click(), 500);" title="Novo Lojista">
                             <i data-lucide="plus" class="icon-xs"></i> Lojista
-                        </button>
-                        <button class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Limpar Cache da Rede" onclick="if(window.showToast) window.showToast('Cache de rede limpo!', 'success')">
-                            <i data-lucide="hard-drive" class="icon-sm"></i>
                         </button>
                     </div>
 
@@ -137,101 +129,38 @@
                         </button>
 
                         <div id="notifications-drawer" class="notification-drawer d-none">
-                            <div
-                                class="p-3 border-bottom-dashed border-border flex justify-between align-center bg-card-hover rounded-t-lg">
+                            <div class="p-3 border-bottom-dashed border-border flex justify-between align-center bg-card-hover rounded-t-lg">
                                 <span class="font-bold text-sm text-primary">Avisos da Rede</span>
-                                <button id="btn-mark-all-read"
-                                    class="text-xs text-primary-light hover:text-primary transition-colors cursor-pointer bg-transparent border-none">Lidas</button>
+                                <button id="btn-mark-all-read" class="text-xs text-primary-light hover:text-primary transition-colors cursor-pointer bg-transparent border-none">Lidas</button>
                             </div>
-                            <div id="notifications-list"
-                                class="flex-1 overflow-y-auto custom-scrollbar p-2 flex flex-col gap-2"
-                                style="max-height: 300px;">
-                                <div class="text-center p-4 text-xs text-secondary">A rede está operando normalmente.
-                                </div>
+                            <div id="notifications-list" class="flex-1 overflow-y-auto custom-scrollbar p-2 flex flex-col gap-2" style="max-height: 300px;">
+                                <div class="text-center p-4 text-xs text-secondary">A rede está operando normalmente.</div>
                             </div>
                             <div class="p-2 border-top-dashed border-border bg-card-hover text-center rounded-b-lg">
-                                <a href="#"
-                                    onclick="document.querySelector('[data-tab=\'notificacoes\']').click(); return false;"
-                                    class="text-xs text-secondary hover:text-primary transition-colors text-decoration-none">Ver
-                                    todas na Central</a>
+                                <a href="#" onclick="document.querySelector('[data-tab=\'notificacoes\']').click(); return false;" class="text-xs text-secondary hover:text-primary transition-colors text-decoration-none">Ver todas na Central</a>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Perfil do Usuário -->
-                    <div class="user-dropdown-container">
-                        <div class="user-dropdown-trigger" id="profile-dropdown-trigger">
-                            <div class="skeleton sk-avatar w-40px h-40px rounded-full" id="profile-avatar-ph"></div>
-                            <span class="text-sm font-medium d-none d-sm-block text-primary"
-                                id="profile-name-ph">Administrador</span>
-                            <i data-lucide="chevron-down" class="icon-xs text-secondary d-none d-sm-block"></i>
-                        </div>
-
-                        <div class="user-dropdown-menu">
-                            <div class="user-dropdown-header text-sm">
-                                <strong class="text-primary block mb-1">Conta Master</strong>
-                                <span class="text-secondary text-xs" id="profile-email-ph">Super Admin</span>
+                    <div class="user-dropdown-container position-relative">
+                        <div class="user-profile flex align-center gap-2 cursor-pointer p-1 rounded-md" style="transition: var(--transition);">
+                            <div class="avatar w-40px h-40px rounded-full bg-danger-light flex align-center justify-center text-danger font-bold border border-danger">
+                                GOD
                             </div>
-                            <button class="user-dropdown-item"
-                                onclick="document.querySelector('[data-tab=\'configuracoes\']').click()">
-                                <i data-lucide="settings" class="icon-sm"></i>
-                                Configurações Globais
-                            </button>
-                            <div class="user-dropdown-divider"></div>
-                            <button class="user-dropdown-item text-danger btn-logout w-100 text-left">
-                                <i data-lucide="log-out" class="icon-sm"></i>
-                                Sair do Painel
-                            </button>
+                            <div class="user-info d-none d-md-flex flex-column">
+                                <span class="user-name text-sm font-bold text-primary">Master Admin</span>
+                                <span class="user-role text-xs text-secondary">Acesso Total</span>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </header>
 
-            <!-- Dynamic Content Area -->
-            <main id="app-content" class="content-area custom-scrollbar">
-                <!-- Views will be loaded here by the Router -->
+            <!-- Main Content Area for Router -->
+            <main class="content-area p-4" id="app-content">
+                <!-- Conteúdo injetado pelo Router -->
             </main>
         </div>
     </div>
-
-    <!-- Toast Notifications Container -->
-    <div id="toast-container"></div>
-
-    <!-- Global Confirm Modal (Glassmorphism) -->
-    <div id="global-confirm-modal" class="modal-overlay d-none" style="z-index: 99999;">
-        <div class="modal-content config-card" style="max-width: 400px; width: 90%; text-align: center; padding: 2rem;">
-            <div class="mb-4 flex justify-center">
-                <div class="w-16 h-16 rounded-full bg-warning-light flex align-center justify-center">
-                    <i data-lucide="alert-triangle" class="text-warning w-8 h-8"></i>
-                </div>
-            </div>
-            <h3 class="text-primary mb-2 text-lg">Tem certeza?</h3>
-            <p id="global-confirm-message" class="text-secondary text-sm mb-6">Você está prestes a realizar uma ação irreversível.</p>
-            <div class="flex gap-3 justify-center">
-                <button id="btn-global-confirm-cancel" class="btn bg-placeholder text-secondary border-none rounded-md px-6 py-2 cursor-pointer hover:bg-hover transition-colors font-medium">Cancelar</button>
-                <button id="btn-global-confirm-ok" class="btn btn-primary rounded-md px-6 py-2 font-medium flex align-center justify-center gap-2 border-none cursor-pointer">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Global Prompt Modal (Glassmorphism) -->
-    <div id="global-prompt-modal" class="modal-overlay d-none" style="z-index: 99999;">
-        <div class="modal-content config-card" style="max-width: 400px; width: 90%; text-align: center; padding: 2rem;">
-            <div class="mb-4 flex justify-center">
-                <div class="w-16 h-16 rounded-full bg-danger-light flex align-center justify-center">
-                    <i data-lucide="shield-alert" class="text-danger w-8 h-8"></i>
-                </div>
-            </div>
-            <h3 class="text-primary mb-2 text-lg">Confirmação de Segurança</h3>
-            <p id="global-prompt-message" class="text-secondary text-sm mb-4">Por favor, digite o texto solicitado para continuar.</p>
-            <input type="text" id="input-global-prompt" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary text-center mb-6" placeholder="Digite aqui...">
-            <div class="flex gap-3 justify-center">
-                <button id="btn-global-prompt-cancel" class="btn bg-placeholder text-secondary border-none rounded-md px-6 py-2 cursor-pointer hover:bg-hover transition-colors font-medium">Cancelar</button>
-                <button id="btn-global-prompt-ok" class="btn btn-primary rounded-md px-6 py-2 font-medium flex align-center justify-center gap-2 border-none cursor-pointer">Confirmar</button>
-            </div>
-        </div>
-    </div>
 </body>
-
 </html>
