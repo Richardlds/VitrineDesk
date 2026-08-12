@@ -35,24 +35,38 @@ export class usuariosController {
     
     async loadUsuarios(searchQuery = '') {
         try {
-            // ATENCAO: A tabela admin_users no Supabase nao possui tenant_id.
-            // Para ser multi-tenant, voce precisara adicionar a coluna tenant_id na tabela admin_users!
-            // Por enquanto, buscaremos todos os usuarios que nao sao superadmin.
-            
-            let query = supabase
-                .from('admin_users')
-                .select('*')
-                .neq('role', 'superadmin')
-                .order('created_at', { ascending: false });
-            
-            if (searchQuery) {
-                query = query.or(`name.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%`);
-            }
+            const tenantId = await getCurrentTenantId();
+            if (!tenantId) return;
 
-            const { data, error } = await query;
+            const { data: tenant, error } = await supabase
+                .from('tenants')
+                .select('settings')
+                .eq('id', tenantId)
+                .single();
+
             if (error) throw error;
 
-            this.renderTable(data);
+            let usuarios = tenant.settings?.usuarios || [];
+            
+            // Garante que todo usuário tenha um ID interno para edição
+            usuarios = usuarios.map((u, i) => {
+                if (!u.id) u.id = 'usr_' + Date.now() + '_' + i;
+                return u;
+            });
+            
+            this.tenantSettings = tenant.settings || {};
+            this.usuarios = usuarios;
+
+            let filtered = usuarios;
+            if (searchQuery) {
+                const term = searchQuery.toLowerCase();
+                filtered = usuarios.filter(u => 
+                    (u.name && u.name.toLowerCase().includes(term)) ||
+                    (u.email && u.email.toLowerCase().includes(term))
+                );
+            }
+
+            this.renderTable(filtered);
             if (window.lucide) window.lucide.createIcons();
         } catch (error) {
             console.error('Erro ao carregar usuários:', error);
@@ -140,11 +154,11 @@ export class usuariosController {
                     currentEditingId = id;
                     document.getElementById('modal-usuario-title').innerText = 'Editar Usuário';
                     
-                    const { data, error } = await supabase.from('admin_users').select('*').eq('id', id).single();
-                    if (!error && data) {
-                        document.getElementById('input-usuario-nome').value = data.name || '';
-                        document.getElementById('input-usuario-email').value = data.email || '';
-                        document.getElementById('input-usuario-perfil').value = data.role || 'gerente';
+                    const user = this.usuarios.find(u => u.id === id);
+                    if (user) {
+                        document.getElementById('input-usuario-nome').value = user.name || '';
+                        document.getElementById('input-usuario-email').value = user.email || '';
+                        document.getElementById('input-usuario-perfil').value = user.role || 'gerente';
                         document.getElementById('input-usuario-senha').value = ''; // não preenche senha
                         document.getElementById('input-usuario-senha').required = false; // opcional na edição
                         modal.classList.remove('d-none');
@@ -178,34 +192,52 @@ export class usuariosController {
                     const perfil = document.getElementById('input-usuario-perfil').value;
                     const senha = document.getElementById('input-usuario-senha').value;
                     
-                    const payload = {
-                        name: nome,
-                        email: email,
-                        role: perfil,
-                        is_active: true
-                    };
+                    const tenantId = await getCurrentTenantId();
+                    let usuariosCopy = [...(this.usuarios || [])];
                     
-                    if (senha) {
-                        // TODO: Auth.signUp ou criptografia real de senha se integrado ao Auth
-                        payload.password_hash = btoa(senha); 
+                    if (currentEditingId) {
+                        const idx = usuariosCopy.findIndex(u => u.id === currentEditingId);
+                        if (idx !== -1) {
+                            usuariosCopy[idx].name = nome;
+                            usuariosCopy[idx].email = email;
+                            usuariosCopy[idx].role = perfil;
+                            if (senha) {
+                                usuariosCopy[idx].password = await hashPasswordSHA256(senha);
+                            }
+                        }
+                    } else {
+                        // Verifica se email já existe
+                        if (usuariosCopy.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+                            throw new Error('Já existe um usuário com este e-mail.');
+                        }
+                        
+                        const newUser = {
+                            id: 'usr_' + Date.now(),
+                            name: nome,
+                            email: email,
+                            role: perfil,
+                            is_active: true,
+                            password: await hashPasswordSHA256(senha)
+                        };
+                        usuariosCopy.push(newUser);
                     }
 
-                    if (currentEditingId) {
-                        payload.updated_at = new Date().toISOString();
-                        const { error } = await supabase.from('admin_users').update(payload).eq('id', currentEditingId);
-                        if (error) throw error;
-                        if (window.showToast) window.showToast('Usuário atualizado com sucesso!', 'success');
-                    } else {
-                        const { error } = await supabase.from('admin_users').insert([payload]);
-                        if (error) throw error;
-                        if (window.showToast) window.showToast('Usuário cadastrado com sucesso!', 'success');
-                    }
+                    const newSettings = { ...this.tenantSettings, usuarios: usuariosCopy };
+                    
+                    const { error } = await supabase
+                        .from('tenants')
+                        .update({ settings: newSettings })
+                        .eq('id', tenantId);
+
+                    if (error) throw error;
+                    
+                    if (window.showToast) window.showToast(currentEditingId ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!', 'success');
                     
                     modal.classList.add('d-none');
                     this.loadUsuarios();
                 } catch (err) {
                     console.error(err);
-                    if (window.showToast) window.showToast('Erro ao salvar usuário.', 'error');
+                    if (window.showToast) window.showToast(err.message || 'Erro ao salvar usuário.', 'error');
                 } finally {
                     btnSubmit.innerHTML = originalText;
                     btnSubmit.disabled = false;
@@ -217,4 +249,12 @@ export class usuariosController {
     destroy() {
         if (this.searchTimeout) clearTimeout(this.searchTimeout);
     }
+}
+
+async function hashPasswordSHA256(password) {
+    const msgUint8 = new TextEncoder().encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
 }

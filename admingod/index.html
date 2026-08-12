@@ -26,59 +26,61 @@
     <script type="module" src="/admingod/js/core/app.js"></script>
 </head>
 
-<body>
+<body class="bg-placeholder" style="background: radial-gradient(circle at top right, rgba(239, 68, 68, 0.1), transparent 40%), radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.1), transparent 40%);">
     <div class="admin-layout">
         <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="logo-container" style="display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="zap" class="brand-icon text-danger"></i>
-                    <span class="brand-text">VitrineDesk God</span>
+        <aside class="sidebar border-right-dashed" id="sidebar" style="background-color: var(--color-bg-surface); backdrop-filter: var(--glass-blur);">
+            <div class="sidebar-header border-bottom-dashed">
+                <div class="logo-container flex align-center gap-2">
+                    <div class="flex align-center justify-center rounded-lg shadow-glow bg-danger-light border border-danger p-1">
+                        <i data-lucide="zap" class="brand-icon text-danger icon-sm m-0"></i>
+                    </div>
+                    <span class="brand-text font-bold text-lg text-white" style="letter-spacing: 1px;">GOD <span class="text-danger">MODE</span></span>
                 </div>
-                <button class="menu-toggle d-md-none" aria-label="Fechar Menu">
+                <button class="menu-toggle d-md-none bg-transparent border-none text-secondary" aria-label="Fechar Menu">
                     <i data-lucide="x"></i>
                 </button>
             </div>
 
-            <nav class="sidebar-nav">
+            <nav class="sidebar-nav mt-3 custom-scrollbar">
                 <!-- PRINCIPAL -->
-                <div class="nav-section">Global</div>
-                <button class="nav-item active" data-tab="dashboard">
+                <div class="nav-section text-xs font-bold text-secondary mb-2" style="letter-spacing: 1.5px; opacity: 0.7;">GLOBAL</div>
+                <button class="nav-item active rounded-md mb-1 transition hover:bg-placeholder" data-tab="dashboard">
                     <i data-lucide="layout-dashboard"></i> Visão Geral
                 </button>
 
                 <!-- CADASTROS E GESTÃO -->
-                <div class="nav-section">Controle Master</div>
-                <button class="nav-item" data-tab="tenants">
+                <div class="nav-section text-xs font-bold text-secondary mb-2 mt-4" style="letter-spacing: 1.5px; opacity: 0.7;">CONTROLE MASTER</div>
+                <button class="nav-item rounded-md mb-1 transition hover:bg-placeholder" data-tab="tenants">
                     <i data-lucide="store"></i> Tenants (Lojas)
                 </button>
-                <button class="nav-item" data-tab="planos">
+                <button class="nav-item rounded-md mb-1 transition hover:bg-placeholder" data-tab="planos">
                     <i data-lucide="credit-card"></i> Planos & Assinaturas
                 </button>
-                <button class="nav-item" data-tab="clientes">
+                <button class="nav-item rounded-md mb-1 transition hover:bg-placeholder" data-tab="clientes">
                     <i data-lucide="users"></i> Clientes Globais
                 </button>
-                <button class="nav-item" data-tab="mensagens">
+                <button class="nav-item rounded-md mb-1 transition hover:bg-placeholder" data-tab="mensagens">
                     <i data-lucide="mail"></i> Mensagens do Site
                 </button>
 
-                <div class="nav-section">Sistema</div>
-                <button class="nav-item" data-tab="notificacoes">
-                    <i data-lucide="bell-ring"></i> Central de Notificações
+                <div class="nav-section text-xs font-bold text-secondary mb-2 mt-4" style="letter-spacing: 1.5px; opacity: 0.7;">SISTEMA</div>
+                <button class="nav-item rounded-md mb-1 transition hover:bg-placeholder" data-tab="notificacoes">
+                    <i data-lucide="bell-ring"></i> Notificações
                 </button>
-                <button class="nav-item" data-tab="tickets">
+                <button class="nav-item rounded-md mb-1 transition hover:bg-placeholder" data-tab="tickets">
                     <i data-lucide="life-buoy"></i> Tickets de Suporte
                 </button>
-                <button class="nav-item" data-tab="relatorios">
+                <button class="nav-item rounded-md mb-1 transition hover:bg-placeholder" data-tab="relatorios">
                     <i data-lucide="bar-chart-2"></i> Relatórios
                 </button>
-                <button class="nav-item" data-tab="configuracoes">
+                <button class="nav-item rounded-md mb-1 transition hover:bg-placeholder" data-tab="configuracoes">
                     <i data-lucide="settings"></i> Configurações Master
                 </button>
             </nav>
-            <div class="sidebar-footer">
-                <button class="btn-logout" id="btn-logout" style="color: var(--danger);">
-                    <i data-lucide="log-out"></i> Sair
+            <div class="sidebar-footer border-top-dashed p-3">
+                <button class="btn-logout flex justify-center w-100 rounded-md p-2 bg-danger-light text-danger font-bold cursor-pointer transition hover:bg-danger hover:text-white" id="btn-logout" style="border: 1px solid var(--color-danger);">
+                    <i data-lucide="log-out" class="mr-2"></i> Encerrar Sessão
                 </button>
             </div>
         </aside>
@@ -86,70 +88,63 @@
         <!-- Main Wrapper -->
         <div class="main-wrapper">
             <!-- Topbar -->
-            <header class="topbar topbar-glass flex justify-between align-center px-4 py-3 border-bottom-dashed border-border w-100 gap-4">
+            <header class="topbar flex justify-between align-center px-4 py-3 border-bottom-dashed border-border w-100 gap-4" style="background-color: var(--color-bg-surface); backdrop-filter: var(--glass-blur); position: sticky; top: 0; z-index: 50;">
                 <!-- Esquerda: Toggle + Busca -->
                 <div class="flex align-center gap-3 flex-1">
-                    <button class="menu-toggle d-md-none bg-transparent border-none text-primary cursor-pointer p-1" aria-label="Abrir Menu">
+                    <button class="menu-toggle d-md-none bg-transparent border-none text-danger cursor-pointer p-1" aria-label="Abrir Menu">
                         <i data-lucide="menu"></i>
                     </button>
                     
                     <div class="flex align-center gap-2 d-none d-md-flex">
-                        <h2 class="text-primary m-0" id="page-title">God Mode</h2>
-                        <span class="badge bg-danger-light text-danger px-2 py-1 rounded-full text-xs font-bold border border-danger">Super Admin</span>
+                        <h2 class="text-white m-0 font-bold" id="page-title">God Mode</h2>
+                        <span class="badge bg-danger-light text-danger px-2 py-1 rounded-full text-xs font-bold border border-danger shadow-glow">Acesso Nível 99</span>
                     </div>
                 </div>
 
                 <!-- Centro: Barra de Pesquisa Spotlight -->
-                <div class="topbar-search d-none d-lg-flex flex-1" style="max-width: 600px;" onclick="if(window.showToast) window.showToast('Busca global ativada!', 'info')">
-                    <i data-lucide="search" class="icon-sm text-secondary"></i>
-                    <span class="flex-1 text-left text-secondary">Buscar loja, cliente ou plano...</span>
-                    <span class="topbar-search-kbd">Ctrl+K</span>
+                <div class="topbar-search d-none d-lg-flex flex-1 rounded-lg border border-dashed border-danger px-3 py-2 cursor-pointer bg-danger-light hover:bg-placeholder transition" style="max-width: 600px; opacity: 0.8;" onclick="if(window.showToast) window.showToast('Busca global ativada!', 'info')">
+                    <i data-lucide="search" class="icon-sm text-danger mr-2"></i>
+                    <span class="flex-1 text-left text-danger font-medium">Buscar loja, cliente ou plano...</span>
+                    <span class="topbar-search-kbd bg-danger text-white rounded px-1 text-xs">Ctrl+K</span>
                 </div>
 
                 <!-- Direita: Ações Rápidas + Sino + Perfil -->
                 <div class="flex align-center gap-3">
-                    <!-- Quick Actions -->
-                    <div class="flex align-center gap-2 d-none d-sm-flex border-right-dashed border-border pr-3 mr-1">
-                        <button class="btn bg-primary text-white text-xs py-1 px-3 rounded-full flex align-center gap-1 shadow-sm hover-float cursor-pointer border-none" onclick="document.querySelector('[data-tab=\'tenants\']')?.click(); setTimeout(() => document.getElementById('btn-novo-tenant')?.click(), 500);" title="Novo Lojista">
-                            <i data-lucide="plus" class="icon-xs"></i> Lojista
-                        </button>
-                    </div>
-
-                    <button id="btn-toggle-theme" class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Alternar Tema" onclick="window.toggleTheme(this)">
+                    <button id="btn-toggle-theme" class="bg-transparent border-none text-secondary cursor-pointer hover:text-danger transition-colors p-1 rounded" title="Alternar Tema" onclick="window.toggleTheme(this)">
                         <i data-lucide="moon" class="icon-sm" id="theme-icon"></i>
                     </button>
 
                     <!-- Sino de Notificações -->
-                    <div class="notification-container">
+                    <div class="notification-container relative">
                         <button id="btn-notifications"
-                            class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors relative p-1"
+                            class="bg-transparent border-none text-secondary cursor-pointer hover:text-danger transition-colors relative p-1"
                             title="Notificações da Rede">
                             <i data-lucide="bell"></i>
-                            <span id="notifications-badge" class="badge-dot d-none"></span>
+                            <span id="notifications-badge" class="badge-dot d-none bg-danger border border-bg-base"></span>
                         </button>
 
-                        <div id="notifications-drawer" class="notification-drawer d-none">
-                            <div class="p-3 border-bottom-dashed border-border flex justify-between align-center bg-card-hover rounded-t-lg">
-                                <span class="font-bold text-sm text-primary">Avisos da Rede</span>
-                                <button id="btn-mark-all-read" class="text-xs text-primary-light hover:text-primary transition-colors cursor-pointer bg-transparent border-none">Lidas</button>
+                        <div id="notifications-drawer" class="notification-drawer d-none absolute right-0 mt-2 w-300px rounded-lg border border-dashed border-danger shadow-premium" style="background-color: var(--color-bg-card); z-index: 100;">
+                            <div class="p-3 border-bottom-dashed border-border flex justify-between align-center bg-danger-light rounded-t-lg">
+                                <span class="font-bold text-sm text-danger">Avisos da Rede</span>
+                                <button id="btn-mark-all-read" class="text-xs text-danger opacity-70 hover:opacity-100 transition-colors cursor-pointer bg-transparent border-none font-bold">Lidas</button>
                             </div>
-                            <div id="notifications-list" class="flex-1 overflow-y-auto custom-scrollbar p-2 flex flex-col gap-2" style="max-height: 300px;">
+                            <div id="notifications-list" class="flex-1 overflow-y-auto custom-scrollbar p-2 flex flex-column gap-2" style="max-height: 300px;">
                                 <div class="text-center p-4 text-xs text-secondary">A rede está operando normalmente.</div>
                             </div>
-                            <div class="p-2 border-top-dashed border-border bg-card-hover text-center rounded-b-lg">
-                                <a href="#" onclick="document.querySelector('[data-tab=\'notificacoes\']').click(); return false;" class="text-xs text-secondary hover:text-primary transition-colors text-decoration-none">Ver todas na Central</a>
+                            <div class="p-2 border-top-dashed border-border text-center rounded-b-lg hover:bg-placeholder transition">
+                                <a href="#" onclick="document.querySelector('[data-tab=\'notificacoes\']').click(); return false;" class="text-xs text-danger font-bold text-decoration-none">Ver todas na Central</a>
                             </div>
                         </div>
                     </div>
 
                     <div class="user-dropdown-container position-relative">
-                        <div class="user-profile flex align-center gap-2 cursor-pointer p-1 rounded-md" style="transition: var(--transition);">
-                            <div class="avatar w-40px h-40px rounded-full bg-danger-light flex align-center justify-center text-danger font-bold border border-danger">
-                                GOD
+                        <div class="user-profile flex align-center gap-2 cursor-pointer p-1 rounded-md transition hover:bg-placeholder border border-transparent hover:border-danger hover:shadow-glow">
+                            <div class="avatar w-40px h-40px rounded-full bg-danger text-white flex align-center justify-center font-bold border border-danger-light shadow-glow">
+                                <i data-lucide="shield-alert" class="icon-sm"></i>
                             </div>
                             <div class="user-info d-none d-md-flex flex-column">
-                                <span class="user-name text-sm font-bold text-primary">Master Admin</span>
-                                <span class="user-role text-xs text-secondary">Acesso Total</span>
+                                <span class="user-name text-sm font-bold text-white">Master Admin</span>
+                                <span class="user-role text-xs text-danger font-bold">Acesso Total</span>
                             </div>
                         </div>
                     </div>

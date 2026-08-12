@@ -1,5 +1,6 @@
 import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
 
+const escapeHTML = (str) => str ? str.replace(/[&<>'"`]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;', '`': '&#96;' }[tag] || tag)) : '';
 export class filiaisController {
     constructor(stateManager) {
         this.state = stateManager;
@@ -59,33 +60,38 @@ export class filiaisController {
 
         filiais.forEach(filial => {
             const isActive = filial.id === activeId;
-            const cardClass = isActive ? 'border-primary bg-primary-light shadow-md' : 'border-dashed bg-placeholder hover:border-primary';
-            const iconClass = isActive ? 'text-primary' : 'text-secondary';
+            const topBorderColor = isActive ? 'var(--color-success)' : 'var(--color-primary)';
+            const shadowClass = isActive ? 'box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-4px);' : 'box-shadow: 0 4px 15px rgba(0,0,0,0.03); transform: translateY(0);';
+            const iconWrapperColor = isActive ? 'bg-success-light' : 'bg-primary-light';
+            const iconColor = isActive ? 'text-success' : 'text-primary';
             const iconName = isActive ? 'store' : 'building-2';
             
             const btnHtml = isActive 
-                ? `<div class="bg-primary text-white text-sm font-bold px-4 py-2 rounded-md text-center shadow-sm w-100 flex align-center justify-center gap-2">
+                ? `<div class="text-white text-sm font-bold px-4 py-2 rounded-md text-center shadow-sm w-100 flex align-center justify-center gap-2" style="background-color: var(--color-success);">
                      <i data-lucide="check-circle" class="icon-sm"></i> Filial Ativa
                    </div>`
-                : `<button class="btn bg-transparent border border-primary text-primary w-100 py-2 rounded-md cursor-pointer hover:bg-primary hover:text-white transition-colors flex align-center justify-center gap-2" onclick="window.acessarFilial('${filial.id}')">
+                : `<button class="btn btn-outline text-primary border-primary w-100 py-2 rounded-md cursor-pointer hover:bg-primary-light transition-colors flex align-center justify-center gap-2" onclick="window.acessarFilial('${filial.id}')">
                      Acessar Filial
                    </button>`;
 
             html += `
-                <div class="config-card flex flex-column justify-between border-2 ${cardClass} rounded-lg overflow-hidden transition-all duration-300 h-100" style="${isActive ? 'transform: translateY(-2px);' : 'cursor: pointer;'}">
-                    <div class="p-4">
-                        <div class="flex justify-between align-start mb-3">
-                            <div class="flex align-center justify-center bg-bg-base rounded-full shadow-sm" style="width: 48px; height: 48px; border: 1px solid var(--color-border);">
-                                <i data-lucide="${iconName}" class="${iconClass}"></i>
+                <div class="config-card flex flex-column h-100 relative transition-all" style="border: none; border-top: 4px solid ${topBorderColor}; ${shadowClass}">
+                    <div class="p-4 flex-1">
+                        <div class="flex justify-between align-start mb-4 border-bottom-dashed border-placeholder pb-3">
+                            <div class="kpi-icon-wrapper ${iconWrapperColor}" style="width: 32px; height: 32px;">
+                                <i data-lucide="${iconName}" class="${iconColor} icon-sm"></i>
                             </div>
-                            ${filial.is_main ? `<span class="bg-primary-light text-primary text-xs font-bold px-2 py-1 rounded-md border border-primary flex align-center gap-1"><i data-lucide="crown" class="icon-xs"></i> Matriz</span>` : ''}
+                            ${filial.is_main ? `<span class="text-white text-xs font-bold px-2 py-1 rounded-sm flex align-center gap-1 shadow-sm" style="background-color: var(--color-primary); letter-spacing: 0.5px;"><i data-lucide="crown" class="icon-xs text-white"></i> MATRIZ</span>` : ''}
                         </div>
-                        <h3 class="text-lg font-bold text-primary mb-1">${filial.name || 'Filial Sem Nome'}</h3>
-                        <p class="text-sm text-secondary mb-3 flex align-center gap-1" style="min-height: 20px;">
-                            <i data-lucide="map-pin" class="icon-xs flex-shrink-0"></i> 
-                            <span class="truncate">${filial.address ? filial.address : '<span class="opacity-50">Sem endereço</span>'}</span>
+                        
+                        <h3 class="text-primary font-bold m-0 mb-1" style="font-size: 1.25rem;">${escapeHTML(filial.name || 'Filial Sem Nome')}</h3>
+                        
+                        <p class="text-secondary text-sm m-0 mt-2 flex align-center gap-2" style="line-height: 1.4;">
+                            <i data-lucide="map-pin" class="icon-sm flex-shrink-0 opacity-70"></i> 
+                            <span class="truncate" title="${escapeHTML(filial.address || '')}">${filial.address ? escapeHTML(filial.address) : '<span class="opacity-50 italic">Sem endereço cadastrado</span>'}</span>
                         </p>
                     </div>
+                    
                     <div class="px-4 pb-4 mt-auto">
                         ${btnHtml}
                     </div>

@@ -12,38 +12,26 @@
             <!-- Esquerda: Formulários -->
             <div class="flex flex-column gap-4">
 
-                <!-- Tabs Navigation -->
-                <div class="flex flex-wrap gap-2 border-bottom-dashed mb-4 pb-2">
-                    <button type="button"
-                        class="tab-btn active px-4 py-2 border-none rounded-t-md bg-placeholder text-primary font-medium cursor-pointer transition-colors"
-                        data-tab="tab-identidade" style="border-bottom: 2px solid var(--color-primary);">
-                        <i data-lucide="building" class="icon-sm mr-1" style="vertical-align: middle;"></i> Identidade
+                <!-- Tabs de Navegação -->
+                <div class="flex flex-wrap gap-2 mb-2 border-bottom-dashed border-placeholder pb-3">
+                    <button type="button" class="btn tab-btn active bg-primary-light text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-config-identidade">
+                        <i data-lucide="building" class="icon-sm"></i> Identidade
                     </button>
-                    <button type="button"
-                        class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                        data-tab="tab-contatos">
-                        <i data-lucide="link" class="icon-sm mr-1" style="vertical-align: middle;"></i> Contatos
+                    <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-config-contatos">
+                        <i data-lucide="link" class="icon-sm"></i> Contatos
                     </button>
-                    <button type="button"
-                        class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                        data-tab="tab-visibilidade">
-                        <i data-lucide="eye" class="icon-sm mr-1" style="vertical-align: middle;"></i> Visibilidade
+                    <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-config-visibilidade">
+                        <i data-lucide="eye" class="icon-sm"></i> Visibilidade
                     </button>
-                    <button type="button"
-                        class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                        data-tab="tab-horarios">
-                        <i data-lucide="clock" class="icon-sm mr-1" style="vertical-align: middle;"></i> Horários
+                    <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-config-horarios">
+                        <i data-lucide="clock" class="icon-sm"></i> Horários
                     </button>
-                    <button type="button"
-                        class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                        data-tab="tab-pagamentos">
-                        <i data-lucide="credit-card" class="icon-sm mr-1" style="vertical-align: middle;"></i>
-                        Pagamentos
+                    <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-config-pagamentos">
+                        <i data-lucide="credit-card" class="icon-sm"></i> Pagamentos
                     </button>
-                </div>
-
-                <!-- 1: IDENTIDADE -->
-                <div id="tab-identidade" class="tab-content config-card mb-0 p-4">
+                </div>                <!-- 1: IDENTIDADE -->
+                <div id="tab-config-identidade" class="config-card mb-4 p-4 tab-content">
+                    <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Identidade</h3>
                     <div class="mt-2">
                         <p class="text-sm text-secondary mb-4 mt-0">Defina o nome da sua vitrine pública e URL
                             personalizada.</p>
@@ -96,7 +84,8 @@
                 </div>
 
                 <!-- 2: LINKS -->
-                <div id="tab-contatos" class="tab-content d-none config-card mb-0 p-4">
+                <div id="tab-config-contatos" class="config-card mb-4 p-4 tab-content d-none">
+                    <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Contatos</h3>
                     <div class="mt-2">
                         <p class="text-sm text-secondary mb-4 mt-0">Adicione o Instagram, Facebook e os links onde os
                             clientes te encontram.</p>
@@ -165,7 +154,8 @@
                 </div>
 
                 <!-- 3: VISIBILIDADE -->
-                <div id="tab-visibilidade" class="tab-content d-none config-card mb-0 p-4">
+                <div id="tab-config-visibilidade" class="config-card mb-4 p-4 tab-content d-none">
+                    <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Visibilidade</h3>
                     <div class="mt-2">
                         <p class="text-sm text-secondary mb-4 mt-0">Defina o endereço e ative as travas de visibilidade
                             da loja pública.</p>
@@ -261,7 +251,8 @@
                 </div>
 
                 <!-- 4: HORÁRIOS -->
-                <div id="tab-horarios" class="tab-content d-none config-card mb-0 p-4">
+                <div id="tab-config-horarios" class="config-card mb-4 p-4 tab-content d-none">
+                    <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Horários</h3>
                     <div class="mt-2">
                         <p class="text-sm text-secondary mb-4 mt-0">Defina o horário exato de expediente de Segunda a
                             Domingo.</p>
@@ -272,7 +263,8 @@
                 </div>
 
                 <!-- 5: STRIPE (PAGAMENTOS) -->
-                <div id="tab-pagamentos" class="tab-content d-none config-card mb-0 p-4">
+                <div id="tab-config-pagamentos" class="config-card mb-4 p-4 tab-content d-none">
+                    <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Pagamentos</h3>
                     <div class="mt-2">
                         <div class="flex justify-between align-start mb-4 gap-3">
                             <p class="text-sm text-secondary m-0 flex-1">Integre sua própria conta do Stripe para

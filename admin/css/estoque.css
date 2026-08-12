@@ -1,0 +1,294 @@
+/* ==========================================================================
+   estoque.css — Estilos da tela de Estoque & Catálogo
+   ========================================================================== */
+
+/* Barra de filtros (reaproveitando o estilo glassmorphism) */
+.cat-filter-bar {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Inputs de filtro */
+.cat-input {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 0.5rem 0.9rem;
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+.cat-input::placeholder { color: var(--color-text-secondary); }
+.cat-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+.cat-input-icon-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+.cat-input-icon-wrap .cat-icon-inside {
+    position: absolute;
+    top: 50%;
+    left: 0.7rem;
+    transform: translateY(-50%);
+    color: var(--color-text-secondary);
+    pointer-events: none;
+}
+.cat-input-icon-wrap .cat-input {
+    padding-left: 2.2rem;
+}
+
+/* ===== CARDS DE CATÁLOGO ===== */
+.cat-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.cat-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 0.9rem 1.1rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto auto auto;
+    align-items: center;
+    gap: 0.8rem 1.2rem;
+    transition: background 0.18s, border-color 0.18s, transform 0.15s, box-shadow 0.18s;
+    position: relative;
+    overflow: hidden;
+}
+
+.cat-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 14px 0 0 14px;
+    background: var(--cat-accent, var(--color-primary));
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.cat-card:hover {
+    background: rgba(255,255,255,0.055);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateX(3px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.cat-card:hover::before {
+    opacity: 1;
+}
+
+/* SKU e Ícone de Tipo */
+.cat-card-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.cat-card-sku {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    font-family: 'Courier New', monospace;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px;
+    padding: 0.15rem 0.45rem;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+    display: inline-block;
+}
+
+/* Info principal */
+.cat-card-main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.cat-card-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.15rem;
+}
+.cat-card-type {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-transform: capitalize;
+}
+
+/* Preço */
+.cat-card-price {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    text-align: right;
+}
+
+/* Estoque */
+.cat-card-stock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+}
+.cat-card-stock-val {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1;
+}
+.cat-card-stock-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    font-weight: 700;
+}
+
+/* Badge de status */
+.cat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.28rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+}
+.cat-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.cat-badge.status-ideal    { background: rgba(16,185,129,0.12); color: var(--color-success); }
+.cat-badge.status-ideal .cat-badge-dot { background: var(--color-success); }
+.cat-badge.status-baixo    { background: rgba(245,158,11,0.12); color: var(--color-warning); }
+.cat-badge.status-baixo .cat-badge-dot  { background: var(--color-warning); }
+.cat-badge.status-zerado   { background: rgba(239,68,68,0.12);  color: var(--color-danger); }
+.cat-badge.status-zerado .cat-badge-dot { background: var(--color-danger); }
+
+/* Ações */
+.cat-card-actions {
+    display: flex;
+    gap: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.18s;
+}
+.cat-card:hover .cat-card-actions { opacity: 1; }
+
+.cat-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.04);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+    flex-shrink: 0;
+}
+.cat-action-btn:hover        { background: rgba(255,255,255,0.1); color: var(--color-text-primary); border-color: rgba(255,255,255,0.15); }
+.cat-action-btn.danger:hover { background: rgba(239,68,68,0.15); color: var(--color-danger); border-color: rgba(239,68,68,0.3); }
+
+/* Acento da borda lateral por status */
+.cat-card[data-status="ideal"]  { --cat-accent: var(--color-success); }
+.cat-card[data-status="baixo"]  { --cat-accent: var(--color-warning); }
+.cat-card[data-status="zerado"] { --cat-accent: var(--color-danger); }
+
+/* ===== EMPTY STATE ===== */
+.cat-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 0.75rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    background: rgba(255,255,255,0.02);
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 14px;
+}
+.cat-empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.25rem;
+    color: var(--color-text-secondary);
+}
+
+/* ===== SKELETON ===== */
+.cat-skeleton-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+    padding: 0.9rem 1.1rem;
+    display: grid;
+    grid-template-columns: 40px 1fr 80px 60px 80px 80px;
+    gap: 0.8rem 1.2rem;
+    align-items: center;
+}
+.cat-sk {
+    height: 14px;
+    border-radius: 6px;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: cat-shimmer 1.5s infinite;
+}
+.cat-sk-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+}
+@keyframes cat-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cat-card {
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto auto;
+    }
+    .cat-card-stock   { grid-column: 2; grid-row: 2; flex-direction: row; justify-content: flex-start; }
+    .cat-badge        { grid-column: 1; grid-row: 2; }
+    .cat-card-actions { grid-column: 3; grid-row: 2; opacity: 1; }
+    .cat-skeleton-card { grid-template-columns: 40px 1fr 80px; }
+}

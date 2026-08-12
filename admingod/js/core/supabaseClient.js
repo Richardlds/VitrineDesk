@@ -8,7 +8,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // O supabase-js expõe `window.supabase` através da CDN (index.html).
 export const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
-        storage: window.sessionStorage,
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true

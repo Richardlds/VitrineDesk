@@ -84,30 +84,30 @@ export class fidelidadeController {
 
         if (!this.config.is_active) {
             bannerContainer.innerHTML = `
-                <div class="config-card mb-0 bg-bg-surface border-dashed">
-                    <div class="flex flex-wrap align-center gap-4 p-2">
-                        <div class="bg-placeholder text-secondary p-4 rounded-full flex align-center justify-center">
-                            <i data-lucide="award" class="icon-lg opacity-50"></i>
+                <div class="config-card mb-0 bg-bg-surface flex flex-column transition-all" style="border: none; border-top: 4px solid var(--color-border); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                    <div class="p-4 flex align-center gap-4">
+                        <div class="kpi-icon-wrapper bg-placeholder" style="width: 48px; height: 48px;">
+                            <i data-lucide="award" class="icon-md text-secondary"></i>
                         </div>
                         <div class="flex-1">
-                            <h3 class="text-secondary text-lg mb-1">Programa Desativado</h3>
-                            <p class="text-sm text-secondary">Habilite o programa de fidelidade nas configurações para que seus clientes comecem a pontuar.</p>
+                            <h3 class="text-secondary text-lg mb-1 font-bold">Programa Desativado</h3>
+                            <p class="text-sm text-secondary m-0">Habilite o programa de fidelidade nas configurações para que seus clientes comecem a pontuar.</p>
                         </div>
-                        <button class="btn btn-primary" onclick="document.getElementById('btn-configurar-fidelidade').click()">Ativar Agora</button>
+                        <button class="btn btn-primary shadow-sm" onclick="document.getElementById('btn-configurar-fidelidade').click()">Ativar Agora</button>
                     </div>
                 </div>
             `;
         } else {
             bannerContainer.innerHTML = `
-                <div class="config-card mb-0" style="background: linear-gradient(135deg, rgba(59, 130, 246,0.1) 0%, rgba(59, 130, 246,0.02) 100%); border: 1px solid rgba(59, 130, 246,0.2);">
-                    <div class="flex flex-wrap align-center gap-4 p-2">
-                        <div class="bg-primary text-white p-4 rounded-full flex align-center justify-center shadow-sm">
-                            <i data-lucide="award" class="icon-lg"></i>
+                <div class="config-card mb-0 bg-bg-surface flex flex-column relative transition-all" style="border: none; border-top: 4px solid var(--color-success); box-shadow: 0 8px 30px rgba(0,0,0,0.06);">
+                    <div class="p-4 flex align-center gap-4">
+                        <div class="kpi-icon-wrapper bg-success-light" style="width: 48px; height: 48px;">
+                            <i data-lucide="award" class="icon-md text-success"></i>
                         </div>
                         <div class="flex-1">
                             <div class="flex align-center gap-2 mb-1">
-                                <span class="bg-success-light text-success text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide">Ativo</span>
-                                <h3 class="text-primary text-lg mb-0 m-0">Meta: ${this.config.pontos_necessarios} Agendamentos</h3>
+                                <h3 class="text-primary text-lg mb-0 font-bold">Meta: ${this.config.pontos_necessarios} Agendamentos</h3>
+                                <span class="text-white text-xs font-bold px-2 py-1 rounded-sm shadow-sm" style="background-color: var(--color-success); letter-spacing: 0.5px;">ATIVO</span>
                             </div>
                             <p class="text-sm text-secondary m-0">Recompensa: <strong class="text-primary">${this.config.recompensa}</strong></p>
                         </div>

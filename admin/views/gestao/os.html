@@ -7,80 +7,90 @@
                     <div class="kpi-icon-wrapper bg-primary-light">
                         <i data-lucide="file-check-2" class="icon-sm text-primary"></i>
                     </div>
-                    <h2 class="text-primary m-0">Nova Ordem de Serviço (OS)</h2>
+                    <h2 class="m-0" style="color: var(--color-text-primary); font-size: 1.1rem; font-weight: 700;">Nova Ordem de Serviço (OS)</h2>
                 </div>
                 <p class="text-secondary text-sm m-0">Crie uma OS, baixe do estoque e imprima o comprovante</p>
             </div>
-            <button id="btn-save-print-os" class="btn btn-primary shadow-sm flex align-center gap-2 px-4 py-2" disabled>
+            <button id="btn-save-print-os" class="btn btn-primary flex align-center gap-2 px-4 py-2" disabled>
                 <i data-lucide="printer" class="icon-sm"></i> Salvar e Imprimir
             </button>
         </div>
 
         <div class="grid grid-lg-2 gap-4">
             <!-- Dados do Cliente -->
-            <div class="config-card">
-                <div class="flex align-center gap-2 mb-4 border-bottom-dashed pb-3">
-                    <i data-lucide="user" class="text-primary icon-sm"></i>
-                    <h3 class="text-lg font-bold text-primary m-0">Dados do Cliente</h3>
+            <div class="os-card">
+                <div class="os-section-divider">
+                    <div class="os-section-icon bg-primary-light">
+                        <i data-lucide="user" class="icon-xs text-primary"></i>
+                    </div>
+                    <h3>Dados do Cliente</h3>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-3 mb-3">
+
+                <div class="grid grid-md-2 gap-3 mb-3">
                     <div class="flex flex-column gap-1">
-                        <label for="os-customer-name" class="text-sm font-medium text-secondary">Nome do Cliente *</label>
-                        <input type="text" id="os-customer-name" class="bg-placeholder border border-border rounded-md px-3 py-2 text-primary w-100 outline-none focus-ring" placeholder="Ex: João da Silva" autocomplete="off">
+                        <label for="os-customer-name" class="os-label">Nome do Cliente *</label>
+                        <input type="text" id="os-customer-name" class="os-input"
+                            placeholder="Ex: João da Silva" autocomplete="off">
                     </div>
                     <div class="flex flex-column gap-1">
-                        <label for="os-customer-phone" class="text-sm font-medium text-secondary">WhatsApp / Tel</label>
-                        <input type="text" id="os-customer-phone" class="bg-placeholder border border-border rounded-md px-3 py-2 text-primary w-100 outline-none focus-ring" placeholder="(00) 00000-0000" autocomplete="off">
+                        <label for="os-customer-phone" class="os-label">WhatsApp / Tel</label>
+                        <input type="text" id="os-customer-phone" class="os-input"
+                            placeholder="(00) 00000-0000" autocomplete="off">
                     </div>
                 </div>
-                <div class="flex flex-column gap-1 mt-4">
-                    <label for="os-notes" class="text-sm font-medium text-secondary">Termos de Garantia / Observações</label>
-                    <textarea id="os-notes" class="bg-placeholder border border-border rounded-md px-3 py-2 text-primary w-100 outline-none focus-ring custom-scrollbar" rows="3" placeholder="Ex: Garantia de 90 dias balcão..."></textarea>
+                <div class="flex flex-column gap-1">
+                    <label for="os-notes" class="os-label">Termos de Garantia / Observações</label>
+                    <textarea id="os-notes" class="os-input" rows="3"
+                        style="resize: vertical; min-height: 80px;"
+                        placeholder="Ex: Garantia de 90 dias balcão..."></textarea>
                 </div>
             </div>
 
             <!-- Adicionar Itens -->
-            <div class="config-card">
-                <div class="flex align-center gap-2 mb-4 border-bottom-dashed pb-3">
-                    <i data-lucide="shopping-cart" class="text-primary icon-sm"></i>
-                    <h3 class="text-lg font-bold text-primary m-0">Produtos & Serviços</h3>
+            <div class="os-card">
+                <div class="os-section-divider">
+                    <div class="os-section-icon bg-primary-light">
+                        <i data-lucide="shopping-cart" class="icon-xs text-primary"></i>
+                    </div>
+                    <h3>Produtos &amp; Serviços</h3>
                 </div>
-                
-                <div class="flex gap-2 mb-3">
-                    <div class="flex-1 relative">
-                        <i data-lucide="search" class="icon-sm text-secondary absolute" style="top: 10px; left: 10px;"></i>
-                        <input type="text" id="os-search-item" class="bg-placeholder border border-border rounded-md pl-5 pr-3 py-2 text-primary w-100 outline-none focus-ring" placeholder="Clique para buscar no estoque..." autocomplete="off">
-                        <!-- Autocomplete Dropdown -->
-                        <div id="os-search-results" class="absolute w-100 border border-dashed border-border rounded-md shadow-md flex-column overflow-hidden d-none" style="top: 100%; left: 0; z-index: 9999; max-height: 250px; overflow-y: auto; background-color: var(--color-bg-base); margin-top: 5px;">
-                            <!-- Injetado via JS -->
-                        </div>
+
+                <div class="os-input-search-wrap mb-3">
+                    <i data-lucide="search" class="icon-sm os-input-search-icon"></i>
+                    <input type="text" id="os-search-item" class="os-input"
+                        placeholder="Clique para buscar no estoque..." autocomplete="off">
+                    <!-- Autocomplete Dropdown -->
+                    <div id="os-search-results"
+                        class="absolute w-100 flex-column overflow-hidden d-none"
+                        style="top: 100%; left: 0; z-index: 9999; max-height: 250px; overflow-y: auto; margin-top: 5px;">
+                        <!-- Injetado via JS -->
                     </div>
                 </div>
 
-                <div class="table-responsive rounded-md border border-border overflow-hidden mb-3" style="max-height: 220px;">
-                    <table class="data-table w-100">
-                        <thead class="bg-placeholder">
+                <div class="os-items-table-wrap">
+                    <table class="os-items-table" id="os-items-main-table">
+                        <thead>
                             <tr>
-                                <th class="text-left py-2 px-3">Item</th>
-                                <th class="text-center py-2 px-3">Qtd</th>
-                                <th class="text-right py-2 px-3">Preço</th>
-                                <th class="text-right py-2 px-3">Sub</th>
-                                <th class="text-center py-2 px-3"></th>
+                                <th>Item</th>
+                                <th>Qtd</th>
+                                <th>Preço</th>
+                                <th>Sub</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="os-cart-body">
                             <!-- Injetado via JS -->
                         </tbody>
                     </table>
-                    <div id="os-empty-cart" class="text-center py-5 text-secondary text-sm border-top-dashed border-border">
+                    <div id="os-empty-cart" class="os-empty-cart text-secondary text-sm">
+                        <i data-lucide="package-open" class="icon-sm" style="opacity: 0.4;"></i>
                         Nenhum item adicionado à OS.
                     </div>
                 </div>
 
-                <div class="flex justify-between align-center pt-3 border-top-dashed border-border">
-                    <span class="text-secondary font-bold uppercase text-sm">Total da OS:</span>
-                    <span id="os-total-amount" class="text-2xl font-bold text-success">R$ 0,00</span>
+                <div class="os-total-bar">
+                    <span class="os-total-label">Total da OS:</span>
+                    <span id="os-total-amount" class="font-bold text-success" style="font-size: 1.4rem; letter-spacing: -0.02em;">R$ 0,00</span>
                 </div>
             </div>
         </div>
@@ -88,11 +98,14 @@
 
     <!-- Print Layout (A4) - Hidden by default, shown when printing -->
     <div id="print-layout" class="d-none print-only">
-        <div class="print-header flex justify-between" style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+        <div class="print-header flex justify-between"
+            style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
             <div style="text-align: left; display: flex; align-items: center; gap: 15px;">
-                <img id="print-tenant-logo" src="" alt="Logo" class="d-none" style="max-height: 70px; max-width: 150px; object-fit: contain;">
+                <img id="print-tenant-logo" src="" alt="Logo" class="d-none"
+                    style="max-height: 70px; max-width: 150px; object-fit: contain;">
                 <div>
-                    <h1 class="print-title" id="print-tenant-name" style="font-size: 20px; margin-bottom: 4px;">Minha Loja</h1>
+                    <h1 class="print-title" id="print-tenant-name" style="font-size: 20px; margin-bottom: 4px;">Minha
+                        Loja</h1>
                     <p id="print-tenant-details" style="font-size: 12px; margin: 0; line-height: 1.4; color: #333;">
                         <span id="print-tenant-cnpj"></span><br>
                         <span id="print-tenant-address"></span><br>

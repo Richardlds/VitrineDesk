@@ -492,8 +492,18 @@ export class planos_clientesController {
 
         try {
             const nome = document.getElementById('input-plano-nome').value.trim();
-            const descricao = document.getElementById('input-plano-descricao').value.trim();
             const preco = parseFloat(document.getElementById('input-plano-preco').value);
+            
+            if (!nome) {
+                if (window.showToast) window.showToast('O Nome do plano é obrigatório.', 'warning');
+                return;
+            }
+            if (isNaN(preco) || preco <= 0) {
+                if (window.showToast) window.showToast('A Mensalidade deve ser maior que zero.', 'warning');
+                return;
+            }
+
+            const descricao = document.getElementById('input-plano-descricao').value.trim();
             const desconto = parseFloat(document.getElementById('input-plano-desconto').value) || 0;
             const gratis = parseInt(document.getElementById('input-plano-gratis').value, 10) || 0;
             

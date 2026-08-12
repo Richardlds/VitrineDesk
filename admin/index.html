@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="/admin/css/design-system.css">
     <link rel="stylesheet" href="/admin/css/tickets.css">
     <link rel="stylesheet" href="/admin/css/agenda.css">
+    <link rel="stylesheet" href="/admin/css/gestao.css">
+    <link rel="stylesheet" href="/admin/css/estoque.css">
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
@@ -38,7 +40,8 @@
                 <div class="logo-container" style="display: flex; align-items: center; gap: 8px;">
                     <i data-lucide="zap" class="brand-icon"></i>
                     <span class="brand-text">VitrineDesk</span>
-                    <span id="tenant-plan-badge" class="badge bg-primary-light text-primary d-none" style="font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--color-primary);"></span>
+                    <span id="tenant-plan-badge" class="badge bg-primary-light text-primary d-none"
+                        style="font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--color-primary);"></span>
                 </div>
                 <button class="menu-toggle d-md-none" aria-label="Fechar Menu">
                     <i data-lucide="x"></i>
@@ -53,6 +56,9 @@
                 </button>
                 <button class="nav-item" data-tab="principal/agenda_diaria">
                     <i data-lucide="calendar-clock"></i> Agenda Diária
+                </button>
+                <button class="nav-item" data-tab="principal/agendamentos">
+                    <i data-lucide="calendar-days"></i> Histórico
                 </button>
 
                 <!-- CADASTROS -->
@@ -106,7 +112,7 @@
                     <i data-lucide="gift"></i> Fidelidade
                 </button>
 
-                                <!-- SISTEMA -->
+                <!-- SISTEMA -->
                 <div class="nav-section">Sistema</div>
                 <button class="nav-item" data-tab="cadastros/filiais">
                     <i data-lucide="store"></i> Minhas Filiais
@@ -150,42 +156,55 @@
                     <div class="flex align-center gap-2 flex-1">
                         <h1 id="page-title" class="d-none">Dashboard</h1>
                         <!-- Nova Barra de Pesquisa Substituindo o Título -->
-                        <div class="topbar-search flex flex-1 relative" style="max-width: 400px; margin: 0; cursor: text;" id="global-search-container">
+                        <div class="topbar-search flex flex-1 relative"
+                            style="max-width: 400px; margin: 0; cursor: text;" id="global-search-container">
                             <i data-lucide="search" class="icon-sm text-secondary"></i>
-                            <input type="text" id="global-search-input" class="flex-1 bg-transparent border-none outline-none text-secondary w-100" placeholder="Buscar clientes, funções ou telas..." autocomplete="off">
+                            <input type="text" id="global-search-input"
+                                class="flex-1 bg-transparent border-none outline-none text-secondary w-100"
+                                placeholder="Buscar clientes, funções ou telas..." autocomplete="off">
                             <span class="topbar-search-kbd d-none d-sm-block">Ctrl+K</span>
-                            
+
                             <!-- Dropdown de Resultados Spotlight -->
-                            <div id="global-search-results" class="absolute w-100 border border-dashed border-border rounded-md shadow-md flex-column overflow-hidden d-none" style="top: 110%; left: 0; z-index: 9999; max-height: 350px; overflow-y: auto; background-color: var(--color-bg-base);">
+                            <div id="global-search-results"
+                                class="absolute w-100 border border-dashed border-border rounded-md shadow-md flex-column overflow-hidden d-none"
+                                style="top: 110%; left: 0; z-index: 9999; max-height: 350px; overflow-y: auto; background-color: var(--color-bg-base);">
                             </div>
                         </div>
                         <!-- Filial Ativa -->
                         <div id="topbar-active-branch"
-                            class="d-none flex align-center gap-2 px-2 py-1 cursor-pointer transition hover:opacity-80 ml-2" 
-                            title="Trocar Filial" 
+                            class="d-none flex align-center gap-2 px-2 py-1 cursor-pointer transition hover:opacity-80 ml-2"
+                            title="Trocar Filial"
                             onclick="document.querySelector('[data-tab=\'cadastros/filiais\']')?.click();">
-                            
-                            <div class="flex align-center justify-center rounded-full bg-primary text-white flex-shrink-0" style="width: 22px; height: 22px;">
+
+                            <div class="flex align-center justify-center rounded-full bg-primary text-white flex-shrink-0"
+                                style="width: 22px; height: 22px;">
                                 <i data-lucide="store" class="icon-xs m-0"></i>
                             </div>
-                            <span id="topbar-active-branch-name" class="text-primary font-bold" style="font-size: 13px; white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis;">Matriz</span>
+                            <span id="topbar-active-branch-name" class="text-primary font-bold"
+                                style="font-size: 13px; white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis;">Matriz</span>
                             <i data-lucide="chevron-down" class="icon-xs text-secondary opacity-70"></i>
                         </div>
                     </div>
                 </div>
                 <!-- Direita: Ações Rápidas + Sino + Perfil -->
                 <div class="flex align-center gap-3">
-                
+
                     <!-- Quick Actions -->
                     <div class="flex align-center gap-2 d-none d-sm-flex border-right-dashed border-border pr-3 mr-1">
-                        <button class="btn bg-primary text-white text-xs py-1 px-3 rounded-full flex align-center gap-1 shadow-sm hover-float cursor-pointer border-none" onclick="document.querySelector('[data-tab=\'cadastros/clientes\']')?.click();" title="Novo Cliente">
+                        <button
+                            class="btn bg-primary text-white text-xs py-1 px-3 rounded-full flex align-center gap-1 shadow-sm hover-float cursor-pointer border-none"
+                            onclick="document.querySelector('[data-tab=\'cadastros/clientes\']')?.click();"
+                            title="Novo Cliente">
                             <i data-lucide="plus" class="icon-xs"></i> Cliente
                         </button>
-                        <button class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover" title="Limpar Cache Local" onclick="if(window.showToast) window.showToast('Cache limpo!', 'success')">
+                        <button
+                            class="bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors p-1 rounded hover:bg-hover"
+                            title="Limpar Cache Local"
+                            onclick="if(window.showToast) window.showToast('Cache limpo!', 'success')">
                             <i data-lucide="hard-drive" class="icon-sm"></i>
                         </button>
                     </div>
-                    
+
 
                     <!-- Sino de Notificações -->
                     <div class="notification-container" style="margin-right: 8px;">
@@ -240,14 +259,14 @@
                         <div class="skeleton" style="width: 200px; height: 32px; border-radius: 8px;"></div>
                         <div class="skeleton" style="width: 150px; height: 40px; border-radius: 8px;"></div>
                     </div>
-                    
+
                     <div class="grid grid-sm-2 grid-lg-4 gap-4 mb-6">
                         <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
                         <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
                         <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
                         <div class="skeleton" style="height: 130px; border-radius: 12px;"></div>
                     </div>
-                    
+
                     <div class="grid gap-4">
                         <div class="skeleton w-100" style="height: 400px; border-radius: 12px;"></div>
                     </div>
@@ -257,24 +276,29 @@
     </div>
     <!-- Modal Upsell Global -->
     <div id="modal-upsell-limit" class="modal-overlay d-none" style="z-index: 9999;">
-        <div class="modal-content config-card modal-card-md" style="max-width: 450px; text-align: center; padding: 2.5rem 2rem;">
+        <div class="modal-content config-card modal-card-md"
+            style="max-width: 450px; text-align: center; padding: 2.5rem 2rem;">
             <div class="mb-4 flex justify-center">
-                <div class="bg-primary-light text-primary p-3 rounded-xl" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                <div class="bg-primary-light text-primary p-3 rounded-xl"
+                    style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
                     <i data-lucide="rocket" style="width: 30px; height: 30px;"></i>
                 </div>
             </div>
-            
+
             <h3 class="text-xl font-bold text-primary mb-2">Limite Atingido! 🚀</h3>
             <p class="text-secondary text-sm mb-4 line-height-1-6">
-                Seu plano atual permite apenas <strong id="upsell-limit-label" class="text-primary">X itens</strong>. 
+                Seu plano atual permite apenas <strong id="upsell-limit-label" class="text-primary">X itens</strong>.
                 Para continuar crescendo sua empresa e adicionar mais, faça um upgrade no seu plano.
             </p>
-            
+
             <div class="flex flex-col gap-3">
-                <button class="btn btn-primary w-100 py-3 rounded-lg font-bold" onclick="document.getElementById('modal-upsell-limit').classList.add('d-none'); document.querySelector('[data-tab=\'sistema/assinatura\']').click();">
+                <button class="btn btn-primary w-100 py-3 rounded-lg font-bold"
+                    onclick="document.getElementById('modal-upsell-limit').classList.add('d-none'); document.querySelector('[data-tab=\'sistema/assinatura\']').click();">
                     Ver Planos & Upgrade
                 </button>
-                <button class="btn bg-transparent border-none text-secondary font-medium w-100 py-2 cursor-pointer hover:text-primary transition-colors" onclick="document.getElementById('modal-upsell-limit').classList.add('d-none');">
+                <button
+                    class="btn bg-transparent border-none text-secondary font-medium w-100 py-2 cursor-pointer hover:text-primary transition-colors"
+                    onclick="document.getElementById('modal-upsell-limit').classList.add('d-none');">
                     Agora não
                 </button>
             </div>

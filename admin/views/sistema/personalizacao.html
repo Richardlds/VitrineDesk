@@ -10,43 +10,29 @@
         <!-- Esquerda: Formulários -->
         <div class="flex flex-column gap-4">
 
-            <!-- Tabs Navigation -->
-            <div class="flex flex-wrap gap-2 border-bottom-dashed mb-4 pb-2">
-                <button type="button"
-                    class="tab-btn active px-4 py-2 border-none rounded-t-md bg-placeholder text-primary font-medium cursor-pointer transition-colors"
-                    data-tab="tab-identidade" style="border-bottom: 2px solid var(--color-primary);">
-                    <i data-lucide="image" class="icon-sm mr-1" style="vertical-align: middle;"></i> Identidade
+            <!-- Tabs de Navegação -->
+            <div class="flex flex-wrap gap-2 mb-2 border-bottom-dashed border-placeholder pb-3">
+                <button type="button" class="btn tab-btn active bg-primary-light text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-identidade">
+                    <i data-lucide="image" class="icon-sm"></i> Identidade
                 </button>
-                <button type="button"
-                    class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                    data-tab="tab-tipografia">
-                    <i data-lucide="type" class="icon-sm mr-1" style="vertical-align: middle;"></i> Estilos
+                <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-tipografia">
+                    <i data-lucide="type" class="icon-sm"></i> Estilos
                 </button>
-                <button type="button"
-                    class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                    data-tab="tab-cabecalho">
-                    <i data-lucide="layout-template" class="icon-sm mr-1" style="vertical-align: middle;"></i> Cabeçalho
+                <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-cabecalho">
+                    <i data-lucide="layout-template" class="icon-sm"></i> Cabeçalho
                 </button>
-                <button type="button"
-                    class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                    data-tab="tab-rodape">
-                    <i data-lucide="message-circle" class="icon-sm mr-1" style="vertical-align: middle;"></i> Rodapé &
-                    Chat
+                <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-rodape">
+                    <i data-lucide="message-circle" class="icon-sm"></i> Rodapé & Chat
                 </button>
-                <button type="button"
-                    class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                    data-tab="tab-galeria">
-                    <i data-lucide="layout-grid" class="icon-sm mr-1" style="vertical-align: middle;"></i> Galeria
+                <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-galeria">
+                    <i data-lucide="layout-grid" class="icon-sm"></i> Galeria
                 </button>
-                <button type="button"
-                    class="tab-btn px-4 py-2 border-none rounded-t-md bg-transparent text-secondary cursor-pointer hover:bg-placeholder hover:text-primary transition-colors"
-                    data-tab="tab-painel-admin">
-                    <i data-lucide="monitor" class="icon-sm mr-1" style="vertical-align: middle;"></i> Painel Admin
+                <button type="button" class="btn tab-btn bg-transparent text-secondary hover:text-primary py-2 px-3 rounded-md text-sm font-medium border-none cursor-pointer flex align-center gap-2" data-tab="tab-painel-admin">
+                    <i data-lucide="monitor" class="icon-sm"></i> Painel Admin
                 </button>
-            </div>
-
-            <!-- 1. Identidade Base -->
-            <div id="tab-identidade" class="tab-content config-card mb-0 p-4">
+            </div>            <!-- 1. Identidade Base -->
+            <div id="tab-identidade" class="config-card mb-4 p-4 tab-content">
+                <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Identidade</h3>
                 <div class="mt-2">
 
                     <div class="mb-3">
@@ -308,7 +294,8 @@
             </div>
 
             <!-- 2. Tipografia e Estilos -->
-            <div id="tab-tipografia" class="tab-content d-none config-card mb-0 p-4">
+            <div id="tab-tipografia" class="config-card mb-4 p-4 tab-content d-none">
+                <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Estilos</h3>
                 <div class="mt-2">
 
                     <div class="mb-3">
@@ -348,7 +335,8 @@
             </div>
 
             <!-- 3. Cabeçalho (Top Bar) -->
-            <div id="tab-cabecalho" class="tab-content d-none config-card mb-0 p-4">
+            <div id="tab-cabecalho" class="config-card mb-4 p-4 tab-content d-none">
+                <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Cabeçalho</h3>
                 <div class="mt-2">
 
                     <div class="grid-cols-2 gap-3 mb-3">
@@ -381,7 +369,8 @@
             </div>
 
             <!-- 4. Rodapé e WhatsApp -->
-            <div id="tab-rodape" class="tab-content d-none config-card mb-0 p-4">
+            <div id="tab-rodape" class="config-card mb-4 p-4 tab-content d-none">
+                <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Rodapé & Chat</h3>
                 <div class="mt-2">
 
                     <div class="grid-cols-2 gap-3 mb-3">
@@ -463,7 +452,8 @@
             </div>
 
             <!-- 5. Galeria de Fotos -->
-            <div id="tab-galeria" class="tab-content d-none config-card mb-0 p-4">
+            <div id="tab-galeria" class="config-card mb-4 p-4 tab-content d-none">
+                <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Galeria</h3>
                 <div class="mt-2">
                     <p class="text-xs text-secondary mb-3">Adicione até 6 fotos para o portfólio da loja, antes-e-depois
                         ou infraestrutura.</p>
@@ -476,7 +466,8 @@
             </div>
 
             <!-- 6. Painel Admin -->
-            <div id="tab-painel-admin" class="tab-content d-none config-card mb-0 p-4">
+            <div id="tab-painel-admin" class="config-card mb-4 p-4 tab-content d-none">
+                <h3 class="text-primary mb-3 mt-0 flex align-center gap-2 border-bottom-dashed pb-2"> Painel Admin</h3>
                 <div class="mt-2">
                     <p class="text-xs text-secondary mb-3">Personalize as cores do seu próprio painel administrativo
                         para combinar com sua marca ou preferência.</p>

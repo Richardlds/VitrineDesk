@@ -72,26 +72,26 @@
                             Gerar Aleatório
                         </button>
                     </label>
-                    <input type="text" id="input-cupom-codigo" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm font-mono uppercase" placeholder="Ex: VERAO20" required>
+                    <input type="text" name="input-cupom-codigo" id="input-cupom-codigo" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm font-mono uppercase" placeholder="Ex: VERAO20" required>
                 </div>
                 
                 <div class="grid grid-md-2 mb-3">
                     <div>
                         <label class="font-medium text-sm text-secondary mb-1 inline-block">Tipo de Desconto</label>
-                        <select id="input-cupom-tipo" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+                        <select name="input-cupom-tipo" id="input-cupom-tipo" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
                             <option value="porcentagem">Porcentagem (%)</option>
                             <option value="fixo">Valor Fixo (R$)</option>
                         </select>
                     </div>
                     <div>
                         <label class="font-medium text-sm text-secondary mb-1 inline-block">Valor</label>
-                        <input type="number" id="input-cupom-valor" step="0.01" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="20" required>
+                        <input type="number" name="input-cupom-valor" id="input-cupom-valor" step="0.01" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="20" required>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label class="font-medium text-sm text-secondary mb-1 inline-block">Data de Expiração (Opcional)</label>
-                    <input type="date" id="input-cupom-validade" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm text-secondary">
+                    <input type="date" name="input-cupom-validade" id="input-cupom-validade" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm text-secondary">
                 </div>
 
                 <div class="flex gap-2">

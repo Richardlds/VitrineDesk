@@ -12,7 +12,7 @@ export class listaController {
         this.loadSavedThreshold();
         this.bindEvents();
         await this.loadItems();
-        
+
         if (window.lucide) {
             window.lucide.createIcons();
         }
@@ -45,7 +45,7 @@ export class listaController {
         const btnSaveThreshold = document.getElementById('btn-save-threshold');
         const alertInput = document.getElementById('input-alert-threshold');
         const alertText = document.getElementById('alert-threshold-text');
-        
+
         const displayMode = document.getElementById('alert-display-mode');
         const editMode = document.getElementById('alert-edit-mode');
 
@@ -61,13 +61,13 @@ export class listaController {
                 if (isNaN(val) || val < 1) val = 1;
                 alertInput.value = val;
                 if (alertText) alertText.textContent = val;
-                
+
                 // Salvar preferência
                 localStorage.setItem('vitrinedesk_alert_threshold', val);
-                
+
                 editMode.classList.add('d-none');
                 displayMode.classList.remove('d-none');
-                
+
                 this.updateKPIs();
             });
 
@@ -186,7 +186,7 @@ export class listaController {
         const searchInput = document.getElementById('search-estoque');
         const typeSelect = document.getElementById('filter-type');
         const statusSelect = document.getElementById('filter-status');
-        
+
         const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const filterType = typeSelect ? typeSelect.value : 'all';
         const filterStatus = statusSelect ? statusSelect.value : 'all';
@@ -198,10 +198,10 @@ export class listaController {
         // Filtrar itens
         const filteredItems = this.items.filter(item => {
             // Filtro de Busca
-            const matchesSearch = !searchTerm || 
-                (item.name && item.name.toLowerCase().includes(searchTerm)) || 
+            const matchesSearch = !searchTerm ||
+                (item.name && item.name.toLowerCase().includes(searchTerm)) ||
                 (item.sku && item.sku.toLowerCase().includes(searchTerm));
-            
+
             // Filtro de Tipo
             const matchesType = filterType === 'all' || item.type === filterType;
 
@@ -253,7 +253,7 @@ export class listaController {
             </tr>
             `;
         }).join('');
-        
+
         if (window.lucide) window.lucide.createIcons();
     }
 
@@ -268,7 +268,7 @@ export class listaController {
         this.itemToDelete = id;
         const modal = document.getElementById('modal-delete-estoque');
         const nameEl = document.getElementById('delete-item-name');
-        
+
         if (modal && nameEl) {
             nameEl.textContent = name;
             modal.classList.remove('d-none');
@@ -298,7 +298,7 @@ export class listaController {
             if (error) throw error;
 
             if (window.showToast) window.showToast('Item excluído com sucesso!', 'success');
-            
+
             // Recarregar itens da tabela
             await this.loadItems();
         } catch (error) {

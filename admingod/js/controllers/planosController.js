@@ -8,7 +8,8 @@ export class planosController {
                 category: 'Principal',
                 items: [
                     { id: 'principal/dashboard', name: 'Dashboard' },
-                    { id: 'principal/agenda_diaria', name: 'Agenda Diária' }
+                    { id: 'principal/agenda_diaria', name: 'Agenda Diária' },
+                    { id: 'principal/agendamentos', name: 'Histórico de Agendamentos' }
                 ]
             },
             {
@@ -126,7 +127,7 @@ export class planosController {
         }
 
         // Setup Tabs for Modal Plano
-        const modalTabs = document.querySelectorAll('#modal-plano .tab-plano-btn');
+        const modalTabs = document.querySelectorAll('#modal-plano .tab-btn');
         modalTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 const targetId = e.currentTarget.getAttribute('data-tab-target');
@@ -135,7 +136,7 @@ export class planosController {
                 // Hide all contents
                 document.querySelectorAll('#modal-plano .tab-plano-content').forEach(el => el.style.display = 'none');
                 // Remove active from all tabs
-                document.querySelectorAll('#modal-plano .tab-plano-btn').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('#modal-plano .tab-btn').forEach(el => el.classList.remove('active'));
                 
                 // Show target and activate tab
                 document.getElementById(targetId).style.display = 'block';

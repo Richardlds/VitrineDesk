@@ -10,7 +10,7 @@ export class relatoriosController {
     }
     
     async init() {
-        this.tableBody = document.getElementById('relatorios-table-body');
+        this.servicesList = document.getElementById('relatorios-services-list');
         this.cardsContainer = document.getElementById('relatorios-cards');
         
         this.renderSkeletons();
@@ -22,23 +22,23 @@ export class relatoriosController {
         if (this.cardsContainer) {
             let cardsHtml = '';
             for (let i = 0; i < 4; i++) {
-                cardsHtml += `<div class="skeleton" style="height: 100px; border-radius: 8px;"></div>`;
+                cardsHtml += `<div class="skeleton" style="height: 90px; border-radius: 12px;"></div>`;
             }
             this.cardsContainer.innerHTML = cardsHtml;
         }
 
-        if (this.tableBody) {
+        if (this.servicesList) {
             let skeletonsHtml = '';
             for (let i = 0; i < 3; i++) {
-                skeletonsHtml += `
-                    <tr>
-                        <td><div class="skeleton sk-row"></div></td>
-                        <td><div class="skeleton sk-row"></div></td>
-                        <td><div class="skeleton sk-row"></div></td>
-                    </tr>
-                `;
+                skeletonsHtml += `<div class="cat-skeleton-card mb-2">
+                    <div class="skeleton cat-sk-icon"></div>
+                    <div class="skeleton cat-sk" style="width: 70%"></div>
+                    <div class="skeleton cat-sk" style="width: 50px"></div>
+                    <div class="skeleton cat-sk" style="width: 40px"></div>
+                    <div class="skeleton cat-sk" style="width: 60px"></div>
+                </div>`;
             }
-            this.tableBody.innerHTML = skeletonsHtml;
+            this.servicesList.innerHTML = skeletonsHtml;
         }
     }
     
@@ -143,80 +143,104 @@ export class relatoriosController {
         if (!this.cardsContainer) return;
         
         this.cardsContainer.innerHTML = `
-            <div class="config-card flex flex-col justify-center mb-0 border-l-4 border-success">
-                <div class="flex justify-between align-start">
-                    <div>
-                        <div class="text-secondary text-sm mb-1">Faturamento Bruto</div>
-                        <div class="text-xl font-bold text-success">R$ ${metrics.faturamento.toFixed(2)}</div>
-                    </div>
-                    <div class="bg-success-light text-success p-2 rounded-lg">
-                        <i data-lucide="dollar-sign" class="icon-sm"></i>
+            <div class="metric-card fade-in">
+                <div class="flex justify-between align-center mb-1">
+                    <span class="kpi-label">Faturamento Bruto</span>
+                    <div class="kpi-icon-wrapper bg-success-light">
+                        <i data-lucide="dollar-sign" class="icon-sm text-success"></i>
                     </div>
                 </div>
+                <div class="kpi-value text-success">R$ ${metrics.faturamento.toFixed(2)}</div>
+                <p class="text-xs text-secondary mt-1">Total acumulado no período</p>
             </div>
 
-            <div class="config-card flex flex-col justify-center mb-0 border-l-4 border-primary">
-                <div class="flex justify-between align-start">
-                    <div>
-                        <div class="text-secondary text-sm mb-1">Agendamentos</div>
-                        <div class="text-xl font-bold text-primary">${metrics.agendamentos}</div>
-                    </div>
-                    <div class="bg-primary-light text-primary p-2 rounded-lg">
-                        <i data-lucide="calendar-check" class="icon-sm"></i>
+            <div class="metric-card fade-in" style="animation-delay: 0.1s;">
+                <div class="flex justify-between align-center mb-1">
+                    <span class="kpi-label">Agendamentos</span>
+                    <div class="kpi-icon-wrapper bg-primary-light">
+                        <i data-lucide="calendar-check" class="icon-sm text-primary"></i>
                     </div>
                 </div>
+                <div class="kpi-value text-primary">${metrics.agendamentos}</div>
+                <p class="text-xs text-secondary mt-1">Serviços concluídos</p>
             </div>
 
-            <div class="config-card flex flex-col justify-center mb-0 border-l-4" style="border-left-color: var(--color-text-secondary);">
-                <div class="flex justify-between align-start">
-                    <div>
-                        <div class="text-secondary text-sm mb-1">Ticket Médio</div>
-                        <div class="text-xl font-bold text-primary">R$ ${metrics.ticketMedio.toFixed(2)}</div>
-                    </div>
-                    <div class="bg-placeholder text-secondary p-2 rounded-lg">
-                        <i data-lucide="trending-up" class="icon-sm"></i>
+            <div class="metric-card fade-in" style="animation-delay: 0.2s;">
+                <div class="flex justify-between align-center mb-1">
+                    <span class="kpi-label">Ticket Médio</span>
+                    <div class="kpi-icon-wrapper" style="background-color: rgba(255,255,255,0.05);">
+                        <i data-lucide="trending-up" class="icon-sm text-secondary"></i>
                     </div>
                 </div>
+                <div class="kpi-value text-primary">R$ ${metrics.ticketMedio.toFixed(2)}</div>
+                <p class="text-xs text-secondary mt-1">Gasto médio por serviço</p>
             </div>
 
-            <div class="config-card flex flex-col justify-center mb-0 border-l-4" style="border-left-color: #3B82F6;">
-                <div class="flex justify-between align-start">
-                    <div>
-                        <div class="text-secondary text-sm mb-1">Clientes Únicos</div>
-                        <div class="text-xl font-bold" style="color: #3B82F6;">${metrics.novosClientes}</div>
-                    </div>
-                    <div class="p-2 rounded-lg" style="background-color: #DBEAFE; color: #3B82F6;">
-                        <i data-lucide="users" class="icon-sm"></i>
+            <div class="metric-card fade-in" style="animation-delay: 0.3s;">
+                <div class="flex justify-between align-center mb-1">
+                    <span class="kpi-label">Clientes Únicos</span>
+                    <div class="kpi-icon-wrapper" style="background-color: #DBEAFE;">
+                        <i data-lucide="users" class="icon-sm" style="color: #3B82F6;"></i>
                     </div>
                 </div>
+                <div class="kpi-value" style="color: #3B82F6;">${metrics.novosClientes}</div>
+                <p class="text-xs text-secondary mt-1">Visitantes no período</p>
             </div>
         `;
     }
 
     renderTable(data) {
-        if (!this.tableBody) return;
+        if (!this.servicesList) return;
 
         if (!data || data.length === 0) {
-            this.tableBody.innerHTML = `
-                <tr>
-                    <td colspan="3" class="text-center text-secondary py-3">Nenhum dado para o período selecionado.</td>
-                </tr>
+            this.servicesList.innerHTML = `
+                <div class="cat-empty">
+                    <div class="cat-empty-icon">
+                        <i data-lucide="inbox" class="w-24px h-24px"></i>
+                    </div>
+                    <h3 class="text-primary m-0">Nenhum dado encontrado</h3>
+                    <p class="text-secondary text-sm m-0">Nenhum serviço foi agendado neste período.</p>
+                </div>
             `;
             return;
         }
 
         let html = '';
-        data.forEach(item => {
+        data.forEach((item, index) => {
+            let delay = index * 0.05;
+            // Destaca os 3 primeiros com cores diferentes
+            let status = 'ideal'; // verde default
+            if (index === 0) status = 'baixo'; // amarelo para top 1
+            if (index === 1) status = 'zerado'; // vermelho para top 2
+
             html += `
-                <tr>
-                    <td class="font-medium text-primary">${item.nome}</td>
-                    <td class="text-center text-secondary">${item.qtd}</td>
-                    <td class="text-right text-success font-medium">R$ ${item.receita.toFixed(2)}</td>
-                </tr>
+            <div class="cat-card fade-in" data-status="${status}" style="animation-delay: ${delay}s;">
+                <div class="cat-card-icon-wrap text-secondary">
+                    <i data-lucide="star" class="icon-sm"></i>
+                </div>
+                
+                <div class="cat-card-main">
+                    <span class="cat-card-sku">TOP ${index + 1}</span>
+                    <div class="cat-card-name">${item.nome}</div>
+                    <div class="cat-card-type">Serviço</div>
+                </div>
+
+                <div class="cat-card-price text-success">
+                    R$ ${item.receita.toFixed(2)}
+                </div>
+
+                <div class="cat-card-stock" style="min-width: 60px;">
+                    <span class="cat-card-stock-val text-primary">${item.qtd}</span>
+                    <span class="cat-card-stock-label" style="text-transform: none; letter-spacing: normal;">Vezes</span>
+                </div>
+
+                <div class="cat-badge" style="visibility: hidden;"></div>
+                <div class="cat-card-actions" style="display: none;"></div>
+            </div>
             `;
         });
 
-        this.tableBody.innerHTML = html;
+        this.servicesList.innerHTML = html;
     }
 
     bindEvents() {

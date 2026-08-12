@@ -2314,13 +2314,13 @@ details.config-accordion .accordion-content {
     top: 100%;
     right: 0;
     margin-top: 12px;
-    background: rgba(25, 25, 25, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--color-bg-surface);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: var(--glass-border);
     border-radius: 16px;
     min-width: 220px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-premium);
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px) scale(0.95);
@@ -2355,7 +2355,7 @@ details.config-accordion .accordion-content {
 }
 
 .user-dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-bg-hover);
     transform: translateX(4px);
 }
 
@@ -2365,7 +2365,7 @@ details.config-accordion .accordion-content {
 
 .user-dropdown-divider {
     height: 1px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-border);
     margin: 8px 0;
 }
 

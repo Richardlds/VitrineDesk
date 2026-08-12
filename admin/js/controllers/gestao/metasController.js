@@ -50,8 +50,8 @@ export class metasController {
     }
 
     async getFaturamentoReal(mesAno, tenantId) {
-        // mesAno = 'YYYY-MM'
-        const start = new Date(`${mesAno}-01T00:00:00.000Z`);
+        const [yyyy, mm] = mesAno.split('-');
+        const start = new Date(yyyy, parseInt(mm) - 1, 1);
         const nextMonth = new Date(start);
         nextMonth.setMonth(nextMonth.getMonth() + 1);
         
@@ -76,45 +76,73 @@ export class metasController {
         return faturamento;
     }
 
+    async getAgendamentosGraficos(mesAno, tenantId) {
+        const [yyyy, mm] = mesAno.split('-');
+        const start = new Date(yyyy, parseInt(mm) - 1, 1);
+        const nextMonth = new Date(start);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        
+        const { data: appts, error } = await supabase
+            .from('appointments')
+            .select('*, services(name, price), profissionais(nome)')
+            .eq('tenant_id', tenantId)
+            .neq('status', 'cancelled')
+            .gte('appointment_date', start.toISOString().split('T')[0])
+            .lt('appointment_date', nextMonth.toISOString().split('T')[0]);
+            
+        if (error) return [];
+        return appts || [];
+    }
+
     async loadMetas() {
         try {
             const tenantId = await getCurrentTenantId();
             if (!tenantId) return;
 
-            // Load metas paginadas
-            let query = supabase
-                .from('metas_desempenho')
-                .select('*', { count: 'exact' })
-                .eq('tenant_id', tenantId)
-                .order('mes_ano', { ascending: false });
-
-            const from = (this.currentPage - 1) * this.itemsPerPage;
-            const to = from + this.itemsPerPage - 1;
-            query = query.range(from, to);
-
-            const { data, error, count } = await query;
+            // Load metas from tenants.settings
+            const { data: tenantData, error } = await supabase
+                .from('tenants')
+                .select('settings')
+                .eq('id', tenantId)
+                .single();
+                
             if (error) throw error;
-
-            this.totalItems = count || 0;
             
-            // Render Table (assíncrono para buscar o faturamento de cada linha ou calcular tudo de uma vez?
+            const settings = tenantData?.settings || {};
+            let allMetas = settings.metas || [];
+            
+            // Sort by mes_ano descending
+            allMetas.sort((a, b) => b.mes_ano.localeCompare(a.mes_ano));
+
+            this.totalItems = allMetas.length;
+            
+            // Local pagination
+            const from = (this.currentPage - 1) * this.itemsPerPage;
+            const to = from + this.itemsPerPage;
+            const paginatedData = allMetas.slice(from, to);
+            
+            // Render Table
             // Melhor: o histórico já passou. Ideal seria armazenar o 'atingido' no DB ao virar o mês,
             // mas como VitrineDesk é dinâmico, vamos calcular em runtime pra mostrar o real.
             
-            await this.renderTable(data, tenantId);
+            await this.renderTable(paginatedData, tenantId);
             this.updatePaginationUI();
             
             // Process Progresso Atual (Mês Corrente)
             const today = new Date();
             const currentMonthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
             
-            const currentMeta = data.find(m => m.mes_ano === currentMonthStr);
+            const currentMeta = allMetas.find(m => m.mes_ano === currentMonthStr);
             if (currentMeta) {
                 const atingido = await this.getFaturamentoReal(currentMonthStr, tenantId);
                 this.renderProgresso(currentMeta.valor_alvo, atingido);
             } else {
                 this.renderProgresso(0, 0, true);
             }
+
+            // Charts
+            const agendamentosGraficos = await this.getAgendamentosGraficos(currentMonthStr, tenantId);
+            this.renderCharts(agendamentosGraficos);
 
             if (window.lucide) window.lucide.createIcons();
         } catch (error) {
@@ -123,18 +151,154 @@ export class metasController {
         }
     }
 
+    renderCharts(appts) {
+        const chartsContainer = document.getElementById('metas-charts-container');
+        if (!chartsContainer) return;
+        
+        // Se não houver agendamentos válidos, esconde os gráficos
+        const validAppts = appts.filter(a => ['confirmed', 'completed'].includes(a.status));
+        if (validAppts.length === 0) {
+            chartsContainer.classList.add('d-none');
+            return;
+        }
+        
+        chartsContainer.classList.remove('d-none');
+        
+        // 1. Processar dados para Gráfico de Serviços (Doughnut)
+        const faturamentoPorServico = {};
+        validAppts.forEach(ag => {
+            const sName = ag.services?.name || 'Serviço Avulso';
+            const price = parseFloat(ag.services?.price || 0);
+            if (!faturamentoPorServico[sName]) faturamentoPorServico[sName] = 0;
+            faturamentoPorServico[sName] += price;
+        });
+        
+        const servicosKeys = Object.keys(faturamentoPorServico);
+        const servicosValues = Object.values(faturamentoPorServico);
+        
+        // 2. Processar dados para Gráfico de Profissionais (Bar)
+        const faturamentoPorProf = {};
+        validAppts.forEach(ag => {
+            const pName = ag.profissionais?.nome || 'Não atribuído';
+            const price = parseFloat(ag.services?.price || 0);
+            if (!faturamentoPorProf[pName]) faturamentoPorProf[pName] = 0;
+            faturamentoPorProf[pName] += price;
+        });
+        
+        const proKeys = Object.keys(faturamentoPorProf);
+        const proValues = Object.values(faturamentoPorProf);
+        
+        // Destruir gráficos anteriores se existirem (Chart.js requirement)
+        if (this.chartServicos) this.chartServicos.destroy();
+        if (this.chartProfissionais) this.chartProfissionais.destroy();
+        
+        const ctxServicos = document.getElementById('chart-metas-servicos');
+        const ctxProfissionais = document.getElementById('chart-metas-profissionais');
+        
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { family: 'Inter' } } }
+            }
+        };
+
+        const colors = [
+            '#3b82f6', // primary
+            '#10b981', // success
+            '#f59e0b', // warning
+            '#ef4444', // danger
+            '#8b5cf6', // purple
+            '#06b6d4', // cyan
+            '#f97316'  // orange
+        ];
+        
+        // Gráfico de Serviços
+        if (ctxServicos) {
+            this.chartServicos = new Chart(ctxServicos, {
+                type: 'doughnut',
+                data: {
+                    labels: servicosKeys,
+                    datasets: [{
+                        data: servicosValues,
+                        backgroundColor: colors,
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    ...chartOptions,
+                    cutout: '70%',
+                    plugins: {
+                        ...chartOptions.plugins,
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' R$ ' + context.raw.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Gráfico de Profissionais
+        if (ctxProfissionais) {
+            this.chartProfissionais = new Chart(ctxProfissionais, {
+                type: 'bar',
+                data: {
+                    labels: proKeys,
+                    datasets: [{
+                        label: 'Faturamento',
+                        data: proValues,
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    ...chartOptions,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' R$ ' + context.raw.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value;
+                                }
+                            },
+                            grid: { borderDash: [5, 5] }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     renderProgresso(meta, atingido, noMeta = false) {
         if (!this.progressoCard) return;
 
         if (noMeta) {
             this.progressoCard.innerHTML = `
-                <div class="config-card mb-0 bg-bg-surface border-dashed">
-                    <div class="flex flex-wrap align-center gap-4 p-2">
-                        <div class="bg-placeholder text-secondary p-4 rounded-full flex align-center justify-center">
-                            <i data-lucide="target" class="icon-lg opacity-50"></i>
+                <div class="config-card mb-0 bg-bg-surface flex flex-column transition-all" style="border: none; border-top: 4px solid var(--color-border); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                    <div class="p-4 flex align-center gap-4">
+                        <div class="kpi-icon-wrapper bg-placeholder" style="width: 48px; height: 48px;">
+                            <i data-lucide="target" class="icon-md text-secondary"></i>
                         </div>
                         <div class="flex-1">
-                            <h3 class="text-secondary text-lg mb-1">Nenhuma meta definida</h3>
+                            <h3 class="text-secondary text-lg mb-1 font-bold">Nenhuma meta definida</h3>
                             <p class="text-sm text-secondary m-0">Configure uma meta de faturamento para engajar a equipe neste mês.</p>
                         </div>
                         <button class="btn btn-primary shadow-sm hover-float" onclick="document.getElementById('btn-configurar-meta').click()">Configurar Meta</button>
@@ -145,18 +309,19 @@ export class metasController {
         }
 
         const percent = meta > 0 ? Math.min((atingido / meta) * 100, 100) : 0;
-        let colorClass = 'bg-primary';
+        let colorVar = 'var(--color-primary)';
         let textClass = 'text-primary';
-        if (percent >= 100) { colorClass = 'bg-success'; textClass = 'text-success'; }
-        else if (percent > 70) { colorClass = 'bg-primary'; textClass = 'text-primary'; }
-        else if (percent > 40) { colorClass = 'bg-warning'; textClass = 'text-warning'; }
-        else { colorClass = 'bg-danger'; textClass = 'text-danger'; }
+        let bgLightClass = 'bg-primary-light';
+        if (percent >= 100) { colorVar = 'var(--color-success)'; textClass = 'text-success'; bgLightClass = 'bg-success-light'; }
+        else if (percent > 70) { colorVar = 'var(--color-primary)'; textClass = 'text-primary'; bgLightClass = 'bg-primary-light'; }
+        else if (percent > 40) { colorVar = 'var(--color-warning)'; textClass = 'text-warning'; bgLightClass = 'bg-warning-light'; }
+        else { colorVar = 'var(--color-danger)'; textClass = 'text-danger'; bgLightClass = 'bg-placeholder'; }
 
         this.progressoCard.innerHTML = `
-            <div class="config-card mb-0" style="background: linear-gradient(135deg, rgba(59, 130, 246,0.05) 0%, rgba(59, 130, 246,0.01) 100%); border: 1px solid rgba(59, 130, 246,0.15);">
-                <div class="flex flex-wrap align-center gap-4 p-2">
-                    <div class="${colorClass} text-white p-4 rounded-full flex align-center justify-center shadow-sm">
-                        <i data-lucide="target" class="icon-lg"></i>
+            <div class="config-card mb-0 bg-bg-surface flex flex-column relative transition-all" style="border: none; border-top: 4px solid ${colorVar}; box-shadow: 0 8px 30px rgba(0,0,0,0.06);">
+                <div class="p-4 flex align-center gap-4">
+                    <div class="kpi-icon-wrapper ${bgLightClass}" style="width: 48px; height: 48px;">
+                        <i data-lucide="target" class="icon-md ${textClass}"></i>
                     </div>
                     <div class="flex-1">
                         <div class="flex justify-between align-end mb-2">
@@ -167,7 +332,7 @@ export class metasController {
                             <div class="text-xl font-bold ${textClass}">${percent.toFixed(1)}%</div>
                         </div>
                         <div class="progress-bar bg-placeholder rounded-full overflow-hidden w-100" style="height: 8px;">
-                            <div class="progress-fill ${colorClass} h-100 transition-all duration-500" style="width: ${percent}%;"></div>
+                            <div class="progress-fill h-100 transition-all duration-500" style="width: ${percent}%; background-color: ${colorVar};"></div>
                         </div>
                         ${percent >= 100 ? `<p class="text-success text-sm mt-3 mb-0 flex align-center gap-1 font-bold"><i data-lucide="award" class="icon-sm"></i> Meta atingida com sucesso!</p>` : ''}
                     </div>
@@ -230,7 +395,7 @@ export class metasController {
                     </td>
                     <td class="text-right py-3 px-3 border-bottom-dashed" style="width: 1%;">
                         <div class="flex justify-end align-center">
-                            <button class="btn btn-outline border-dashed text-danger hover-border-danger hover-bg-danger-light transition-colors text-xs px-2 rounded-md cursor-pointer btn-excluir-meta flex align-center justify-center font-bold" style="min-width: 32px; height: 32px;" data-id="${item.id}" title="Excluir Meta">
+                            <button class="btn btn-outline border-dashed text-danger hover-border-danger hover-bg-danger-light transition-colors text-xs px-2 rounded-md cursor-pointer btn-excluir-meta flex align-center justify-center font-bold" style="min-width: 32px; height: 32px;" data-id="${item.mes_ano}" title="Excluir Meta">
                                 <i data-lucide="trash-2" class="icon-xs"></i>
                             </button>
                         </div>
@@ -244,25 +409,33 @@ export class metasController {
         const btnsExcluir = this.tableBody.querySelectorAll('.btn-excluir-meta');
         btnsExcluir.forEach(btn => {
             btn.addEventListener('click', async () => {
-                const id = btn.getAttribute('data-id');
+                const mesAno = btn.getAttribute('data-id');
                 const conf = await window.showConfirm("Deseja realmente excluir esta meta?", "Aviso", "Excluir");
                 if (conf) {
-                    await this.excluirMeta(id);
+                    try {
+                        const { data: tenantData } = await supabase.from('tenants').select('settings').eq('id', tenantId).single();
+                        const settings = tenantData?.settings || {};
+                        let metas = settings.metas || [];
+                        
+                        metas = metas.filter(m => m.mes_ano !== mesAno);
+                        settings.metas = metas;
+                        
+                        const { error } = await supabase.from('tenants').update({ settings }).eq('id', tenantId);
+                        
+                        if (error) throw error;
+                        if (window.showToast) window.showToast("Meta excluída!", "success");
+                        this.loadMetas();
+                    } catch(e) {
+                        console.error(e);
+                        if (window.showToast) window.showToast("Erro ao excluir meta", "error");
+                    }
                 }
             });
         });
     }
 
     async excluirMeta(id) {
-        try {
-            const { error } = await supabase.from('metas_desempenho').delete().eq('id', id);
-            if (error) throw error;
-            if (window.showToast) window.showToast('Meta excluída.', 'success');
-            this.loadMetas();
-        } catch (e) {
-            console.error(e);
-            if (window.showToast) window.showToast('Erro ao excluir.', 'error');
-        }
+        // Logic migrated to local renderTable listener for RLS compatibility
     }
 
     updatePaginationUI() {
@@ -305,22 +478,20 @@ export class metasController {
             const mesAno = document.getElementById('input-meta-mes').value;
             const valor = parseFloat(document.getElementById('input-meta-valor').value);
             
-            // Upsert (atualiza se ja existir para aquele mes)
-            // Precisamos checar se ja existe para dar update, senao insert.
-            const { data: exist } = await supabase.from('metas_desempenho')
-                .select('id').eq('tenant_id', tenantId).eq('mes_ano', mesAno).maybeSingle();
-                
-            let errorOp;
-            if (exist) {
-                const { error } = await supabase.from('metas_desempenho')
-                    .update({ valor_alvo: valor })
-                    .eq('id', exist.id);
-                errorOp = error;
+            const { data: tenantData } = await supabase.from('tenants').select('settings').eq('id', tenantId).single();
+            const settings = tenantData?.settings || {};
+            let metas = settings.metas || [];
+            
+            const existingIndex = metas.findIndex(m => m.mes_ano === mesAno);
+            if (existingIndex >= 0) {
+                metas[existingIndex].valor_alvo = valor;
             } else {
-                const { error } = await supabase.from('metas_desempenho')
-                    .insert({ tenant_id: tenantId, mes_ano: mesAno, valor_alvo: valor, tipo_meta: 'faturamento' });
-                errorOp = error;
+                metas.push({ mes_ano: mesAno, valor_alvo: valor });
             }
+            
+            settings.metas = metas;
+            
+            const { error: errorOp } = await supabase.from('tenants').update({ settings }).eq('id', tenantId);
             
             if (errorOp) throw errorOp;
 

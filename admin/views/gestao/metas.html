@@ -14,9 +14,24 @@
     <div id="metas-progresso-card" class="mb-5">
         <!-- Renderizado pelo controller -->
     </div>
+    <!-- Gráficos de Análise do Mês (Injetado via JS) -->
+    <div id="metas-charts-container" class="grid grid-md-2 gap-4 mb-5 d-none">
+        <div class="config-card flex-column" style="border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <h3 class="mb-3 text-primary text-md">Faturamento por Serviço</h3>
+            <div style="position: relative; height: 250px; width: 100%;">
+                <canvas id="chart-metas-servicos"></canvas>
+            </div>
+        </div>
+        <div class="config-card flex-column" style="border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+            <h3 class="mb-3 text-primary text-md">Faturamento por Profissional</h3>
+            <div style="position: relative; height: 250px; width: 100%;">
+                <canvas id="chart-metas-profissionais"></canvas>
+            </div>
+        </div>
+    </div>
 
     <!-- Histórico de Metas -->
-    <div class="config-card mb-0 shadow-sm border-dashed">
+    <div class="config-card mb-0" style="border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
         <h3 class="mb-3 text-primary text-md">Histórico de Metas</h3>
         <div class="table-responsive">
             <table class="data-table w-100" id="metas-table">

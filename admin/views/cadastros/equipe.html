@@ -50,7 +50,7 @@
                 <!-- Foto (Upload) -->
                 <div class="flex justify-center mb-4 relative">
                     <label for="input-foto-equipe" class="cursor-pointer relative group" style="width: 80px; height: 80px; display: block;">
-                        <input type="file" id="input-foto-equipe" accept="image/*" class="d-none">
+                        <input type="file" name="input-foto-equipe" id="input-foto-equipe" accept="image/*" class="d-none">
                         
                         <!-- Preview da Foto -->
                         <div id="preview-foto-equipe" class="bg-placeholder border-dashed flex justify-center align-center rounded-full overflow-hidden relative" style="width: 100%; height: 100%;">
@@ -67,21 +67,21 @@
 
                 <div class="mb-3">
                     <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome Completo</label>
-                    <input type="text" id="input-nome-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Lucas Barbosa" required>
+                    <input type="text" name="input-nome-equipe" id="input-nome-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Lucas Barbosa" required>
                 </div>
                 
                 <div class="grid grid-md-3 mb-3 gap-3">
                     <div>
                         <label class="font-medium text-sm text-secondary mb-1 inline-block">Especialidade</label>
-                        <input type="text" id="input-especialidade-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Barbeiro" required>
+                        <input type="text" name="input-especialidade-equipe" id="input-especialidade-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Barbeiro" required>
                     </div>
                     <div>
                         <label class="font-medium text-sm text-secondary mb-1 inline-block">Telefone (Opcional)</label>
-                        <input type="text" id="input-telefone-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="(11) 90000-0000">
+                        <input type="text" name="input-telefone-equipe" id="input-telefone-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="(11) 90000-0000">
                     </div>
                     <div>
                         <label class="font-medium text-sm text-secondary mb-1 inline-block">Comissão (%)</label>
-                        <input type="number" id="input-comissao-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 50" min="0" max="100">
+                        <input type="number" name="input-comissao-equipe" id="input-comissao-equipe" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: 50" min="0" max="100">
                     </div>
                 </div>
 

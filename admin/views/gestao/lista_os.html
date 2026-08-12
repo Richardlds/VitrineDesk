@@ -1,49 +1,149 @@
+
 <div class="admin-section fade-in" id="section-lista-os">
+
     <!-- Header -->
     <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
         <div>
             <div class="flex align-center gap-2 mb-1">
                 <div class="kpi-icon-wrapper bg-primary-light">
-                    <i data-lucide="clipboard-list" class="icon-sm text-primary"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-sm text-primary"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
                 </div>
-                <h2 class="text-primary m-0">Histórico de OS</h2>
+                <h2 class="m-0" style="color: var(--color-text-primary); font-size: 1.1rem; font-weight: 700;">Histórico de Ordens de Serviço</h2>
             </div>
-            <p class="text-secondary text-sm m-0">Visualize as Ordens de Serviço emitidas</p>
+            <p class="text-secondary text-sm m-0">Visualize, filtre e gerencie todas as OS criadas</p>
         </div>
-        <div class="flex gap-2 align-center">
-            <div class="search-bar">
-                <i data-lucide="search" class="icon-sm text-secondary"></i>
-                <input type="text" id="search-os" placeholder="Buscar por Cliente ou OS #...">
+    </div>
+
+    <!-- Filtros -->
+    <div class="los-filter-bar">
+        <div class="flex flex-wrap gap-2 align-center justify-between">
+            <div class="los-input-icon-wrap">
+                <i data-lucide="search" class="icon-sm los-icon-inside"></i>
+                <input type="text" id="filter-search" class="los-input"
+                    placeholder="Buscar cliente ou OS #..."
+                    aria-label="Buscar OS">
             </div>
-            <button id="btn-nova-os-redirect" class="btn btn-primary shadow-sm flex align-center gap-2">
+
+            <div style="min-width:150px;">
+                <select id="filter-status" class="los-input" aria-label="Filtrar por status">
+                    <option value="todos">Todos os Status</option>
+                    <option value="Pendente">Pendente</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Concluída">Concluída</option>
+                    <option value="Cancelada">Cancelada</option>
+                </select>
+            </div>
+
+            <div class="flex align-center gap-2">
+                <input type="date" id="filter-date-start" class="los-input" style="min-width:140px;" title="Data Inicial" aria-label="Data inicial">
+                <span class="text-secondary text-xs">—</span>
+                <input type="date" id="filter-date-end" class="los-input" style="min-width:140px;" title="Data Final" aria-label="Data final">
+            </div>
+
+            <button id="btn-nova-os-redirect" class="btn btn-primary flex align-center gap-2">
                 <i data-lucide="plus" class="icon-sm"></i> Nova OS
             </button>
         </div>
     </div>
 
-    <!-- Lista de OS -->
-    <div class="config-card p-0">
-        <div class="table-responsive">
-            <table class="data-table w-100" id="table-lista-os">
-                <thead class="bg-placeholder">
-                    <tr>
-                        <th class="text-left py-2 px-3">OS #</th>
-                        <th class="text-left py-2 px-3">Cliente</th>
-                        <th class="text-left py-2 px-3">Data</th>
-                        <th class="text-left py-2 px-3">Status</th>
-                        <th class="text-right py-2 px-3">Valor Total</th>
-                        <th class="text-center py-2 px-3">Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="lista-os-tbody">
-                    <!-- Preenchido via JS -->
-                </tbody>
-            </table>
-            
-            <div id="lista-os-empty" class="d-none text-center py-5">
-                <i data-lucide="file-search" class="icon-md text-secondary mb-2 opacity-50" style="display: block; margin: 0 auto;"></i>
-                <p class="text-secondary text-sm m-0">Nenhuma OS encontrada.</p>
+    <!-- Lista de cards -->
+    <div id="lista-os-card-container" class="los-card-list">
+        <!-- Preenchido via JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="lista-os-empty" class="los-empty d-none" role="status" aria-live="polite">
+        <div class="los-empty-icon">
+            <i data-lucide="file-x-2" class="icon-sm"></i>
+        </div>
+        <p class="font-bold text-sm" style="color: var(--color-text-primary);">Nenhuma OS encontrada</p>
+        <p class="text-xs text-secondary">Tente ajustar os filtros ou crie uma nova ordem de serviço.</p>
+    </div>
+
+    <!-- Paginação -->
+    <div id="lista-os-pagination" class="los-pagination d-none">
+        <span class="text-xs text-secondary" id="lista-os-page-info">Mostrando 0 a 0 de 0</span>
+        <div class="flex gap-2">
+            <button id="btn-prev-page" class="los-page-btn" disabled aria-label="Página anterior">
+                <i data-lucide="chevron-left" class="icon-sm"></i>
+            </button>
+            <button id="btn-next-page" class="los-page-btn" disabled aria-label="Próxima página">
+                <i data-lucide="chevron-right" class="icon-sm"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalhes da OS -->
+<div id="modal-os-details" class="los-modal-overlay d-none" role="dialog" aria-modal="true" aria-labelledby="modal-os-title">
+    <div class="los-modal">
+
+        <!-- Header -->
+        <div class="los-modal-header">
+            <div class="los-modal-title-group">
+                <div class="los-modal-id-row">
+                    <h3 id="modal-os-title" class="los-modal-id">OS #</h3>
+                    <span id="modal-os-status" class="los-badge"></span>
+                </div>
+                <div class="los-modal-date-row">
+                    <i data-lucide="calendar" class="icon-xs"></i>
+                    <span id="modal-os-date"></span>
+                </div>
             </div>
+            <button id="btn-close-os-details" class="los-modal-close" aria-label="Fechar modal">
+                <i data-lucide="x" class="icon-sm"></i>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="los-modal-body">
+
+            <div>
+                <p class="los-section-label">
+                    <i data-lucide="user" class="icon-xs"></i> Cliente
+                </p>
+                <div class="los-modal-client-card">
+                    <div class="los-modal-field">
+                        <label for="modal-os-customer">Nome</label>
+                        <span id="modal-os-customer">—</span>
+                    </div>
+                    <div class="los-modal-field">
+                        <label for="modal-os-phone">Telefone</label>
+                        <span id="modal-os-phone">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-os-notes-container" class="d-none">
+                <p class="los-section-label">
+                    <i data-lucide="file-text" class="icon-xs"></i> Observações
+                </p>
+                <p id="modal-os-notes" class="los-modal-notes"></p>
+            </div>
+
+            <div>
+                <p class="los-section-label">
+                    <i data-lucide="package" class="icon-xs"></i> Serviços e Produtos
+                </p>
+                <table class="los-items-table" aria-label="Itens da OS">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qtd</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-os-items-body">
+                        <!-- Preenchido via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="los-modal-footer">
+            <span class="los-total-label">Valor Total</span>
+            <span id="modal-os-total" class="los-total-value">R$ 0,00</span>
         </div>
     </div>
 </div>

@@ -483,6 +483,8 @@ export class agenda_diariaController {
     async updateAppointmentStatus(id, newStatus) {
         const row = this.rows.find((r) => r.id === id);
         const prev = row?.status;
+        const clientPhone = row?.client_phone;
+        
         if (row) { row.status = newStatus; this.renderAll(); } // optimistic update
         
         try {
@@ -491,12 +493,47 @@ export class agenda_diariaController {
                 
             if (error) throw error;
             if (data) this.upsert(data);
+            
+            // Lógica de Fidelidade: Adiciona ponto se mudou para completed, tira se desfez
+            if (clientPhone) {
+                if (prev !== 'completed' && newStatus === 'completed') {
+                    await this.processFidelityPoint(this.tenantId, clientPhone, 1);
+                } else if (prev === 'completed' && newStatus !== 'completed') {
+                    await this.processFidelityPoint(this.tenantId, clientPhone, -1);
+                }
+            }
+
             this.renderAll();
             this.toast(`Status atualizado para “${STATUS_LABEL[newStatus]}”.`);
         } catch (err) {
             if (row && prev) row.status = prev;
             this.renderAll();
             this.toast(err.message || "Não foi possível atualizar o status.");
+        }
+    }
+
+    async processFidelityPoint(tenantId, clientPhone, amount) {
+        try {
+            const { data: tenantData } = await supabase.from('tenants')
+                .select('settings')
+                .eq('id', tenantId)
+                .maybeSingle();
+                
+            if (!tenantData || !tenantData.settings || !tenantData.settings.fidelidade || !tenantData.settings.fidelidade.is_active) return;
+            
+            const { data: client } = await supabase.from('clientes')
+                .select('id, pontos')
+                .eq('tenant_id', tenantId)
+                .eq('telefone', clientPhone)
+                .maybeSingle();
+                
+            if (client) {
+                let novosPontos = (client.pontos || 0) + amount;
+                if (novosPontos < 0) novosPontos = 0;
+                await supabase.from('clientes').update({ pontos: novosPontos }).eq('id', client.id);
+            }
+        } catch (e) {
+            console.error("Erro ao processar ponto de fidelidade automático na agenda:", e);
         }
     }
 

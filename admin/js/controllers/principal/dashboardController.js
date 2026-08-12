@@ -21,6 +21,23 @@ export class dashboardController {
         if (window.lucide) {
             window.lucide.createIcons();
         }
+
+        // Botão de Copiar Link da Loja
+        const btnCopyLink = document.getElementById('btn-dashboard-copy-link');
+        if (btnCopyLink) {
+            btnCopyLink.addEventListener('click', () => {
+                const slug = window.currentTenantSlug || 'loja';
+                const baseUrl = window.location.origin;
+                const vitrineUrl = `${baseUrl}/${slug}`;
+                
+                navigator.clipboard.writeText(vitrineUrl).then(() => {
+                    if (window.showToast) window.showToast('Link da loja copiado para a área de transferência!', 'success');
+                }).catch(err => {
+                    console.error('Erro ao copiar link:', err);
+                    if (window.showToast) window.showToast('Erro ao copiar link. Tente novamente.', 'error');
+                });
+            });
+        }
     }
 
     async loadData() {

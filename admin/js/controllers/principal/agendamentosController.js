@@ -746,12 +746,13 @@ export class agendamentosController {
 
     async processFidelityPoint(tenantId, clientPhone, amount) {
         try {
-            const { data: config } = await supabase.from('config_fidelidade')
-                .select('is_active')
-                .eq('tenant_id', tenantId)
+            const { data: tenantData } = await supabase.from('tenants')
+                .select('settings')
+                .eq('id', tenantId)
                 .maybeSingle();
                 
-            if (!config || !config.is_active) return;
+            if (!tenantData || !tenantData.settings || !tenantData.settings.fidelidade || !tenantData.settings.fidelidade.is_active) return;
+
             
             const { data: client } = await supabase.from('clientes')
                 .select('id, pontos')

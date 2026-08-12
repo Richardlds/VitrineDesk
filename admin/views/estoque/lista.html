@@ -9,7 +9,8 @@
                 </div>
                 <h2 class="text-primary">Estoque &amp; Catálogo</h2>
             </div>
-            <p class="text-secondary text-sm">Gerencie seus produtos, peças e serviços com controle total de estoque.</p>
+            <p class="text-secondary text-sm">Gerencie seus produtos, peças e serviços com controle total de estoque.
+            </p>
         </div>
         <button id="btn-novo-item" class="btn btn-primary flex align-center gap-2">
             <i data-lucide="plus" class="icon-sm"></i> Novo Item
@@ -36,19 +37,26 @@
                 </div>
             </div>
             <div class="kpi-value text-warning" id="kpi-baixo">&#x2014;</div>
-            
+
             <!-- Limite de Alerta: Modo Visualização -->
             <div id="alert-display-mode" class="flex align-center gap-1 mt-1 transition-all">
-                <p class="text-xs text-secondary">Abaixo de <strong class="text-warning" id="alert-threshold-text">5</strong> itens</p>
-                <button class="btn bg-transparent border-none cursor-pointer text-secondary hover:text-warning flex align-center justify-center p-1 rounded-full transition-colors" id="btn-edit-threshold" title="Alterar limite de alerta">
+                <p class="text-xs text-secondary">Abaixo de <strong class="text-warning"
+                        id="alert-threshold-text">5</strong> itens</p>
+                <button
+                    class="btn bg-transparent border-none cursor-pointer text-secondary hover:text-warning flex align-center justify-center p-1 rounded-full transition-colors"
+                    id="btn-edit-threshold" title="Alterar limite de alerta">
                     <i data-lucide="pencil" style="width: 12px; height: 12px;"></i>
                 </button>
             </div>
-            
+
             <!-- Limite de Alerta: Modo Edição -->
             <div id="alert-edit-mode" class="flex align-center gap-1 mt-1 d-none transition-all">
-                <input type="number" id="input-alert-threshold" value="5" min="1" class="bg-placeholder border border-primary rounded-sm text-primary outline-none px-2 py-1 text-center font-bold" style="width: 50px; font-size: 11px;">
-                <button class="btn bg-primary text-white border-none cursor-pointer flex align-center justify-center p-1 rounded-sm hover:bg-primary-hover transition-colors" id="btn-save-threshold" title="Salvar">
+                <input type="number" id="input-alert-threshold" value="5" min="1"
+                    class="bg-placeholder border border-primary rounded-sm text-primary outline-none px-2 py-1 text-center font-bold"
+                    style="width: 50px; font-size: 11px;">
+                <button
+                    class="btn bg-primary text-white border-none cursor-pointer flex align-center justify-center p-1 rounded-sm hover:bg-primary-hover transition-colors"
+                    id="btn-save-threshold" title="Salvar">
                     <i data-lucide="check" style="width: 14px; height: 14px;"></i>
                 </button>
             </div>
@@ -69,18 +77,14 @@
     <div class="config-card mb-4 flex flex-wrap gap-3 align-center">
         <div class="flex align-center gap-2 flex-1">
             <i data-lucide="search" class="icon-sm text-secondary"></i>
-            <input
-                type="text"
-                id="search-estoque"
-                placeholder="Buscar por nome, SKU ou atributo..."
-                class="flex-1 bg-transparent border-none outline-none text-primary text-sm"
-                autocomplete="off"
-                aria-label="Buscar itens do estoque"
-            >
+            <input type="text" id="search-estoque" placeholder="Buscar por nome, SKU ou atributo..."
+                class="flex-1 bg-transparent border-none outline-none text-primary text-sm" autocomplete="off"
+                aria-label="Buscar itens do estoque">
         </div>
         <div class="flex align-center gap-2">
             <label for="filter-type" class="text-secondary text-sm font-medium">Tipo:</label>
-            <select id="filter-type" class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+            <select id="filter-type"
+                class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
                 <option value="all">Todos</option>
                 <option value="product">Produtos</option>
                 <option value="part">Peças</option>
@@ -89,7 +93,8 @@
         </div>
         <div class="flex align-center gap-2">
             <label for="filter-status" class="text-secondary text-sm font-medium">Status:</label>
-            <select id="filter-status" class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
+            <select id="filter-status"
+                class="bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer">
                 <option value="all">Todos</option>
                 <option value="ideal">Ideal</option>
                 <option value="baixo">Baixo</option>
@@ -129,11 +134,16 @@
                 de <span id="pag-total-estoque" class="font-bold text-primary">0</span>
             </div>
             <div class="flex gap-2 align-center">
-                <button id="btn-prev-page-estoque" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-2 cursor-pointer" disabled aria-label="Página anterior">
+                <button id="btn-prev-page-estoque"
+                    class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-2 cursor-pointer" disabled
+                    aria-label="Página anterior">
                     <i data-lucide="chevron-left" class="icon-sm"></i>
                 </button>
-                <span id="pag-atual-estoque" class="text-sm font-medium text-primary px-3 bg-placeholder rounded-md py-2">Pág. 1 de 1</span>
-                <button id="btn-next-page-estoque" class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-2 cursor-pointer" disabled aria-label="Próxima página">
+                <span id="pag-atual-estoque"
+                    class="text-sm font-medium text-primary px-3 bg-placeholder rounded-md py-2">Pág. 1 de 1</span>
+                <button id="btn-next-page-estoque"
+                    class="btn bg-placeholder border-none text-secondary rounded-md px-3 py-2 cursor-pointer" disabled
+                    aria-label="Próxima página">
                     <i data-lucide="chevron-right" class="icon-sm"></i>
                 </button>
             </div>
@@ -150,7 +160,8 @@
                     </div>
                     <h3 class="font-bold text-primary">Confirmar Exclusão</h3>
                 </div>
-                <button id="btn-close-modal-delete-estoque" class="btn bg-transparent border-none text-secondary cursor-pointer" aria-label="Fechar modal">
+                <button id="btn-close-modal-delete-estoque"
+                    class="btn bg-transparent border-none text-secondary cursor-pointer" aria-label="Fechar modal">
                     <i data-lucide="x" class="w-24px h-24px"></i>
                 </button>
             </div>

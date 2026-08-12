@@ -49,7 +49,7 @@
             <form id="form-servico">
                 <div class="mb-3">
                     <label class="font-medium text-sm text-secondary mb-1 inline-block">Nome do Serviço</label>
-                    <input type="text" id="input-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Corte Degradê" required>
+                    <input type="text" name="input-nome" id="input-nome" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Corte Degradê" required>
                 </div>
                 
                 <div class="mb-3">
@@ -59,7 +59,7 @@
                             <i data-lucide="image" class="text-secondary" id="service-img-icon"></i>
                         </div>
                         <div class="flex-1">
-                            <input type="file" id="input-imagem" accept="image/png, image/jpeg, image/webp" class="d-none">
+                            <input type="file" name="input-imagem" id="input-imagem" accept="image/png, image/jpeg, image/webp" class="d-none">
                             <button type="button" onclick="document.getElementById('input-imagem').click()" class="btn border-none bg-primary-light text-primary py-2 px-3 rounded-md cursor-pointer text-sm font-medium">Escolher Foto</button>
                             <button type="button" id="btn-remover-foto" class="btn border-none bg-error-light text-error py-2 px-3 rounded-md cursor-pointer text-sm font-medium d-none ml-2">Remover</button>
                             <div class="text-xs text-secondary mt-1">PNG ou JPG até 2MB</div>
@@ -69,23 +69,23 @@
 
                 <div class="mb-3">
                     <label class="font-medium text-sm text-secondary mb-1 inline-block">Categoria / Tag</label>
-                    <input type="text" id="input-categoria" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Cabelo, Barba, Massagem">
+                    <input type="text" name="input-categoria" id="input-categoria" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="Ex: Cabelo, Barba, Massagem">
                     <div class="text-xs text-secondary mt-1">Usada para agrupar e filtrar serviços no site do cliente.</div>
                 </div>
 
                 <div class="mb-3 flex align-center gap-2">
-                    <input type="checkbox" id="input-show-photos" class="cursor-pointer" checked>
+                    <input type="checkbox" name="input-show-photos" id="input-show-photos" class="cursor-pointer" checked>
                     <label for="input-show-photos" class="font-medium text-sm text-secondary cursor-pointer">Mostrar foto deste serviço na Vitrine</label>
                 </div>
                 
                 <div class="grid grid-md-2 mb-3">
                     <div>
                         <label class="font-medium text-sm text-secondary mb-1 inline-block">Duração (minutos)</label>
-                        <input type="number" id="input-duracao" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="45" required>
+                        <input type="number" name="input-duracao" id="input-duracao" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="45" required>
                     </div>
                     <div>
                         <label class="font-medium text-sm text-secondary mb-1 inline-block">Preço (R$)</label>
-                        <input type="number" id="input-preco" step="0.01" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="35.00" required>
+                        <input type="number" name="input-preco" id="input-preco" step="0.01" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" placeholder="35.00" required>
                     </div>
                 </div>
 

@@ -89,7 +89,7 @@ export class configuracoesController {
                 .single();
 
             if (error) throw error;
-            
+
             // Buscar integrações (Stripe)
             const { data: integrations } = await supabase
                 .from('tenant_integrations')
@@ -153,7 +153,7 @@ export class configuracoesController {
                 setVal('input-stripe-secret', integrations.stripe_secret_key);
                 setVal('input-stripe-webhook', integrations.stripe_webhook_secret);
             }
-            
+
             const hint = document.getElementById('webhook-url-hint');
             if (hint) {
                 hint.textContent = `${window.location.origin}/api/stripe/webhook?tenantId=${this.tenantId}`;
@@ -180,9 +180,12 @@ export class configuracoesController {
             });
         }
 
+        // Tabs
         const tabBtns = document.querySelectorAll('.tab-btn');
         tabBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => this.switchTab(e.currentTarget));
+            btn.addEventListener('click', (e) => {
+                this.switchTab(e.currentTarget);
+            });
         });
 
         const formConfig = document.getElementById('form-configuracoes-loja');
@@ -198,9 +201,9 @@ export class configuracoesController {
         const previewMap = document.getElementById('admin-map-preview');
 
         this.updateMapPreview = () => {
-            if(!endInput || !previewMap) return;
+            if (!endInput || !previewMap) return;
             let val = endInput.value.trim();
-            if(!val) {
+            if (!val) {
                 previewMap.innerHTML = '<span class="text-secondary text-sm">O mapa aparecerá aqui</span>';
                 return;
             }
@@ -223,20 +226,18 @@ export class configuracoesController {
         if (endInput && btnTestMap) {
             btnTestMap.addEventListener('click', this.updateMapPreview);
             endInput.addEventListener('blur', this.updateMapPreview);
-            endInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') { e.preventDefault(); this.updateMapPreview(); } });
+            endInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); this.updateMapPreview(); } });
         }
     }
 
     switchTab(activeBtn) {
         document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active', 'text-primary', 'bg-placeholder');
-            btn.classList.add('text-secondary', 'bg-transparent');
-            btn.style.borderBottom = 'none';
+            btn.classList.remove('active', 'bg-primary-light', 'text-primary');
+            btn.classList.add('bg-transparent', 'text-secondary');
         });
 
-        activeBtn.classList.add('active', 'text-primary', 'bg-placeholder');
-        activeBtn.classList.remove('text-secondary', 'bg-transparent');
-        activeBtn.style.borderBottom = '2px solid var(--color-primary)';
+        activeBtn.classList.add('active', 'bg-primary-light', 'text-primary');
+        activeBtn.classList.remove('bg-transparent', 'text-secondary');
 
         document.querySelectorAll('.tab-content').forEach(content => {
             content.classList.add('d-none');
@@ -335,7 +336,7 @@ export class configuracoesController {
                         stripe_webhook_secret: stripeWebhook,
                         updated_at: new Date().toISOString()
                     });
-                    
+
                 if (errorIntegrations) {
                     console.error('Erro ao salvar integrações:', errorIntegrations);
                     throw new Error('As configurações foram salvas, mas houve um erro ao salvar as credenciais do Stripe.');

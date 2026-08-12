@@ -117,26 +117,26 @@ export class comissoesController {
         });
 
         resumoContainer.innerHTML = `
-            <div class="config-card flex flex-col justify-center mb-0 border-l-4 border-warning">
-                <div class="flex justify-between align-start">
+            <div class="config-card flex flex-column relative transition-all mb-0" style="border: none; border-top: 4px solid var(--color-warning); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                <div class="flex justify-between align-start p-2">
                     <div>
-                        <div class="text-secondary text-sm mb-1">A Pagar (Pendente)</div>
-                        <div class="text-xl font-bold text-warning">R$ ${totalPendente.toFixed(2)}</div>
+                        <div class="text-secondary text-xs uppercase font-bold tracking-widest mb-2">A Pagar (Pendente)</div>
+                        <div class="text-2xl font-bold text-warning">R$ ${totalPendente.toFixed(2)}</div>
                     </div>
-                    <div class="bg-warning-light text-warning p-2 rounded-lg">
-                        <i data-lucide="clock" class="icon-sm"></i>
+                    <div class="kpi-icon-wrapper bg-warning-light" style="width: 40px; height: 40px;">
+                        <i data-lucide="clock" class="icon-sm text-warning"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="config-card flex flex-col justify-center mb-0 border-l-4 border-success">
-                <div class="flex justify-between align-start">
+            <div class="config-card flex flex-column relative transition-all mb-0" style="border: none; border-top: 4px solid var(--color-success); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                <div class="flex justify-between align-start p-2">
                     <div>
-                        <div class="text-secondary text-sm mb-1">Total Pago</div>
-                        <div class="text-xl font-bold text-success">R$ ${totalPago.toFixed(2)}</div>
+                        <div class="text-secondary text-xs uppercase font-bold tracking-widest mb-2">Total Pago</div>
+                        <div class="text-2xl font-bold text-success">R$ ${totalPago.toFixed(2)}</div>
                     </div>
-                    <div class="bg-success-light text-success p-2 rounded-lg">
-                        <i data-lucide="check-circle" class="icon-sm"></i>
+                    <div class="kpi-icon-wrapper bg-success-light" style="width: 40px; height: 40px;">
+                        <i data-lucide="check-circle" class="icon-sm text-success"></i>
                     </div>
                 </div>
             </div>

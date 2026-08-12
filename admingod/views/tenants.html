@@ -1,71 +1,76 @@
 <div class="admin-section fade-in">
-    <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
-        <div>
-            <h2 class="mb-1 text-primary">Tenants (Lojas)</h2>
-            <p class="text-secondary text-sm">Gerencie todos os negócios cadastrados, limite de uso, suspensão e acesso root (Logar como).</p>
-        </div>
-        <div class="flex gap-2">
-            <div class="relative">
-                <i data-lucide="search" class="absolute left-3 top-50 translate-y-n50 text-secondary icon-sm absolute-center-y"></i>
-                <input type="text" id="input-search-tenant" placeholder="Buscar por nome ou link..." class="bg-placeholder border-dashed border-placeholder rounded-md pl-9 pr-3 py-2 text-primary outline-none text-sm focus:border-primary transition-colors min-w-250px">
+    <div class="mb-4 bg-danger-light p-4 rounded-xl border border-dashed border-danger shadow-glow" style="background: rgba(239, 68, 68, 0.05); backdrop-filter: var(--glass-blur);">
+        <div class="flex flex-wrap justify-between align-center gap-3">
+            <div>
+                <h2 class="mb-1 text-white font-bold flex align-center gap-2">
+                    <i data-lucide="store" class="text-danger"></i> Tenants (Lojas)
+                </h2>
+                <p class="text-secondary text-sm">Gerencie todos os negócios cadastrados, limite de uso, suspensão e acesso root (Logar como).</p>
             </div>
-            <button class="btn btn-primary px-3 py-2 rounded-md font-medium flex align-center gap-2">
-                <i data-lucide="plus" class="icon-sm"></i> Novo Tenant
-            </button>
+            <div class="flex gap-2">
+                <div class="relative">
+                    <i data-lucide="search" class="absolute left-3 top-50 translate-y-n50 text-danger icon-sm absolute-center-y"></i>
+                    <input type="text" id="input-search-tenant" placeholder="Buscar por nome ou link..." class="bg-placeholder border border-danger border-opacity-50 rounded-md pl-9 pr-3 py-2 text-white outline-none text-sm focus:border-danger focus:shadow-glow transition-all min-w-250px" style="background-color: var(--color-bg-surface); backdrop-filter: var(--glass-blur);">
+                </div>
+                <button class="btn bg-danger text-white hover:bg-danger-hover px-4 py-2 rounded-md font-bold flex align-center gap-2 shadow-glow transition-all border border-danger-light">
+                    <i data-lucide="plus" class="icon-sm"></i> Novo Tenant
+                </button>
+            </div>
         </div>
     </div>
 
-
-    <div class="flex gap-4 mb-4 border-bottom-dashed border-placeholder pb-2" id="tenants-tabs">
-        <button class="btn bg-transparent border-none text-primary font-bold cursor-pointer tab-btn active" data-filter="all" style="border-bottom: 2px solid var(--color-primary); padding-bottom: 8px;">Todas as Lojas</button>
-        <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors tab-btn" data-filter="pending" style="padding-bottom: 8px;">Novos Lojistas (Aprovação) <span id="badge-pending" class="badge bg-warning-light text-warning rounded-full px-2 py-1 text-xs ml-1 d-none">0</span></button>
-        <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition-colors tab-btn" data-filter="disparos" style="padding-bottom: 8px;">Mensagens / Disparos</button>
+    <div class="flex gap-4 mb-4 border-bottom-dashed border-danger border-opacity-50 pb-2" id="tenants-tabs">
+        <button class="btn bg-transparent border-none text-white font-bold cursor-pointer tab-btn active hover:text-danger transition-colors" data-filter="all" style="border-bottom: 2px solid var(--color-danger); padding-bottom: 8px;">Todas as Lojas</button>
+        <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-danger transition-colors tab-btn" data-filter="pending" style="padding-bottom: 8px;">Novos Lojistas (Aprovação) <span id="badge-pending" class="badge bg-warning-light text-warning rounded-full px-2 py-1 text-xs ml-1 d-none shadow-glow">0</span></button>
+        <button class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-danger transition-colors tab-btn" data-filter="disparos" style="padding-bottom: 8px;">Mensagens / Disparos</button>
     </div>
 
     <!-- Tabela de Tenants -->
-    <div id="tenants-table-container" class="config-card overflow-hidden">
-        <div class="table-responsive custom-scrollbar">
+    <div id="tenants-table-container" class="config-card overflow-hidden border border-border hover:border-danger hover:shadow-glow transition-all relative" style="background-color: var(--color-bg-surface); backdrop-filter: var(--glass-blur);">
+        <div class="absolute top-0 left-0 w-32 h-32 bg-danger opacity-10 rounded-full" style="transform: translate(-30%, -30%); blur(30px);"></div>
+        <div class="table-responsive custom-scrollbar relative z-10">
             <table class="data-table w-100">
                 <thead>
                     <tr>
-                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Nome da Loja / Link</th>
-                        <th class="text-left text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Dono (E-mail)</th>
-                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Status</th>
-                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Plano / Assinatura</th>
-                        <th class="text-center text-secondary text-sm font-medium py-3 px-4 border-bottom-dashed">Ações Mestre</th>
+                        <th class="text-left text-danger text-sm font-bold py-3 px-4 border-bottom-dashed border-danger border-opacity-30">Nome da Loja / Link</th>
+                        <th class="text-left text-danger text-sm font-bold py-3 px-4 border-bottom-dashed border-danger border-opacity-30">Dono (E-mail)</th>
+                        <th class="text-center text-danger text-sm font-bold py-3 px-4 border-bottom-dashed border-danger border-opacity-30">Status</th>
+                        <th class="text-center text-danger text-sm font-bold py-3 px-4 border-bottom-dashed border-danger border-opacity-30">Plano / Assinatura</th>
+                        <th class="text-center text-danger text-sm font-bold py-3 px-4 border-bottom-dashed border-danger border-opacity-30">Ações Mestre</th>
                     </tr>
                 </thead>
                 <tbody id="table-body-tenants">
                     <tr>
                         <td colspan="5" class="text-center py-5 text-secondary">
-                            <i data-lucide="loader" class="animate-spin mb-2 mx-auto"></i> Carregando tenants...
+                            <i data-lucide="loader" class="animate-spin mb-2 mx-auto text-danger"></i> Carregando tenants...
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         
-        <div class="p-3 border-top-dashed flex justify-between align-center bg-placeholder bg-opacity-50">
-            <span class="text-xs text-secondary">Exibindo todos os registros.</span>
+        <div class="p-3 border-top-dashed border-danger border-opacity-30 flex justify-between align-center" style="background: rgba(0,0,0,0.2);">
+            <span class="text-xs text-secondary font-medium">Exibindo todos os registros na base God Mode.</span>
         </div>
     </div>
 
     <!-- Painel de Disparos -->
-    <div id="tenants-disparos-container" class="config-card p-4 d-none fade-in">
-        <h3 class="text-primary mb-3">Disparo de Boas-Vindas para Novos Lojistas</h3>
+    <div id="tenants-disparos-container" class="config-card p-4 d-none fade-in border border-border hover:border-danger hover:shadow-glow transition-all relative" style="background-color: var(--color-bg-surface); backdrop-filter: var(--glass-blur);">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-danger opacity-10 rounded-full" style="transform: translate(30%, -30%); blur(30px);"></div>
+        <h3 class="text-white mb-3 font-bold flex align-center gap-2"><i data-lucide="send" class="text-danger"></i> Disparo de Boas-Vindas para Novos Lojistas</h3>
         <p class="text-sm text-secondary mb-4">Esta mensagem será enviada automaticamente para a caixa de notificações (sininho) de todo novo lojista assim que ele se cadastrar.</p>
         
-        <div class="grid grid-cols-1 gap-4 max-w-600px">
+        <div class="grid grid-cols-1 gap-4 max-w-600px relative z-10">
             <div>
-                <label class="font-medium text-sm text-secondary mb-1 inline-block">Título da Notificação</label>
-                <input type="text" id="welcome-msg-title" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" placeholder="Ex: Seja bem-vindo ao VitrineDesk!">
+                <label class="font-bold text-sm text-danger mb-1 inline-block">Título da Notificação</label>
+                <input type="text" id="welcome-msg-title" class="w-100 bg-placeholder border border-danger border-opacity-50 rounded-md px-3 py-2 text-white outline-none focus:border-danger focus:shadow-glow transition-all" placeholder="Ex: Seja bem-vindo ao VitrineDesk!">
             </div>
             <div>
-                <label class="font-medium text-sm text-secondary mb-1 inline-block">Conteúdo da Mensagem</label>
-                <textarea id="welcome-msg-body" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none focus:border-primary" rows="4" placeholder="Ex: Configure sua loja e comece a vender..."></textarea>
+                <label class="font-bold text-sm text-danger mb-1 inline-block">Conteúdo da Mensagem</label>
+                <textarea id="welcome-msg-body" class="w-100 bg-placeholder border border-danger border-opacity-50 rounded-md px-3 py-2 text-white outline-none focus:border-danger focus:shadow-glow transition-all" rows="4" placeholder="Ex: Configure sua loja e comece a vender..."></textarea>
             </div>
             <div>
-                <button id="btn-save-welcome-msg" class="btn btn-primary px-4 py-2 rounded-md font-bold flex align-center gap-2">
+                <button id="btn-save-welcome-msg" class="btn bg-danger text-white hover:bg-danger-hover px-4 py-2 rounded-md font-bold flex align-center gap-2 shadow-glow transition-all border border-danger-light">
                     <i data-lucide="send"></i> Salvar Disparo
                 </button>
             </div>

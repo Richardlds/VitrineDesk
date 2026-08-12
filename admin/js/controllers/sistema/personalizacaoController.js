@@ -15,11 +15,11 @@ export class personalizacaoController {
 
     async init() {
 
+        // Bind dos eventos primeiro para as abas funcionarem de imediato
+        this.bindEvents();
+
         // Simular um fetch das configs atuais
         await this.loadCurrentSettings();
-
-        // Bind dos eventos
-        this.bindEvents();
 
         if (window.lucide) {
             window.lucide.createIcons();
@@ -110,15 +110,19 @@ export class personalizacaoController {
     }
 
     bindEvents() {
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => this.switchTab(e.currentTarget));
-        });
 
         const btnSave = document.getElementById('btn-save-vitrine');
         if (btnSave) {
             btnSave.addEventListener('click', (e) => this.handleSave(e));
         }
+
+        // Tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.switchTab(e.currentTarget);
+            });
+        });
 
         // Preview dinâmico para todos os color pickers
         const colorPickers = document.querySelectorAll('.color-picker');
@@ -128,7 +132,7 @@ export class personalizacaoController {
                 if (hexLabel && hexLabel.classList.contains('color-hex-display')) {
                     hexLabel.textContent = e.target.value;
                 }
-                
+
                 // Live preview para admin
                 const adminMap = {
                     'admin-color-primary-input': '--color-primary',
@@ -219,7 +223,7 @@ export class personalizacaoController {
                     this.updateColorInput('admin-color-bg-surface-input', colors.bgSurface);
                     this.updateColorInput('admin-color-text-primary-input', colors.textPrimary);
                     this.updateColorInput('admin-color-text-secondary-input', colors.textSecondary);
-                    
+
                     // Live preview do template admin
                     document.documentElement.style.setProperty('--color-primary', colors.primary);
                     document.documentElement.style.setProperty('--color-secondary', colors.secondary);
@@ -227,7 +231,7 @@ export class personalizacaoController {
                     document.documentElement.style.setProperty('--color-bg-surface', colors.bgSurface);
                     document.documentElement.style.setProperty('--color-text-primary', colors.textPrimary);
                     document.documentElement.style.setProperty('--color-text-secondary', colors.textSecondary);
-                    
+
                     if (window.showToast) window.showToast('Template Admin aplicado!', 'success');
                 }
             });
@@ -280,12 +284,12 @@ export class personalizacaoController {
                     if (previewCover) {
                         previewCover.style.backgroundImage = `url('${base64}')`;
                         const iconCover = document.getElementById('icon-cover');
-                        if(iconCover) iconCover.classList.add('d-none');
+                        if (iconCover) iconCover.classList.add('d-none');
                     }
                 });
             });
         }
-        
+
         this.bindCropperEvents();
 
         // Banners
@@ -325,14 +329,12 @@ export class personalizacaoController {
 
     switchTab(activeBtn) {
         document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active', 'text-primary', 'bg-placeholder');
-            btn.classList.add('text-secondary', 'bg-transparent');
-            btn.style.borderBottom = 'none';
+            btn.classList.remove('active', 'bg-primary-light', 'text-primary');
+            btn.classList.add('bg-transparent', 'text-secondary');
         });
 
-        activeBtn.classList.add('active', 'text-primary', 'bg-placeholder');
-        activeBtn.classList.remove('text-secondary', 'bg-transparent');
-        activeBtn.style.borderBottom = '2px solid var(--color-primary)';
+        activeBtn.classList.add('active', 'bg-primary-light', 'text-primary');
+        activeBtn.classList.remove('bg-transparent', 'text-secondary');
 
         document.querySelectorAll('.tab-content').forEach(content => {
             content.classList.add('d-none');
@@ -385,15 +387,15 @@ export class personalizacaoController {
     bindCropperEvents() {
         const modal = document.getElementById('modal-cropper');
         if (!modal) return;
-        
+
         document.getElementById('btn-close-cropper')?.addEventListener('click', () => this.closeCropperModal());
         document.getElementById('btn-cancel-cropper')?.addEventListener('click', () => this.closeCropperModal());
-        
+
         document.getElementById('btn-crop-zoom-in')?.addEventListener('click', () => this.cropper?.zoom(0.1));
         document.getElementById('btn-crop-zoom-out')?.addEventListener('click', () => this.cropper?.zoom(-0.1));
         document.getElementById('btn-crop-rotate-left')?.addEventListener('click', () => this.cropper?.rotate(-45));
         document.getElementById('btn-crop-rotate-right')?.addEventListener('click', () => this.cropper?.rotate(45));
-        
+
         document.getElementById('btn-confirm-cropper')?.addEventListener('click', () => {
             if (!this.cropper) return;
             const canvas = this.cropper.getCroppedCanvas({
@@ -403,7 +405,7 @@ export class personalizacaoController {
                 imageSmoothingEnabled: true,
                 imageSmoothingQuality: 'high'
             });
-            
+
             if (canvas) {
                 const base64 = canvas.toDataURL('image/png');
                 canvas.toBlob((blob) => {
@@ -421,14 +423,14 @@ export class personalizacaoController {
         const modal = document.getElementById('modal-cropper');
         const img = document.getElementById('cropper-image');
         if (!modal || !img) return;
-        
+
         img.src = imageUrl;
         modal.classList.remove('d-none');
-        
+
         if (this.cropper) {
             this.cropper.destroy();
         }
-        
+
         setTimeout(() => {
             this.cropper = new Cropper(img, {
                 aspectRatio: aspectRatio,
@@ -445,7 +447,7 @@ export class personalizacaoController {
             });
         }, 100);
     }
-    
+
     closeCropperModal() {
         document.getElementById('modal-cropper')?.classList.add('d-none');
         if (this.cropper) {
@@ -664,7 +666,7 @@ export class personalizacaoController {
                 whatsapp_size: document.getElementById('input-whatsapp-size')?.value,
                 banners: this.banners.map(b => b.isNew ? b.preview : b)
             };
-            
+
             if (!settings.admin_personalizacao) settings.admin_personalizacao = {};
             settings.admin_personalizacao = {
                 ...settings.admin_personalizacao,

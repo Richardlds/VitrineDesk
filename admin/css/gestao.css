@@ -1,0 +1,623 @@
+/* ==========================================================================
+   gestao.css — Estilos das telas de Gestão (OS e Histórico OS)
+   ========================================================================== */
+
+
+/* ============================================================
+   LISTA OS — Cards, Filtros, Modal, Skeleton
+   ============================================================ */
+
+/* Barra de filtros glassmorphism */
+.los-filter-bar {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Inputs de filtro */
+.los-input {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 0.5rem 0.9rem;
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+.los-input::placeholder { color: var(--color-text-secondary); }
+.los-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+.los-input-icon-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+.los-input-icon-wrap .los-icon-inside {
+    position: absolute;
+    top: 50%;
+    left: 0.7rem;
+    transform: translateY(-50%);
+    color: var(--color-text-secondary);
+    pointer-events: none;
+}
+.los-input-icon-wrap .los-input {
+    padding-left: 2.2rem;
+}
+
+/* ===== CARDS DE OS ===== */
+.los-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.los-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 0.9rem 1.1rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto auto;
+    align-items: center;
+    gap: 0.8rem 1.2rem;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s, transform 0.15s, box-shadow 0.18s;
+    position: relative;
+    overflow: hidden;
+}
+
+.los-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 14px 0 0 14px;
+    background: var(--los-accent, var(--color-primary));
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.los-card:hover {
+    background: rgba(255,255,255,0.055);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateX(3px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.los-card:hover::before {
+    opacity: 1;
+}
+
+.los-card-id {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    font-family: 'Courier New', monospace;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px;
+    padding: 0.25rem 0.55rem;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+}
+
+.los-card-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+.los-card-customer {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.los-card-date {
+    font-size: 0.73rem;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Badge de status */
+.los-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.28rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+}
+.los-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.los-badge.status-pendente     { background: rgba(245,158,11,0.12); color: var(--color-warning); }
+.los-badge.status-pendente .los-badge-dot  { background: var(--color-warning); }
+.los-badge.status-andamento    { background: rgba(59,130,246,0.12);  color: var(--color-primary); }
+.los-badge.status-andamento .los-badge-dot { background: var(--color-primary); }
+.los-badge.status-concluida    { background: rgba(16,185,129,0.12); color: var(--color-success); }
+.los-badge.status-concluida .los-badge-dot { background: var(--color-success); }
+.los-badge.status-cancelada    { background: rgba(239,68,68,0.12);  color: var(--color-danger); }
+.los-badge.status-cancelada .los-badge-dot { background: var(--color-danger); }
+
+.los-card-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    text-align: right;
+}
+
+/* Ações */
+.los-card-actions {
+    display: flex;
+    gap: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.18s;
+}
+.los-card:hover .los-card-actions { opacity: 1; }
+
+.los-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.04);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+    flex-shrink: 0;
+}
+.los-action-btn:hover        { background: rgba(255,255,255,0.1); color: var(--color-text-primary); border-color: rgba(255,255,255,0.15); }
+.los-action-btn.danger:hover { background: rgba(239,68,68,0.15); color: var(--color-danger); border-color: rgba(239,68,68,0.3); }
+
+/* Acento da borda lateral por status */
+.los-card[data-status="Concluída"]    { --los-accent: var(--color-success); }
+.los-card[data-status="Pendente"]     { --los-accent: var(--color-warning); }
+.los-card[data-status="Cancelada"]    { --los-accent: var(--color-danger); }
+.los-card[data-status="Em Andamento"] { --los-accent: var(--color-primary); }
+
+/* ===== PAGINAÇÃO ===== */
+.los-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0.25rem 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 0.75rem;
+}
+.los-page-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+}
+.los-page-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); color: var(--color-text-primary); }
+.los-page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ===== EMPTY STATE ===== */
+.los-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 0.75rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+.los-empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.25rem;
+    color: var(--color-text-secondary);
+}
+
+/* ===== SKELETON ===== */
+.los-skeleton-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+    padding: 0.9rem 1.1rem;
+    display: grid;
+    grid-template-columns: 70px 1fr 90px 80px 80px;
+    gap: 0.8rem 1.2rem;
+    align-items: center;
+}
+.los-sk {
+    height: 14px;
+    border-radius: 6px;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: los-shimmer 1.5s infinite;
+}
+@keyframes los-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ===== MODAL ===== */
+.los-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: los-fade-in 0.2s ease;
+}
+@keyframes los-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes los-slide-up {
+    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.los-modal {
+    background: #0f0f14;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    animation: los-slide-up 0.25s ease;
+    overflow: hidden;
+}
+
+.los-modal-header {
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+.los-modal-title-group { display: flex; flex-direction: column; gap: 0.35rem; }
+.los-modal-id-row      { display: flex; align-items: center; gap: 0.65rem; }
+.los-modal-id {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    font-family: 'Courier New', monospace;
+}
+.los-modal-date-row {
+    font-size: 0.76rem;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.los-modal-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+    flex-shrink: 0;
+}
+.los-modal-close:hover { background: rgba(239,68,68,0.15); color: var(--color-danger); border-color: rgba(239,68,68,0.3); }
+
+.los-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.los-section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.los-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+}
+
+.los-modal-client-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+.los-modal-field label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2rem;
+}
+.los-modal-field span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.los-modal-notes {
+    background: rgba(245,158,11,0.05);
+    border: 1px solid rgba(245,158,11,0.15);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.los-items-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.los-items-table thead tr { border-bottom: 1px solid rgba(255,255,255,0.07); }
+.los-items-table thead th {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+}
+.los-items-table thead th:first-child { text-align: left; }
+.los-items-table thead th:nth-child(2) { text-align: center; }
+.los-items-table thead th:last-child   { text-align: right; }
+.los-items-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+}
+.los-items-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+.los-items-table tbody tr:last-child { border-bottom: none; }
+.los-items-table td { padding: 0.6rem 0.75rem; color: var(--color-text-primary); }
+.los-items-table td:nth-child(2) { text-align: center; color: var(--color-text-secondary); }
+.los-items-table td:last-child   { text-align: right; font-weight: 700; color: var(--color-success); }
+
+.los-modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    background: rgba(0,0,0,0.2);
+}
+.los-total-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+}
+.los-total-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-success);
+    letter-spacing: -0.02em;
+}
+
+@media (max-width: 640px) {
+    .los-card {
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto auto;
+    }
+    .los-card-value   { grid-column: 3; grid-row: 1; }
+    .los-badge        { grid-column: 2; grid-row: 2; }
+    .los-card-actions { grid-column: 3; grid-row: 2; opacity: 1; }
+    .los-skeleton-card { grid-template-columns: 70px 1fr 80px; }
+    .los-modal-client-card { grid-template-columns: 1fr; }
+}
+
+
+/* ============================================================
+   NOVA OS — Formulário de criação de OS
+   ============================================================ */
+
+.os-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 1.4rem 1.5rem;
+    transition: border-color 0.2s;
+}
+.os-card:hover {
+    border-color: rgba(255,255,255,0.12);
+}
+
+.os-section-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.os-section-divider h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+.os-section-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.os-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.4rem;
+}
+.os-input {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 0.55rem 0.9rem;
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    font-family: inherit;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.os-input::placeholder { color: var(--color-text-secondary); opacity: 0.7; }
+.os-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+.os-input-search-wrap {
+    position: relative;
+}
+.os-input-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    color: var(--color-text-secondary);
+    pointer-events: none;
+}
+.os-input-search-wrap .os-input {
+    padding-left: 2.25rem;
+}
+
+.os-items-table-wrap {
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 0.85rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+.os-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+.os-items-table thead tr {
+    background: rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.os-items-table thead th {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.67rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+}
+.os-items-table thead th:first-child  { text-align: left; }
+.os-items-table thead th:nth-child(2) { text-align: center; }
+.os-items-table thead th:nth-child(3),
+.os-items-table thead th:nth-child(4) { text-align: right; }
+.os-items-table thead th:last-child   { text-align: center; }
+
+.os-items-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+}
+.os-items-table tbody tr:last-child { border-bottom: none; }
+.os-items-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+.os-items-table td { padding: 0.6rem 0.75rem; color: var(--color-text-primary); }
+.os-items-table td:nth-child(2) { text-align: center; }
+.os-items-table td:nth-child(3),
+.os-items-table td:nth-child(4) { text-align: right; }
+.os-items-table td:last-child { text-align: center; }
+
+.os-empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    gap: 0.5rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.os-total-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+}
+.os-total-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+}
+
+#os-search-results {
+    background: #0f0f14;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
