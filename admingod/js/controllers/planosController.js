@@ -7,7 +7,14 @@ export class planosController {
             {
                 category: 'Principal',
                 items: [
-                    { id: 'principal/dashboard', name: 'Dashboard' },
+                    { 
+                        id: 'principal/dashboard', 
+                        name: 'Dashboard',
+                        subItems: [
+                            { id: 'dashboard/financeiro', name: 'Métricas Financeiras' },
+                            { id: 'dashboard/agendamentos', name: 'Métricas de Agendamentos' }
+                        ]
+                    },
                     { id: 'principal/agenda_diaria', name: 'Agenda Diária' },
                     { id: 'principal/agendamentos', name: 'Histórico de Agendamentos' }
                 ]
@@ -15,30 +22,66 @@ export class planosController {
             {
                 category: 'Cadastros',
                 items: [
-                    { id: 'cadastros/servicos', name: 'Serviços' },
-                    { id: 'cadastros/equipe', name: 'Equipe' },
-                    { id: 'cadastros/clientes', name: 'Clientes' }
+                    { 
+                        id: 'cadastros/servicos', 
+                        name: 'Serviços',
+                        subItems: [
+                            { id: 'servicos/novo', name: 'Criar Novo Serviço' },
+                            { id: 'servicos/categorias', name: 'Gerenciar Categorias' }
+                        ]
+                    },
+                    { 
+                        id: 'cadastros/equipe', 
+                        name: 'Equipe',
+                        subItems: [
+                            { id: 'equipe/novo', name: 'Adicionar Profissional' },
+                            { id: 'equipe/permissoes', name: 'Permissões de Acesso' }
+                        ]
+                    },
+                    { 
+                        id: 'cadastros/clientes', 
+                        name: 'Clientes',
+                        subItems: [
+                            { id: 'clientes/novo', name: 'Adicionar Cliente' },
+                            { id: 'clientes/exportar', name: 'Exportar Lista' }
+                        ]
+                    }
                 ]
             },
             {
                 category: 'CRM & Vendas',
                 items: [
                     { id: 'crm_vendas/planos_clientes', name: 'Planos de Clientes' },
-                    { id: 'crm_vendas/cupons', name: 'Cupons' },
-                    { id: 'crm_vendas/marketing', name: 'Marketing' },
+                    { id: 'crm_vendas/cupons', name: 'Cupons de Desconto' },
+                    { id: 'crm_vendas/marketing', name: 'Campanhas de Marketing' },
                     { id: 'crm_vendas/blacklist', name: 'Blacklist' }
                 ]
             },
             {
                 category: 'Gestão',
                 items: [
-                    { id: 'estoque/lista', name: 'Estoque & Catálogo' },
-                    { id: 'gestao/relatorios', name: 'Relatórios' },
-                    { id: 'gestao/lista_os', name: 'Histórico de OS' },
-                    { id: 'gestao/os', name: 'Nova OS' },
-                    { id: 'gestao/comissoes', name: 'Comissões' },
-                    { id: 'gestao/metas', name: 'Metas' },
-                    { id: 'gestao/fidelidade', name: 'Fidelidade' }
+                    { 
+                        id: 'estoque/lista', 
+                        name: 'Estoque & Catálogo',
+                        subItems: [
+                            { id: 'estoque/novo', name: 'Cadastrar Produto' },
+                            { id: 'estoque/movimentacao', name: 'Movimentação (Entrada/Saída)' }
+                        ]
+                    },
+                    { 
+                        id: 'gestao/relatorios', 
+                        name: 'Relatórios',
+                        subItems: [
+                            { id: 'relatorios/vendas', name: 'Relatórios de Vendas/Caixa' },
+                            { id: 'relatorios/agendamentos', name: 'Relatórios de Agendamentos' },
+                            { id: 'relatorios/comissoes', name: 'Relatórios de Comissões' }
+                        ]
+                    },
+                    { id: 'gestao/lista_os', name: 'Histórico de OS (Vendas)' },
+                    { id: 'gestao/os', name: 'Nova OS (Frente de Caixa)' },
+                    { id: 'gestao/comissoes', name: 'Gestão de Comissões' },
+                    { id: 'gestao/metas', name: 'Metas e Objetivos' },
+                    { id: 'gestao/fidelidade', name: 'Programa de Fidelidade' }
                 ]
             },
             {
@@ -50,16 +93,16 @@ export class planosController {
                         id: 'sistema/configuracoes', 
                         name: 'Configurações',
                         subItems: [
-                            { id: 'configuracoes/identidade', name: 'Aba: Identidade' },
-                            { id: 'configuracoes/contatos', name: 'Aba: Contatos' },
-                            { id: 'configuracoes/visibilidade', name: 'Aba: Visibilidade' },
-                            { id: 'configuracoes/horarios', name: 'Aba: Horários' },
-                            { id: 'configuracoes/pagamentos', name: 'Aba: Pagamentos' }
+                            { id: 'configuracoes/identidade', name: 'Aba: Identidade Visual' },
+                            { id: 'configuracoes/contatos', name: 'Aba: Contatos e Endereço' },
+                            { id: 'configuracoes/visibilidade', name: 'Aba: Visibilidade (SEO)' },
+                            { id: 'configuracoes/horarios', name: 'Aba: Horários de Funcionamento' },
+                            { id: 'configuracoes/pagamentos', name: 'Aba: Métodos de Pagamento' }
                         ]
                     },
-                    { id: 'sistema/personalizacao', name: 'Personalização' },
-                    { id: 'sistema/usuarios', name: 'Usuários' },
-                    { id: 'sistema/suporte', name: 'Suporte' }
+                    { id: 'sistema/personalizacao', name: 'Personalização Avançada (Cores)' },
+                    { id: 'sistema/usuarios', name: 'Usuários (Administradores)' },
+                    { id: 'sistema/suporte', name: 'Suporte Técnico' }
                 ]
             }
         ];
@@ -79,15 +122,27 @@ export class planosController {
         const container = document.getElementById('plano-features-container');
         if (!container) return;
 
-        let html = '';
-        this.MENU_MODULES.forEach(group => {
-            html += `
-                <div class="mb-4">
-                    <h5 class="text-primary mb-3 text-sm font-bold uppercase tracking-wide border-bottom-dashed pb-2">${group.category}</h5>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        let tabsHtml = '<div class="flex gap-2 border-bottom-dashed mb-4" style="border-bottom: 1px solid var(--border-color); overflow-x: auto; padding-bottom: 0.5rem;">';
+        let contentHtml = '<div>';
+
+        this.MENU_MODULES.forEach((group, index) => {
+            const tabId = `module-tab-${index}`;
+            const contentId = `module-content-${index}`;
+            const isActive = index === 0;
+            
+            tabsHtml += `
+                <button type="button" class="tab-btn sub-module-tab-btn ${isActive ? 'active' : ''}" data-target="${contentId}" style="white-space: nowrap; font-size: 0.85rem; padding: 0.4rem 0.8rem;">
+                    ${group.category}
+                </button>
             `;
+
+            contentHtml += `
+                <div id="${contentId}" class="sub-module-content" style="display: ${isActive ? 'block' : 'none'};">
+                    <div class="grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+            `;
+
             group.items.forEach(module => {
-                html += `
+                contentHtml += `
                     <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder bg-placeholder bg-opacity-20">
                         <span class="text-sm text-primary font-medium">${module.name}</span>
                         <label class="toggle-switch">
@@ -98,8 +153,8 @@ export class planosController {
                 `;
                 if (module.subItems && module.subItems.length > 0) {
                     module.subItems.forEach(sub => {
-                        html += `
-                            <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder bg-placeholder bg-opacity-10" style="margin-left: 20px; border-left: 3px solid var(--color-primary);">
+                        contentHtml += `
+                            <div class="flex justify-between align-center p-3 rounded-md border-dashed border-placeholder bg-placeholder bg-opacity-10" style="margin-left: 20px; border-left: 3px solid var(--primary-color);">
                                 <span class="text-sm text-secondary font-medium"><i data-lucide="corner-down-right" class="icon-sm inline-block" style="width: 14px; height: 14px;"></i> ${sub.name}</span>
                                 <label class="toggle-switch">
                                     <input type="checkbox" class="feature-toggle" data-module="${sub.id}">
@@ -110,12 +165,39 @@ export class planosController {
                     });
                 }
             });
-            html += `
+
+            contentHtml += `
                     </div>
                 </div>
             `;
         });
-        container.innerHTML = html;
+
+        tabsHtml += '</div>';
+        contentHtml += '</div>';
+
+        container.innerHTML = tabsHtml + contentHtml;
+        
+        if (window.lucide) window.lucide.createIcons();
+
+        // Bind events for the sub-tabs
+        const subTabs = container.querySelectorAll('.sub-module-tab-btn');
+        subTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const targetId = e.currentTarget.getAttribute('data-target');
+                if(!targetId) return;
+                
+                // Hide all contents
+                container.querySelectorAll('.sub-module-content').forEach(el => el.style.display = 'none');
+                // Remove active from all tabs
+                container.querySelectorAll('.sub-module-tab-btn').forEach(el => el.classList.remove('active'));
+                
+                // Show target and activate tab
+                document.getElementById(targetId).style.display = 'block';
+                e.currentTarget.classList.add('active');
+            });
+        });
     }
 
     bindEvents() {

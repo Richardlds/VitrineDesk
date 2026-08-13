@@ -42,8 +42,8 @@
 
 <!-- Modal Plano -->
 <div id="modal-plano" class="modal-overlay d-none">
-    <div class="modal-content config-card modal-card-lg" style="max-height: 90vh; overflow-y: auto; width: 90%; max-width: 700px; padding: 2rem;">
-        <div class="flex justify-between align-center mb-3">
+    <div class="modal-content config-card" style="height: 95vh; width: 95vw; max-width: 1200px; padding: 2rem; display: flex; flex-direction: column;">
+        <div class="flex justify-between align-center mb-3" style="flex-shrink: 0;">
             <div class="flex align-center gap-3">
                 <div class="bg-primary-light text-primary p-2 rounded-lg">
                     <i data-lucide="layers"></i>
@@ -61,14 +61,14 @@
         <input type="hidden" id="plano-id">
         
         <!-- Tabs Header -->
-        <div class="flex gap-4 border-bottom-dashed mb-4" style="border-bottom: 1px solid var(--border-color); overflow-x: auto;">
+        <div class="flex gap-4 border-bottom-dashed mb-4" style="border-bottom: 1px solid var(--border-color); overflow-x: auto; flex-shrink: 0;">
             <button type="button" class="tab-btn active" data-tab-target="tab-god-basico" style="white-space: nowrap;">Básico</button>
             <button type="button" class="tab-btn" data-tab-target="tab-god-precos" style="white-space: nowrap;">Preço & Regras</button>
             <button type="button" class="tab-btn" data-tab-target="tab-god-modulos" style="white-space: nowrap;">Módulos</button>
             <button type="button" class="tab-btn" data-tab-target="tab-god-limites" style="white-space: nowrap;">Limites</button>
         </div>
 
-        <div class="custom-scrollbar" style="max-height: 65vh; overflow-y: auto; padding-right: 0.5rem;">
+        <div class="custom-scrollbar flex-1" style="overflow-y: auto; padding-right: 0.5rem; margin-bottom: 1rem;">
             
             <!-- ABA 1: BÁSICO -->
             <div id="tab-god-basico" class="tab-plano-content active">
@@ -133,7 +133,7 @@
                     </h4>
                     <p class="text-xs text-muted mb-3">Marque as telas e menus que os lojistas deste plano terão acesso.</p>
 
-                    <div id="plano-features-container" class="bg-placeholder border-dashed p-3 rounded-xl grid gap-2" style="max-height: 300px; overflow-y: auto; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                    <div id="plano-features-container" class="bg-placeholder border-dashed p-3 rounded-xl">
                         <!-- Renderizado via JS -->
                         <div class="flex align-center justify-center py-4" style="grid-column: 1 / -1;">
                             <i data-lucide="loader" class="animate-spin text-secondary"></i>
@@ -171,12 +171,12 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="pt-3 mt-2 border-top-dashed">
-                <button id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-lg font-bold flex align-center justify-center gap-2">
-                    <i data-lucide="save"></i> Salvar Plano
-                </button>
-            </div>
+        </div>
+        
+        <div class="pt-3 border-top-dashed" style="flex-shrink: 0;">
+            <button id="btn-salvar-plano" class="btn btn-primary w-100 py-3 rounded-lg font-bold flex align-center justify-center gap-2">
+                <i data-lucide="save"></i> Salvar Plano
+            </button>
         </div>
     </div>
 </div>
