@@ -105,7 +105,7 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
 }
 
 // Fazer Login
-export async function loginMerchant(email, password) {
+export async function loginMerchant(email, password, silent = false) {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
@@ -118,7 +118,7 @@ export async function loginMerchant(email, password) {
       .maybeSingle();
 
     if (adminData?.role === 'superadmin' || adminData?.role === 'admin') {
-      showToast("Bem-vindo, Superadmin! 🚀", "success");
+      if (!silent) showToast("Bem-vindo, Superadmin! 🚀", "success");
       setTimeout(() => {
         window.location.href = '/admingod/';
       }, 500);
@@ -133,22 +133,22 @@ export async function loginMerchant(email, password) {
       if (tenantData) {
         if (tenantData.approval_status === 'pending') {
           await supabase.auth.signOut();
-          showToast('Seu cadastro está em análise. Aguarde a aprovação.', 'warning');
+          if (!silent) showToast('Seu cadastro está em análise. Aguarde a aprovação.', 'warning');
           return null;
         }
         if (tenantData.approval_status === 'rejected') {
           await supabase.auth.signOut();
-          showToast('Seu cadastro foi recusado. Contate o suporte.', 'error');
+          if (!silent) showToast('Seu cadastro foi recusado. Contate o suporte.', 'error');
           return null;
         }
         if (!tenantData.is_active) {
           await supabase.auth.signOut();
-          showToast('Sua conta está suspensa. Contate o suporte.', 'error');
+          if (!silent) showToast('Sua conta está suspensa. Contate o suporte.', 'error');
           return null;
         }
       }
 
-      showToast("Login realizado!", "success");
+      if (!silent) showToast("Login realizado!", "success");
       setTimeout(() => {
         window.location.href = '/admin/';
       }, 500);
@@ -156,11 +156,13 @@ export async function loginMerchant(email, password) {
 
     return data;
   } catch (err) {
-    console.error('Detalhe técnico:', err);
-    if (err.message && err.message.includes('Invalid login credentials')) {
-      showToast('E-mail ou senha incorretos.', 'error');
-    } else {
-      showToast('Erro inesperado. Tente novamente.', 'error');
+    if (!silent) {
+      console.error('Detalhe técnico:', err);
+      if (err.message && err.message.includes('Invalid login credentials')) {
+        showToast('E-mail ou senha incorretos.', 'error');
+      } else {
+        showToast('Erro inesperado. Tente novamente.', 'error');
+      }
     }
     return null;
   }

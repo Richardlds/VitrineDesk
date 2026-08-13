@@ -259,6 +259,26 @@ export class configuracoesController {
             const getVal = (id) => document.getElementById(id)?.value?.trim() || null;
             const getChk = (id) => document.getElementById(id)?.checked || false;
 
+            const novoSlug = getVal('input-config-slug');
+            if (novoSlug && novoSlug !== this.tenantData.slug) {
+                const { data: existingSlug, error: checkError } = await supabase
+                    .from('tenants')
+                    .select('id')
+                    .eq('slug', novoSlug)
+                    .neq('id', this.tenantId)
+                    .maybeSingle();
+                
+                if (existingSlug) {
+                    const slugInput = document.getElementById('input-config-slug');
+                    if (slugInput) {
+                        slugInput.classList.add('border-danger', 'text-danger');
+                        slugInput.focus();
+                        setTimeout(() => slugInput.classList.remove('border-danger', 'text-danger'), 4000);
+                    }
+                    throw new Error('Esta URL personalizada (slug) já está sendo utilizada por outra loja.');
+                }
+            }
+
             const horarios = {};
             this.diasDaSemana.forEach(dia => {
                 horarios[dia] = {

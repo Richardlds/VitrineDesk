@@ -112,19 +112,58 @@
         </div>
     </div>
 
-    <!-- Modal de Importação -->
-    <div id="modal-importar-servico" class="modal-overlay d-none">
-        <div class="modal-content config-card">
+    <!-- Modal de Importar Serviço da Rede -->
+    <div id="modal-importar-servico" class="modal-overlay d-none" style="z-index: 1000;">
+        <div class="modal-content config-card" style="max-width: 600px;">
             <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
-                <h3 id="modal-importar-servico-title" class="text-primary font-bold mb-0">Importar Serviço da Rede</h3>
+                <h3 class="text-primary font-bold mb-0">Importar Serviço da Rede</h3>
                 <button id="btn-close-modal-importar-servico" class="btn bg-transparent border-none text-secondary cursor-pointer">
                     <i data-lucide="x"></i>
                 </button>
             </div>
-            <p class="text-sm text-secondary mb-3">Selecione um serviço de outra filial sua para copiar para cá.</p>
+            <div id="importar-servico-lista" class="flex flex-column gap-3 max-h-[400px] overflow-y-auto pr-2">
+                <!-- Lista de servicos da rede injetada via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal do Cropper -->
+    <div id="modal-cropper" class="modal-overlay d-none" style="z-index: 9999;">
+        <div class="modal-content config-card text-center" style="max-width: 500px; padding: 20px;">
+            <div class="flex justify-between align-center mb-4 border-bottom-dashed pb-3">
+                <h3 class="text-primary font-bold mb-0 text-lg">Ajustar Imagem</h3>
+                <button id="btn-close-cropper" class="btn bg-transparent border-none text-secondary cursor-pointer p-1 hover:text-danger transition-colors">
+                    <i data-lucide="x" class="icon-sm"></i>
+                </button>
+            </div>
             
-            <div id="importar-servico-lista" class="flex flex-column gap-2 max-h-300px overflow-y-auto pr-2">
-                <!-- Injetado via JS -->
+            <div class="cropper-container mb-4 bg-placeholder rounded-lg" style="height: 350px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <img id="cropper-image" src="" alt="Recortar imagem" style="max-width: 100%; max-height: 100%;">
+            </div>
+
+            <!-- Controles extras do Cropper -->
+            <div class="flex justify-center gap-2 mb-4">
+                <button id="btn-crop-zoom-in" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover transition-colors" title="Aumentar Zoom">
+                    <i data-lucide="zoom-in" class="icon-sm"></i>
+                </button>
+                <button id="btn-crop-zoom-out" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover transition-colors" title="Diminuir Zoom">
+                    <i data-lucide="zoom-out" class="icon-sm"></i>
+                </button>
+                <button id="btn-crop-rotate-left" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover transition-colors" title="Girar Esquerda">
+                    <i data-lucide="rotate-ccw" class="icon-sm"></i>
+                </button>
+                <button id="btn-crop-rotate-right" class="btn bg-placeholder text-secondary border-none rounded p-2 cursor-pointer hover:bg-hover transition-colors" title="Girar Direita">
+                    <i data-lucide="rotate-cw" class="icon-sm"></i>
+                </button>
+            </div>
+
+            <div class="flex gap-3 justify-center">
+                <button id="btn-cancel-cropper" class="btn bg-placeholder text-secondary border-none rounded-lg px-4 py-2 cursor-pointer hover:bg-hover transition-colors flex align-center gap-2">
+                    Cancelar
+                </button>
+                <button id="btn-confirm-cropper" class="btn bg-primary text-white border-none rounded-lg px-4 py-2 cursor-pointer hover:opacity-90 transition-colors flex align-center gap-2">
+                    <i data-lucide="check" class="icon-sm"></i> Confirmar
+                </button>
             </div>
         </div>
     </div>

@@ -405,13 +405,26 @@ function aplicarConfiguracoes() {
       s('--secondary-rgb', hexToRgb(tenant.secondary_color));
     }
     if (tenant.accent_color) s('--accent', tenant.accent_color);
-    if (tenant.border_color) s('--border', tenant.border_color);
+    if (tenant.border_color) {
+      s('--border', tenant.border_color);
+      s('--border-glass', tenant.border_color);
+    }
 
     s('--bg-dark', pers.bg_color || tenant.bg_color || '#0a0a0f');
     s('--text-main', pers.text_color || tenant.text_color || '#fafafa');
     s('--text-muted', pers.text_muted_color || tenant.text_muted_color || '#9ca3af');
-    s('--card-bg', pers.card_bg_color || tenant.card_bg_color || (pers.card_style === 'glass' ? 'rgba(255,255,255,0.05)' : 'var(--bg-dark)'));
-    s('--bg-card', pers.card_bg_color || tenant.card_bg_color || (pers.card_style === 'glass' ? 'rgba(255,255,255,0.05)' : 'var(--bg-dark)'));
+    s('--text-btn', pers.text_btn_color || '#ffffff');
+    s('--success', pers.success_color || '#10b981');
+    s('--warning', pers.warning_color || '#f59e0b');
+    s('--danger', pers.danger_color || '#ef4444');
+    
+    const cardBgColor = pers.card_bg_color || tenant.card_bg_color || (pers.card_style === 'glass' ? 'rgba(255,255,255,0.05)' : 'var(--bg-dark)');
+    s('--card-bg', cardBgColor);
+    s('--bg-card', cardBgColor);
+    s('--glass', cardBgColor);
+
+    const primaryGlow = tenant.accent_color || tenant.secondary_color || tenant.primary_color;
+    if (primaryGlow) s('--primary-glow', primaryGlow);
 
     // Tema Claro / Escuro
     if (tenant.theme_mode === 'light') {

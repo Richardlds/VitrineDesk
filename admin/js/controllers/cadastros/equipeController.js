@@ -215,6 +215,25 @@ export class equipeController {
             });
         }
 
+        const inputTelefone = document.getElementById('input-telefone-equipe');
+        if (inputTelefone) {
+            inputTelefone.addEventListener('input', (e) => {
+                let v = e.target.value.replace(/\D/g, "");
+                if (v.length > 11) v = v.slice(0, 11);
+                if (v.length > 10) {
+                    v = v.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+                } else if (v.length > 5) {
+                    v = v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+                } else if (v.length > 2) {
+                    v = v.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+                } else {
+                    v = v.replace(/^(\d*)/, "($1");
+                    if (v === '(') v = '';
+                }
+                e.target.value = v;
+            });
+        }
+
         const btnImportar = document.getElementById('btn-importar-equipe');
         const modalImport = document.getElementById('modal-importar-equipe');
         const btnCloseImport = document.getElementById('btn-close-modal-importar-equipe');

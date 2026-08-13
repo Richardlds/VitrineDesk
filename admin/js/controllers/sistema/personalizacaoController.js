@@ -66,6 +66,12 @@ export class personalizacaoController {
                 if (pers.border_color) this.updateColorInput('color-border-input', pers.border_color);
                 if (pers.text_color) this.updateColorInput('color-text-primary-input', pers.text_color);
                 if (pers.text_muted_color) this.updateColorInput('color-text-secondary-input', pers.text_muted_color);
+                
+                // Novas cores de status e botões
+                if (pers.text_btn_color) this.updateColorInput('color-text-btn-input', pers.text_btn_color);
+                if (pers.success_color) this.updateColorInput('color-success-input', pers.success_color);
+                if (pers.warning_color) this.updateColorInput('color-warning-input', pers.warning_color);
+                if (pers.danger_color) this.updateColorInput('color-danger-input', pers.danger_color);
 
                 // Novos campos
                 const setVal = (id, val) => {
@@ -153,39 +159,45 @@ export class personalizacaoController {
             'dark-elegance': {
                 primary: '#3B82F6', secondary: '#3b82f6', accent: '#10b981',
                 bgSite: '#050505', bgCards: '#121212', border: '#222222',
-                textPrimary: '#ffffff', textSecondary: '#9ca3af'
+                textPrimary: '#ffffff', textSecondary: '#9ca3af',
+                textBtn: '#ffffff', success: '#10b981', warning: '#f59e0b', danger: '#ef4444'
             },
             'barber-classic': {
                 primary: '#d4af37', secondary: '#aa0000', accent: '#ffffff',
                 bgSite: '#0a0a0a', bgCards: '#141414', border: '#2a2a2a',
-                textPrimary: '#ffffff', textSecondary: '#a3a3a3'
+                textPrimary: '#ffffff', textSecondary: '#a3a3a3',
+                textBtn: '#000000', success: '#16a34a', warning: '#f59e0b', danger: '#dc2626'
             },
             'neon-vibe': {
                 primary: '#ff00ff', secondary: '#00ffff', accent: '#ffff00',
                 bgSite: '#080010', bgCards: '#150024', border: '#330055',
-                textPrimary: '#ffffff', textSecondary: '#ffb3ff'
+                textPrimary: '#ffffff', textSecondary: '#ffb3ff',
+                textBtn: '#000000', success: '#00ff00', warning: '#ffff00', danger: '#ff0033'
             },
             'ocean-blue': {
                 primary: '#0ea5e9', secondary: '#0284c7', accent: '#38bdf8',
                 bgSite: '#081729', bgCards: '#0f2942', border: '#1e3a8a',
-                textPrimary: '#f8fafc', textSecondary: '#94a3b8'
+                textPrimary: '#f8fafc', textSecondary: '#94a3b8',
+                textBtn: '#ffffff', success: '#10b981', warning: '#eab308', danger: '#ef4444'
             },
             'light-clean': {
                 primary: '#0f172a', secondary: '#334155', accent: '#3b82f6',
                 bgSite: '#f8fafc', bgCards: '#ffffff', border: '#e2e8f0',
-                textPrimary: '#0f172a', textSecondary: '#64748b'
+                textPrimary: '#0f172a', textSecondary: '#64748b',
+                textBtn: '#ffffff', success: '#22c55e', warning: '#f59e0b', danger: '#ef4444'
             },
             'forest-green': {
                 primary: '#16a34a', secondary: '#22c55e', accent: '#facc15',
                 bgSite: '#052e16', bgCards: '#14532d', border: '#166534',
-                textPrimary: '#f0fdf4', textSecondary: '#86efac'
+                textPrimary: '#f0fdf4', textSecondary: '#86efac',
+                textBtn: '#ffffff', success: '#22c55e', warning: '#eab308', danger: '#dc2626'
             }
         };
 
         const templateBtns = document.querySelectorAll('.template-btn');
         templateBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const tmpl = e.target.dataset.template;
+                const tmpl = e.target.dataset.template || e.target.closest('button').dataset.template;
                 const colors = templates[tmpl];
                 if (colors) {
                     this.updateColorInput('color-primary-input', colors.primary);
@@ -196,6 +208,10 @@ export class personalizacaoController {
                     this.updateColorInput('color-border-input', colors.border);
                     this.updateColorInput('color-text-primary-input', colors.textPrimary);
                     this.updateColorInput('color-text-secondary-input', colors.textSecondary);
+                    this.updateColorInput('color-text-btn-input', colors.textBtn);
+                    this.updateColorInput('color-success-input', colors.success);
+                    this.updateColorInput('color-warning-input', colors.warning);
+                    this.updateColorInput('color-danger-input', colors.danger);
                     if (window.showToast) window.showToast('Template aplicado com sucesso!', 'success');
                 }
             });
@@ -401,7 +417,7 @@ export class personalizacaoController {
             const canvas = this.cropper.getCroppedCanvas({
                 maxWidth: 1920,
                 maxHeight: 1920,
-                fillColor: '#fff',
+                fillColor: 'transparent',
                 imageSmoothingEnabled: true,
                 imageSmoothingQuality: 'high'
             });
@@ -647,6 +663,10 @@ export class personalizacaoController {
                 border_color: document.getElementById('color-border-input')?.value,
                 text_color: document.getElementById('color-text-primary-input')?.value,
                 text_muted_color: document.getElementById('color-text-secondary-input')?.value,
+                text_btn_color: document.getElementById('color-text-btn-input')?.value,
+                success_color: document.getElementById('color-success-input')?.value,
+                warning_color: document.getElementById('color-warning-input')?.value,
+                danger_color: document.getElementById('color-danger-input')?.value,
 
                 // Novos campos
                 font_family: document.getElementById('input-font-family')?.value,

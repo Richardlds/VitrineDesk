@@ -1,4 +1,4 @@
-﻿import { supabase } from './config.js';
+import { supabase } from './config.js';
 
 import { loginMerchant, registerMerchant, loginWithGoogle, completeGoogleRegistration } from './auth.js';
 
@@ -141,14 +141,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
   // 1b. GOOGLE AUTH REDIRECT CHECK
-
   try {
-
-    const { data: sessionData } = await supabase.auth.getSession();
-
-    if (sessionData?.session?.user) {
-
-      const user = sessionData.session.user;
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (!authError && authData?.user) {
+      const user = authData.user;
 
       
 
@@ -721,208 +717,91 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
       try {
-
-        let staffTenants = null;
-
-        try {
-
-          // Staff check first
-
-          const resultStaff = await supabase
-
-            .from('tenants')
-
-            .select('id, name, slug, settings')
-
-            .contains('settings', { usuarios: [{ email: emailVal.toLowerCase() }] });
-
-          staffTenants = resultStaff.data;
-
-        } catch (staffErr) {
-
-          console.warn('Erro ao verificar staff, continuando login de Lojista normal...', staffErr);
-
-        }
-
-
-
-        let foundStaff = null;
-
-        let staffTenant = null;
-
-        let needsPasswordUpdate = false;
-
-
-
-        if (staffTenants && staffTenants.length > 0) {
-
-          const hashedInputPassword = await hashPasswordSHA256(passwordVal);
-
-
-
-          for (const t of staffTenants) {
-
-            const usuarios = t.settings?.usuarios || [];
-
-            const user = usuarios.find(u => u.email?.toLowerCase() === emailVal.toLowerCase());
-
-
-
-            if (user) {
-
-              if (user.password === hashedInputPassword) {
-
-                foundStaff = user;
-
-                staffTenant = t;
-
-                break;
-
-              } else if (user.password === passwordVal) {
-
-                foundStaff = user;
-
-                staffTenant = t;
-
-                needsPasswordUpdate = true;
-
-                break;
-
-              }
-
-            }
-
-          }
-
-        }
-
-
-
-        if (foundStaff && staffTenant) {
-
-          if (needsPasswordUpdate) {
-
-            const hashedNewPassword = await hashPasswordSHA256(passwordVal);
-
-            const updatedUsuarios = staffTenant.settings.usuarios.map(u => {
-
-              if (u.email?.toLowerCase() === foundStaff.email?.toLowerCase()) {
-
-                return { ...u, password: hashedNewPassword };
-
-              }
-
-              return u;
-
-            });
-
-            const newSettings = { ...staffTenant.settings, usuarios: updatedUsuarios };
-
-
-
-            await supabase
-
-              .from('tenants')
-
-              .update({ settings: newSettings })
-
-              .eq('id', staffTenant.id);
-
-          }
-
-
-
-          const safeStaffData = { ...foundStaff };
-
-          delete safeStaffData.password;
-
-
-
-          sessionStorage.setItem('staff_user', JSON.stringify(safeStaffData));
-
-          sessionStorage.setItem('staff_auth_expires', Date.now() + (24 * 60 * 60 * 1000));
-
-          sessionStorage.setItem('staff_tenant_id', staffTenant.id);
-
-          localStorage.removeItem('impersonated_tenant_id');
-
-          localStorage.removeItem('impersonate_tenant_id');
-
-          resetAttempts();
-
-
-
-          showToast(`Bem-vindo, ${foundStaff.name}!`, 'success');
-
-          setTimeout(() => {
-
-            window.location.href = '/admin/';
-
-          }, 500);
-
-          return;
-
-        }
-
-
-
-        const result = await loginMerchant(emailVal, passwordVal);
-
-
+        // Primeiro tenta como Lojista/Superadmin
+        const result = await loginMerchant(emailVal, passwordVal, true);
 
         if (result) {
+          resetAttempts();
+          if (btnLoginSubmit) btnLoginSubmit.classList.remove('btn-loading');
+          return; // O redirecionamento é feito dentro do loginMerchant
+        }
 
-          const { data: sessionData } = await supabase.auth.getSession();
+        // Se falhou como owner, tenta como Staff
+        let staffTenants = null;
+        try {
+          const resultStaff = await supabase
+            .from('tenants')
+            .select('id, name, slug, settings')
+            .contains('settings', { usuarios: [{ email: emailVal.toLowerCase() }] });
+          staffTenants = resultStaff.data;
+        } catch (staffErr) {
+          console.warn('Erro ao verificar staff:', staffErr);
+        }
 
+        let foundStaff = null;
+        let staffTenant = null;
+        let needsPasswordUpdate = false;
 
+        if (staffTenants && staffTenants.length > 0) {
+          const hashedInputPassword = await hashPasswordSHA256(passwordVal);
 
-          if (sessionData?.session?.user) {
+          for (const t of staffTenants) {
+            const usuarios = t.settings?.usuarios || [];
+            const user = usuarios.find(u => u.email?.toLowerCase() === emailVal.toLowerCase());
 
-            const { data: adminData } = await supabase
-
-              .from('admin_users')
-
-              .select('role')
-
-              .eq('id', sessionData.session.user.id)
-
-              .maybeSingle();
-
-
-
-            if (adminData?.role === 'superadmin' || adminData?.role === 'admin') {
-
-              resetAttempts();
-
-              showToast('Bem-vindo, Superadmin!', 'success');
-
-              setTimeout(() => {
-
-                window.location.href = '/admingod/';
-
-              }, 500);
-
-              return;
-
+            if (user) {
+              if (user.password === hashedInputPassword) {
+                foundStaff = user;
+                staffTenant = t;
+                break;
+              } else if (user.password === passwordVal) {
+                foundStaff = user;
+                staffTenant = t;
+                needsPasswordUpdate = true;
+                break;
+              }
             }
+          }
+        }
 
+        if (foundStaff && staffTenant) {
+          if (needsPasswordUpdate) {
+            const hashedNewPassword = await hashPasswordSHA256(passwordVal);
+            const updatedUsuarios = staffTenant.settings.usuarios.map(u => {
+              if (u.email?.toLowerCase() === foundStaff.email?.toLowerCase()) {
+                return { ...u, password: hashedNewPassword };
+              }
+              return u;
+            });
+            const newSettings = { ...staffTenant.settings, usuarios: updatedUsuarios };
+
+            await supabase
+              .from('tenants')
+              .update({ settings: newSettings })
+              .eq('id', staffTenant.id);
           }
 
-        }
+          const safeStaffData = { ...foundStaff };
+          delete safeStaffData.password;
 
-
-
-        if (!result) {
-
-          recordFailedAttempt();
-
-          if (btnLoginSubmit) btnLoginSubmit.classList.remove('btn-loading');
-
-        } else {
-
+          sessionStorage.setItem('staff_user', JSON.stringify(safeStaffData));
+          sessionStorage.setItem('staff_auth_expires', Date.now() + (24 * 60 * 60 * 1000));
+          sessionStorage.setItem('staff_tenant_id', staffTenant.id);
+          localStorage.removeItem('impersonated_tenant_id');
+          localStorage.removeItem('impersonate_tenant_id');
           resetAttempts();
 
+          showToast(`Bem-vindo, ${foundStaff.name}!`, 'success');
+          setTimeout(() => {
+            window.location.href = '/admin/';
+          }, 500);
+          return;
         }
+
+        // Se chegou aqui, não é Owner nem Staff válido
+        recordFailedAttempt();
+        showToast('E-mail ou senha incorretos.', 'error');
+        if (btnLoginSubmit) btnLoginSubmit.classList.remove('btn-loading');
 
       } catch (err) {
 

@@ -39,7 +39,8 @@
                         <label class="font-medium text-sm text-secondary mb-2 inline-block">Favicon</label>
                         <div class="flex align-center gap-3">
                             <div id="preview-favicon"
-                                class="bg-placeholder rounded-full flex justify-center align-center border-dashed w-48px h-48px bg-center bg-cover bg-no-repeat">
+                                class="bg-placeholder rounded-full flex justify-center align-center border-dashed bg-center bg-cover bg-no-repeat"
+                                style="width: 48px; height: 48px;">
                                 <i data-lucide="upload" class="text-secondary" id="icon-favicon"></i>
                             </div>
                             <div>
@@ -58,7 +59,7 @@
                             <div class="flex align-center gap-3">
                                 <div id="preview-cover"
                                     class="bg-placeholder rounded-md flex justify-center align-center border-dashed bg-center bg-cover bg-no-repeat cursor-pointer"
-                                    style="width: 160px; height: 60px;" title="Clique para alterar a Capa">
+                                    style="width: 160px; height: 34px;" title="Clique para alterar a Capa">
                                     <i data-lucide="upload" class="text-secondary" id="icon-cover"></i>
                                 </div>
                                 <div>
@@ -213,6 +214,8 @@
                         </div>
                     </div>
 
+                    <!-- CATEGORIA: Cores da Marca -->
+                    <h4 class="font-bold text-primary mt-4 mb-2 text-sm border-bottom-dashed pb-1">Cores da Marca</h4>
                     <div class="grid-cols-2 grid-md-3 gap-3 mb-3">
                         <div>
                             <label class="font-medium text-sm text-secondary mb-1 inline-block">Cor Primária</label>
@@ -243,7 +246,9 @@
                         </div>
                     </div>
 
-                    <div class="grid-cols-2 grid-md-3 gap-3 mb-0">
+                    <!-- CATEGORIA: Fundo e Estrutura -->
+                    <h4 class="font-bold text-primary mt-4 mb-2 text-sm border-bottom-dashed pb-1">Fundo e Estrutura</h4>
+                    <div class="grid-cols-2 grid-md-3 gap-3 mb-3">
                         <div>
                             <label class="font-medium text-sm text-secondary mb-1 inline-block">Fundo do Site</label>
                             <div class="flex align-center gap-2">
@@ -271,6 +276,11 @@
                                 <span class="text-sm color-hex-display d-none">#222222</span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- CATEGORIA: Textos -->
+                    <h4 class="font-bold text-primary mt-4 mb-2 text-sm border-bottom-dashed pb-1">Textos</h4>
+                    <div class="grid-cols-2 grid-md-3 gap-3 mb-3">
                         <div>
                             <label class="font-medium text-sm text-secondary mb-1 inline-block">Texto Principal</label>
                             <div class="flex align-center gap-2">
@@ -287,6 +297,47 @@
                                     class="color-picker cursor-pointer border-none bg-transparent"
                                     id="color-text-secondary-input">
                                 <span class="text-sm color-hex-display d-none">#9ca3af</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Botão Primário</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#ffffff"
+                                    class="color-picker cursor-pointer border-none bg-transparent"
+                                    id="color-text-btn-input">
+                                <span class="text-sm color-hex-display d-none">#ffffff</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CATEGORIA: Status e Avisos -->
+                    <h4 class="font-bold text-primary mt-4 mb-2 text-sm border-bottom-dashed pb-1">Status e Avisos</h4>
+                    <div class="grid-cols-2 grid-md-3 gap-3 mb-0">
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Sucesso (Ex: Aberto)</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#10b981"
+                                    class="color-picker cursor-pointer border-none bg-transparent"
+                                    id="color-success-input">
+                                <span class="text-sm color-hex-display d-none">#10b981</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Aviso (Ex: Pendente)</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#f59e0b"
+                                    class="color-picker cursor-pointer border-none bg-transparent"
+                                    id="color-warning-input">
+                                <span class="text-sm color-hex-display d-none">#f59e0b</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-medium text-sm text-secondary mb-1 inline-block">Erro (Ex: Fechado)</label>
+                            <div class="flex align-center gap-2">
+                                <input type="color" value="#ef4444"
+                                    class="color-picker cursor-pointer border-none bg-transparent"
+                                    id="color-danger-input">
+                                <span class="text-sm color-hex-display d-none">#ef4444</span>
                             </div>
                         </div>
                     </div>

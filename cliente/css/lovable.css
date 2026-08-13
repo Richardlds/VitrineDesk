@@ -95,7 +95,7 @@ button { font: inherit; }
 }
 .btn--sm { min-height: 38px; padding: 0 14px; font-size: 0.875rem; }
 .btn--primary {
-  color: var(--text-main);
+  color: var(--text-btn, var(--text-main));
   background: linear-gradient(135deg, var(--primary), color-mix(in oklab, var(--primary-glow) 70%, var(--primary)));
   box-shadow: 0 12px 28px -14px color-mix(in oklab, var(--primary) 90%, transparent);
 }
@@ -114,7 +114,7 @@ button { font: inherit; }
 .chip--ghost { cursor: default; color: var(--text-muted); }
 .chip--active {
   background: linear-gradient(135deg, var(--primary), color-mix(in oklab, var(--primary-glow) 60%, var(--primary)));
-  border-color: transparent; color: var(--text-main);
+  border-color: transparent; color: var(--text-btn, var(--text-main));
 }
 
 .icon-btn {
@@ -143,8 +143,8 @@ button { font: inherit; }
   background: color-mix(in oklab, var(--text-main) 8%, transparent);
 }
 .badge__dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-.badge--open { color: #6ee7a8; border-color: color-mix(in oklab, #6ee7a8 40%, transparent); }
-.badge--closed { color: #ff9d9d; border-color: color-mix(in oklab, #ff9d9d 40%, transparent); }
+.badge--open { color: var(--success, #6ee7a8); border-color: color-mix(in oklab, var(--success, #6ee7a8) 40%, transparent); }
+.badge--closed { color: var(--danger, #ff9d9d); border-color: color-mix(in oklab, var(--danger, #ff9d9d) 40%, transparent); }
 
 /* ---------------- Topnav ---------------- */
 .topnav {

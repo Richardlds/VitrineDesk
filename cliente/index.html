@@ -355,7 +355,7 @@
             <div class="modern-input-group flex gap-2">
               <div class="input-with-icon flex-1 relative">
                 <i data-lucide="tag" class="input-icon absolute left-3 top-1/2 translate-y-half text-muted"></i>
-                <input type="text" id="coupon-code" class="text-uppercase w-full pl-10 pr-3 py-3 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" placeholder="Tem um cupom?">
+                <input type="text" id="coupon-code" class="text-uppercase w-full pl-10 pr-3 py-3 rounded-lg bg-glass border border-glass text-main focus-border-primary" placeholder="Tem um cupom?">
               </div>
               <button class="btn-apply-coupon btn btn-outline px-4" id="btn-apply-coupon">Aplicar</button>
             </div>
@@ -363,7 +363,7 @@
           </div>
           <div class="modern-input-group mt-4 note-group relative">
             <i data-lucide="message-square" class="input-icon absolute left-3 top-3 text-muted"></i>
-            <textarea id="booking-notes" rows="3" class="w-full pl-10 pr-3 py-3 rounded-lg bg-glass border border-glass text-foreground focus-border-primary resize-none" placeholder="Alguma observação para o profissional? (opcional)"></textarea>
+            <textarea id="booking-notes" rows="3" class="w-full pl-10 pr-3 py-3 rounded-lg bg-glass border border-glass text-main focus-border-primary resize-none" placeholder="Alguma observação para o profissional? (opcional)"></textarea>
           </div>
         </section>
       </div>
@@ -406,11 +406,11 @@
         </div>
         <form id="form-login" novalidate class="flex flex-column gap-4">
           <div class="input-group floating-label relative">
-            <input type="email" id="login-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="username" placeholder=" ">
+            <input type="email" id="login-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required autocomplete="username" placeholder=" ">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">E-mail</label>
           </div>
           <div class="input-group floating-label relative">
-            <input type="password" id="login-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="current-password" minlength="6" placeholder=" ">
+            <input type="password" id="login-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required autocomplete="current-password" minlength="6" placeholder=" ">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Senha</label>
           </div>
           <div class="text-right mt-1">
@@ -435,24 +435,24 @@
         </div>
         <form id="form-register" novalidate class="flex flex-column gap-3">
           <div class="input-group floating-label relative">
-            <input type="text" id="register-nome" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="name" placeholder=" ">
+            <input type="text" id="register-nome" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required autocomplete="name" placeholder=" ">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Nome completo</label>
           </div>
           <div class="input-group floating-label relative">
-            <input type="email" id="register-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="email" placeholder=" ">
+            <input type="email" id="register-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required autocomplete="email" placeholder=" ">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">E-mail</label>
           </div>
           <div class="input-group floating-label relative">
-            <input type="password" id="register-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="new-password" minlength="6" placeholder=" ">
+            <input type="password" id="register-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required autocomplete="new-password" minlength="6" placeholder=" ">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Criar Senha (mín. 6)</label>
           </div>
           <div class="display-grid grid-cols-2 gap-3">
             <div class="input-group floating-label relative">
-              <input type="tel" id="register-telefone" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" data-mask="telefone" autocomplete="tel" required minlength="14" placeholder=" ">
+              <input type="tel" id="register-telefone" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" data-mask="telefone" autocomplete="tel" required minlength="14" placeholder=" ">
               <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">WhatsApp</label>
             </div>
             <div class="input-group floating-label relative">
-              <input type="text" id="register-cpf" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" data-mask="cpf" maxlength="14" required placeholder=" ">
+              <input type="text" id="register-cpf" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" data-mask="cpf" maxlength="14" required placeholder=" ">
               <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">CPF</label>
             </div>
           </div>
@@ -483,7 +483,7 @@
         </div>
         <form id="form-forgot" novalidate class="flex flex-column gap-4">
           <div class="input-group floating-label relative">
-            <input type="email" id="forgot-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="email" placeholder=" ">
+            <input type="email" id="forgot-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required autocomplete="email" placeholder=" ">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">E-mail</label>
           </div>
           <button type="submit" class="btn btn-primary btn-block btn-glow mt-2 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
@@ -508,7 +508,7 @@
         </div>
         <form id="form-reset" novalidate class="flex flex-column gap-4">
           <div class="input-group floating-label relative">
-            <input type="password" id="reset-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required minlength="6" placeholder=" ">
+            <input type="password" id="reset-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required minlength="6" placeholder=" " autocomplete="new-password">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Nova Senha (mín. 6)</label>
           </div>
           <button type="submit" class="btn btn-primary btn-block btn-glow mt-2 py-3 text-md font-bold shadow-glow flex justify-center gap-2">
@@ -547,7 +547,7 @@
               </div>
               <input type="file" id="client-avatar-upload" hidden accept="image/jpeg, image/png, image/webp" aria-hidden="true">
             </div>
-            <h4 class="client-name mt-3 text-lg font-bold m-0" id="client-name-display">Carregando...</h4>
+            <h4 class="client-name mt-3 text-lg font-bold m-0 text-main" id="client-name-display">Carregando...</h4>
             <span class="client-status text-sm text-muted mt-1 block" id="client-store-display">Cliente VitrineDesk</span>
             <div id="profile-active-plan-badge" class="hidden mt-3 inline-flex align-center gap-1 bg-primary-alpha border border-primary text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
               <i data-lucide="star" class="icon-xs"></i> <span id="profile-active-plan-name">Plano VIP</span>
@@ -556,15 +556,15 @@
 
           <form id="form-update-profile" novalidate class="flex flex-column gap-4">
             <div class="input-group floating-label relative">
-              <input type="text" id="drawer-client-name" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="name" placeholder=" ">
+              <input type="text" id="drawer-client-name" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required autocomplete="name" placeholder=" ">
               <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Nome Completo</label>
             </div>
             <div class="input-group floating-label relative">
-              <input type="email" id="drawer-client-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" required autocomplete="email" placeholder=" ">
+              <input type="email" id="drawer-client-email" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required autocomplete="email" placeholder=" ">
               <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">E-mail</label>
             </div>
             <div class="input-group floating-label relative">
-              <input type="tel" id="drawer-client-phone" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" data-mask="telefone" autocomplete="tel" required minlength="14" placeholder=" ">
+              <input type="tel" id="drawer-client-phone" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" data-mask="telefone" autocomplete="tel" required minlength="14" placeholder=" ">
               <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">WhatsApp</label>
             </div>
             <div class="input-group floating-label relative opacity-70 cursor-not-allowed">
@@ -624,11 +624,11 @@
 
       <form id="form-google-complete" novalidate class="flex flex-column gap-3">
         <div class="input-group floating-label relative">
-          <input type="tel" id="google-complete-telefone" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" data-mask="telefone" autocomplete="tel" required minlength="14" placeholder=" ">
+          <input type="tel" id="google-complete-telefone" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" data-mask="telefone" autocomplete="tel" required minlength="14" placeholder=" ">
           <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">WhatsApp</label>
         </div>
         <div class="input-group floating-label relative">
-          <input type="text" id="google-complete-cpf" class="w-full p-4 rounded-lg bg-glass border border-glass text-foreground focus-border-primary" data-mask="cpf" maxlength="14" required placeholder=" ">
+          <input type="text" id="google-complete-cpf" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" data-mask="cpf" maxlength="14" required placeholder=" ">
           <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">CPF</label>
         </div>
         <button type="submit" class="btn btn-primary btn-block btn-glow mt-4 py-3 text-md font-bold shadow-glow flex justify-center gap-2">

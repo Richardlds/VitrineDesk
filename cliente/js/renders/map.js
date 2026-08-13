@@ -159,10 +159,10 @@ export function renderSocial(tenant) {
       if (!finalUrl.startsWith('http')) finalUrl = 'https://' + finalUrl;
       
       html += `
-          <a href="${finalUrl}" target="_blank" rel="noopener noreferrer" class="social-btn glass-card social-btn-card" 
-style="color:${rede.color}; background: color-mix(in srgb, ${rede.color} 10%, var(--card-bg)); border: 1px solid color-mix(in srgb, ${rede.color} 30%, transparent);">
-            ${rede.svg}
-            <span class="social-btn-text">${rede.name}</span>
+          <a href="${finalUrl}" target="_blank" rel="noopener noreferrer" class="social-btn glass-card" 
+style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-pill); color:${rede.color}; background: color-mix(in srgb, ${rede.color} 10%, var(--card-bg)); border: 1px solid color-mix(in srgb, ${rede.color} 30%, transparent); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: transform 0.2s; min-width: 140px; flex: 1;">
+            ${rede.svg.replace('width="32" height="32"', 'width="24" height="24"')}
+            <span style="color: var(--text-main);">${rede.name}</span>
           </a>
         `;
     });

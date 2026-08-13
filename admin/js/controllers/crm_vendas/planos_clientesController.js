@@ -549,14 +549,21 @@ export class planos_clientesController {
                 if (window.showToast) window.showToast('Plano atualizado com sucesso!', 'success');
             } else {
                 // CREATE - also create in Stripe
-                const response = await fetch('/api/stripe/create-plan', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: nome, price: preco, tenantId: this.tenantId })
+                btnSalvar.innerHTML = `<i data-lucide="loader" class="animate-spin icon-sm mr-2"></i> Criando plano na Stripe...`;
+                
+                const { data: stripeData, error: stripeError } = await supabase.functions.invoke('create-stripe-plan', {
+                    body: { name: nome, price: preco, tenantId: this.tenantId }
                 });
                 
-                if (!response.ok) throw new Error('Erro ao criar no Stripe');
-                const stripeData = await response.json();
+                if (stripeError) {
+                    throw new Error(`Erro ao criar na Stripe: ${stripeError.message}`);
+                }
+                
+                if (!stripeData || stripeData.error) {
+                    throw new Error(`Erro retornado pela Stripe: ${stripeData?.error || 'Desconhecido'}`);
+                }
+
+                btnSalvar.innerHTML = `<i data-lucide="loader" class="animate-spin icon-sm mr-2"></i> Salvando no banco...`;
 
                 const { error } = await supabase
                     .from('tenant_client_plans')

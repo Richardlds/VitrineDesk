@@ -82,3 +82,4 @@ AGENTS.md
 
 # Supabase (se usado localmente via CLI)
 supabase/.temp/
+supabase/.temp

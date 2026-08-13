@@ -167,7 +167,8 @@ window.playNotificationSound = function (type = 'info') {
         if (!ctx) return;
 
         if (ctx.state === 'suspended') {
-            ctx.resume();
+            const p = ctx.resume();
+            if (p && p.catch) p.catch(() => {});
         }
         
         if (type === 'success') {

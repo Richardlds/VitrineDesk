@@ -653,11 +653,15 @@ body.modal-open {
 }
 
 .text-muted {
-  color: var(--text-muted);
+  color: var(--text-muted) !important;
 }
 
 .text-white {
   color: #fff;
+}
+
+input, textarea, select {
+  color: var(--text-main);
 }
 
 .text-primary {
@@ -1847,6 +1851,8 @@ body.is-logged .guest-only {
 /* ============================================================
    PREMIUM UTILITIES (Glassmorphism & Layouts)
    ============================================================ */
+.text-main { color: var(--text-main) !important; }
+
 .bg-glass {
   background: var(--bg-glass-2);
   backdrop-filter: blur(12px);

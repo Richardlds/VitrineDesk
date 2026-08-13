@@ -7,6 +7,8 @@ export class servicosController {
         this.tableBody = null;
         this.currentId = null;
         this.realtimeChannel = null;
+        this.cropper = null;
+        this.currentCropCallback = null;
     }
     
     async init() {
@@ -206,10 +208,13 @@ export class servicosController {
                     inputImagem.value = '';
                     return;
                 }
-                this.selectedImageFile = file; // Armazena o File nativo
+                // this.selectedImageFile = file; // Armazena o File nativo
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    this.setPreviewImage(event.target.result);
+                    this.openCropperModal(event.target.result, 1, (croppedBase64, blob) => {
+                        this.selectedImageFile = new File([blob], file.name, { type: 'image/png' });
+                        this.setPreviewImage(croppedBase64);
+                    });
                 };
                 reader.readAsDataURL(file);
             });
@@ -229,6 +234,8 @@ export class servicosController {
 
         if (btnImportar) btnImportar.addEventListener('click', () => this.openImportModal());
         if (btnCloseImport) btnCloseImport.addEventListener('click', () => modalImport.classList.add('d-none'));
+
+        this.bindCropperEvents();
     }
 
     async openImportModal() {
@@ -472,7 +479,81 @@ export class servicosController {
             }
         }
 
-        destroy() {
+        bindCropperEvents() {
+        const modal = document.getElementById('modal-cropper');
+        if (!modal) return;
+
+        document.getElementById('btn-close-cropper')?.addEventListener('click', () => this.closeCropperModal());
+        document.getElementById('btn-cancel-cropper')?.addEventListener('click', () => this.closeCropperModal());
+
+        document.getElementById('btn-crop-zoom-in')?.addEventListener('click', () => this.cropper?.zoom(0.1));
+        document.getElementById('btn-crop-zoom-out')?.addEventListener('click', () => this.cropper?.zoom(-0.1));
+        document.getElementById('btn-crop-rotate-left')?.addEventListener('click', () => this.cropper?.rotate(-45));
+        document.getElementById('btn-crop-rotate-right')?.addEventListener('click', () => this.cropper?.rotate(45));
+
+        document.getElementById('btn-confirm-cropper')?.addEventListener('click', () => {
+            if (!this.cropper) return;
+            const canvas = this.cropper.getCroppedCanvas({
+                maxWidth: 1920,
+                maxHeight: 1920,
+                fillColor: '#fff',
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+
+            if (canvas) {
+                const base64 = canvas.toDataURL('image/png');
+                canvas.toBlob((blob) => {
+                    if (this.currentCropCallback) {
+                        this.currentCropCallback(base64, blob);
+                    }
+                    this.closeCropperModal();
+                }, 'image/png');
+            }
+        });
+    }
+
+    openCropperModal(imageUrl, aspectRatio, callback) {
+        this.currentCropCallback = callback;
+        const modal = document.getElementById('modal-cropper');
+        const img = document.getElementById('cropper-image');
+        if (!modal || !img) return;
+
+        img.src = imageUrl;
+        modal.classList.remove('d-none');
+
+        if (this.cropper) {
+            this.cropper.destroy();
+        }
+
+        setTimeout(() => {
+            this.cropper = new Cropper(img, {
+                aspectRatio: aspectRatio,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+            });
+        }, 150);
+    }
+
+    closeCropperModal() {
+        const modal = document.getElementById('modal-cropper');
+        if (modal) modal.classList.add('d-none');
+        if (this.cropper) {
+            this.cropper.destroy();
+            this.cropper = null;
+        }
+        document.getElementById('input-imagem').value = '';
+    }
+
+    destroy() {
             if (this.realtimeChannel) {
                 supabase.removeChannel(this.realtimeChannel);
             }
