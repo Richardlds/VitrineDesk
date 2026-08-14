@@ -140,6 +140,7 @@ export async function loginComGoogle(e) {
     
     // Inicia fluxo OAuth. O redirect volta para a mesma página.
     localStorage.setItem('oauth_redirect', window.location.pathname);
+    localStorage.setItem('is_google_login', 'true');
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -919,6 +920,8 @@ export function initAuth() {
 
 async function checkGoogleOAuthSession() {
   try {
+    if (localStorage.getItem('is_google_login') !== 'true') return;
+
     const supabase = getSupabaseAuthClient();
     if (!supabase) return;
 
@@ -930,6 +933,7 @@ async function checkGoogleOAuthSession() {
     }
 
     if (session && session.user) {
+      localStorage.removeItem('is_google_login');
       // Usuário autenticado pelo Google!
       // Vamos sincronizar com a nossa tabela `clientes`
       const email = session.user.email;
