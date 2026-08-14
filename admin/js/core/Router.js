@@ -63,11 +63,24 @@ export class Router {
         // Router Guard (Proteção de Plano)
         if (window.allowedMenus && window.allowedMenus[tabPath] === false) {
             this.contentArea.innerHTML = `
-                <div class="config-card flex flex-column align-center justify-center text-center p-5" style="margin-top: 2rem;">
-                    <i data-lucide="lock" class="text-warning mb-3" style="width: 48px; height: 48px;"></i>
-                    <h2 class="text-warning mb-2">Acesso Restrito</h2>
-                    <p class="text-secondary">O módulo <strong>${title || tabPath}</strong> não está incluso no seu plano atual.</p>
-                    <button class="btn btn-warning mt-4 py-2 px-4 rounded-md cursor-pointer text-white font-bold" onclick="window.open('https://api.whatsapp.com/send?phone=5511999999999', '_blank')">Fazer Upgrade</button>
+                <div class="flex flex-column align-center justify-center p-5" style="min-height: 65vh;">
+                    <div class="config-card p-5 text-center flex flex-column align-center relative overflow-hidden" style="max-width: 420px; width: 100%; border: 1px solid rgba(245, 158, 11, 0.3); background: linear-gradient(145deg, rgba(245, 158, 11, 0.05) 0%, rgba(5, 5, 8, 0.6) 100%); box-shadow: 0 10px 40px rgba(245, 158, 11, 0.1); border-radius: 20px;">
+                        <!-- Subtle Glow -->
+                        <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 50%); pointer-events: none;"></div>
+                        
+                        <div class="mb-4 flex align-center justify-center relative" style="width: 72px; height: 72px; background: rgba(245, 158, 11, 0.15); border-radius: 50%; border: 1px solid rgba(245, 158, 11, 0.4);">
+                            <i data-lucide="lock" style="color: #f59e0b; width: 32px; height: 32px;"></i>
+                        </div>
+                        
+                        <h2 class="mb-2 font-bold text-2xl relative" style="color: #f59e0b; letter-spacing: -0.5px;">Acesso Restrito</h2>
+                        <p class="text-secondary mb-4 relative" style="line-height: 1.6; font-size: 15px;">
+                            O módulo <strong style="color: var(--text-main); font-weight: 600;">${title || tabPath}</strong> é exclusivo para planos superiores. Evolua seu negócio e desbloqueie esta funcionalidade.
+                        </p>
+                        
+                        <button class="w-100 font-bold flex align-center justify-center gap-2 relative" style="background: #f59e0b; color: #fff; padding: 14px; border-radius: 12px; font-size: 16px; border: none; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); cursor:pointer; transition: transform 0.2s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" onclick="document.querySelector('.nav-item[data-tab=\\'sistema/assinatura\\']') ? document.querySelector('.nav-item[data-tab=\\'sistema/assinatura\\']').click() : window.open('https://api.whatsapp.com/send?phone=5511999999999', '_blank')">
+                            <i data-lucide="zap" class="icon-sm"></i> Fazer Upgrade
+                        </button>
+                    </div>
                 </div>
             `;
             if (window.lucide) window.lucide.createIcons();
