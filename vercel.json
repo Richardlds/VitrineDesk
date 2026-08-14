@@ -39,7 +39,7 @@
       "destination": "/cliente/index.html"
     },
     {
-      "source": "/((?!admin|admingod|cliente|css|js|assets|api|login\\.html|index\\.html)[^/]+)",
+      "source": "/((?!admin|admingod|cliente|css|js|assets|api|login\\.html|index\\.html|sw\\.js|manifest\\.json)[^/]+)",
       "destination": "/cliente/index.html"
     }
   ],

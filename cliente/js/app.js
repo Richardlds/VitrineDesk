@@ -173,6 +173,14 @@ export async function init() {
         return;
       }
 
+      const openDrawerBtn = e.target.closest('[data-open]');
+      if (openDrawerBtn) {
+        const targetId = openDrawerBtn.getAttribute('data-open');
+        const drawer = document.getElementById(targetId);
+        if (drawer) drawer.classList.add('active');
+        return;
+      }
+
       const actionEl = e.target.closest('[data-action]');
       if (!actionEl) return;
 
@@ -824,13 +832,11 @@ function injectDynamicManifest(tenant, slug) {
         {
           src: logo,
           sizes: "192x192",
-          type: "image/png",
           purpose: "any maskable"
         },
         {
           src: logo,
           sizes: "512x512",
-          type: "image/png",
           purpose: "any maskable"
         }
       ]
