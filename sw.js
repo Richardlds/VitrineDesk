@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vitrinedesk-v3';
+const CACHE_NAME = 'vitrinedesk-v4';
 
 // Arquivos base para colocar em cache inicial
 const INITIAL_CACHED_RESOURCES = [
