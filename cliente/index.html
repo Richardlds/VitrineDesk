@@ -13,11 +13,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/lovable.css">
-  <link rel="stylesheet" href="css/booking.css">
-  <link rel="stylesheet" href="css/auth.css">
-  <link rel="stylesheet" href="css/agendamentos.css">
+  <link rel="stylesheet" href="/cliente/css/base.css">
+  <link rel="stylesheet" href="/cliente/css/lovable.css">
+  <link rel="stylesheet" href="/cliente/css/booking.css">
+  <link rel="stylesheet" href="/cliente/css/auth.css">
+  <link rel="stylesheet" href="/cliente/css/agendamentos.css">
 </head>
 <body>
 
@@ -507,6 +507,8 @@
           <p class="text-sm text-muted">Digite sua nova senha de acesso.</p>
         </div>
         <form id="form-reset" novalidate class="flex flex-column gap-4">
+          <!-- Hidden username for accessibility -->
+          <input type="text" id="reset-email-hidden" name="username" autocomplete="username" class="hidden" style="display: none;" aria-hidden="true" value="user@example.com">
           <div class="input-group floating-label relative">
             <input type="password" id="reset-senha" class="w-full p-4 rounded-lg bg-glass border border-glass text-main focus-border-primary" required minlength="6" placeholder=" " autocomplete="new-password">
             <label class="absolute left-4 top-1/2 translate-y-half text-muted transition-all pointer-events-none">Nova Senha (mín. 6)</label>
@@ -673,12 +675,12 @@
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="js/utils.js"></script>
-  <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/booking.js"></script>
-  <script type="module" src="js/agendamentos.js"></script>
-  <script type="module" src="js/planos.js"></script>
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="/cliente/js/utils.js"></script>
+  <script type="module" src="/cliente/js/auth.js"></script>
+  <script type="module" src="/cliente/js/booking.js"></script>
+  <script type="module" src="/cliente/js/agendamentos.js"></script>
+  <script type="module" src="/cliente/js/planos.js"></script>
+  <script type="module" src="/cliente/js/app.js"></script>
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>

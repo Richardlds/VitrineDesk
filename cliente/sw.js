@@ -1,22 +1,19 @@
-const CACHE_NAME = 'vitrinedesk-v2';
+const CACHE_NAME = 'vitrinedesk-v3';
 
 // Arquivos base para colocar em cache inicial
 const INITIAL_CACHED_RESOURCES = [
-  './',
-  './index.html',
-  './css/global.css',
-  './css/layout.css',
-  './css/cliente.css',
-  './css/modais.css',
-  './css/components.css',
-  './css/auth.css',
-  './css/booking.css',
-  './css/agendamentos.css',
-  './js/app.js',
-  './js/utils.js',
-  './js/auth.js',
-  './js/booking.js',
-  './js/agendamentos.js'
+  '/cliente/index.html',
+  '/cliente/css/base.css',
+  '/cliente/css/lovable.css',
+  '/cliente/css/auth.css',
+  '/cliente/css/booking.css',
+  '/cliente/css/agendamentos.css',
+  '/cliente/js/app.js',
+  '/cliente/js/utils.js',
+  '/cliente/js/auth.js',
+  '/cliente/js/booking.js',
+  '/cliente/js/agendamentos.js',
+  '/cliente/js/planos.js'
 ];
 
 self.addEventListener('install', event => {

@@ -136,6 +136,7 @@ export async function init() {
     configurarWhatsApp();
     configurarBanner();
     updateHeader();
+    injectDynamicManifest(tenant, slug);
 
     // Inicializar módulos
     initAuth();
@@ -799,9 +800,58 @@ function updateStatusBadge() {
     badge.className = `badge ${aberto ? 'badge--open' : 'badge--closed'}`;
     badge.innerHTML = `<span class="badge__dot" aria-hidden="true"></span> ${aberto ? 'Aberto agora' : 'Fechado'}`;
   } catch (e) {
-    console.error('Erro ao atualizar status:', e);
+    console.error('Erro ao atualizar badge de status:', e);
   }
 }
+
+// ────────────────────────── Manifest Dinâmico (PWA) ──────────────────────────
+
+function injectDynamicManifest(tenant, slug) {
+  try {
+    const bg_color = tenant.settings?.personalizacao?.bg_color || tenant.bg_color || "#0a0a0f";
+    const theme_color = tenant.primary_color || "#3B82F6";
+    const logo = tenant.logo_url || "/assets/icon-192.png";
+    
+    const manifest = {
+      name: tenant.name || "VitrineDesk",
+      short_name: tenant.name || "Vitrine",
+      description: "Agendamento online",
+      start_url: window.location.pathname + window.location.search,
+      display: "standalone",
+      background_color: bg_color,
+      theme_color: theme_color,
+      icons: [
+        {
+          src: logo,
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "any maskable"
+        },
+        {
+          src: logo,
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any maskable"
+        }
+      ]
+    };
+
+    const stringManifest = JSON.stringify(manifest);
+    const blob = new Blob([stringManifest], {type: 'application/json'});
+    const manifestURL = URL.createObjectURL(blob);
+
+    let link = document.querySelector('link[rel="manifest"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'manifest';
+      document.head.appendChild(link);
+    }
+    link.href = manifestURL;
+  } catch (e) {
+    console.warn("Erro ao gerar manifest dinâmico:", e);
+  }
+}
+
 
 // Módulos de renderização agora são importados de js/renders/
 
