@@ -12,7 +12,8 @@ export class Router {
             'relatorios': { file: '/admingod/views/relatorios.html', controller: 'relatoriosController' },
             'configuracoes': { file: '/admingod/views/configuracoes.html', controller: 'configuracoesController' },
             'personalizacao': { file: '/admingod/views/personalizacao.html', controller: 'personalizacaoController' },
-            'notificacoes': { file: '/admingod/views/notificacoes.html', controller: 'notificacoesController' }
+            'notificacoes': { file: '/admingod/views/notificacoes.html', controller: 'notificacoesController' },
+            'acompanhamento': { file: '/admingod/views/acompanhamento.html', controller: 'acompanhamentoController' }
         };
         this.currentController = null;
         this.isNavigating = false; // Prevents race conditions during rapid clicks

@@ -1,0 +1,78 @@
+<div class="admin-section fade-in">
+    <div class="flex flex-column gap-4">
+        <!-- Header -->
+        <div class="flex justify-between align-center flex-wrap gap-3">
+            <div>
+                <h1 class="text-xl font-bold text-white mb-1">Acompanhamento Onboarding</h1>
+                <p class="text-sm text-secondary">Acompanhe se os lojistas configuraram o sistema corretamente.</p>
+            </div>
+            
+            <div class="search-bar bg-placeholder bg-opacity-20 border border-dashed border-placeholder rounded-lg flex align-center px-3 py-2 w-100" style="max-width: 350px;">
+                <i data-lucide="search" class="icon-sm text-secondary mr-2"></i>
+                <input type="text" id="search-acompanhamento" placeholder="Buscar loja por nome ou slug..." class="bg-transparent border-none text-white flex-1 outline-none text-sm">
+            </div>
+        </div>
+
+        <!-- Lista de Lojistas -->
+        <div class="bg-placeholder bg-opacity-10 border border-dashed border-placeholder rounded-lg overflow-hidden shadow-premium">
+            <div class="overflow-x-auto">
+                <table class="w-100 border-collapse text-left text-sm">
+                    <thead>
+                        <tr class="bg-placeholder bg-opacity-20 text-secondary border-bottom-dashed border-placeholder">
+                            <th class="py-3 px-4 font-medium">Lojista (Tenant)</th>
+                            <th class="py-3 px-4 font-medium text-center">Status (Aprovação)</th>
+                            <th class="py-3 px-4 font-medium text-center">Plano Ativo</th>
+                            <th class="py-3 px-4 font-medium text-right">Progresso (Ação)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body-acompanhamento">
+                        <!-- Carregado via JS -->
+                        <tr>
+                            <td colspan="4" class="text-center py-8 text-secondary">
+                                <i data-lucide="loader" class="animate-spin mb-2 icon-md mx-auto"></i>
+                                <p>Carregando lojistas...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Progresso -->
+<div id="modal-progresso" class="d-none position-fixed top-0 left-0 w-100 h-100 flex align-center justify-center p-3" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 9999;">
+    <div class="bg-bg-card rounded-lg p-5 w-100 border border-dashed border-danger shadow-glow-lg position-relative max-h-90vh overflow-y-auto custom-scrollbar" style="max-width: 600px;">
+        
+        <button id="btn-close-modal-progresso" class="position-absolute bg-transparent border-none text-secondary cursor-pointer hover:text-danger transition" style="top: 15px; right: 15px;">
+            <i data-lucide="x"></i>
+        </button>
+        
+        <h2 class="text-lg font-bold text-white mb-1" id="progresso-nome-loja">Nome da Loja</h2>
+        <p class="text-sm text-secondary mb-4">Análise em tempo real do setup inicial.</p>
+        
+        <!-- Loading State -->
+        <div id="progresso-loading" class="text-center py-5">
+            <i data-lucide="loader" class="animate-spin text-danger icon-md mx-auto mb-2"></i>
+            <p class="text-sm text-secondary">Analisando tabelas...</p>
+        </div>
+
+        <!-- Resultado -->
+        <div id="progresso-content" class="d-none">
+            <!-- Barra Circular ou Horizontal -->
+            <div class="mb-4 bg-placeholder bg-opacity-20 rounded-lg p-4 text-center border border-dashed border-placeholder">
+                <span class="text-3xl font-bold text-white d-block mb-1" id="progresso-porcentagem">0%</span>
+                <span class="text-sm text-secondary uppercase font-bold" style="letter-spacing: 1px;">Concluído</span>
+                <div class="w-100 bg-placeholder rounded-full h-8px mt-3 overflow-hidden">
+                    <div id="progresso-barra" class="h-100 bg-success transition-all" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Checklist -->
+            <div class="grid gap-3" id="progresso-checklist">
+                <!-- Itens injetados pelo JS -->
+            </div>
+        </div>
+
+    </div>
+</div>
