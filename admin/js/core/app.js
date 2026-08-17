@@ -927,6 +927,18 @@ class AdminApp {
                         });
                     }
                 })
+                .on('broadcast', { event: 'clear_cache' }, async (payload) => {
+                    if (window.showToast) window.showToast('Atualização de sistema detectada. Recarregando em instantes...', 'warning');
+                    if ('caches' in window) {
+                        try {
+                            const names = await caches.keys();
+                            await Promise.all(names.map(name => caches.delete(name)));
+                        } catch (e) {
+                            console.error('Erro ao limpar caches via broadcast', e);
+                        }
+                    }
+                    setTimeout(() => window.location.reload(true), 3000);
+                })
                 .subscribe();
         };
 
@@ -1285,7 +1297,9 @@ class AdminApp {
         const toggles = document.querySelectorAll('.menu-toggle');
 
         toggles.forEach(toggle => {
-            toggle.addEventListener('click', () => {
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 sidebar.classList.toggle('open');
             });
         });
@@ -1297,6 +1311,16 @@ class AdminApp {
                     sidebar.classList.remove('open');
                 }
             }
+        });
+
+        // Fechar sidebar mobile ao clicar em um item do menu
+        const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth < 992) {
+                    sidebar.classList.remove('open');
+                }
+            });
         });
     }
 }

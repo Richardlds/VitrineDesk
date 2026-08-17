@@ -43,6 +43,24 @@ class SuperAdminApp {
         this.router = new Router();
         this.initSidebar();
         this.initLogout();
+        this.applyGodTheme();
+    }
+
+    applyGodTheme() {
+        const saved = localStorage.getItem('vitrinedesk_god_theme_config');
+        if (saved) {
+            try {
+                const config = JSON.parse(saved);
+                if (config.primary) document.documentElement.style.setProperty('--color-primary', config.primary);
+                if (config.secondary) document.documentElement.style.setProperty('--color-secondary', config.secondary);
+                if (config.bgBase) document.documentElement.style.setProperty('--color-bg-base', config.bgBase);
+                if (config.bgSurface) document.documentElement.style.setProperty('--color-bg-surface', config.bgSurface);
+                if (config.textPrimary) document.documentElement.style.setProperty('--color-text-primary', config.textPrimary);
+                if (config.textSecondary) document.documentElement.style.setProperty('--color-text-secondary', config.textSecondary);
+            } catch (e) {
+                console.error('Erro ao aplicar tema God:', e);
+            }
+        }
     }
 
     async boot() {
@@ -777,9 +795,67 @@ window.showToast = function (message, type = 'success', onClick = null) {
     if (type === 'warning') iconName = 'alert-triangle';
 
     toast.innerHTML = `
+    toast.innerHTML = `
         <div class="flex align-center gap-2">
             <i data-lucide="${iconName}"></i>
             <span>${message}</span>
+        </div>
+    `;
+
+    if (onClick) {
+        toast.style.cursor = 'pointer';
+        toast.addEventListener('click', () => { onClick(); toast.remove(); });
+    }
+
+    container.appendChild(toast);
+    if (window.lucide) window.lucide.createIcons();
+
+    setTimeout(() => { toast.classList.add('fade-out'); setTimeout(() => toast.remove(), 300); }, 3000);
+};
+
+// Global Confirm functionality
+window.showConfirm = function(message, onConfirm) {
+    if (!document.getElementById('modal-global-confirm')) {
+        const modalHtml = `
+            <div id="modal-global-confirm" class="modal-overlay d-none flex align-center justify-center" style="z-index: 100000; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);">
+                <div class="flex-col" style="background: var(--color-bg-surface); width: 400px; max-width: 90vw; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--color-border);">
+                    <div class="px-6 py-4 border-bottom-dashed">
+                        <h3 class="font-bold text-lg text-primary m-0 flex align-center gap-2"><i data-lucide="alert-circle" class="text-warning"></i> Confirmação</h3>
+                    </div>
+                    <div class="px-6 py-4">
+                        <p id="confirm-message" class="text-sm text-secondary m-0"></p>
+                    </div>
+                    <div class="px-6 py-4 flex gap-3 justify-end border-top-dashed bg-bg-base">
+                        <button id="btn-cancel-confirm" class="btn bg-transparent text-secondary border border-dashed rounded font-bold cursor-pointer hover:bg-placeholder px-4 py-2">Cancelar</button>
+                        <button id="btn-ok-confirm" class="btn btn-primary rounded font-bold cursor-pointer border-none px-4 py-2 shadow-sm">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    const modal = document.getElementById('modal-global-confirm');
+    document.getElementById('confirm-message').textContent = message;
+    
+    if (window.lucide) window.lucide.createIcons();
+    modal.classList.remove('d-none');
+
+    const btnOk = document.getElementById('btn-ok-confirm');
+    const btnCancel = document.getElementById('btn-cancel-confirm');
+
+    const closeAndClean = () => {
+        modal.classList.add('d-none');
+        btnOk.replaceWith(btnOk.cloneNode(true));
+        btnCancel.replaceWith(btnCancel.cloneNode(true));
+    };
+
+    btnCancel.addEventListener('click', closeAndClean);
+    btnOk.addEventListener('click', () => {
+        closeAndClean();
+        if (typeof onConfirm === 'function') onConfirm();
+    });
+};
         </div>
     `;
 

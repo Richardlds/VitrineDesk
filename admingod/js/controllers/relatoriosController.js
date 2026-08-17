@@ -65,29 +65,55 @@ export class relatoriosController {
 
     async loadMetricsAndCharts() {
         try {
-            // Buscar todas as lojas para montar os gráficos reais
-            const { data: tenants, error } = await supabase
-                .from('tenants')
-                .select('id, name, created_at, approval_status, settings')
-                .order('created_at', { ascending: false });
+            // Buscar lojas e planos paralelamente
+            const [
+                { data: tenants, error: errTenants },
+                { data: plans, error: errPlans }
+            ] = await Promise.all([
+                supabase.from('tenants').select('id, name, created_at, approval_status, settings').order('created_at', { ascending: false }),
+                supabase.from('plans').select('id, name, price')
+            ]);
 
-            if (error) throw error;
+            if (errTenants) throw errTenants;
+            if (errPlans) throw errPlans;
 
-            let countPro = 0;
-            let countStarter = 0;
-            let countFree = 0;
+            const plansMap = {};
+            if (plans) {
+                plans.forEach(p => plansMap[p.id] = { name: p.name, price: p.price || 0 });
+            }
+
+            let mrr = 0;
+            let payingCustomers = 0;
             let churned = 0;
+            const countByPlanName = {};
 
             const now = new Date();
             const recentTenants = [];
 
             tenants.forEach(t => {
-                const plano = (t.settings?.plano || 'gratuito').toLowerCase();
-                if (plano === 'pro') countPro++;
-                else if (plano === 'starter') countStarter++;
-                else countFree++;
+                let planoName = 'Gratuito';
+                const pid = t.settings?.plano_id;
+                
+                if (pid && plansMap[pid]) {
+                    planoName = plansMap[pid].name;
+                    mrr += plansMap[pid].price;
+                    if (plansMap[pid].price > 0) payingCustomers++;
+                } else if (t.settings?.plano) {
+                    // Fallback para string legado
+                    planoName = t.settings.plano.toUpperCase();
+                    if (planoName.includes('PRO')) {
+                        mrr += 97;
+                        payingCustomers++;
+                    } else if (planoName.includes('STARTER')) {
+                        mrr += 47;
+                        payingCustomers++;
+                    }
+                }
 
-                // Lojas reprovadas ou banidas
+                // Conta distribuição para o gráfico
+                countByPlanName[planoName] = (countByPlanName[planoName] || 0) + 1;
+
+                // Lojas reprovadas ou banidas (Churn)
                 if (t.approval_status === 'rejected' || t.settings?.banned) {
                     churned++;
                 }
@@ -101,11 +127,7 @@ export class relatoriosController {
                 }
             });
 
-            // Regras de negócio fictícias para os KPIs
-            // PRO = 97/mes, Starter = 47/mes
-            const mrr = (countPro * 97) + (countStarter * 47);
             const grossRevenueAnualizado = mrr * 12;
-            const payingCustomers = countPro + countStarter;
             const arpu = payingCustomers > 0 ? (mrr / payingCustomers) : 0;
             const churnRate = tenants.length > 0 ? ((churned / tenants.length) * 100).toFixed(1) : 0;
 
@@ -113,7 +135,7 @@ export class relatoriosController {
             document.getElementById('kpi-arpu').textContent = arpu.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('kpi-churn').textContent = `${churnRate}%`;
 
-            this.renderCharts(countPro, countStarter, countFree, mrr);
+            this.renderCharts(countByPlanName, mrr);
             this.renderRecentTable(recentTenants);
 
         } catch (error) {
@@ -124,11 +146,17 @@ export class relatoriosController {
         }
     }
 
-    renderCharts(pro, starter, free, currentMrr) {
+    renderCharts(countByPlanName, currentMrr) {
         if (typeof Chart === 'undefined') {
             console.warn('Chart.js não está carregado.');
             return;
         }
+
+        const planLabels = Object.keys(countByPlanName);
+        const planData = Object.values(countByPlanName);
+        
+        // Cores vibrantes do glassmorphism premium
+        const bgColors = ['#3B82F6', '#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', 'rgba(255, 255, 255, 0.1)'];
 
         // Gráfico de Pizza (Distribuição)
         const ctxPlanos = document.getElementById('chart-plan-distribution')?.getContext('2d');
@@ -137,10 +165,10 @@ export class relatoriosController {
             this.chartPlanos = new Chart(ctxPlanos, {
                 type: 'doughnut',
                 data: {
-                    labels: ['PRO', 'Starter', 'Gratuito'],
+                    labels: planLabels.length ? planLabels : ['Nenhum'],
                     datasets: [{
-                        data: [pro, starter, free],
-                        backgroundColor: ['#3B82F6', '#06b6d4', 'rgba(255, 255, 255, 0.1)'],
+                        data: planData.length ? planData : [1],
+                        backgroundColor: bgColors.slice(0, Math.max(1, planLabels.length)),
                         borderWidth: 0,
                         hoverOffset: 4
                     }]

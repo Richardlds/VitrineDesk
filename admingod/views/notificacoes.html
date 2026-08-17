@@ -9,7 +9,7 @@
 
 <div class="grid grid-md-2 gap-6 fade-in" style="animation-delay: 0.1s;">
     <!-- Formulário de Disparo -->
-    <div class="card p-6" style="background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: 12px;">
+    <div class="config-card p-6">
         <h2 class="text-md font-bold text-primary mb-4 border-bottom-dashed pb-2">Nova Notificação</h2>
         
         <form id="form-send-notification">
@@ -36,14 +36,14 @@
                 <textarea id="input-notif-message" class="w-100 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm" rows="5" placeholder="Digite o comunicado oficial que será lido pelo lojista..." required></textarea>
             </div>
 
-            <button type="submit" id="btn-submit-notif" class="btn btn-primary w-100 py-2 rounded-lg font-bold flex align-center justify-center gap-2" style="background: var(--color-primary); color: #fff; border: none; cursor: pointer;">
+            <button type="submit" id="btn-submit-notif" class="btn bg-danger text-white w-100 py-2 rounded-lg font-bold flex align-center justify-center gap-2 border-none cursor-pointer transition-colors shadow-glow" onmouseover="this.style.backgroundColor='var(--color-danger-light)'" onmouseout="this.style.backgroundColor='var(--color-danger)'">
                 <i data-lucide="send" class="icon-sm"></i> Disparar Notificação
             </button>
         </form>
     </div>
 
     <!-- Histórico Recente -->
-    <div class="card p-6" style="background: var(--color-bg-surface); border: 1px solid var(--color-border); border-radius: 12px;">
+    <div class="config-card p-6">
         <h2 class="text-md font-bold text-primary mb-4 border-bottom-dashed pb-2">Últimos Disparos</h2>
         
         <select id="notif-category-select" class="mb-4 bg-placeholder border-dashed rounded-md px-3 py-2 text-primary outline-none text-sm cursor-pointer filter-select" style="max-width: 200px;">

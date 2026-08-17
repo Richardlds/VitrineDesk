@@ -81,6 +81,7 @@ export async function renderServices(tenant, openBookingModalCb) {
     }).join('');
 
     renderServiceFilters();
+    initSearchServices();
     if (window.lucide) lucide.createIcons();
 
     // Quick book helper export
@@ -90,6 +91,10 @@ export async function renderServices(tenant, openBookingModalCb) {
     return [];
   }
 }
+
+let currentCategory = 'todos';
+let currentPage = 1;
+const ITEMS_PER_PAGE = 10;
 
 export function renderServiceFilters() {
   const container = document.getElementById('services-filters');
@@ -124,14 +129,19 @@ export function renderServiceFilters() {
       });
       btn.classList.add('chip--active');
       btn.setAttribute('aria-selected', 'true');
-      filtrarServicos(btn.dataset.category);
+      
+      currentCategory = btn.dataset.category;
+      currentPage = 1;
+      const searchInput = document.getElementById('services-search-input');
+      filtrarServicos(currentCategory, searchInput ? searchInput.value : '');
     });
   });
 }
 
-function filtrarServicos(categoria) {
-  const cards = document.querySelectorAll('.service-card');
-  cards.forEach(card => {
+function filtrarServicos(categoria, query = '') {
+  const cards = Array.from(document.querySelectorAll('.service-card'));
+  
+  const filteredCards = cards.filter(card => {
     // eslint-disable-next-line no-useless-assignment
     let serviceData = {};
     try {
@@ -141,11 +151,89 @@ function filtrarServicos(categoria) {
     }
     let serviceCat = serviceData.category || serviceData.categoria || 'Outros';
     serviceCat = serviceCat.replace('|NO_PHOTOS', '');
+    const serviceName = (serviceData.nome || serviceData.name || '').toLowerCase();
+    const serviceDesc = (serviceData.descricao || serviceData.description || '').toLowerCase();
+    const serviceCatLower = serviceCat.toLowerCase();
+    const q = query.toLowerCase().trim();
     
-    if (categoria === 'todos' || serviceCat === categoria) {
-      card.classList.remove('service-hidden');
-    } else {
-      card.classList.add('service-hidden');
+    let matchesCategory = (categoria === 'todos' || serviceCat === categoria);
+    let matchesQuery = true;
+    if (q) {
+      matchesQuery = serviceName.includes(q) || serviceDesc.includes(q) || serviceCatLower.includes(q);
     }
+
+    return matchesCategory && matchesQuery;
+  });
+
+  const totalItems = filteredCards.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+
+  // Esconder todos inicialmente
+  cards.forEach(card => card.classList.add('service-hidden'));
+
+  // Mostrar apenas os filtrados na página atual
+  for (let i = startIndex; i < endIndex && i < totalItems; i++) {
+    filteredCards[i].classList.remove('service-hidden');
+  }
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const paginationContainer = document.getElementById('services-pagination');
+  if (!paginationContainer) return;
+
+  if (totalPages <= 1) {
+    paginationContainer.style.display = 'none';
+    paginationContainer.innerHTML = '';
+    return;
+  }
+
+  paginationContainer.style.display = 'flex';
+  
+  let html = '';
+  
+  const prevDisabled = currentPage === 1 ? 'disabled style="opacity: 0.5; pointer-events: none;"' : '';
+  html += `<button class="btn btn--sm btn--outline" data-page="${currentPage - 1}" ${prevDisabled}>Anterior</button>`;
+  
+  html += `<span class="text-sm font-medium">Página ${currentPage} de ${totalPages}</span>`;
+  
+  const nextDisabled = currentPage === totalPages ? 'disabled style="opacity: 0.5; pointer-events: none;"' : '';
+  html += `<button class="btn btn--sm btn--outline" data-page="${currentPage + 1}" ${nextDisabled}>Próxima</button>`;
+
+  paginationContainer.innerHTML = html;
+
+  paginationContainer.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const newPage = parseInt(btn.dataset.page);
+      if (!isNaN(newPage) && newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        const searchInput = document.getElementById('services-search-input');
+        filtrarServicos(currentCategory, searchInput ? searchInput.value : '');
+        // Opcional: Rolar de volta para o topo da seção
+        document.getElementById('section-servicos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+}
+
+function initSearchServices() {
+  const searchInput = document.getElementById('services-search-input');
+  if (!searchInput) return;
+
+  // Evita adicionar múltiplos listeners clonando o elemento
+  const newSearchInput = searchInput.cloneNode(true);
+  searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+
+  newSearchInput.addEventListener('input', (e) => {
+    const query = e.target.value;
+    currentPage = 1;
+    filtrarServicos(currentCategory, query);
   });
 }

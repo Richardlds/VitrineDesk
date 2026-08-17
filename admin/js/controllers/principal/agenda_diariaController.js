@@ -15,7 +15,7 @@ const STATUS_LABEL = {
   confirmed: "Confirmado",
   completed: "Concluído",
   cancelled: "Cancelado",
-  no_show: "No-show",
+  no_show: "Não compareceu",
 };
 
 const SELECT_GRAPH = '*, profissionais(nome, foto_url), services(name, price, duration)';
@@ -96,7 +96,7 @@ export class agenda_diariaController {
             if (error) throw error;
             this.pros = data ?? [];
         } catch (err) {
-            this.toast(err.message || "Erro ao carregar profissionais");
+            if(window.showToast) window.showToast(err.message || "Erro ao carregar profissionais", "error");
             this.pros = [];
         }
     }
@@ -203,7 +203,7 @@ export class agenda_diariaController {
             this.rows = data ?? [];
         } catch (err) {
             this.rows = [];
-            this.toast(err.message || "Falha ao carregar agendamentos");
+            if(window.showToast) window.showToast(err.message || "Falha ao carregar agendamentos", "error");
         }
         
         this.loading = false;
@@ -312,6 +312,7 @@ export class agenda_diariaController {
         hours.innerHTML = ""; lines.innerHTML = "";
         for (let h = DAY_START; h < DAY_END; h++) {
             hours.appendChild(el("div", "tl-hour", `${String(h).padStart(2, "0")}:00`));
+            hours.appendChild(el("div", "tl-hour tl-half", `${String(h).padStart(2, "0")}:30`));
             const a = el("div", "tl-line h"); a.style.height = `${SLOT_PX}px`;
             const b = el("div", "tl-line"); b.style.height = `${SLOT_PX}px`;
             lines.append(a, b);
@@ -382,11 +383,14 @@ export class agenda_diariaController {
                 card.style.width = `calc(${laneW}% - 6px)`;
                 card.title = `${it.row.client_name} — ${it.row.services?.name}`;
                 card.innerHTML = `
-                  <span class="ev-time">${fmtHour.format(it.s)} – ${fmtHour.format(it.e)}</span>
-                  <span class="ev-client">${esc(it.row.client_name ?? "Cliente")}</span>
-                  <span class="ev-svc">${esc(it.row.services?.name ?? "")}</span>
-                  <span class="ev-foot">${this.avatarHTML(it.row, "sm")}
-                    <span class="ev-svc">${esc((it.row.profissionais?.nome ?? "").split(" ")[0])}</span></span>`;
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; width: 100%;">
+                    <span class="ev-client" style="flex: 1; line-height: 1.1;">${esc(it.row.client_name ?? "Cliente")}</span>
+                    <span class="ev-time" style="flex: 0 0 auto; line-height: 1.1;">${fmtHour.format(it.s)} - ${fmtHour.format(it.e)}</span>
+                  </div>
+                  <div class="ev-bottom" style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; gap: 4px; width: 100%;">
+                    <span class="ev-svc" style="flex: 1; white-space: normal; line-height: 1.1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${esc(it.row.services?.name ?? "")}</span>
+                    <div style="flex: 0 0 auto;" title="${esc(it.row.profissionais?.nome ?? "")}">${this.avatarHTML(it.row, "sm")}</div>
+                  </div>`;
                 wrap.appendChild(card);
             }
         }
@@ -488,11 +492,10 @@ export class agenda_diariaController {
         if (row) { row.status = newStatus; this.renderAll(); } // optimistic update
         
         try {
-            const { data, error } = await supabase
-                .from("appointments").update({ status: newStatus }).eq("id", id).select(SELECT_GRAPH).single();
+            const { error } = await supabase
+                .from("appointments").update({ status: newStatus }).eq("id", id);
                 
             if (error) throw error;
-            if (data) this.upsert(data);
             
             // Lógica de Fidelidade: Adiciona ponto se mudou para completed, tira se desfez
             if (clientPhone) {
@@ -504,11 +507,11 @@ export class agenda_diariaController {
             }
 
             this.renderAll();
-            this.toast(`Status atualizado para “${STATUS_LABEL[newStatus]}”.`);
+            if(window.showToast) window.showToast(`Status atualizado para “${STATUS_LABEL[newStatus]}”.`, "success");
         } catch (err) {
             if (row && prev) row.status = prev;
             this.renderAll();
-            this.toast(err.message || "Não foi possível atualizar o status.");
+            if(window.showToast) window.showToast(err.message || "Não foi possível atualizar o status.", "error");
         }
     }
 
@@ -561,7 +564,7 @@ export class agenda_diariaController {
                 <button class="agenda-btn tiny" data-m="confirmed">Confirmar</button>
                 <button class="agenda-btn tiny gold" data-m="completed">Concluir</button>
                 <button class="agenda-btn tiny" data-m="cancelled">Cancelar</button>
-                <button class="agenda-btn tiny" data-m="no_show">No-show</button>
+                <button class="agenda-btn tiny" data-m="no_show">Não compareceu</button>
               </div>`;
               
             mBody.querySelectorAll("button[data-m]").forEach((b) =>
@@ -611,27 +614,17 @@ export class agenda_diariaController {
     
     handleRealtimeEvent(type, row) {
         if (!row?.appointment_date) return;
+
+        
         if (row.appointment_date !== this.dayIso) return;
         this.upsert(row);
         this.flash.add(row.id);
         setTimeout(() => { this.flash.delete(row.id); }, 6000);
         this.renderAll();
-        this.toast(type === "INSERT"
-          ? `Novo agendamento: ${row.client_name ?? ""}`
-          : `Atualizado: ${row.client_name ?? ""} → ${STATUS_LABEL[row.status] ?? row.status}`, true);
     }
 
     upsert(row) {
         const i = this.rows.findIndex((r) => r.id === row.id);
         if (i === -1) this.rows.push(row); else this.rows[i] = { ...this.rows[i], ...row };
-    }
-
-    toast(msg, gold = false) {
-        const t = el("div", `toast${gold ? " gold" : ""}`, esc(msg));
-        const toastsContainer = this.$("#toasts");
-        if(toastsContainer) {
-            toastsContainer.appendChild(t);
-            setTimeout(() => t.remove(), 4200);
-        }
     }
 }

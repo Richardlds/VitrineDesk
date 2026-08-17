@@ -1,0 +1,72 @@
+/* God Mode Specific Styles */
+
+:root {
+    --god-primary: #ef4444;       /* Base Red */
+    --god-secondary: #fca5a5;
+    --god-bg-base: #050505;
+    --god-bg-surface: #111111;
+    --god-text-primary: #f8fafc;
+    --god-text-secondary: #94a3b8;
+    
+    /* Variáveis dinâmicas para personalização (sobrepõem o admin) */
+    --color-primary: var(--god-primary);
+    --color-secondary: var(--god-secondary);
+    --color-bg-base: var(--god-bg-base);
+    --color-bg-surface: var(--god-bg-surface);
+    --color-text-primary: var(--god-text-primary);
+    --color-text-secondary: var(--god-text-secondary);
+}
+
+body {
+    background-color: var(--color-bg-base) !important;
+    color: var(--color-text-primary) !important;
+}
+
+/* Glassmorphism e Transparências mais profundas para o GOD Mode */
+.sidebar, .topbar {
+    background: var(--color-bg-surface) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border-color: rgba(255,255,255,0.05) !important;
+}
+
+.card, .config-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px);
+}
+
+.text-danger { color: var(--color-primary) !important; }
+.bg-danger { background-color: var(--color-primary) !important; }
+.bg-danger-light { background-color: rgba(239, 68, 68, 0.1) !important; }
+.border-danger { border-color: rgba(239, 68, 68, 0.3) !important; }
+
+/* Animação exclusiva no ícone GOD */
+@keyframes godPulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px var(--color-primary)); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 15px var(--color-primary)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--color-primary)); }
+}
+
+.brand-icon {
+    animation: godPulse 3s infinite;
+}
+
+.menu-toggle, #btn-toggle-theme, #btn-notifications {
+    color: var(--color-text-secondary) !important;
+}
+.menu-toggle:hover, #btn-toggle-theme:hover, #btn-notifications:hover {
+    color: var(--color-primary) !important;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Scrollbar escura (sobrepõe do admin se necessário) */
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2) !important;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1) !important;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.2) !important;
+}

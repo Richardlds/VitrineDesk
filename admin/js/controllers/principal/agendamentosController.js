@@ -142,7 +142,7 @@ export class agendamentosController {
             }
 
             if (this.filterStatus !== 'todos') {
-                query = query.ilike('status', this.filterStatus);
+                query = query.eq('status', this.filterStatus);
             }
             if (this.filterProfessional !== 'todos') {
                 query = query.eq('profissional_id', this.filterProfessional);
@@ -871,6 +871,20 @@ export class agendamentosController {
         if (statusFilter) statusFilter.addEventListener('change', applyFilters);
         if (profFilter) profFilter.addEventListener('change', applyFilters);
         if (servFilter) servFilter.addEventListener('change', applyFilters);
+
+        // Toggle Expandir Filtros
+        const btnToggleFilters = document.getElementById('btn-toggle-filters');
+        const extendedFilters = document.getElementById('extended-filters');
+        if (btnToggleFilters && extendedFilters) {
+            btnToggleFilters.addEventListener('click', () => {
+                extendedFilters.classList.toggle('d-none');
+                if (extendedFilters.classList.contains('d-none')) {
+                    btnToggleFilters.classList.remove('active');
+                } else {
+                    btnToggleFilters.classList.add('active');
+                }
+            });
+        }
 
         // Search com debounce
         const searchInput = document.getElementById('search-client');

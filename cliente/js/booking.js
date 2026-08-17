@@ -294,14 +294,8 @@ function renderCalendar(year, month) {
     const diasNoMes = ultimoDia.getDate();
     const diaSemanaInicio = primeiroDia.getDay(); // 0=Dom
 
-    // Labels dos dias
     const labels = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-    let html = labels.map(l => `<div class="calendar-day-label">${l}</div>`).join('');
-
-    // Dias vazios antes do primeiro dia
-    for (let i = 0; i < diaSemanaInicio; i++) {
-      html += '<div class="calendar-day empty"></div>';
-    }
+    let html = '';
 
     // Dias do mês
     for (let d = 1; d <= diasNoMes; d++) {
@@ -310,6 +304,7 @@ function renderCalendar(year, month) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
       const isToday = date.getTime() === hoje.getTime();
       const isPast = date < hoje;
+      const nomeDiaSemana = labels[date.getDay()];
 
       let classes = 'calendar-day';
       if (isPast) classes += ' disabled';
@@ -327,14 +322,21 @@ function renderCalendar(year, month) {
         isClosed = workHours && (workHours.ativo === false || workHours.fechado === true);
       }
 
-      if (isFolga || isClosed) classes += ' disabled folga-fechado';
+      if (isPast || isFolga || isClosed) continue;
+
       if (isToday) classes += ' today';
-      if (bookingState.selectedDate === dateStr && !isFolga && !isClosed) classes += ' selected';
+      if (bookingState.selectedDate === dateStr) classes += ' selected';
 
-      const clickAttr = (isPast || isFolga || isClosed) ? '' : `data-action="selectDate" data-date="${dateStr}"`;
-      const titleAttr = isFolga ? 'Profissional de Folga' : (isClosed ? 'Não atende neste dia' : '');
+      const clickAttr = `data-action="selectDate" data-date="${dateStr}"`;
 
-      html += `<div class="${classes}" data-date="${dateStr}" ${clickAttr} title="${titleAttr}">${d}</div>`;
+      html += `<div class="${classes}" data-date="${dateStr}" ${clickAttr}>
+        <span class="calendar-day-name">${nomeDiaSemana}</span>
+        <span class="calendar-day-num">${d}</span>
+      </div>`;
+    }
+
+    if (html === '') {
+      html = '<div class="w-full text-center p-4 text-muted font-medium">Nenhuma data disponível neste mês.</div>';
     }
 
     gridEl.innerHTML = html;
@@ -388,16 +390,16 @@ async function loadTimeSlots(dateStr) {
 
     const tenantId = getTenantId();
 
-    // Buscar agendamentos existentes para o dia
+    // Buscar agendamentos existentes para o dia (Bypass cache to prevent double booking)
     let query = `/rest/v1/appointments?tenant_id=eq.${tenantId}&appointment_date=eq.${dateStr}&status=neq.cancelled&select=appointment_time,duration,profissional_id`;
-    const agendamentos = await supaFetch(query) || [];
+    const agendamentos = await supaFetch(query, { noCache: true }) || [];
 
     // Obter configuração de horários do tenant
     const tenant = JSON.parse(sessionStorage.getItem('vp_tenant') || '{}');
     const settings = tenant.settings || {};
     const horarioInicio = settings.horario_inicio || '08:00';
     const horarioFim = settings.horario_fim || '20:00';
-    const intervalo = parseInt(settings.intervalo || 30);
+    const intervalo = parseInt(settings.intervalo || 15);
 
     // ═══════════════════════════════════════════
     // ✅ NOVO: Calcular horário mínimo (agora)
@@ -414,6 +416,9 @@ async function loadTimeSlots(dateStr) {
     if (dataSelecionada.getTime() === hoje.getTime()) {
       horaMinima = agora.getHours() * 60 + agora.getMinutes() + 30; // 30min de folga
     }
+
+    // Calcular duração total com extras
+    const duracaoTotal = typeof calcTotalDuration === 'function' ? calcTotalDuration() : bookingState.serviceDuration;
 
     // Gerar slots
     const slots = [];
@@ -434,7 +439,7 @@ async function loadTimeSlots(dateStr) {
       }
 
       // Verificar se o slot está ocupado
-      const ocupado = checkConflict(hora, bookingState.serviceDuration, agendamentos);
+      const ocupado = checkConflict(hora, duracaoTotal, agendamentos);
       slots.push({ hora, ocupado, isPast });
     }
 
@@ -532,7 +537,7 @@ async function loadExtras() {
     if (step4) step4.classList.remove('empty-extras');
 
     container.innerHTML = data.map(extra => `
-      <div class="extra-item">
+      <label class="extra-item" style="cursor: pointer;">
         <div class="extra-info">
           <input type="checkbox" class="extra-checkbox"
                  data-action="toggleExtraService"
@@ -543,7 +548,7 @@ async function loadExtras() {
           <span class="extra-name">${escapeHtml(extra.nome || extra.name)}</span>
         </div>
         <span class="extra-price">${formatCurrency(extra.preco || extra.price || 0)}</span>
-      </div>
+      </label>
     `).join('');
   } catch (e) {
     console.error('Erro ao carregar extras:', e);
@@ -555,7 +560,7 @@ async function loadExtras() {
 
 export function toggleExtraService(checkbox) {
   try {
-    const id = parseInt(checkbox.dataset.extraId);
+    const id = checkbox.dataset.extraId;
     const name = checkbox.dataset.extraName;
     const price = parseFloat(checkbox.dataset.extraPrice);
     const duration = parseInt(checkbox.dataset.extraDuration);
@@ -563,7 +568,7 @@ export function toggleExtraService(checkbox) {
     if (checkbox.checked) {
       bookingState.extras.push({ id, name, price, duration });
     } else {
-      bookingState.extras = bookingState.extras.filter(e => e.id !== id);
+      bookingState.extras = bookingState.extras.filter(e => String(e.id) !== String(id));
     }
 
     updateBookingSummary();

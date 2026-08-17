@@ -79,14 +79,22 @@ export class configuracoesController {
         if (btnCache) {
             btnCache.addEventListener('click', () => {
                 if (window.showConfirm) {
-                    window.showConfirm('Isso forçará o recarregamento dos assets na próxima vez que as lojas acessarem o sistema. Confirmar limpeza?', async () => {
-                        if (window.showToast) window.showToast('Limpando cache...', 'info');
+                    window.showConfirm('Isso forçará o recarregamento dos assets em TODOS os lojistas conectados agora. Confirmar limpeza global?', async () => {
+                        if (window.showToast) window.showToast('Limpando cache global...', 'info');
                         if ('caches' in window) {
                             const names = await caches.keys();
                             await Promise.all(names.map(name => caches.delete(name)));
                         }
-                        await this.addLog('system', 'Cache global do navegador limpo com sucesso.');
-                        if (window.showToast) window.showToast('Cache limpo! Recarregando...', 'success');
+                        
+                        // Dispara evento Realtime para todos os lojistas limparem o cache localmente
+                        await supabase.channel('admin-notifications').send({
+                            type: 'broadcast',
+                            event: 'clear_cache',
+                            payload: { action: 'clear' }
+                        });
+
+                        await this.addLog('system', 'Cache global do navegador limpo e broadcast enviado aos lojistas.');
+                        if (window.showToast) window.showToast('Comando de Cache enviado com sucesso! Recarregando...', 'success');
                         setTimeout(() => window.location.reload(true), 1500);
                     });
                 }

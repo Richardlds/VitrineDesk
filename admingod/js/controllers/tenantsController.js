@@ -140,7 +140,8 @@ export class tenantsController {
             let statusBadge = '';
             if (t.approval_status === 'approved') {
                 const venc = t.settings?.vencimento;
-                if (venc && new Date(venc) < new Date()) {
+                const hoje = new Date().toISOString().split('T')[0];
+                if (venc && venc.split('T')[0] < hoje) {
                     statusBadge = '<span class="badge bg-danger-light text-danger text-xs px-2 py-1 rounded">Vencido</span>';
                 } else {
                     statusBadge = '<span class="badge bg-success-light text-success text-xs px-2 py-1 rounded">Ativo</span>';
@@ -155,7 +156,11 @@ export class tenantsController {
             const planoId = t.settings?.plano_id;
             const planoObj = this.availablePlans.find(p => p.id === planoId);
             const planoName = planoObj ? planoObj.name : 'Sem Plano';
-            const vencimento = t.settings?.vencimento ? new Date(t.settings.vencimento).toLocaleDateString('pt-BR') : 'Sem Venc.';
+            let vencimento = 'Sem Venc.';
+            if (t.settings?.vencimento) {
+                const pDate = t.settings.vencimento.split('T')[0].split('-');
+                vencimento = `${pDate[2]}/${pDate[1]}/${pDate[0]}`;
+            }
             
             const planoColor = planoObj ? 'bg-primary-light text-primary' : 'bg-placeholder text-secondary';
 

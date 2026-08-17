@@ -115,7 +115,7 @@ export class notificacoesController {
         window.addEventListener('new_notification_god', (e) => {
             const newNotif = e.detail;
             if (newNotif) {
-                this.allNotifs.unshift(newNotif);
+                this.allSentNotifs.unshift(newNotif);
                 this.renderRecent();
             }
         });
@@ -161,11 +161,11 @@ export class notificacoesController {
             const isUpdate = n.type === 'update';
             const destName = n.tenant_id ? (n.tenants?.name || 'Loja Específica') : 'Todos/Sistema';
             return `
-                <div class="p-3 rounded-md flex-col gap-1 border border-dashed transition-colors cursor-pointer" onclick="window.openGodNotificationDetail('${n.id}')" style="background: var(--color-bg-base); border-color: var(--color-border);">
+                <div class="p-3 rounded-md flex-col gap-1 border border-dashed transition-all cursor-pointer hover-float" onclick="window.openGodNotificationDetail('${n.id}')" style="background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.05);">
                     <div class="flex justify-between align-center">
                         <div class="flex align-center gap-2" style="white-space: nowrap;">
-                            <i data-lucide="${isUpdate ? 'zap' : (n.type === 'system' ? 'settings' : 'info')}" class="icon-sm ${isUpdate ? 'text-primary' : 'text-secondary'}" style="flex-shrink: 0;"></i>
-                            <span class="text-xs font-bold uppercase" style="color: ${isUpdate ? 'var(--color-primary)' : 'var(--color-text-primary)'}; white-space: nowrap;">${isUpdate ? 'Atualização' : (n.type === 'system' ? 'Aviso do Sistema' : 'Informação Geral')}</span>
+                            <i data-lucide="${isUpdate ? 'zap' : (n.type === 'system' ? 'settings' : 'info')}" class="icon-sm ${isUpdate ? 'text-danger' : 'text-secondary'}" style="flex-shrink: 0;"></i>
+                            <span class="text-xs font-bold uppercase" style="color: ${isUpdate ? 'var(--color-danger)' : 'var(--color-text-primary)'}; white-space: nowrap;">${isUpdate ? 'Atualização' : (n.type === 'system' ? 'Aviso do Sistema' : 'Informação Geral')}</span>
                         </div>
                         <span class="text-xs text-secondary opacity-70">${new Date(n.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</span>
                     </div>

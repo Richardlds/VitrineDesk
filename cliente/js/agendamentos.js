@@ -97,7 +97,7 @@ export async function loadMyAppointments() {
     const email = cliente.email ? encodeURIComponent(cliente.email) : '';
 
     // Construir query com filtros seguros
-    let query = `/rest/v1/appointments?tenant_id=eq.${tenantId}&select=*,services(name,price,duration)&order=appointment_date.desc,appointment_time.desc`;
+    let query = `/rest/v1/appointments?tenant_id=eq.${tenantId}&select=*,services(*),profissionais(*)&order=appointment_date.desc,appointment_time.desc`;
 
     const filters = [];
     if (phone) filters.push(`client_phone.eq.${phone}`);
@@ -166,8 +166,9 @@ function renderAppointments() {
   }
 
   container.innerHTML = filtered.map(a => {
-    const serviceName = a.services?.name || a.service?.name || 'Serviço';
-    const servicePrice = a.services?.price || a.service?.price || 0;
+    const serviceName = a.services?.nome || a.services?.name || a.service?.nome || a.service?.name || 'Serviço';
+    const servicePrice = a.services?.preco || a.services?.price || a.service?.preco || a.service?.price || 0;
+    const profName = a.profissionais?.nome || a.profissionais?.name || '';
     const statusLabel = getStatusLabel(a.status);
     const statusColor = getStatusColor(a.status, settings);
     const rgbaColor = `rgba(${hexToRgb(statusColor)}, 0.15)`;
@@ -195,43 +196,56 @@ function renderAppointments() {
     const displayTotal = totalText ? totalText : formatCurrency(servicePrice);
 
     return `
-      <div class="appointment-card status-${a.status}">
-        <div class="appointment-info">
-          <div class="flex-between-start">
-            <div class="flex-col-4">
-              <span class="appointment-service">${serviceName}</span>
-              <span class="appointment-price text-base">${displayTotal}</span>
-            </div>
-            <div class="flex-col-end-6">
-              <span class="status-badge ${a.status}">${statusLabel}</span>
-              ${canCancel ? `
-                <button class="btn btn-sm btn-danger btn-cancel-appointment btn-cancel-small" data-id="${a.id}">
-                  <i data-lucide="x" class="icon-sm"></i> ${settings.textoCancelar}
-                </button>
-              ` : ''}
-            </div>
+      <div class="appointment-card glass-card p-0 mb-4 overflow-hidden" style="border-left: 4px solid ${statusColor}; border-radius: 12px; background: var(--bg-glass-2); box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+        
+        <!-- Header: Data e Status -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-glass-5); border-bottom: 1px solid var(--border-glass);">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-main);">
+            <i data-lucide="calendar" style="width: 16px; height: 16px; color: var(--primary);"></i>
+            <span>${formatDate(a.appointment_date)} às ${formatTime(a.appointment_time)}</span>
           </div>
-          
-          <div class="appointment-meta">
-            <div class="appointment-meta-item">
-              <i data-lucide="calendar"></i> ${formatDate(a.appointment_date)}
+          <span style="background: ${rgbaColor}; color: ${statusColor}; border: 1px solid ${statusColor}; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
+            ${statusLabel}
+          </span>
+        </div>
+
+        <!-- Body: Serviço e Profissional -->
+        <div style="padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin: 0 0 4px 0;">${serviceName}</h3>
+              ${profName ? `<div style="font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;"><i data-lucide="user" style="width: 14px; height: 14px;"></i> ${profName}</div>` : ''}
             </div>
-            <div class="appointment-meta-item">
-              <i data-lucide="clock"></i> ${formatTime(a.appointment_time)}
+            <div style="text-align: right;">
+              <div style="font-size: 1.1rem; font-weight: 700; color: var(--primary);">${displayTotal}</div>
             </div>
           </div>
 
+          <!-- Extras e Obs -->
           ${(extrasText || obsText) ? `
-          <div class="appointment-extras extras-container">
+          <div style="background: var(--bg-glass-2); padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 12px; border: 1px solid var(--border-glass);">
             ${extrasText ? `
-            <div class="extras-list">
-              <strong>Adicionais:</strong>
-              ${extrasText.split(', ').map(extra => `<span class="extra-item">• ${extra}</span>`).join('')}
+            <div style="margin-bottom: ${obsText ? '8px' : '0'};">
+              <strong style="display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Adicionais</strong>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                ${extrasText.split(', ').map(extra => `<span style="display: flex; align-items: center; gap: 6px; color: var(--text-main);"><i data-lucide="plus-circle" style="width: 12px; height: 12px; color: var(--primary);"></i> ${extra}</span>`).join('')}
+              </div>
             </div>` : ''}
+            
             ${obsText ? `
-            <div class="obs-text">
-              <strong>Obs:</strong> ${obsText}
+            <div style="${extrasText ? 'padding-top: 8px; border-top: 1px solid var(--border-glass);' : ''}">
+              <strong style="display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Observações</strong>
+              <p style="margin: 0; color: var(--text-main);">${obsText}</p>
             </div>` : ''}
+          </div>
+          ` : ''}
+
+          <!-- Footer Actions -->
+          ${canCancel ? `
+          <div style="display: flex; justify-content: flex-end; padding-top: 12px; border-top: 1px solid var(--border-glass);">
+            <button class="btn btn-sm btn-cancel-appointment btn-cancel-small hover-bg-danger" data-id="${a.id}" style="background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <i data-lucide="x" style="width: 14px; height: 14px;"></i> ${settings.textoCancelar}
+            </button>
           </div>
           ` : ''}
         </div>
@@ -426,7 +440,7 @@ function updateUpcomingAppointmentsWidget() {
 
   if (upcoming.length > 0) {
     const nextApp = upcoming[0];
-    const serviceName = nextApp.services ? nextApp.services.name : 'Agendamento';
+    const serviceName = nextApp.services ? (nextApp.services.nome || nextApp.services.name) : 'Agendamento';
     const [year, month, day] = nextApp.appointment_date.split('-');
     const dataFormatada = `${day}/${month}/${year}`;
     const horaFormatada = nextApp.appointment_time.substring(0, 5);

@@ -467,21 +467,24 @@ export class planosController {
                 const res = await supabase.from('plans').update(payload).eq('id', id);
                 error = res.error;
             } else {
-                // CREATE - Create in Stripe Platform first
-                const response = await fetch('/api/stripe/platform/create-plan', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: payload.name, price: payload.price })
-                });
-                
-                if (!response.ok) {
-                    const errData = await response.json();
-                    throw new Error(errData.error || 'Erro ao criar no Stripe (Plataforma)');
+                // CREATE - Tenta criar no Stripe primeiro, mas se falhar, cria apenas local
+                try {
+                    const response = await fetch('/api/stripe/platform/create-plan', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: payload.name, price: payload.price })
+                    });
+                    
+                    if (response.ok) {
+                        const stripeData = await response.json();
+                        payload.stripe_product_id = stripeData.productId;
+                        payload.stripe_price_id = stripeData.priceId;
+                    } else {
+                        console.warn("Stripe indisponível. Criando plano apenas localmente.");
+                    }
+                } catch(e) {
+                    console.warn("Erro ao comunicar com Stripe. Criando plano apenas localmente.", e);
                 }
-                const stripeData = await response.json();
-                
-                payload.stripe_product_id = stripeData.productId;
-                payload.stripe_price_id = stripeData.priceId;
 
                 const res = await supabase.from('plans').insert([payload]);
                 error = res.error;

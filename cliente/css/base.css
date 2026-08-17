@@ -405,7 +405,7 @@ ol {
 }
 
 .confirm-box {
-  background: rgba(18, 18, 26, 0.98);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -421,7 +421,7 @@ ol {
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 10px;
-  color: #fff;
+  color: var(--text-main);
 }
 
 .confirm-message {

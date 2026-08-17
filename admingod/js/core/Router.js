@@ -11,6 +11,7 @@ export class Router {
             'tickets': { file: '/admingod/views/tickets.html', controller: 'ticketsController' },
             'relatorios': { file: '/admingod/views/relatorios.html', controller: 'relatoriosController' },
             'configuracoes': { file: '/admingod/views/configuracoes.html', controller: 'configuracoesController' },
+            'personalizacao': { file: '/admingod/views/personalizacao.html', controller: 'personalizacaoController' },
             'notificacoes': { file: '/admingod/views/notificacoes.html', controller: 'notificacoesController' }
         };
         this.currentController = null;
@@ -67,7 +68,7 @@ export class Router {
             if (window.lucide) window.lucide.createIcons();
 
             const ts = new Date().getTime();
-            const response = await fetch(`${route.file}?v=${ts}`);
+            const response = await fetch(`${route.file}`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const html = await response.text();
             contentArea.innerHTML = html;
@@ -77,8 +78,8 @@ export class Router {
                 this.currentController.destroy();
             }
 
-            // Cache Busting: garante que o navegador baixe a versão mais recente dos controllers
-            const module = await import(`../controllers/${route.controller}.js?v=${ts}`);
+            // Sem Cache Busting: respeitando regra de SPA e ES6 Modules
+            const module = await import(`../controllers/${route.controller}.js`);
             const ControllerClass = module[route.controller];
             this.currentController = new ControllerClass();
             

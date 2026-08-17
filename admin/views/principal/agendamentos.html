@@ -11,59 +11,69 @@
     </div>
 
     <!-- Filtros e Controles -->
-    <div class="config-card flex flex-column flex-md-row justify-between align-start align-md-center mb-4 gap-3">
-        <div class="flex flex-column flex-md-row gap-3 align-start align-md-center w-100">
-            <div class="view-toggle bg-placeholder rounded-lg flex p-1 w-100 w-md-auto flex-md-row">
+    <div class="config-card flex flex-column mb-4 gap-3">
+        <!-- Top Row: View Toggle | Search & Filter Toggle -->
+        <div class="flex flex-column flex-md-row justify-between align-start align-md-center gap-3 w-100">
+            <!-- Toggle de Visão -->
+            <div class="view-toggle bg-placeholder rounded-lg flex p-1 w-100 w-md-auto flex-md-row shrink-0">
                 <button id="btn-view-list"
-                    class="btn btn-toggle active flex align-center gap-2 cursor-pointer border-none bg-transparent py-1 px-3 rounded-md font-medium">
+                    class="btn btn-toggle active flex align-center justify-center gap-2 cursor-pointer border-none bg-transparent py-1 px-3 rounded-md font-medium">
                     <i data-lucide="list"></i> Lista
                 </button>
                 <button id="btn-view-calendar"
-                    class="btn btn-toggle flex align-center gap-2 cursor-pointer border-none bg-transparent py-1 px-3 rounded-md font-medium text-secondary">
+                    class="btn btn-toggle flex align-center justify-center gap-2 cursor-pointer border-none bg-transparent py-1 px-3 rounded-md font-medium text-secondary">
                     <i data-lucide="calendar"></i> Calendário
                 </button>
             </div>
 
-            <div class="filter-group flex flex-wrap gap-2 w-100 w-md-auto">
-                <select id="filter-date"
-                    class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100 w-md-auto">
-                    <option value="todos">Todas as Datas</option>
-                    <option value="hoje">Hoje</option>
-                    <option value="amanha">Amanhã</option>
-                    <option value="semana">Esta Semana</option>
-                    <option value="mes">Este Mês</option>
-                    <option value="especifica">Data Específica...</option>
-                </select>
-                <input type="date" id="filter-date-custom"
-                    class="form-input bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm outline-none w-100 w-md-auto d-none">
-
-                <select id="filter-status"
-                    class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100 w-md-auto">
-                    <option value="todos">Todos os Status</option>
-                    <option value="pending">Pendente</option>
-                    <option value="confirmed">Confirmado</option>
-                    <option value="completed">Concluído</option>
-                    <option value="cancelled">Cancelado</option>
-                </select>
-
-                <select id="filter-professional"
-                    class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100 w-md-auto">
-                    <option value="todos">Qualquer Profissional</option>
-                </select>
-
-                <select id="filter-service"
-                    class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100 w-md-auto">
-                    <option value="todos">Qualquer Serviço</option>
-                </select>
+            <!-- Pesquisa e Botão Filtros -->
+            <div class="flex flex-column flex-md-row align-start align-md-center gap-2 w-100 w-md-auto">
+                <div class="search-bar w-100 w-md-auto" style="flex: 1; min-width: 250px;">
+                    <div class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 w-100">
+                        <i data-lucide="search" class="text-secondary mr-2 w-24px h-24px"></i>
+                        <input type="text" id="search-client" placeholder="Buscar cliente..."
+                            class="bg-transparent border-none text-primary outline-none text-sm w-100">
+                    </div>
+                </div>
+                <button id="btn-toggle-filters" class="btn btn-outline flex align-center justify-center gap-2 w-100 w-md-auto py-2">
+                    <i data-lucide="filter"></i> Filtros
+                </button>
             </div>
         </div>
 
-        <div class="search-bar w-100 w-md-auto">
-            <div class="input-icon-wrapper flex align-center bg-placeholder rounded-md px-3 py-2 w-100">
-                <i data-lucide="search" class="text-secondary mr-2 w-24px h-24px"></i>
-                <input type="text" id="search-client" placeholder="Buscar cliente..."
-                    class="bg-transparent border-none text-primary outline-none text-sm w-100">
-            </div>
+        <!-- Filtros Extendidos (Ocultos por padrão) -->
+        <div id="extended-filters" class="filter-group grid grid-cols-2 grid-md-4 gap-2 w-100 d-none pt-3" style="border-top: 1px dashed rgba(255,255,255,0.1);">
+            <select id="filter-date"
+                class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100">
+                <option value="todos">Todas as Datas</option>
+                <option value="hoje">Hoje</option>
+                <option value="amanha">Amanhã</option>
+                <option value="semana">Esta Semana</option>
+                <option value="mes">Este Mês</option>
+                <option value="especifica">Data Específica...</option>
+            </select>
+            <input type="date" id="filter-date-custom"
+                class="form-input bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm outline-none w-100 d-none" style="grid-column: span 2;">
+
+            <select id="filter-status"
+                class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100">
+                <option value="todos">Todos os Status</option>
+                <option value="pending">Pendente</option>
+                <option value="confirmed">Confirmado</option>
+                <option value="completed">Concluído</option>
+                <option value="cancelled">Cancelado</option>
+                <option value="no_show">Não compareceu</option>
+            </select>
+
+            <select id="filter-professional"
+                class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100">
+                <option value="todos">Qualquer Profissional</option>
+            </select>
+
+            <select id="filter-service"
+                class="form-select bg-placeholder border-none text-primary rounded-md py-2 px-3 text-sm cursor-pointer outline-none w-100">
+                <option value="todos">Qualquer Serviço</option>
+            </select>
         </div>
     </div>
 

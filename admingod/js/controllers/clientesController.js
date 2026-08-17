@@ -51,6 +51,17 @@ export class clientesController {
                 }
             });
         }
+
+        const pagNumbers = document.getElementById('pag-numbers');
+        if (pagNumbers) {
+            pagNumbers.addEventListener('click', (e) => {
+                const btn = e.target.closest('.btn-page');
+                if (btn) {
+                    const page = parseInt(btn.getAttribute('data-page'));
+                    if (page) this.searchClientes(this.lastSearchTerm, page);
+                }
+            });
+        }
     }
 
     async searchClientes(term = '', page = 1) {
@@ -190,7 +201,7 @@ export class clientesController {
 
         for (let i = startPage; i <= endPage; i++) {
             const activeClass = i === this.currentPage ? 'bg-primary text-white' : 'bg-transparent text-secondary hover:bg-hover hover:text-primary';
-            numbersHtml += `<button class="btn border-none rounded w-8 h-8 flex align-center justify-center cursor-pointer transition-colors font-medium text-sm ${activeClass}" onclick="window.location.hash.includes('clientes') && document.querySelector('#btn-search-cliente').closest('.admin-section').__vue__ /* hacky, use proper event delegation */ ? null : null; document.dispatchEvent(new CustomEvent('changePageClientes', {detail: ${i}}))">${i}</button>`;
+            numbersHtml += `<button class="btn btn-page border-none rounded w-8 h-8 flex align-center justify-center cursor-pointer transition-colors font-medium text-sm ${activeClass}" data-page="${i}">${i}</button>`;
         }
         pagNumbers.innerHTML = numbersHtml;
     }
@@ -222,16 +233,6 @@ export class clientesController {
                 }
             });
         });
-
-        // Delegação de evento custom para paginação via botão numérico
-        if (!this._pageChangeBound) {
-            this._pageChangeBound = true;
-            document.addEventListener('changePageClientes', (e) => {
-                if (window.location.hash.includes('clientes')) {
-                    this.searchClientes(this.lastSearchTerm, e.detail);
-                }
-            });
-        }
     }
 
     async toggleBlacklist(id, newStatus) {
