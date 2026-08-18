@@ -795,7 +795,6 @@ window.showToast = function (message, type = 'success', onClick = null) {
     if (type === 'warning') iconName = 'alert-triangle';
 
     toast.innerHTML = `
-    toast.innerHTML = `
         <div class="flex align-center gap-2">
             <i data-lucide="${iconName}"></i>
             <span>${message}</span>
