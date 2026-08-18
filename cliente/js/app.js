@@ -820,13 +820,15 @@ function injectDynamicManifest(tenant, slug) {
     const theme_color = tenant.primary_color || "#3B82F6";
     const logo = tenant.logo_url || "/assets/icon-192.png";
     
+    const baseUrl = window.location.origin + window.location.pathname;
+    
     const manifest = {
-      id: `/${slug}`,
+      id: `${baseUrl}?id=${slug}`,
       name: tenant.name || "VitrineDesk",
       short_name: tenant.name || "Vitrine",
       description: "Agendamento online",
-      start_url: `/${slug}`,
-      scope: `/${slug}`,
+      start_url: `${baseUrl}?slug=${slug}`,
+      scope: baseUrl,
       display: "standalone",
       background_color: bg_color,
       theme_color: theme_color,
