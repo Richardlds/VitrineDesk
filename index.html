@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.supabase.co https://unpkg.com; img-src 'self' data: https:;">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.supabase.co https://unpkg.com; img-src 'self' data: https:;">
   <title>VitrineDesk — Infraestrutura Premium para Salões e Barbearias</title>
-  <meta name="description" content="A plataforma SaaS definitiva para salões, barbearias e clínicas. Automatize agendamentos, comissões, financeiro e retenção com uma experiência premium.">
-  
+  <meta name="description"
+    content="A plataforma SaaS definitiva para salões, barbearias e clínicas. Automatize agendamentos, comissões, financeiro e retenção com uma experiência premium.">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/css/landing.css">
@@ -19,6 +22,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body>
 
   <!-- Background Decorators -->
@@ -52,7 +56,8 @@
       </nav>
 
       <!-- Mobile Toggle -->
-      <button class="btn-menu-toggle" id="btn-menu-toggle" aria-label="Abrir menu mobile" aria-expanded="false" aria-controls="nav-mobile">
+      <button class="btn-menu-toggle" id="btn-menu-toggle" aria-label="Abrir menu mobile" aria-expanded="false"
+        aria-controls="nav-mobile">
         <i data-lucide="menu"></i>
       </button>
     </div>
@@ -76,16 +81,14 @@
     <section class="hero-section" aria-labelledby="hero-title">
       <div class="container hero-layout">
         <div class="hero-content reveal-up">
-          <div class="badge-new">
-            <span class="badge-new-tag">Novo</span>
-            <span>Gestão financeira totalmente integrada</span>
-          </div>
+
           <h1 id="hero-title" class="hero-title">
             Sua operação,<br>
             <span class="text-gradient">no automático.</span>
           </h1>
           <p class="hero-description">
-            A infraestrutura completa e premium para o seu negócio de beleza. Do agendamento online ao fluxo de caixa, tudo em um só lugar. Esqueça planilhas e o caos no WhatsApp.
+            A infraestrutura completa e premium para o seu negócio de beleza. Do agendamento online ao fluxo de caixa,
+            tudo em um só lugar. Esqueça planilhas e o caos no WhatsApp.
           </p>
           <div class="hero-actions">
             <a href="/login.html?register=true" class="btn btn-primary btn-lg">
@@ -140,10 +143,14 @@
         <p class="trust-label">Confiado por +500 negócios no Brasil</p>
         <div class="trust-logos">
           <!-- Placeholder SVG text logos for premium look -->
-          <svg viewBox="0 0 160 30" aria-label="BarberShop Premium"><text x="80" y="21" font-family="Arial" font-weight="700" font-size="16" fill="currentColor" text-anchor="middle">BarberShop Premium</text></svg>
-          <svg viewBox="0 0 140 30" aria-label="Studio Elegance"><text x="70" y="21" font-family="Arial" font-weight="700" font-size="16" fill="currentColor" text-anchor="middle">Studio Elegance</text></svg>
-          <svg viewBox="0 0 110 30" aria-label="Clínica Zen"><text x="55" y="21" font-family="Arial" font-weight="700" font-size="16" fill="currentColor" text-anchor="middle">Clínica Zen</text></svg>
-          <svg viewBox="0 0 130 30" aria-label="Tattoo Art Co."><text x="65" y="21" font-family="Arial" font-weight="700" font-size="16" fill="currentColor" text-anchor="middle">Tattoo Art Co.</text></svg>
+          <svg viewBox="0 0 160 30" aria-label="BarberShop Premium"><text x="80" y="21" font-family="Arial"
+              font-weight="700" font-size="16" fill="currentColor" text-anchor="middle">BarberShop Premium</text></svg>
+          <svg viewBox="0 0 140 30" aria-label="Studio Elegance"><text x="70" y="21" font-family="Arial"
+              font-weight="700" font-size="16" fill="currentColor" text-anchor="middle">Studio Elegance</text></svg>
+          <svg viewBox="0 0 110 30" aria-label="Clínica Zen"><text x="55" y="21" font-family="Arial" font-weight="700"
+              font-size="16" fill="currentColor" text-anchor="middle">Clínica Zen</text></svg>
+          <svg viewBox="0 0 130 30" aria-label="Tattoo Art Co."><text x="65" y="21" font-family="Arial"
+              font-weight="700" font-size="16" fill="currentColor" text-anchor="middle">Tattoo Art Co.</text></svg>
         </div>
       </div>
     </section>
@@ -151,28 +158,50 @@
     <!-- STATS SECTION -->
     <section class="stats-section" aria-label="Estatísticas">
       <div class="container">
-        <div class="stats-grid">
-          <div class="stat-item reveal-up">
-            <div class="stat-number text-gradient">+500</div>
-            <div class="stat-label">Estabelecimentos ativos</div>
-          </div>
-          <div class="stat-item reveal-up delay-100">
-            <div class="stat-number text-gradient">98%</div>
-            <div class="stat-label">Taxa de satisfação</div>
-          </div>
-          <div class="stat-item reveal-up delay-200">
-            <div class="stat-number text-gradient">40h</div>
-            <div class="stat-label">Horas salvas por mês</div>
-          </div>
-          <div class="stat-item reveal-up delay-300">
-            <div class="stat-number text-gradient">5min</div>
-            <div class="stat-label">Para configurar tudo</div>
+        <div class="stats-marquee">
+          <div class="stats-marquee-track">
+            <!-- Original -->
+            <div class="stat-item">
+              <div class="stat-number text-gradient">+500</div>
+              <div class="stat-label">Estabelecimentos ativos</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number text-gradient">98%</div>
+              <div class="stat-label">Taxa de satisfação</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number text-gradient">40h</div>
+              <div class="stat-label">Horas salvas por mês</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number text-gradient">5min</div>
+              <div class="stat-label">Para configurar tudo</div>
+            </div>
+            <!-- Duplicate for infinite loop -->
+            <div class="stat-item" aria-hidden="true">
+              <div class="stat-number text-gradient">+500</div>
+              <div class="stat-label">Estabelecimentos ativos</div>
+            </div>
+            <div class="stat-item" aria-hidden="true">
+              <div class="stat-number text-gradient">98%</div>
+              <div class="stat-label">Taxa de satisfação</div>
+            </div>
+            <div class="stat-item" aria-hidden="true">
+              <div class="stat-number text-gradient">40h</div>
+              <div class="stat-label">Horas salvas por mês</div>
+            </div>
+            <div class="stat-item" aria-hidden="true">
+              <div class="stat-number text-gradient">5min</div>
+              <div class="stat-label">Para configurar tudo</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <div class="container"><div class="divider"></div></div>
+    <div class="container">
+      <div class="divider"></div>
+    </div>
 
     <!-- FEATURES SECTION -->
     <section id="funcionalidades" class="features-section" aria-labelledby="features-title">
@@ -188,41 +217,44 @@
           </p>
         </div>
 
+        <div class="drag-indicator reveal-up">
+          <i data-lucide="hand"></i> Deslize para explorar
+        </div>
         <div class="features-grid">
           <article class="feature-card bento-large reveal-up">
             <div class="feature-icon-wrapper"><i data-lucide="calendar-check"></i></div>
-            <h3>Agenda Inteligente</h3>
-            <p>Seus clientes agendam 24/7. O sistema envia lembretes no WhatsApp automaticamente e bloqueia conflitos. Fim das faltas surpresa.</p>
+            <h3>Agendamento 100% Automático</h3>
+            <p>Deixe seus clientes marcarem horários sozinhos. O sistema envia avisos por WhatsApp e você zera os cancelamentos de última hora.</p>
           </article>
-          
+
           <article class="feature-card bento-wide reveal-up delay-100">
             <div class="feature-icon-wrapper"><i data-lucide="bar-chart-3"></i></div>
-            <h3>Métricas que Importam</h3>
-            <p>Dashboard intuitivo com faturamento diário, ticket médio e comissões. Tome decisões baseadas em dados reais, não em intuição.</p>
+            <h3>Visão Clara do Faturamento</h3>
+            <p>Acompanhe suas receitas diárias e lucros em tempo real com gráficos fáceis de entender. Diga adeus às planilhas complexas.</p>
           </article>
 
           <article class="feature-card bento-square reveal-up delay-200">
             <div class="feature-icon-wrapper"><i data-lucide="users"></i></div>
-            <h3>Gestão de Equipe & Comissões</h3>
-            <p>Regras de comissionamento flexíveis. O sistema calcula no centavo quanto cada profissional deve receber no fechamento.</p>
+            <h3>Cálculo de Comissões Exato</h3>
+            <p>Configure regras personalizadas e deixe o sistema fechar a folha da sua equipe em segundos, sem dor de cabeça e sem margem para erro.</p>
           </article>
 
           <article class="feature-card bento-square reveal-up">
             <div class="feature-icon-wrapper"><i data-lucide="wallet"></i></div>
-            <h3>Controle Financeiro</h3>
-            <p>Controle entradas, saídas e fluxo de caixa de forma visual e simples. Relatórios exportáveis em um clique.</p>
+            <h3>Caixa Sempre no Azul</h3>
+            <p>Registre entradas e saídas rapidamente. Controle seu fluxo de caixa e saiba exatamente para onde vai o dinheiro do seu negócio.</p>
           </article>
 
           <article class="feature-card bento-wide reveal-up delay-100">
             <div class="feature-icon-wrapper"><i data-lucide="star"></i></div>
-            <h3>Retenção de Clientes</h3>
-            <p>CRM integrado. Identifique clientes inativos, crie campanhas de fidelidade e envie promoções automatizadas.</p>
+            <h3>Fidelização Descomplicada</h3>
+            <p>Identifique clientes que não voltam há tempos e envie promoções direcionadas no automático para manter sua agenda sempre cheia.</p>
           </article>
 
           <article class="feature-card bento-wide reveal-up delay-200">
             <div class="feature-icon-wrapper"><i data-lucide="smartphone"></i></div>
-            <h3>App do Cliente (Em Breve)</h3>
-            <p>Ofereça uma experiência VIP. Um aplicativo com a sua marca para o cliente agendar e acompanhar o histórico.</p>
+            <h3>Página de Agendamento Exclusiva</h3>
+            <p>Um link só seu, com a cara da sua marca, para colocar na bio do Instagram e transformar seguidores instantaneamente em clientes.</p>
           </article>
         </div>
       </div>
@@ -236,7 +268,8 @@
             <span class="section-badge">Gestão Descomplicada</span>
             <h2>Sua equipe, organizada e mais produtiva do que nunca.</h2>
             <p>
-              Adicione profissionais, defina serviços, preços e horários. O VitrineDesk assume o trabalho pesado, garantindo que sua operação flua sem gargalos enquanto você foca no cliente.
+              Adicione profissionais, defina serviços, preços e horários. O VitrineDesk assume o trabalho pesado,
+              garantindo que sua operação flua sem gargalos enquanto você foca no cliente.
             </p>
             <ul class="highlight-list">
               <li><i data-lucide="check-circle-2"></i> Dashboard unificado para todos os profissionais</li>
@@ -244,7 +277,7 @@
               <li><i data-lucide="check-circle-2"></i> Suporte humano e em português via chat</li>
             </ul>
           </div>
-          
+
           <div class="highlight-visual-content" aria-hidden="true">
             <div class="user-row">
               <div class="user-avatar">RS</div>
@@ -275,7 +308,9 @@
       </div>
     </section>
 
-    <div class="container"><div class="divider"></div></div>
+    <div class="container">
+      <div class="divider"></div>
+    </div>
 
     <!-- PRICING SECTION -->
     <section id="planos" class="pricing-section" aria-labelledby="pricing-title">
@@ -286,14 +321,16 @@
             Transparente e justo.<br>
             <span class="text-gradient">Sem surpresas.</span>
           </h2>
-          <p class="section-description">Cancele quando quiser. Planos que se adaptam ao tamanho e ritmo do seu negócio.</p>
+          <p class="section-description">Cancele quando quiser. Planos que se adaptam ao tamanho e ritmo do seu negócio.
+          </p>
         </div>
 
         <!-- Toggle Mensal / Anual -->
         <div class="pricing-toggle reveal-up delay-100">
           <div class="toggle-wrapper">
             <div class="toggle-indicator" id="pricing-indicator"></div>
-            <button class="toggle-btn" id="btn-monthly" onclick="window.togglePricing('monthly')" aria-pressed="true">Mensal</button>
+            <button class="toggle-btn" id="btn-monthly" onclick="window.togglePricing('monthly')"
+              aria-pressed="true">Mensal</button>
             <button class="toggle-btn" id="btn-annual" onclick="window.togglePricing('annual')" aria-pressed="false">
               Anual
               <span class="save-badge">-20%</span>
@@ -304,7 +341,8 @@
         <!-- Grid de planos dinâmicos -->
         <div class="pricing-grid" id="pricing-grid-dynamic">
           <div style="grid-column: 1/-1; text-align: center; padding: 4rem 0;">
-            <i data-lucide="loader-2" class="animate-spin" style="width: 40px; height: 40px; color: var(--accent-primary)"></i>
+            <i data-lucide="loader-2" class="animate-spin"
+              style="width: 40px; height: 40px; color: var(--accent-primary)"></i>
             <p style="margin-top: 1rem; color: var(--text-muted)">Carregando planos...</p>
           </div>
         </div>
@@ -376,4 +414,5 @@
   </script>
   <script src="/js/landing.js"></script>
 </body>
+
 </html>

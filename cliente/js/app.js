@@ -821,10 +821,12 @@ function injectDynamicManifest(tenant, slug) {
     const logo = tenant.logo_url || "/assets/icon-192.png";
     
     const manifest = {
+      id: `/${slug}`,
       name: tenant.name || "VitrineDesk",
       short_name: tenant.name || "Vitrine",
       description: "Agendamento online",
-      start_url: window.location.pathname + window.location.search,
+      start_url: `/${slug}`,
+      scope: `/${slug}`,
       display: "standalone",
       background_color: bg_color,
       theme_color: theme_color,
@@ -993,7 +995,7 @@ function initBottomNav() {
     const sections = document.querySelectorAll('.section[id]');
     const topbarHeight = document.querySelector('.topbar')?.offsetHeight || 70;
 
-    window.addEventListener('scroll', debounce(() => {
+    window.addEventListener('scroll', throttle(() => {
       let current = '';
 
       sections.forEach(section => {
@@ -1041,16 +1043,17 @@ async function quickBook() {
 
 // ────────────────────────── Helper: debounce ──────────────────────────
 
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
+function throttle(func, limit) {
+  let inThrottle;
+  return function() {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  }
 }
 
 // ────────────────────────── View Toggles (List / Grid) ──────────────────────────

@@ -2,7 +2,7 @@
 const initLanding = () => {
   // 1. NAVBAR SCROLL EFFECT
   const header = document.querySelector('.header-main');
-  
+
   const handleScroll = () => {
     if (window.scrollY > 50) {
       header.classList.add('scrolled');
@@ -10,7 +10,7 @@ const initLanding = () => {
       header.classList.remove('scrolled');
     }
   };
-  
+
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll(); // Initial check
 
@@ -24,7 +24,7 @@ const initLanding = () => {
       const isOpen = navMobile.classList.contains('active');
       navMobile.classList.toggle('active');
       btnMenu.setAttribute('aria-expanded', !isOpen);
-      
+
       // Update Lucide icon if available
       const icon = btnMenu.querySelector('i');
       if (icon && window.lucide) {
@@ -47,7 +47,7 @@ const initLanding = () => {
 
   // 3. SCROLL REVEAL ANIMATIONS (Intersection Observer)
   const revealElements = document.querySelectorAll('.reveal-up');
-  
+
   if ('IntersectionObserver' in window && revealElements.length > 0) {
     const revealObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -80,7 +80,7 @@ const initLanding = () => {
           const offset = 80;
           const elementPosition = targetEl.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - offset;
-  
+
           window.scrollTo({
             top: offsetPosition,
             behavior: 'smooth'
@@ -102,12 +102,12 @@ fetchPlans();
 // =============================================================================
 
 // Global toggle logic for Monthly/Annual
-window.togglePricing = function(mode) {
+window.togglePricing = function (mode) {
   const btnMonthly = document.getElementById('btn-monthly');
   const btnAnnual = document.getElementById('btn-annual');
   const indicator = document.getElementById('pricing-indicator');
   const priceValues = document.querySelectorAll('.price-val');
-  
+
   if (!btnMonthly || !btnAnnual || !indicator) return;
 
   if (mode === 'monthly') {
@@ -115,7 +115,7 @@ window.togglePricing = function(mode) {
     btnAnnual.setAttribute('aria-pressed', 'false');
     indicator.style.transform = 'translateX(0)';
     indicator.style.width = `${btnMonthly.offsetWidth}px`;
-    
+
     priceValues.forEach(el => {
       el.textContent = el.dataset.monthly;
     });
@@ -124,7 +124,7 @@ window.togglePricing = function(mode) {
     btnMonthly.setAttribute('aria-pressed', 'false');
     indicator.style.transform = `translateX(${btnMonthly.offsetWidth}px)`;
     indicator.style.width = `${btnAnnual.offsetWidth}px`;
-    
+
     priceValues.forEach(el => {
       el.textContent = el.dataset.annual;
     });
@@ -183,7 +183,7 @@ async function fetchPlans() {
         priceAnnual = Math.round(priceMonthly * 0.8);
       }
 
-      const isPremium = plan.is_default || index === 1;
+      const isPremium = plan.is_default;
       const delayClass = `delay-${(index + 1) * 100}`;
       let featuresHtml = '';
 
@@ -192,9 +192,17 @@ async function fetchPlans() {
         // Tenta quebrar por \n (escapado) ou quebra de linha real
         const sep = plan.benefits.includes('\\n') ? '\\n' : '\n';
         plan.benefits.split(sep).filter(b => b.trim() !== '').forEach(ben => {
-          let icon = 'check-circle-2';
+          let isDisabled = false;
           let text = ben.trim();
-          
+
+          // Se começar com "off:", renderiza como disabled
+          if (text.toLowerCase().startsWith('off:')) {
+            isDisabled = true;
+            text = text.substring(4).trim();
+          }
+
+          let icon = 'check-circle-2';
+
           // Suporta o formato "icone|Texto" ou "icone:Texto"
           if (text.includes('|')) {
             const parts = text.split('|');
@@ -206,37 +214,15 @@ async function fetchPlans() {
             text = parts.slice(1).join(':').trim();
           }
 
-          featuresHtml += `<li><i data-lucide="${icon}" style="color: var(--accent-primary)"></i> <strong>${text}</strong></li>`;
+          if (isDisabled) {
+            featuresHtml += `<li class="disabled"><i data-lucide="${icon}"></i> <span>${text}</span></li>`;
+          } else {
+            featuresHtml += `<li><i data-lucide="${icon}" style="color: var(--accent-primary)"></i> <strong>${text}</strong></li>`;
+          }
         });
       }
 
-      const limits = feats.limits || {};
 
-      if (limits.max_employees !== undefined && limits.max_employees >= 0) {
-        const val = limits.max_employees;
-        featuresHtml += `<li><i data-lucide="users"></i> ${val === 1 ? '1 Profissional' : 'Até ' + val + ' Profissionais'}</li>`;
-      }
-
-      if (limits.max_services !== undefined && limits.max_services >= 0) {
-        const val = limits.max_services;
-        featuresHtml += `<li><i data-lucide="scissors"></i> ${val === 1 ? '1 Serviço' : 'Até ' + val + ' Serviços'}</li>`;
-      }
-
-      if (limits.max_clients !== undefined && limits.max_clients >= 0) {
-        featuresHtml += `<li><i data-lucide="contact"></i> Até ${limits.max_clients} Clientes</li>`;
-      }
-
-      if (feats.app_agendamento === true) {
-        featuresHtml += `<li><i data-lucide="smartphone"></i> App de Agendamento</li>`;
-      } else {
-        featuresHtml += `<li class="disabled"><i data-lucide="minus"></i> App de Agendamento</li>`;
-      }
-
-      if (feats.financeiro === true) {
-        featuresHtml += `<li><i data-lucide="pie-chart"></i> Gestão Financeira</li>`;
-      } else {
-        featuresHtml += `<li class="disabled"><i data-lucide="minus"></i> Gestão Financeira</li>`;
-      }
 
       html += `
         <article class="plan-card ${isPremium ? 'featured' : ''} is-visible ${delayClass}">
@@ -261,7 +247,7 @@ async function fetchPlans() {
     });
 
     grid.innerHTML = html;
-    
+
     // Re-initialize Lucide icons for dynamically added content
     if (window.lucide) {
       window.lucide.createIcons();

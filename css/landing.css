@@ -36,9 +36,9 @@
   --warning: #F59E0B;
   --danger: #EF4444;
 
-  /* Gradientes Premium */
-  --grad-primary: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%);
-  --grad-subtle: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%);
+  /* Cores Sólidas (Substituindo antigos gradientes) */
+  --grad-primary: var(--accent-primary);
+  --grad-subtle: rgba(59, 130, 246, 0.15);
 
   /* Tipografia */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -126,12 +126,7 @@ ol {
 }
 
 .text-gradient {
-  background: var(--grad-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  /* Fallback */
+  color: var(--accent-primary);
 }
 
 .visually-hidden {
@@ -691,17 +686,37 @@ ol {
   padding: 4rem 0;
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  text-align: center;
+.stats-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  position: relative;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.stats-marquee-track {
+  display: inline-flex;
+  gap: 4rem;
+  padding-right: 4rem;
+  animation: scroll-marquee 25s linear infinite;
+}
+
+.stats-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  align-items: center;
+  text-align: center;
 }
 
 .stat-number {
@@ -751,91 +766,56 @@ ol {
   font-size: 1rem;
   color: var(--text-secondary);
 }
+.drag-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  animation: pulse-horizontal 2s infinite ease-in-out;
+}
+
+@keyframes pulse-horizontal {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
 
 .features-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
   gap: 1.5rem;
+  padding: 1rem 0 2rem 0;
+  scrollbar-width: none;
+  cursor: grab;
 }
 
-/* EFEITO PREMIUM MOBILE: FLOATING BADGE CARDS */
-@media (max-width: 767px) {
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem 0.75rem;
-    /* Gap maior vertical, menor horizontal */
-    position: static;
-    padding: 1.5rem 0 1rem 0;
-  }
-
-  .features-grid::before {
-    display: none;
-  }
-
-  .feature-card {
-    position: relative;
-    width: auto !important;
-    align-self: stretch;
-    background: var(--bg-surface) !important;
-    border: 1px solid var(--border-light) !important;
-    border-radius: 1rem !important;
-    padding: 2.5rem 0.5rem 1rem 0.5rem !important;
-    /* Menos padding horizontal */
-    margin: 0 !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
-    overflow: visible !important;
-  }
-
-  .feature-icon-wrapper {
-    position: absolute !important;
-    top: -1.5rem !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 48px !important;
-    height: 48px !important;
-    border-radius: 0.75rem !important;
-    background: var(--bg-base) !important;
-    border: 2px solid var(--accent-primary) !important;
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4) !important;
-    margin: 0 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-  }
-
-  .feature-icon-wrapper i,
-  .feature-icon-wrapper svg {
-    width: 24px !important;
-    height: 24px !important;
-    color: var(--text-primary);
-  }
-
-  .feature-card h3 {
-    font-size: 1.05rem;
-    /* Reduzido para caber 2 colunas */
-    font-weight: 800;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.2;
-    color: var(--text-primary);
-  }
-
-  .feature-card p {
-    font-size: 0.5rem;
-    /* Reduzido conforme solicitado para caber melhor no mobile */
-    line-height: 1.4;
-    color: var(--text-secondary);
-    margin: 0;
-  }
+.features-grid::-webkit-scrollbar {
+  display: none;
 }
+
+.features-grid:active {
+  cursor: grabbing;
+}
+
+.features-grid.is-dragging {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+
+.features-grid.is-dragging .feature-card {
+  pointer-events: none;
+}
+
+/* Mobile max-width hack removed for proper Mobile First behavior */
 
 .feature-card {
-  width: 100%;
+  flex: 0 0 85vw;
+  max-width: 350px;
+  scroll-snap-align: center;
   background: var(--bg-surface);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
@@ -1125,59 +1105,9 @@ ol {
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-/* Ajustes finos para caber 2 cards lado a lado na tela pequena (Mobile) */
-@media (max-width: 767px) {
-  .pricing-grid {
-    gap: 0.75rem;
-  }
-
-  .plan-card {
-    padding: 1rem !important;
-    border-radius: 1rem !important;
-  }
-
-  .plan-name {
-    font-size: 1rem !important;
-  }
-
-  .plan-price {
-    font-size: 1.75rem !important;
-  }
-
-  .plan-currency {
-    font-size: 0.8rem !important;
-  }
-
-  .plan-period {
-    font-size: 0.65rem !important;
-  }
-
-  .plan-desc {
-    font-size: 0.75rem !important;
-  }
-
-  .plan-features-list {
-    margin: 0.75rem 0 1rem !important;
-    gap: 0.4rem !important;
-  }
-
-  .plan-features-list li {
-    font-size: 0.75rem !important;
-  }
-
-  .plan-features-list li i {
-    width: 14px !important;
-    height: 14px !important;
-  }
-
-  .plan-badge-top {
-    font-size: 0.6rem !important;
-    padding: 0.15rem 0.5rem !important;
-  }
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 1rem 0;
 }
 
 .plan-card {
@@ -1328,9 +1258,13 @@ ol {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 3rem;
   margin-bottom: 3rem;
+}
+
+.footer-brand {
+  grid-column: span 2;
 }
 
 .footer-brand p {
@@ -1402,79 +1336,56 @@ ol {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   MEDIA QUERIES (TABLET & DESKTOP)
+   MEDIA QUERIES (TABLET & DESKTOP) - MOBILE FIRST
    ───────────────────────────────────────────────────────────── */
-@media (min-width: 640px) {
-  .hero-title {
-    font-size: 3rem;
-  }
 
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .pricing-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .hero-actions,
-  .cta-panel .hero-actions {
-    flex-direction: row;
-    justify-content: center;
-    width: auto;
-  }
-
-  .btn-full {
-    width: auto;
-  }
-}
-
+/* TABLET (768px+) */
 @media (min-width: 768px) {
   .hero-section {
     padding: 10rem 0 5rem;
   }
-
   .hero-layout {
     flex-direction: row;
     align-items: center;
     gap: 4rem;
   }
-
   .hero-content {
     flex: 1;
     text-align: left;
     align-items: flex-start;
   }
-
   .hero-actions {
+    flex-direction: row;
     justify-content: flex-start;
+    width: auto;
   }
-
   .hero-visual {
     flex: 1;
   }
-
-  .section-title {
-    font-size: 2.5rem;
+  .btn-full {
+    width: auto;
   }
 
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr);
+  .drag-indicator {
+    display: none;
   }
 
-  /* Volta a ser Grid no tablet */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     overflow-x: visible;
+    cursor: default;
+  }
+  .feature-card {
+    flex: auto;
+    max-width: none;
   }
 
-  .feature-card {
-    min-width: 0;
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .plan-card {
+    max-width: none;
   }
 
   .highlight-panel {
@@ -1482,15 +1393,19 @@ ol {
     align-items: center;
     padding: 3rem;
   }
-
   .highlight-text-content {
     flex: 1;
   }
-
   .highlight-visual-content {
     flex: 1;
     width: 100%;
   }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
 
   .footer-bottom {
     flex-direction: row;
@@ -1498,17 +1413,15 @@ ol {
   }
 }
 
+/* DESKTOP (1024px+) */
 @media (min-width: 1024px) {
-
-  /* Navbar Desktop */
+  /* Navbar */
   .btn-menu-toggle {
     display: none;
   }
-
   .nav-mobile-overlay {
     display: none !important;
   }
-
   .nav-menu {
     display: flex;
     align-items: center;
@@ -1516,7 +1429,6 @@ ol {
     flex: 1;
     margin-left: 3rem;
   }
-
   .nav-menu-links {
     display: flex;
     gap: 2rem;
@@ -1524,11 +1436,9 @@ ol {
     font-size: 0.9375rem;
     color: var(--text-secondary);
   }
-
   .nav-menu-links a:hover {
     color: var(--text-primary);
   }
-
   .nav-menu-actions {
     display: flex;
     align-items: center;
@@ -1540,24 +1450,36 @@ ol {
   }
 
   .features-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(200px, auto);
+  }
+
+  .bento-large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .bento-wide {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  .bento-square {
+    grid-column: span 1;
+    grid-row: span 1;
   }
 
   .pricing-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 800px;
-    /* Como são 2 cards, limitamos a largura máxima para não ficarem gigantes */
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
     margin: 0 auto;
   }
 
   .footer-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 
   .cta-panel {
     padding: 5rem;
   }
-
   .cta-panel h2 {
     font-size: 3rem;
   }
