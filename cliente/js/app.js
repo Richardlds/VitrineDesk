@@ -1223,11 +1223,11 @@ function showCustomInstallBanner() {
   const banner = document.createElement('div');
   banner.id = 'pwa-install-banner';
   banner.className = 'glass-card flex align-center justify-between gap-3';
-  banner.style.cssText = 'position: fixed; bottom: 80px; left: 16px; right: 16px; z-index: 9999; padding: 12px 16px; border-radius: 16px; border: 1px solid var(--primary-alpha); background: rgba(5,5,8,0.9); backdrop-filter: blur(12px); animation: slideUp 0.5s ease-out forwards; box-shadow: 0 10px 30px rgba(0,0,0,0.5);';
+  banner.style.cssText = 'position: fixed; bottom: 80px; left: 16px; right: 16px; z-index: 9999; padding: 12px 16px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg-card); animation: slideUp 0.5s ease-out forwards; box-shadow: var(--shadow);';
   
   banner.innerHTML = `
     <div style="display:flex; align-items:center; gap: 12px;">
-      <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--primary-alpha); color: var(--primary); display: flex; align-items:center; justify-content:center;">
+      <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--primary-soft); color: var(--primary); display: flex; align-items:center; justify-content:center;">
         <i data-lucide="download"></i>
       </div>
       <div>
