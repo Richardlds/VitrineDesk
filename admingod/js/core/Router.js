@@ -39,7 +39,12 @@ export class Router {
     }
 
     async handleRoute() {
-        let hash = window.location.hash.slice(1) || '/dashboard';
+        if (!window.location.hash || window.location.hash === '#/') {
+            window.location.hash = '#/dashboard';
+            return;
+        }
+        
+        let hash = window.location.hash.slice(1);
         if (hash.startsWith('/')) hash = hash.slice(1);
         
         const route = this.routes[hash];

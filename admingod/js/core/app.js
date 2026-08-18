@@ -855,26 +855,6 @@ window.showConfirm = function(message, onConfirm) {
         if (typeof onConfirm === 'function') onConfirm();
     });
 };
-        </div>
-    `;
-
-    if (typeof onClick === 'function') {
-        toast.style.cursor = 'pointer';
-        toast.addEventListener('click', onClick);
-    }
-
-    container.appendChild(toast);
-    if (window.lucide) window.lucide.createIcons();
-    
-    // Trigger reflow to ensure the transition happens
-    toast.offsetHeight;
-    toast.classList.add('show');
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400); // 400ms matches the CSS transition time
-    }, 3000);
-};
 
 // Global Confirm functionality
 window.showConfirm = function (message, onConfirm) {
