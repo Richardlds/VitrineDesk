@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Registrar Service Worker para o PWA do Lojista
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch(err => {
+            navigator.serviceWorker.register('/admin/sw.js', { scope: '/admin/' }).catch(err => {
                 console.warn('Falha ao registrar Service Worker do Lojista:', err);
             });
         });
@@ -33,43 +33,43 @@ window.addEventListener('beforeinstallprompt', (e) => {
     window.dispatchEvent(new Event('pwaInstallReady'));
 
     // Criar o Pop-up global de instalação se não existir
-    if (!document.getElementById('pwa-install-popup') && !sessionStorage.getItem('pwa_popup_dismissed')) {
+    if (!document.getElementById('pwa-install-banner') && !sessionStorage.getItem('pwa_popup_dismissed')) {
         const popupHtml = `
-            <div id="pwa-install-popup" class="config-card flex align-center justify-between gap-3 shadow-sm" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 99999; max-width: 400px; width: 90%; background: var(--color-bg-surface); border: 1px solid var(--color-primary); animation: slideUp 0.3s ease-out;">
-                <div class="flex align-center gap-3">
-                    <div class="bg-primary-light p-2 rounded-md flex-shrink-0 text-primary">
-                        <i data-lucide="download-cloud" class="icon-sm"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-bold m-0 text-primary">App do Lojista</h4>
-                        <p class="text-xs text-secondary m-0 mt-1" style="line-height: 1.3;">Instale para ter acesso rápido à sua Vitrine.</p>
-                    </div>
+            <div id="pwa-install-banner" style="position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 99999; padding: 10px 10px 10px 14px; border-radius: 999px; background: var(--color-bg-surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--color-border-glow); box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 20px var(--color-primary-light); animation: islandDrop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; display: flex; align-items: center; gap: 16px; min-width: 320px; max-width: 92vw;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; box-shadow: 0 4px 12px var(--color-primary-glow);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="download"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg>
                 </div>
-                <div class="flex flex-column gap-2 flex-shrink-0">
-                    <button id="btn-pwa-install-global" class="btn btn-primary px-3 py-1 rounded-md text-xs font-bold w-100">Instalar</button>
-                    <button id="btn-pwa-dismiss-global" class="btn bg-transparent text-secondary border-none cursor-pointer text-xs p-0 w-100 hover:text-danger">Agora não</button>
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--color-text-primary); line-height: 1.2;">App Lojista</h4>
+                    <p style="margin: 2px 0 0 0; font-size: 12px; color: var(--color-text-secondary); line-height: 1.2;">Acesso mais rápido e fluido</p>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: center; flex-shrink: 0;">
+                    <button id="btn-pwa-dismiss" style="background: transparent; border: none; color: var(--color-text-secondary); cursor: pointer; padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+                    <button id="btn-pwa-install" style="background: var(--color-text-primary); color: var(--color-bg-base); border: none; padding: 8px 16px; font-size: 13px; font-weight: 700; border-radius: 999px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">Instalar</button>
                 </div>
             </div>
             <style>
-                @keyframes slideUp { from { bottom: -100px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
+                @keyframes islandDrop { from { top: -100px; transform: translateX(-50%) scale(0.9); opacity: 0; } to { top: 24px; transform: translateX(-50%) scale(1); opacity: 1; } }
+                #btn-pwa-install:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(255,255,255,0.2); }
+                #btn-pwa-dismiss:hover { background: var(--color-bg-hover); color: var(--color-text-primary); }
             </style>
         `;
         document.body.insertAdjacentHTML('beforeend', popupHtml);
         if (window.lucide) window.lucide.createIcons();
 
-        document.getElementById('btn-pwa-install-global').addEventListener('click', async () => {
+        document.getElementById('btn-pwa-install').addEventListener('click', async () => {
             const promptEvent = window.deferredInstallPrompt;
             if (!promptEvent) return;
             promptEvent.prompt();
             const { outcome } = await promptEvent.userChoice;
             if (outcome === 'accepted') {
-                document.getElementById('pwa-install-popup').remove();
+                document.getElementById('pwa-install-banner').remove();
             }
             window.deferredInstallPrompt = null;
         });
 
-        document.getElementById('btn-pwa-dismiss-global').addEventListener('click', () => {
-            document.getElementById('pwa-install-popup').remove();
+        document.getElementById('btn-pwa-dismiss').addEventListener('click', () => {
+            document.getElementById('pwa-install-banner').remove();
             sessionStorage.setItem('pwa_popup_dismissed', 'true');
         });
     }

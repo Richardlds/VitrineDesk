@@ -1220,38 +1220,19 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 function showCustomInstallBanner() {
-  if (document.getElementById('pwa-install-banner')) return;
+  const banner = document.getElementById('pwa-install-banner');
+  if (!banner) return;
+  if (banner.style.display === 'flex') return;
 
-  const banner = document.createElement('div');
-  banner.id = 'pwa-install-banner';
-  banner.className = 'glass-card flex align-center justify-between gap-3';
-  banner.style.cssText = 'position: fixed; bottom: 80px; left: 16px; right: 16px; z-index: 9999; padding: 12px 16px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg-card); animation: slideUp 0.5s ease-out forwards; box-shadow: var(--shadow);';
-  
-  banner.innerHTML = `
-    <div style="display:flex; align-items:center; gap: 12px;">
-      <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--primary-soft); color: var(--primary); display: flex; align-items:center; justify-content:center;">
-        <i data-lucide="download"></i>
-      </div>
-      <div>
-        <h4 style="margin:0; font-size: 14px; font-weight: 600; color: var(--text-main);">Instalar Aplicativo</h4>
-        <p style="margin:0; font-size: 12px; color: var(--text-muted);">Acesse mais rápido da tela inicial</p>
-      </div>
-    </div>
-    <div style="display:flex; gap: 8px; align-items:center;">
-      <button id="btn-pwa-dismiss" style="background:transparent; border:none; color: var(--text-muted); cursor:pointer; padding: 4px; display:flex; align-items:center; justify-content:center; border-radius: 50%;"><i data-lucide="x" style="width: 18px; height: 18px;"></i></button>
-      <button id="btn-pwa-install" class="btn btn-primary" style="padding: 6px 14px; font-size: 12px; min-height: unset; border-radius: 8px; font-weight: bold;">Instalar</button>
-    </div>
-  `;
-  
-  document.body.appendChild(banner);
-  if (window.lucide) window.lucide.createIcons({ root: banner });
+  banner.style.display = 'flex';
 
-  document.getElementById('btn-pwa-dismiss').addEventListener('click', () => {
+  // Usa onclick para evitar múltiplos event listeners caso a função seja chamada mais de uma vez
+  document.getElementById('btn-pwa-dismiss').onclick = () => {
     banner.style.display = 'none';
     deferredPrompt = null;
-  });
+  };
 
-  document.getElementById('btn-pwa-install').addEventListener('click', async () => {
+  document.getElementById('btn-pwa-install').onclick = async () => {
     banner.style.display = 'none';
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -1259,6 +1240,5 @@ function showCustomInstallBanner() {
       console.log('User PWA install outcome:', outcome);
       deferredPrompt = null;
     }
-  });
+  };
 }
-
