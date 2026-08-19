@@ -83,3 +83,44 @@ AGENTS.md
 # Supabase (se usado localmente via CLI)
 supabase/.temp/
 supabase/.temp
+supabase/.branches/
+
+# --- FORTIFICAÇÃO EXTRA ---
+
+# Segurança e chaves
+*.pem
+*.crt
+*.key
+*.cer
+*.p12
+*.pfx
+client_secret.json
+credentials.json
+oauth.json
+.npmrc
+
+# Testes e cobertura de código
+coverage/
+.nyc_output/
+
+# Build tools, bundlers e caches adicionais
+.parcel-cache/
+.cache/
+.vite/
+.turbocache/
+.eslintcache
+.stylelintcache
+
+# Arquivos temporários e backups genéricos
+*.bak
+*.tmp
+*.temp
+*~
+.#*
+\#*\#
+
+# Mais arquivos de Sistema Operacional
+Icon\r
+$RECYCLE.BIN/
+Desktop.ini
+Thumbs.db:encryptable

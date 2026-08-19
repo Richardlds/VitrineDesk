@@ -10,6 +10,69 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         window.lucide.createIcons();
     }
+
+    // Registrar Service Worker para o PWA do Lojista
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.warn('Falha ao registrar Service Worker do Lojista:', err);
+            });
+        });
+    }
+});
+
+// Capturar o evento de instalação do PWA
+window.deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Previne que o mini-infobar apareça no mobile
+    e.preventDefault();
+    // Salva o evento para ser disparado pelo botão
+    window.deferredInstallPrompt = e;
+    
+    // Dispara evento customizado para que os controllers possam exibir o botão se quiserem
+    window.dispatchEvent(new Event('pwaInstallReady'));
+
+    // Criar o Pop-up global de instalação se não existir
+    if (!document.getElementById('pwa-install-popup') && !sessionStorage.getItem('pwa_popup_dismissed')) {
+        const popupHtml = `
+            <div id="pwa-install-popup" class="config-card flex align-center justify-between gap-3 shadow-sm" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 99999; max-width: 400px; width: 90%; background: var(--color-bg-surface); border: 1px solid var(--color-primary); animation: slideUp 0.3s ease-out;">
+                <div class="flex align-center gap-3">
+                    <div class="bg-primary-light p-2 rounded-md flex-shrink-0 text-primary">
+                        <i data-lucide="download-cloud" class="icon-sm"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold m-0 text-primary">App do Lojista</h4>
+                        <p class="text-xs text-secondary m-0 mt-1" style="line-height: 1.3;">Instale para ter acesso rápido à sua Vitrine.</p>
+                    </div>
+                </div>
+                <div class="flex flex-column gap-2 flex-shrink-0">
+                    <button id="btn-pwa-install-global" class="btn btn-primary px-3 py-1 rounded-md text-xs font-bold w-100">Instalar</button>
+                    <button id="btn-pwa-dismiss-global" class="btn bg-transparent text-secondary border-none cursor-pointer text-xs p-0 w-100 hover:text-danger">Agora não</button>
+                </div>
+            </div>
+            <style>
+                @keyframes slideUp { from { bottom: -100px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
+            </style>
+        `;
+        document.body.insertAdjacentHTML('beforeend', popupHtml);
+        if (window.lucide) window.lucide.createIcons();
+
+        document.getElementById('btn-pwa-install-global').addEventListener('click', async () => {
+            const promptEvent = window.deferredInstallPrompt;
+            if (!promptEvent) return;
+            promptEvent.prompt();
+            const { outcome } = await promptEvent.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('pwa-install-popup').remove();
+            }
+            window.deferredInstallPrompt = null;
+        });
+
+        document.getElementById('btn-pwa-dismiss-global').addEventListener('click', () => {
+            document.getElementById('pwa-install-popup').remove();
+            sessionStorage.setItem('pwa_popup_dismissed', 'true');
+        });
+    }
 });
 
 // Theme Management

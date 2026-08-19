@@ -92,6 +92,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   }
 
+  // Registrar Service Worker para o PWA do Lojista
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(err => {
+      console.warn('Falha ao registrar Service Worker do Lojista:', err);
+    });
+  }
+
 
 
   const msg = getQueryParam('msg');

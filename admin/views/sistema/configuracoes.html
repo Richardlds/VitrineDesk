@@ -311,13 +311,20 @@
             </div>
 
             <!-- Direita: Dicas -->
-            <div class="sticky-top">
-                <div
-                    class="config-card mb-0 flex flex-column align-center justify-center bg-placeholder border-dashed text-center min-h-400px h-100">
+            <div class="sticky-top flex flex-column gap-3">
+                <div class="config-card mb-0 flex flex-column align-center justify-center bg-placeholder border-dashed text-center min-h-300px">
                     <i data-lucide="settings" class="text-secondary mb-2 w-48px h-48px"></i>
                     <h3 class="text-secondary mb-1">Painel de Negócios</h3>
-                    <p class="text-secondary text-sm px-3">As alterações feitas aqui refletem nas regras e funcionamento
-                        geral da sua Vitrine.</p>
+                    <p class="text-secondary text-sm px-3">As alterações feitas aqui refletem nas regras e funcionamento geral da sua Vitrine.</p>
+                </div>
+
+                <div class="config-card mb-0 flex flex-column align-center justify-center text-center p-4 d-none" id="card-pwa-install-config" style="background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-bg-surface) 100%); border-color: var(--color-primary);">
+                    <i data-lucide="download-cloud" class="text-primary mb-2 w-40px h-40px"></i>
+                    <h3 class="text-primary mb-1 mt-0">App do Lojista</h3>
+                    <p class="text-secondary text-sm mb-3 mt-0">Instale o aplicativo no seu celular ou computador para acesso rápido.</p>
+                    <button type="button" id="btn-install-pwa-config" class="btn btn-primary w-100 py-2 rounded-md font-bold flex align-center justify-center gap-2">
+                        <i data-lucide="smartphone" class="icon-sm"></i> Instalar App
+                    </button>
                 </div>
             </div>
 

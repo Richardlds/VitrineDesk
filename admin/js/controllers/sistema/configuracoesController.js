@@ -228,6 +228,30 @@ export class configuracoesController {
             endInput.addEventListener('blur', this.updateMapPreview);
             endInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); this.updateMapPreview(); } });
         }
+
+        // --- PWA INSTALL LOGIC ---
+        const pwaCard = document.getElementById('card-pwa-install-config');
+        const pwaBtn = document.getElementById('btn-install-pwa-config');
+
+        if (pwaCard && pwaBtn) {
+            if (window.deferredInstallPrompt) {
+                pwaCard.classList.remove('d-none');
+            }
+
+            window.addEventListener('pwaInstallReady', () => {
+                pwaCard.classList.remove('d-none');
+            });
+
+            pwaBtn.addEventListener('click', async () => {
+                if (!window.deferredInstallPrompt) return;
+                window.deferredInstallPrompt.prompt();
+                const { outcome } = await window.deferredInstallPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    pwaCard.classList.add('d-none');
+                }
+                window.deferredInstallPrompt = null;
+            });
+        }
     }
 
     switchTab(activeBtn) {
