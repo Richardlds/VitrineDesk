@@ -72,44 +72,40 @@ export async function loginCliente(email, senha) {
     }
     
     email = email.trim().toLowerCase();
-
     const tenantId = getTenantId();
     if (!tenantId) {
       showToast('Erro: loja não identificada', 'error');
       return null;
     }
 
-    // Busca o cliente APENAS pelo email
+    const supabase = getSupabaseAuthClient();
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: senha
+    });
+
+    if (authError || !authData?.user) {
+      console.error('Erro Auth:', authError);
+      showToast('E-mail ou senha incorretos', 'error');
+      return null;
+    }
+
+    // Busca o perfil do cliente na tabela (usando o id do auth)
+    // Opcional: buscar por email caso a trigger de insert tenha falhado no passado
     const result = await supaFetch(
       `/rest/v1/clientes?email=eq.${encodeURIComponent(email)}&select=*`
     );
 
     if (!result || result.length === 0) {
-      showToast('E-mail ou senha incorretos', 'error');
+      showToast('Cadastro de cliente não encontrado nesta loja.', 'error');
+      await supabase.auth.signOut();
       return null;
     }
 
     const cliente = result[0];
-
-    // Verifica o hash Bcrypt retornado pelo banco
-    // A biblioteca dcodeIO.bcrypt foi injetada via CDN no HTML
-    let isPasswordValid = false;
-    try {
-      if (window.dcodeIO && window.dcodeIO.bcrypt) {
-        isPasswordValid = window.dcodeIO.bcrypt.compareSync(senha, cliente.senha);
-      } else {
-        console.error("Biblioteca bcryptjs não carregada!");
-        showToast('Erro interno: validação indisponível', 'error');
-        return null;
-      }
-    } catch(err) {
-      console.error("Erro ao validar senha Bcrypt", err);
-      showToast('E-mail ou senha incorretos', 'error');
-      return null;
-    }
-
-    if (!isPasswordValid) {
-      showToast('E-mail ou senha incorretos', 'error');
+    if (cliente.tenant_id !== tenantId) {
+      showToast('Este cliente pertence a outra loja.', 'error');
+      await supabase.auth.signOut();
       return null;
     }
 
@@ -183,29 +179,10 @@ export async function registrarCliente(dados) {
     }
 
     email = email.trim().toLowerCase();
-    
-    // ATENÇÃO: Enviamos a senha em texto plano porque sabemos que
-    // o banco de dados tem uma Trigger que converte ela pra Bcrypt na inserção!
-    const senhaFinal = senha;
-    
     const numTelefone = telefone ? telefone.replace(/\D/g, '') : null;
     const numCpf = cpf ? cpf.replace(/\D/g, '') : null;
 
-    // Criar payload
-    const novoCliente = {
-      tenant_id: tenantId,
-      nome: nome.trim(),
-      email,
-      senha: senhaFinal,
-      telefone: numTelefone,
-      cpf: numCpf,
-      termo_aceite_id: dados.termo_aceite_id || null,
-      data_aceite_termo: dados.termo_aceite_id ? new Date().toISOString() : null
-    };
-
-    // ─────────────────────────────────────────────────────────────
-    // PRÉ-CHECK DE DUPLICIDADE MÚLTIPLA
-    // ─────────────────────────────────────────────────────────────
+    // PRÉ-CHECK DE DUPLICIDADE (mantido)
     let orConditions = [`email.eq.${encodeURIComponent(email)}`];
     if (numCpf) orConditions.push(`cpf.eq.${encodeURIComponent(numCpf)}`);
     if (numTelefone) orConditions.push(`telefone.eq.${encodeURIComponent(numTelefone)}`);
@@ -221,17 +198,42 @@ export async function registrarCliente(dados) {
         } else if (numCpf && dup.cpf === numCpf) {
           showToast('Este CPF já está cadastrado em outra conta.', 'warning');
         } else if (numTelefone && dup.telefone === numTelefone) {
-          showToast('Este telefone (WhatsApp) já está cadastrado.', 'warning');
+          showToast('Este telefone já está cadastrado.', 'warning');
         } else {
           showToast('Já existe um cadastro com esses dados.', 'warning');
         }
         return null;
       }
     } catch (checkErr) {
-      console.warn("Erro no pré-check, continuando com inserção", checkErr);
+      console.warn("Erro no pré-check", checkErr);
     }
 
-    // Tentar salvar direto. O Supabase (PostgreSQL) vai barrar duplicidades (Erro 409) se houver.
+    // 1. Cadastrar usuário no Supabase Auth
+    const supabase = getSupabaseAuthClient();
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: email,
+      password: senha
+    });
+
+    if (authError || !authData?.user) {
+      console.error("Erro no Auth SignUp:", authError);
+      showToast('Erro ao criar credenciais. E-mail pode estar em uso.', 'error');
+      return null;
+    }
+
+    // 2. Criar payload para a tabela clientes
+    const novoCliente = {
+      id: authData.user.id, // Sincroniza o ID com o auth.users
+      tenant_id: tenantId,
+      nome: nome.trim(),
+      email,
+      telefone: numTelefone,
+      cpf: numCpf,
+      termo_aceite_id: dados.termo_aceite_id || null,
+      data_aceite_termo: dados.termo_aceite_id ? new Date().toISOString() : null
+    };
+
+    // 3. Inserir no banco de dados (tabela clientes)
     const result = await supaFetch('/rest/v1/clientes', {
       method: 'POST',
       body: novoCliente
@@ -624,20 +626,22 @@ export function initAuth() {
         try {
           const email = document.getElementById('forgot-email')?.value?.trim();
           if (!email) { showToast('Preencha o e-mail', 'warning'); return; }
-          const tenantId = getTenantId();
           
-          await supaFetch('/rest/v1/rpc/request_password_reset', {
-            method: 'POST',
-            body: { p_email: email.toLowerCase(), p_tenant_id: tenantId }
+          const supabase = getSupabaseAuthClient();
+          const { error } = await supabase.auth.resetPasswordForEmail(email.toLowerCase(), {
+            redirectTo: window.location.origin + window.location.pathname + '?tab=reset',
           });
           
+          if (error) {
+            console.error('Erro reset:', error);
+          }
+          
           // Mostramos a mensagem de sucesso mesmo se falhar para evitar enumeração de emails
-          showToast('Se o e-mail existir, você receberá um link de recuperação em instantes.', 'info');
+          showToast('Se o e-mail existir no sistema, você receberá um link de recuperação em instantes.', 'info');
           openAuthModal('login');
         } catch(err) {
           console.error(err);
-          showToast('Se o e-mail existir, você receberá um link de recuperação em instantes.', 'info');
-          openAuthModal('login');
+          showToast('Erro ao processar solicitação.', 'error');
         } finally {
           btn.disabled = false;
           btn.innerHTML = originalText;
@@ -662,23 +666,19 @@ export function initAuth() {
              showToast('A senha deve ter no mínimo 6 caracteres', 'warning'); 
              return; 
           }
-          if (!window._resetToken) {
-             showToast('Token inválido ou expirado.', 'error');
-             return;
-          }
-          
-          const result = await supaFetch('/rest/v1/rpc/redefinir_senha_cliente', {
-             method: 'POST',
-             body: { p_token: window._resetToken, p_nova_senha: novaSenha }
+          const supabase = getSupabaseAuthClient();
+          const { data, error } = await supabase.auth.updateUser({
+            password: novaSenha
           });
           
-          if (result === true) {
+          if (!error) {
              showToast('Senha alterada com sucesso! Faça login.', 'success');
-             window._resetToken = null;
              window.history.replaceState({}, document.title, window.location.pathname);
+             await supabase.auth.signOut(); // Desloga a sessão temporária de recovery
              openAuthModal('login');
           } else {
-             showToast('Token inválido ou expirado.', 'error');
+             console.error('Erro ao atualizar senha:', error);
+             showToast('Não foi possível alterar a senha. O link pode ter expirado.', 'error');
           }
         } catch(err) {
           console.error(err);
