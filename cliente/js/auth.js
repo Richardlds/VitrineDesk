@@ -459,6 +459,9 @@ export function updateAuthUI(logged) {
 
     // Fechar modais abertos
     closeAuthModal();
+
+    // Notificar outros componentes (como planos.js) que o estado mudou
+    document.dispatchEvent(new Event('userStateChanged'));
   } catch (e) {
     console.error('Erro ao atualizar UI auth:', e);
   }
