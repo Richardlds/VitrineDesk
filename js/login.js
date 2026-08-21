@@ -243,12 +243,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!authError && authData?.user) {
       const user = authData.user;
 
+      const { data: adminData } = await supabase.from('admin_users').select('role').eq('id', user.id).limit(1).maybeSingle();
+      if (adminData?.role === 'superadmin' || adminData?.role === 'admin') {
+        window.location.href = '/admingod/';
+        return;
+      }
+
+      const { data: tenantData } = await supabase.from('tenants').select('id, is_active, approval_status').eq('owner_id', user.id).order('created_at', { ascending: false }).limit(1).maybeSingle();
+      if (tenantData) {
+        if (tenantData.approval_status === 'pending') {
+           await supabase.auth.signOut();
+           window.location.href = window.location.origin + window.location.pathname + '?msg=pending';
+           return;
+        } else if (tenantData.approval_status === 'rejected') {
+           await supabase.auth.signOut();
+           window.location.href = window.location.origin + window.location.pathname + '?msg=rejected';
+           return;
+        } else if (!tenantData.is_active) {
+           await supabase.auth.signOut();
+           window.location.href = window.location.origin + window.location.pathname + '?msg=suspended';
+           return;
+        } else {
+           window.location.href = '/admin/';
+           return;
+        }
+      }
+
+      // Check if user is staff
+      const { data: staffData } = await supabase.from('tenant_users').select('tenant_id').eq('user_id', user.id).maybeSingle();
+      if (staffData && staffData.tenant_id) {
+          sessionStorage.setItem('staff_tenant_id', staffData.tenant_id);
+          window.location.href = '/admin/';
+          return;
+      }
+
       const modalComplete = document.getElementById('modal-complete-registration');
       if (modalComplete) {
 
-           modalComplete.style.display = 'flex';
-
-           setTimeout(() => modalComplete.classList.add('active'), 10);
+           modalComplete.classList.add('active');
 
            
 
