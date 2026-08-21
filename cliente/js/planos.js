@@ -1,4 +1,4 @@
-import { supaFetch, showToast, escapeHtml } from './utils.js';
+import { supaFetch, showToast, escapeHtml, getSupabaseAuthClient } from './utils.js';
 import { getTenantId } from './app.js';
 import { getLoggedClient } from './auth.js';
 
@@ -218,9 +218,16 @@ function renderPlanos() {
                 btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin" style="width: 20px; height: 20px; margin: 0 auto;"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`;
                 btn.disabled = true;
 
+                const supabaseAuth = getSupabaseAuthClient();
+                const { data: sessionData } = await supabaseAuth.auth.getSession();
+                const token = sessionData?.session?.access_token || '';
+
                 const response = await fetch('/api/stripe/create-subscription-checkout', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
                     body: JSON.stringify({
                         priceId: priceId,
                         planId: planId,

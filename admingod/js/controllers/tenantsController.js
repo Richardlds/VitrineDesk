@@ -32,6 +32,16 @@ export class tenantsController {
         ];
     }
 
+    escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     async init() {
         try {
             this.bindEvents();
@@ -170,10 +180,10 @@ export class tenantsController {
             html += `
                 <tr class="border-bottom-dashed border-placeholder hover:bg-hover transition-colors">
                     <td class="py-3 px-4">
-                        <div class="font-bold text-primary">${t.name}</div>
+                        <div class="font-bold text-primary">${this.escapeHTML(t.name)}</div>
                         <div class="text-xs text-secondary mt-1">
                             <a href="${storeUrl}" target="_blank" class="text-primary opacity-80 hover:opacity-100 text-decoration-none">
-                                /${t.slug} <i data-lucide="external-link" class="icon-sm inline-block ml-1"></i>
+                                /${this.escapeHTML(t.slug)} <i data-lucide="external-link" class="icon-sm inline-block ml-1"></i>
                             </a>
                         </div>
                     </td>

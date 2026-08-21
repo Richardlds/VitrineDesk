@@ -1426,8 +1426,12 @@ window.playNotificationSound = function(profile = 1) {
         if (!ctx) return;
         
         if (ctx.state === 'suspended') {
-            ctx.resume();
+            const p = ctx.resume();
+            if (p && p.catch) p.catch(() => {});
+            return; // Aborta silenciosamente se não tiver interação prévia
         }
+        
+        if (ctx.state !== 'running') return;
         
         if (profile === 1) {
             // 1. Soft Pop / Bloop

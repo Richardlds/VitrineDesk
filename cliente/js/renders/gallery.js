@@ -1,4 +1,4 @@
-import { showSkeleton, hideSkeleton } from '../utils.js';
+import { showSkeleton, hideSkeleton, escapeHtml } from '../utils.js';
 
 export function renderGallery(tenant) {
   try {
@@ -17,7 +17,7 @@ export function renderGallery(tenant) {
 
     grid.innerHTML = galeria.slice(0, 6).map((img, i) => {
       const url = typeof img === 'string' ? img : img.url || img.src || '';
-      return `<img src="${url}" alt="Galeria ${i + 1}" loading="lazy" class="reveal">`;
+      return `<img src="${escapeHtml(url)}" alt="Galeria ${i + 1}" loading="lazy" class="reveal">`;
     }).join('');
   } catch (e) {
     console.error('Erro ao renderizar galeria:', e);

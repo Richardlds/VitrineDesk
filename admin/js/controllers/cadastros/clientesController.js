@@ -1,5 +1,12 @@
 import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
 
+function escapeHTML(str) {
+    if (typeof str !== 'string') return str ? String(str) : '';
+    return str.replace(/[&<>"']/g, tag => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[tag] || tag));
+}
+
 export class clientesController {
     constructor(stateManager) {
         this.state = stateManager;
@@ -119,13 +126,13 @@ export class clientesController {
             html += `
                 <tr class="${isBlacklisted ? 'opacity-70' : ''}">
                     <td class="font-medium text-primary flex align-center gap-2">
-                        ${item.nome || 'Sem nome'}
+                        ${escapeHTML(item.nome) || 'Sem nome'}
                         ${isBlacklisted ? '<i data-lucide="alert-triangle" class="text-error icon-sm" title="Na Blacklist"></i>' : ''}
                     </td>
-                    <td class="text-sm text-secondary">${item.telefone || '-'}</td>
-                    <td class="text-sm text-secondary">${item.email || '-'}</td>
+                    <td class="text-sm text-secondary">${escapeHTML(item.telefone) || '-'}</td>
+                    <td class="text-sm text-secondary">${escapeHTML(item.email) || '-'}</td>
                     <td class="text-sm">
-                        ${planName !== '-' ? `<span class="bg-primary-light text-primary px-2 py-1 rounded-md text-xs font-bold" style="border: 1px solid var(--primary);">${planName}</span>` : '<span class="text-muted">-</span>'}
+                        ${planName !== '-' ? `<span class="bg-primary-light text-primary px-2 py-1 rounded-md text-xs font-bold" style="border: 1px solid var(--primary);">${escapeHTML(planName)}</span>` : '<span class="text-muted">-</span>'}
                     </td>
                     <td class="text-center">
                         <span class="bg-placeholder text-primary px-2 py-1 rounded-md text-sm font-medium">-</span>
@@ -435,7 +442,7 @@ export class clientesController {
                     <div class="bg-primary-light border border-primary rounded-md p-3">
                         <div class="text-primary text-xs font-bold mb-1 text-uppercase">Próximo Atendimento</div>
                         <div class="flex justify-between align-center mb-1">
-                            <span class="text-sm font-medium text-primary">${servicoNext}</span>
+                            <span class="text-sm font-medium text-primary">${escapeHTML(servicoNext)}</span>
                             <span class="badge bg-primary text-white text-xs">Confirmado</span>
                         </div>
                         <div class="flex align-center gap-3 text-xs text-primary opacity-80">
@@ -465,7 +472,7 @@ export class clientesController {
                 html += `
                     <div class="bg-placeholder border-dashed rounded-md p-3 mb-2">
                         <div class="flex justify-between align-start mb-2">
-                            <span class="text-sm font-medium text-primary">${servico}</span>
+                            <span class="text-sm font-medium text-primary">${escapeHTML(servico)}</span>
                             <span class="badge ${badgeClass} text-xs">${statusLabel}</span>
                         </div>
                         <div class="flex align-center gap-3 text-xs text-secondary">
@@ -495,13 +502,13 @@ export class clientesController {
         try {
             const tenantId = await getCurrentTenantId();
             const payload = {
-                nome: document.getElementById('input-cliente-nome').value,
-                telefone: document.getElementById('input-cliente-telefone').value,
-                email: document.getElementById('input-cliente-email').value,
+                nome: document.getElementById('input-cliente-nome').value.trim(),
+                telefone: document.getElementById('input-cliente-telefone').value.trim(),
+                email: document.getElementById('input-cliente-email').value.trim(),
                 tenant_id: tenantId
             };
             
-            const obs = document.getElementById('input-cliente-obs').value;
+            const obs = document.getElementById('input-cliente-obs').value.trim();
             if (forceBlacklist) {
                 payload.is_blacklisted = true;
                 payload.blacklist_motivo = obs || 'Desativado manualmente.';
@@ -510,11 +517,12 @@ export class clientesController {
             }
 
             if (this.currentId) {
-                const { error } = await supabase.from('clientes').update(payload).eq('id', this.currentId);
+                const { error } = await supabase.from('clientes').update(payload).eq('id', this.currentId).eq('tenant_id', tenantId);
                 if (error) throw error;
                 if (window.showToast) window.showToast('Cliente atualizado!', 'success');
             } else {
-                payload.senha = '123456'; // Senha padrão exigida pelo banco de dados
+                // Gera senha aleatória forte em vez de usar uma fraca e previsível
+                payload.senha = Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-8).toUpperCase() + '!@';
                 const { error } = await supabase.from('clientes').insert(payload);
                 if (error) throw error;
                 if (window.showToast) window.showToast('Cliente cadastrado!', 'success');
@@ -534,7 +542,8 @@ export class clientesController {
     
     async deleteCliente(id) {
         try {
-            const { error } = await supabase.from('clientes').delete().eq('id', id);
+            const tenantId = await getCurrentTenantId();
+            const { error } = await supabase.from('clientes').delete().eq('id', id).eq('tenant_id', tenantId);
             if (error) throw error;
             
             if (window.showToast) window.showToast('Cliente excluído.', 'success');

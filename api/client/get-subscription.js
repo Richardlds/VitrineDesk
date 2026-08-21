@@ -17,6 +17,17 @@ export default async function handler(req, res) {
   }
 
   try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ error: 'Missing Authorization header' });
+    }
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const { data, error } = await supabase
       .from('client_subscriptions')
       .select('*, tenant_client_plans(*)')

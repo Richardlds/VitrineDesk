@@ -9,6 +9,17 @@ export class equipeController {
         this.realtimeChannel = null;
         this.selectedFile = null;
     }
+    
+    escapeHTML(str) {
+        if (!str) return '';
+        return str.toString()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     async init() {
         this.tableBody = document.getElementById('equipe-table-body');
         
@@ -106,21 +117,21 @@ export class equipeController {
                     <td>
                         <div class="flex align-center gap-3">
                             <div class="bg-placeholder rounded-full w-40px h-40px flex justify-center align-center overflow-hidden">
-                                ${item.foto_url ? `<img src="${item.foto_url}" class="w-100 h-100 object-cover">` : `<i data-lucide="user" class="text-secondary icon-sm"></i>`}
+                                ${item.foto_url ? `<img src="${this.escapeHTML(item.foto_url)}" class="w-100 h-100 object-cover">` : `<i data-lucide="user" class="text-secondary icon-sm"></i>`}
                             </div>
                             <div>
-                                <div class="font-medium text-primary">${item.nome || 'Sem Nome'} ${role === 'admin' ? '<i data-lucide="shield" class="text-warning w-12px h-12px"></i>' : ''}</div>
+                                <div class="font-medium text-primary">${this.escapeHTML(item.nome || 'Sem Nome')} ${role === 'admin' ? '<i data-lucide="shield" class="text-warning w-12px h-12px"></i>' : ''}</div>
                             </div>
                         </div>
                     </td>
-                    <td class="text-sm text-secondary">${especialidade}</td>
-                    <td class="text-sm text-secondary">${comissao}</td>
-                    <td class="text-sm text-secondary">${telefone}</td>
+                    <td class="text-sm text-secondary">${this.escapeHTML(especialidade)}</td>
+                    <td class="text-sm text-secondary">${this.escapeHTML(comissao)}</td>
+                    <td class="text-sm text-secondary">${this.escapeHTML(telefone)}</td>
                     <td class="text-center">
                         <span class="status-badge ${badgeClass}">${badgeLabel}</span>
                     </td>
                     <td class="text-right">
-                        <button class="btn bg-transparent border-none text-primary cursor-pointer btn-editar-equipe" data-id="${item.id}" title="Editar Profissional">
+                        <button class="btn bg-transparent border-none text-primary cursor-pointer btn-editar-equipe" data-id="${this.escapeHTML(item.id)}" title="Editar Profissional">
                             <i data-lucide="edit" class="icon-sm"></i>
                         </button>
                     </td>
@@ -301,7 +312,7 @@ export class equipeController {
                 try {
                     const newBranchIds = p.branch_ids ? [...p.branch_ids, activeBranchId] : [activeBranchId];
                     
-                    const { error: updErr } = await supabase.from('profissionais').update({ branch_ids: newBranchIds }).eq('id', sourceId);
+                    const { error: updErr } = await supabase.from('profissionais').update({ branch_ids: newBranchIds }).eq('id', sourceId).eq('tenant_id', currentTenantId);
                     if (updErr) throw updErr;
                     
                     if (window.showToast) window.showToast('Profissional adicionado com sucesso!', 'success');
@@ -442,7 +453,7 @@ export class equipeController {
             }
 
             if (this.currentId) {
-                const { error } = await supabase.from('profissionais').update(payload).eq('id', this.currentId);
+                const { error } = await supabase.from('profissionais').update(payload).eq('id', this.currentId).eq('tenant_id', tenantId);
                 if (error) throw error;
                 if (window.showToast) window.showToast('Profissional atualizado!', 'success');
             } else {
@@ -469,7 +480,8 @@ export class equipeController {
     
     async deleteProfissional(id) {
         try {
-            const { error } = await supabase.from('profissionais').delete().eq('id', id);
+            const tenantId = await getCurrentTenantId();
+            const { error } = await supabase.from('profissionais').delete().eq('id', id).eq('tenant_id', tenantId);
             if (error) throw error;
             
             if (window.showToast) window.showToast('Profissional excluído.', 'success');

@@ -469,9 +469,15 @@ export class planosController {
             } else {
                 // CREATE - Tenta criar no Stripe primeiro, mas se falhar, cria apenas local
                 try {
+                    const { data: sessionData } = await supabase.auth.getSession();
+                    const token = sessionData?.session?.access_token || '';
+
                     const response = await fetch('/api/stripe/platform/create-plan', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
                         body: JSON.stringify({ name: payload.name, price: payload.price })
                     });
                     

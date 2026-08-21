@@ -21,7 +21,15 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
   try {
     const { data, error } = await supabase.auth.signUp({
       email: email.trim().toLowerCase(),
-      password
+      password,
+      options: {
+        data: {
+          shopName: shopName.trim(),
+          type: type || 'outros',
+          razaoSocial: razaoSocial || '',
+          document: document || ''
+        }
+      }
     });
 
     if (error) {
@@ -35,6 +43,19 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
     }
 
     if (data.user) {
+      // Se não tem sessão, significa que o "Confirm Email" está ativo no Supabase
+      if (!data.session) {
+          showToast('✅ Conta criada! Verifique seu e-mail para ativar.', 'success');
+          // Redirecionar para o login em vez do admin, ou apenas limpar o form
+          setTimeout(() => {
+              const loginTab = document.querySelector('.auth-tab[data-tab="login"]');
+              if(loginTab) loginTab.click();
+              document.getElementById('form-register').reset();
+          }, 2000);
+          return data;
+      }
+
+      // Se tem sessão, a verificação de e-mail não está ativa (comportamento legado)
       const slug = shopName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString().slice(-4);
 
       // Buscar plano padrão
@@ -74,8 +95,6 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
 
       const insertedTenant = insertedTenants[0];
 
-      // O Trigger trigger_notify_god_on_new_tenant avisará o God Mode no Supabase.
-
       // Enviar mensagem de boas vindas para o lojista
       if (masterSettings && masterSettings.welcome_msg_title && masterSettings.welcome_msg_body) {
         await supabase.from('notifications').insert([{
@@ -93,10 +112,17 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
         name: 'Matriz - ' + shopName.trim(),
         is_main: true
       }]);
-    }
+      
+      // Disparar o envio do email de boas-vindas na Vercel (dispara e esquece)
+      fetch('/api/admin/send-welcome', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), shopName: shopName.trim() })
+      }).catch(e => console.error('Erro ao chamar envio de email de boas vindas', e));
 
-    showToast('✅ Cadastro realizado! Entrando no sistema...', 'success');
-    setTimeout(() => window.location.href = '/admin/', 1500);
+      showToast('✅ Cadastro realizado! Entrando no sistema...', 'success');
+      setTimeout(() => window.location.href = '/admin/', 1500);
+    }
     return data;
   } catch (err) {
     showToast('Erro de conexão. Tente novamente.', 'error');
@@ -123,10 +149,10 @@ export async function loginMerchant(email, password, silent = false) {
         window.location.href = '/admingod/';
       }, 500);
     } else {
-      // ✅ Verificar se tenant está ativo e aprovado
+      // ✅ Verificar se é Owner (dono da loja)
       const { data: tenantData } = await supabase
         .from('tenants')
-        .select('is_active, approval_status')
+        .select('id, is_active, approval_status')
         .eq('owner_id', data.user.id)
         .maybeSingle();
 
@@ -146,12 +172,31 @@ export async function loginMerchant(email, password, silent = false) {
           if (!silent) showToast('Sua conta está suspensa. Contate o suporte.', 'error');
           return null;
         }
+        if (!silent) showToast("Login realizado!", "success");
+        setTimeout(() => {
+          window.location.href = '/admin/';
+        }, 500);
+      } else {
+        // ✅ Se não é Owner, verificar se é Funcionário (Staff) na tabela tenant_users
+        const { data: staffData } = await supabase
+          .from('tenant_users')
+          .select('tenant_id')
+          .eq('user_id', data.user.id)
+          .maybeSingle();
+          
+        if (staffData && staffData.tenant_id) {
+          sessionStorage.setItem('staff_tenant_id', staffData.tenant_id);
+          if (!silent) showToast("Bem-vindo(a) à loja!", "success");
+          setTimeout(() => {
+            window.location.href = '/admin/';
+          }, 500);
+        } else {
+          // Não é owner nem staff válido
+          await supabase.auth.signOut();
+          if (!silent) showToast('Nenhuma loja vinculada a este usuário.', 'error');
+          return null;
+        }
       }
-
-      if (!silent) showToast("Login realizado!", "success");
-      setTimeout(() => {
-        window.location.href = '/admin/';
-      }, 500);
     }
 
     return data;

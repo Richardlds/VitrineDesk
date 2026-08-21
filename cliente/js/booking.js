@@ -802,14 +802,14 @@ async function submitBooking() {
         const dateFormatted = dateParts.length === 3 ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}` : bookingState.selectedDate;
         const notifMsg = `Novo agendamento! ${clientName} agendou para o dia ${dateFormatted} às ${bookingState.selectedTime}.`;
         
-        await supaFetch('/rest/v1/notifications', {
+        await fetch('/api/client/create-notification', {
           method: 'POST',
-          body: {
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
             tenant_id: getTenantId(),
             type: 'appointment',
-            message: notifMsg,
-            read: false
-          }
+            message: notifMsg
+          })
         });
       } catch (err) {
         console.error('Erro ao enviar notificação', err);

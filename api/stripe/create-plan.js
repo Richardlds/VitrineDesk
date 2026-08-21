@@ -12,6 +12,16 @@ export default async function handler(req, res) {
   }
 
   try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ error: 'Não autorizado' });
+    }
+    const token = authHeader.split(' ')[1];
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return res.status(401).json({ error: 'Sessão inválida' });
+    }
+
     const { name, price, tenantId } = req.body; 
     
     if (!name || price === undefined || !tenantId) {

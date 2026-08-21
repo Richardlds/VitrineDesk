@@ -1,5 +1,12 @@
 import { supabase, getCurrentTenantId } from '../../core/supabaseClient.js';
 
+function escapeHTML(str) {
+    if (typeof str !== 'string') return str ? String(str) : '';
+    return str.replace(/[&<>"']/g, tag => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[tag] || tag));
+}
+
 export class lista_osController {
     constructor(stateManager) {
         this.state = stateManager;
@@ -217,7 +224,7 @@ export class lista_osController {
             <div class="los-card os-row-click" data-id="${o.id}" data-status="${o.status}">
                 <span class="los-card-id">#${shortId}</span>
                 <div class="los-card-main">
-                    <span class="los-card-customer">${o.customer_name}</span>
+                    <span class="los-card-customer">${escapeHTML(o.customer_name)}</span>
                     <span class="los-card-date">
                         <i data-lucide="calendar" class="icon-xs"></i>${dateStr}
                     </span>
@@ -337,7 +344,7 @@ export class lista_osController {
         const tbody = document.getElementById('modal-os-items-body');
         tbody.innerHTML = (items || []).map(item => `
             <tr>
-                <td>${item.item_name}</td>
+                <td>${escapeHTML(item.item_name)}</td>
                 <td>${item.quantity}</td>
                 <td>R$ ${item.subtotal.toFixed(2)}</td>
             </tr>

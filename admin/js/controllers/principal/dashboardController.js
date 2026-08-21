@@ -5,6 +5,16 @@ export class dashboardController {
         this.tenantId = null;
     }
 
+    escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     async init() {
         console.log("Dashboard inicializado.");
         
@@ -146,8 +156,8 @@ export class dashboardController {
             html += `
                 <div class="flex justify-between align-center p-3 rounded" style="background: var(--color-bg-base); border-left: 4px solid ${statusInfo.color};">
                     <div class="flex-column gap-1">
-                        <span class="font-bold" style="color: var(--color-text-primary); font-size: 1rem;">${timeStr} - ${ag.client_name || 'Sem nome'}</span>
-                        <span class="text-secondary flex align-center gap-1" style="font-size: 0.85rem;"><i data-lucide="scissors" style="width: 14px; height: 14px;"></i> ${servName} com <b style="color: var(--color-text-primary);">${profName}</b></span>
+                        <span class="font-bold" style="color: var(--color-text-primary); font-size: 1rem;">${timeStr} - ${this.escapeHTML(ag.client_name || 'Sem nome')}</span>
+                        <span class="text-secondary flex align-center gap-1" style="font-size: 0.85rem;"><i data-lucide="scissors" style="width: 14px; height: 14px;"></i> ${this.escapeHTML(servName)} com <b style="color: var(--color-text-primary);">${this.escapeHTML(profName)}</b></span>
                     </div>
                     <div class="flex-column align-end gap-1">
                         <span class="font-medium rounded px-2" style="background: ${statusInfo.bg}; color: ${statusInfo.color}; font-size: 0.75rem; padding: 2px 0;">${statusInfo.label}</span>
@@ -203,7 +213,7 @@ export class dashboardController {
                         ${avatarLetter}
                     </div>
                     <div class="flex-1 flex-column" style="min-width: 0;">
-                        <span class="font-bold text-truncate" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${prof.nome}</span>
+                        <span class="font-bold text-truncate" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHTML(prof.nome)}</span>
                         <span class="text-secondary" style="font-size: 0.8rem;">${isValor ? 'Faturamento' : 'Agendamentos'}</span>
                     </div>
                     <div class="flex-column align-end flex-shrink-0">

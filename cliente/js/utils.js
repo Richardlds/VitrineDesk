@@ -180,7 +180,10 @@ window.playNotificationSound = function (type = 'info') {
         if (ctx.state === 'suspended') {
             const p = ctx.resume();
             if (p && p.catch) p.catch(() => {});
+            return; // Aborta silenciosamente se não tiver interação prévia
         }
+        
+        if (ctx.state !== 'running') return;
         
         if (type === 'success') {
             // Success Chord (Duplo Tom)

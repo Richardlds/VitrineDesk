@@ -11,6 +11,17 @@ export class servicosController {
         this.currentCropCallback = null;
     }
     
+    
+    escapeHTML(str) {
+        if (!str) return '';
+        return str.toString()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+    
     async init() {
         this.tableBody = document.getElementById('servicos-table-body');
         
@@ -97,21 +108,22 @@ export class servicosController {
             const duration = item.duration || 0;
             const price = item.price ? Number(item.price).toFixed(2) : '0.00';
             
+            
             html += `
                 <tr>
                     <td>
                         <div class="bg-placeholder rounded-md flex justify-center align-center overflow-hidden mx-auto" style="width: 40px; height: 40px;">
-                            ${item.image_url ? `<img src="${item.image_url}" class="w-100 h-100" style="object-fit: cover;">` : `<i data-lucide="image" class="text-secondary icon-sm"></i>`}
+                            ${item.image_url ? `<img src="${this.escapeHTML(item.image_url)}" class="w-100 h-100" style="object-fit: cover;">` : `<i data-lucide="image" class="text-secondary icon-sm"></i>`}
                         </div>
                     </td>
-                    <td class="font-medium text-primary">${item.name || 'Sem nome'}</td>
-                    <td class="text-sm text-secondary">${duration} min</td>
-                    <td class="text-sm font-medium">R$ ${price}</td>
+                    <td class="font-medium text-primary">${this.escapeHTML(item.name || 'Sem nome')}</td>
+                    <td class="text-sm text-secondary">${this.escapeHTML(duration)} min</td>
+                    <td class="text-sm font-medium">R$ ${this.escapeHTML(price)}</td>
                     <td class="text-center">
                         <span class="status-badge ${badgeClass}">${badgeLabel}</span>
                     </td>
                     <td class="text-right">
-                        <button class="btn bg-transparent border-none text-primary cursor-pointer btn-editar" data-id="${item.id}" title="Editar Serviço">
+                        <button class="btn bg-transparent border-none text-primary cursor-pointer btn-editar" data-id="${this.escapeHTML(item.id)}" title="Editar Serviço">
                             <i data-lucide="edit" class="icon-sm"></i>
                         </button>
                     </td>
@@ -297,7 +309,7 @@ export class servicosController {
                 try {
                     const newBranchIds = s.branch_ids ? [...s.branch_ids, activeBranchId] : [activeBranchId];
                     
-                    const { error: updErr } = await supabase.from('services').update({ branch_ids: newBranchIds }).eq('id', sourceId);
+                    const { error: updErr } = await supabase.from('services').update({ branch_ids: newBranchIds }).eq('id', sourceId).eq('tenant_id', currentTenantId);
                     if (updErr) throw updErr;
                     
                     if (window.showToast) window.showToast('Serviço adicionado com sucesso!', 'success');
@@ -440,7 +452,7 @@ export class servicosController {
                 };
 
                 if (this.currentId) {
-                    const { error } = await supabase.from('services').update(payload).eq('id', this.currentId);
+                    const { error } = await supabase.from('services').update(payload).eq('id', this.currentId).eq('tenant_id', tenantId);
                     if (error) throw error;
                     if (window.showToast) window.showToast('Serviço atualizado com sucesso!', 'success');
                 } else {
@@ -467,7 +479,8 @@ export class servicosController {
         
         async deleteServico(id) {
             try {
-                const { error } = await supabase.from('services').delete().eq('id', id);
+                const tenantId = await getCurrentTenantId();
+                const { error } = await supabase.from('services').delete().eq('id', id).eq('tenant_id', tenantId);
                 if (error) throw error;
                 if (window.showToast) window.showToast('Serviço excluído com sucesso!', 'success');
                 document.getElementById('modal-servico').classList.add('d-none');

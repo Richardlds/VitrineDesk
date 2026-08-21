@@ -10,7 +10,46 @@ const MAX_ATTEMPTS = 5;
 
 const BLOCK_TIME = 30000;
 
+export const validarCPF = (cpf) => {
+    cpf = cpf.replace(/[^\d]+/g,'');
+    if(cpf == '' || cpf.length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    let add = 0;
+    for (let i=0; i < 9; i ++) add += parseInt(cpf.charAt(i)) * (10 - i);
+    let rev = 11 - (add % 11);
+    if (rev == 10 || rev == 11) rev = 0;
+    if (rev != parseInt(cpf.charAt(9))) return false;
+    add = 0;
+    for (let i = 0; i < 10; i ++) add += parseInt(cpf.charAt(i)) * (11 - i);
+    rev = 11 - (add % 11);
+    if (rev == 10 || rev == 11) rev = 0;
+    return rev == parseInt(cpf.charAt(10));
+};
 
+export const validarCNPJ = (cnpj) => {
+    cnpj = cnpj.replace(/[^\d]+/g,'');
+    if(cnpj == '' || cnpj.length != 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0,tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado != digitos.charAt(0)) return false;
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0,tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    return resultado == digitos.charAt(1);
+};
 
 function checkRateLimit() {
 
@@ -173,9 +212,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
 
-        const modalComplete = document.getElementById('modal-complete-registration');
+      // Check if user is staff
+      const { data: staffData } = await supabase.from('tenant_users').select('tenant_id').eq('user_id', user.id).maybeSingle();
+      if (staffData && staffData.tenant_id) {
+          sessionStorage.setItem('staff_tenant_id', staffData.tenant_id);
+          window.location.href = '/admin/';
+          return;
+      }
 
-        if (modalComplete) {
+      // Check if user has metadata from registration (Email confirmed just now)
+      if (user.user_metadata && user.user_metadata.shopName && user.user_metadata.document) {
+          showToast('✅ E-mail confirmado! Finalizando a criação da sua loja...', 'success');
+          const res = await completeGoogleRegistration(
+              user.id, 
+              user.email, 
+              user.user_metadata.shopName, 
+              user.user_metadata.type, 
+              user.user_metadata.razaoSocial, 
+              user.user_metadata.document
+          );
+          if (res !== null) {
+              window.location.href = '/admin/';
+          } else {
+              showToast('Erro ao criar loja. Tente novamente.', 'error');
+          }
+          return;
+      }
+
+      const modalComplete = document.getElementById('modal-complete-registration');
+      if (modalComplete) {
 
            modalComplete.style.display = 'flex';
 
@@ -183,85 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
            
 
-           const validarCPF = (cpf) => {
-
-               cpf = cpf.replace(/[^\d]+/g,'');
-
-               if(cpf == '' || cpf.length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-
-               let add = 0;
-
-               for (let i=0; i < 9; i ++) add += parseInt(cpf.charAt(i)) * (10 - i);
-
-               let rev = 11 - (add % 11);
-
-               if (rev == 10 || rev == 11) rev = 0;
-
-               if (rev != parseInt(cpf.charAt(9))) return false;
-
-               add = 0;
-
-               for (let i = 0; i < 10; i ++) add += parseInt(cpf.charAt(i)) * (11 - i);
-
-               rev = 11 - (add % 11);
-
-               if (rev == 10 || rev == 11) rev = 0;
-
-               return rev == parseInt(cpf.charAt(10));
-
-           };
-
-           
-
-           const validarCNPJ = (cnpj) => {
-
-               cnpj = cnpj.replace(/[^\d]+/g,'');
-
-               if(cnpj == '' || cnpj.length != 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
-
-               let tamanho = cnpj.length - 2;
-
-               let numeros = cnpj.substring(0,tamanho);
-
-               let digitos = cnpj.substring(tamanho);
-
-               let soma = 0;
-
-               let pos = tamanho - 7;
-
-               for (let i = tamanho; i >= 1; i--) {
-
-                 soma += numeros.charAt(tamanho - i) * pos--;
-
-                 if (pos < 2) pos = 9;
-
-               }
-
-               let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-
-               if (resultado != digitos.charAt(0)) return false;
-
-               tamanho = tamanho + 1;
-
-               numeros = cnpj.substring(0,tamanho);
-
-               soma = 0;
-
-               pos = tamanho - 7;
-
-               for (let i = tamanho; i >= 1; i--) {
-
-                 soma += numeros.charAt(tamanho - i) * pos--;
-
-                 if (pos < 2) pos = 9;
-
-               }
-
-               resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-
-               return resultado == digitos.charAt(1);
-
-           };
+           // As funções validarCPF e validarCNPJ agora são globais
 
 
 
@@ -628,12 +615,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
       e.target.value = val;
-
     });
-
   }
 
-
+  // Máscara e formatação para o Nome da Loja/Fantasia (apenas letras e espaços, com capitalização)
+  const nameInputEl = document.getElementById('reg-name');
+  if (nameInputEl) {
+    nameInputEl.addEventListener('input', (e) => {
+      let val = e.target.value;
+      // Remove números e caracteres especiais (permite acentos e espaços)
+      val = val.replace(/[^a-zA-ZáàãâéèêíìóòõôúùûçÁÀÃÂÉÈÊÍÌÓÒÕÔÚÙÛÇ\s]/g, '');
+      // Capitaliza a primeira letra de cada palavra
+      val = val.replace(/\w\S*/g, function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+      e.target.value = val;
+    });
+  }
 
   // 6. REAL-TIME VALIDATIONS & SUBMIT FOR LOGIN
 
@@ -716,90 +714,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
       try {
-        // Primeiro tenta como Lojista/Superadmin
-        const result = await loginMerchant(emailVal, passwordVal, true);
+        const result = await loginMerchant(emailVal, passwordVal, false);
 
         if (result) {
           resetAttempts();
-          if (btnLoginSubmit) btnLoginSubmit.classList.remove('btn-loading');
-          return; // O redirecionamento é feito dentro do loginMerchant
+        } else {
+          recordFailedAttempt();
         }
 
-        // Se falhou como owner, tenta como Staff
-        let staffTenants = null;
-        try {
-          const resultStaff = await supabase
-            .from('tenants')
-            .select('id, name, slug, settings')
-            .contains('settings', { usuarios: [{ email: emailVal.toLowerCase() }] });
-          staffTenants = resultStaff.data;
-        } catch (staffErr) {
-          console.warn('Erro ao verificar staff:', staffErr);
-        }
-
-        let foundStaff = null;
-        let staffTenant = null;
-        let needsPasswordUpdate = false;
-
-        if (staffTenants && staffTenants.length > 0) {
-          const hashedInputPassword = await hashPasswordSHA256(passwordVal);
-
-          for (const t of staffTenants) {
-            const usuarios = t.settings?.usuarios || [];
-            const user = usuarios.find(u => u.email?.toLowerCase() === emailVal.toLowerCase());
-
-            if (user) {
-              if (user.password === hashedInputPassword) {
-                foundStaff = user;
-                staffTenant = t;
-                break;
-              } else if (user.password === passwordVal) {
-                foundStaff = user;
-                staffTenant = t;
-                needsPasswordUpdate = true;
-                break;
-              }
-            }
-          }
-        }
-
-        if (foundStaff && staffTenant) {
-          if (needsPasswordUpdate) {
-            const hashedNewPassword = await hashPasswordSHA256(passwordVal);
-            const updatedUsuarios = staffTenant.settings.usuarios.map(u => {
-              if (u.email?.toLowerCase() === foundStaff.email?.toLowerCase()) {
-                return { ...u, password: hashedNewPassword };
-              }
-              return u;
-            });
-            const newSettings = { ...staffTenant.settings, usuarios: updatedUsuarios };
-
-            await supabase
-              .from('tenants')
-              .update({ settings: newSettings })
-              .eq('id', staffTenant.id);
-          }
-
-          const safeStaffData = { ...foundStaff };
-          delete safeStaffData.password;
-
-          sessionStorage.setItem('staff_user', JSON.stringify(safeStaffData));
-          sessionStorage.setItem('staff_auth_expires', Date.now() + (24 * 60 * 60 * 1000));
-          sessionStorage.setItem('staff_tenant_id', staffTenant.id);
-          localStorage.removeItem('impersonated_tenant_id');
-          localStorage.removeItem('impersonate_tenant_id');
-          resetAttempts();
-
-          showToast(`Bem-vindo, ${foundStaff.name}!`, 'success');
-          setTimeout(() => {
-            window.location.href = '/admin/';
-          }, 500);
-          return;
-        }
-
-        // Se chegou aqui, não é Owner nem Staff válido
-        recordFailedAttempt();
-        showToast('E-mail ou senha incorretos.', 'error');
         if (btnLoginSubmit) btnLoginSubmit.classList.remove('btn-loading');
 
       } catch (err) {
@@ -900,21 +822,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-      if (!nameVal || nameVal.length < 2) {
-
-        nameErr.textContent = 'Nome da loja ÃÂ© muito curto (mÃÂ­nimo 2 caracteres).';
-
+      if (!nameVal || nameVal.split(' ').filter(w => w.length > 0).length < 2) {
+        nameErr.textContent = 'Por favor, informe pelo menos duas palavras para o nome (ex: Loja do João).';
         nameInput.parentElement.classList.add('invalid');
-
         isValid = false;
+      }
 
+      const rawDoc = docVal.replace(/[^\d]+/g, '');
+      if (!rawDoc) {
+        docErr.textContent = 'CPF ou CNPJ é obrigatório.';
+        docInput.parentElement.classList.add('invalid');
+        isValid = false;
+      } else if (rawDoc.length === 11) {
+        if (!validarCPF(rawDoc)) {
+          docErr.textContent = 'CPF inválido.';
+          docInput.parentElement.classList.add('invalid');
+          isValid = false;
+        }
+      } else if (rawDoc.length === 14) {
+        if (!validarCNPJ(rawDoc)) {
+          docErr.textContent = 'CNPJ inválido.';
+          docInput.parentElement.classList.add('invalid');
+          isValid = false;
+        }
+      } else {
+        docErr.textContent = 'Documento inválido. Deve ter 11 ou 14 dígitos numéricos.';
+        docInput.parentElement.classList.add('invalid');
+        isValid = false;
       }
 
 
 
       if (!emailVal || !emailVal.includes('@')) {
 
-        emailErr.textContent = 'Por favor, insira um e-mail vÃÂ¡lido.';
+        emailErr.textContent = 'Por favor, insira um e-mail vÃƒÂ¡lido.';
 
         emailInput.parentElement.classList.add('invalid');
 

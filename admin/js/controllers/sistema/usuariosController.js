@@ -7,6 +7,15 @@ export class usuariosController {
         this.tableBody = null;
         this.searchTimeout = null;
     }
+    escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
     
     async init() {
         this.tableBody = document.getElementById('usuarios-table-body');
@@ -99,8 +108,8 @@ export class usuariosController {
             html += `
                 <tr class="${!isAtivo ? 'opacity-70' : ''}">
                     <td>
-                        <div class="font-medium text-primary">${item.name || 'Sem nome'}</div>
-                        <div class="text-sm text-secondary">${item.email}</div>
+                        <div class="font-medium text-primary">${this.escapeHTML(item.name || 'Sem nome')}</div>
+                        <div class="text-sm text-secondary">${this.escapeHTML(item.email)}</div>
                     </td>
                     <td class="text-sm text-secondary">${perfilLabel}</td>
                     <td class="text-center">
@@ -205,36 +214,57 @@ export class usuariosController {
                                 usuariosCopy[idx].password = await hashPasswordSHA256(senha);
                             }
                         }
+                        
+                        // Atualizar role na tenant_users se houver
+                        await supabase
+                            .from('tenant_users')
+                            .update({ role: perfil })
+                            .eq('user_id', currentEditingId)
+                            .eq('tenant_id', tenantId);
+
+                        const newSettings = { ...this.tenantSettings, usuarios: usuariosCopy };
+                        
+                        const { error } = await supabase
+                            .from('tenants')
+                            .update({ settings: newSettings })
+                            .eq('id', tenantId);
+
+                        if (error) throw error;
+                        
+                        if (window.showToast) window.showToast('Usuário atualizado com sucesso!', 'success');
                     } else {
-                        // Verifica se email já existe
-                        if (usuariosCopy.find(u => u.email.toLowerCase() === email.toLowerCase())) {
-                            throw new Error('Já existe um usuário com este e-mail.');
+                        // Novo usuário via Edge Function (Auth)
+                        const session = await supabase.auth.getSession();
+                        const token = session.data?.session?.access_token;
+                        
+                        if (!token) throw new Error("Sessão expirada.");
+
+                        const res = await fetch('/api/admin/create-staff', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                name: nome,
+                                email: email,
+                                role: perfil,
+                                password: senha,
+                                tenant_id: tenantId
+                            })
+                        });
+
+                        const responseData = await res.json();
+                        
+                        if (!res.ok) {
+                            throw new Error(responseData.error || 'Erro ao criar funcionário na nuvem.');
                         }
                         
-                        const newUser = {
-                            id: 'usr_' + Date.now(),
-                            name: nome,
-                            email: email,
-                            role: perfil,
-                            is_active: true,
-                            password: await hashPasswordSHA256(senha)
-                        };
-                        usuariosCopy.push(newUser);
+                        if (window.showToast) window.showToast('Usuário cadastrado com sucesso!', 'success');
                     }
 
-                    const newSettings = { ...this.tenantSettings, usuarios: usuariosCopy };
-                    
-                    const { error } = await supabase
-                        .from('tenants')
-                        .update({ settings: newSettings })
-                        .eq('id', tenantId);
-
-                    if (error) throw error;
-                    
-                    if (window.showToast) window.showToast(currentEditingId ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!', 'success');
-                    
                     modal.classList.add('d-none');
-                    this.loadUsuarios();
+                    await this.loadUsuarios();
                 } catch (err) {
                     console.error(err);
                     if (window.showToast) window.showToast(err.message || 'Erro ao salvar usuário.', 'error');
