@@ -66,10 +66,12 @@ export async function getCurrentTenantId() {
         .from('tenants')
         .select('id')
         .eq('owner_id', authData.user.id)
-        .single();
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
     if (error || !data) {
-        console.error('Nenhum tenant vinculado a este usuário foi encontrado!');
+        console.error('Nenhum tenant vinculado a este usuário foi encontrado!', error);
         return null;
     }
 

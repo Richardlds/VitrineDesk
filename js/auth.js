@@ -2,10 +2,16 @@
 import { supabase } from './config.js';
 import { showToast } from './utils.js';
 
-// Registrar novo Lojista com validações
+let isRegisteringMerchant = false;
+
+// Registrar um novo Lojista
 export async function registerMerchant(email, password, shopName, type, razaoSocial, doc) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email || !emailRegex.test(email)) {
+  if (isRegisteringMerchant) {
+      console.warn('Bloqueado: Criação de conta já está em andamento');
+      return null;
+  }
+
+  if (!email || !email.includes('@')) {
     showToast('Email inválido', 'error');
     return null;
   }
@@ -18,6 +24,7 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
     return null;
   }
 
+  isRegisteringMerchant = true;
   try {
     const { data, error } = await supabase.auth.signUp({
       email: email.trim().toLowerCase(),
@@ -87,7 +94,7 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
         subscription_status: 'active',
         settings: {
           razao_social: razaoSocial || '',
-          cnpj: document || '',
+          cnpj: doc || '',
           email: email.trim().toLowerCase(),
           plano_id: defaultPlan ? defaultPlan.id : null,
           vencimento: vencimento
@@ -133,6 +140,8 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
   } catch (err) {
     showToast('Erro de conexão. Tente novamente.', 'error');
     return null;
+  } finally {
+    isRegisteringMerchant = false;
   }
 }
 
@@ -284,20 +293,28 @@ export async function loginWithGoogle() {
   }
 }
 
-// Completar cadastro de usu�rio logado via Google
-export async function completeGoogleRegistration(userId, email, shopName, type, razaoSocial, document) {
+let isCompletingRegistration = false;
+
+// Completar cadastro de usurio logado via Google
+export async function completeGoogleRegistration(userId, email, shopName, type, razaoSocial, doc) {
+  if (isCompletingRegistration) {
+      console.warn('Bloqueado: Registro já está em andamento');
+      return true; // Retorna true para deixar o fluxo original seguir sem erro
+  }
+
   if (!shopName || shopName.trim().length < 2) {
-    showToast('Nome da loja � obrigat�rio', 'error');
+    showToast('Nome da loja  obrigatrio', 'error');
     return null;
   }
 
+  isCompletingRegistration = true;
   try {
     const slug = shopName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString().slice(-4);
 
-    // Buscar plano padr�o
+    // Buscar plano padro
     const { data: defaultPlan } = await supabase.from('plans').select('id').eq('is_default', true).maybeSingle();
 
-    // Buscar configura��es master para trial e mensagem
+    // Buscar configuraes master para trial e mensagem
     const { data: masterSettings } = await supabase.from('master_settings').select('trial_days, welcome_msg_title, welcome_msg_body').eq('id', 1).maybeSingle();
 
     let vencimento = null;
@@ -305,6 +322,15 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
       const d = new Date();
       d.setDate(d.getDate() + parseInt(masterSettings.trial_days));
       vencimento = d.toISOString();
+    }
+
+    // Verificar se a loja já foi criada
+    const { data: existingTenant } = await supabase.from('tenants').select('id').eq('owner_id', userId).limit(1).maybeSingle();
+    
+    if (existingTenant) {
+        showToast('✅ Cadastro já finalizado! Entrando no sistema...', 'success');
+        setTimeout(() => window.location.href = '/admin/', 1500);
+        return true;
     }
 
     const { data: insertedTenants, error: tenantError } = await supabase.from('tenants').insert([{
@@ -317,7 +343,7 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
       subscription_status: 'active',
       settings: {
         razao_social: razaoSocial || '',
-        cnpj: document || '',
+        cnpj: doc || '',
         email: email.trim().toLowerCase(),
         plano_id: defaultPlan ? defaultPlan.id : null,
         vencimento: vencimento
@@ -325,7 +351,7 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
     }]).select();
 
     if (tenantError || !insertedTenants || insertedTenants.length === 0) {
-      showToast('Erro ao criar loja. Verifique se os dados est�o corretos.', 'error');
+      showToast('Erro ao criar loja. Verifique se os dados esto corretos.', 'error');
       console.error(tenantError);
       return null;
     }
@@ -362,5 +388,7 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
     console.error('Detalhe tcnico ao completar cadastro:', err);
     showToast('Erro ao finalizar cadastro.', 'error');
     return null;
+  } finally {
+    isCompletingRegistration = false;
   }
 }
