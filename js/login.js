@@ -952,15 +952,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     modalSupport.addEventListener('click', (e) => {
-
       if (e.target === modalSupport) {
-
         modalSupport.classList.remove('active');
-
       }
-
     });
+  }
 
+  // Lógica Genérica para Modais
+  const closeBtns = document.querySelectorAll('[data-close-modal]');
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const modal = e.target.closest('.modal');
+      if (modal) {
+        modal.classList.remove('active');
+      }
+    });
+  });
+
+  const emailConfirmModal = document.getElementById('modal-email-confirm');
+  if (emailConfirmModal) {
+    emailConfirmModal.addEventListener('click', (e) => {
+      if (e.target === emailConfirmModal) {
+        emailConfirmModal.classList.remove('active');
+      }
+    });
   }
 
 

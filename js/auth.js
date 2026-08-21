@@ -48,8 +48,7 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
           // Usa o modal em vez do alert
           const confirmModal = window.document.getElementById('modal-email-confirm');
           if (confirmModal) {
-              confirmModal.style.display = 'flex';
-              setTimeout(() => confirmModal.classList.add('active'), 10);
+              confirmModal.classList.add('active');
           }
           
           showToast('Verifique seu e-mail para ativar a conta.', 'success');
