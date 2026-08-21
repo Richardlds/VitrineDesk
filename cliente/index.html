@@ -144,6 +144,17 @@
         </div>
       </section>
 
+      <!-- ============ PLANOS ============ -->
+      <section id="section-planos" class="section hidden" aria-labelledby="t-planos">
+        <div class="section__head">
+          <h2 id="t-planos">Planos de Assinatura</h2>
+          <p class="section__sub">Escolha o melhor pacote de benefícios</p>
+        </div>
+        <div id="home-plans-grid" class="display-grid gap-4 mt-4" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+           <!-- JS INJECTS PLANS HERE -->
+        </div>
+      </section>
+
       <!-- ============ EQUIPE ============ -->
       <section id="section-equipe" class="section" aria-labelledby="t-equipe">
         <div class="section__head">
@@ -610,6 +621,13 @@
             <article id="active-subscription-card" class="glass-card p-5 text-center text-secondary rounded-xl border border-glass shadow-sm">
               Carregando...
             </article>
+          </div>
+          
+          <div class="mt-6 pt-4 border-t border-glass" id="container-other-plans">
+             <h4 class="text-primary font-bold mb-3 text-lg">Planos Disponíveis</h4>
+             <div id="available-plans-list" class="display-grid gap-3" style="grid-template-columns: 1fr;">
+               <!-- JS INJECTS OTHER PLANS HERE -->
+             </div>
           </div>
         </section>
       </div>
