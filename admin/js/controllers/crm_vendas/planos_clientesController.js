@@ -466,12 +466,19 @@ export class planos_clientesController {
             const sub = this.subscribers.find(s => s.id === id);
             if (!sub) return;
 
-            const nextStatus = sub.status === 'ativo' ? 'cancelado' : 'ativo';
+            const nextStatus = sub.status === 'active' ? 'canceled' : 'active';
+            const displayStatus = nextStatus === 'active' ? 'ATIVO' : 'CANCELADO';
+            
             if (window.showConfirm) {
-                window.showConfirm(`Deseja alterar o status desta assinatura para ${nextStatus.toUpperCase()}?`, async () => {
+                window.showConfirm(`Deseja alterar o status desta assinatura para ${displayStatus}? (Nota: Esta ação não cancela a cobrança na Stripe. É apenas para revogar ou liberar o acesso no sistema)`, async () => {
                     try {
-                        const { error } = await supabase.from('tenant_customer_subscriptions').update({ status: nextStatus }).eq('id', id);
+                        const { error } = await supabase
+                            .from('client_subscriptions')
+                            .update({ status: nextStatus })
+                            .eq('id', id);
+                            
                         if (error) throw error;
+                        
                         if (window.showToast) window.showToast('Status atualizado com sucesso', 'success');
                         this.loadSubscribers();
                     } catch (e) {

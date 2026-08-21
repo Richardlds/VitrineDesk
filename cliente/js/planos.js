@@ -4,6 +4,7 @@ import { getLoggedClient } from './auth.js';
 
 let tenantPlans = [];
 let activeSubscription = null;
+let realtimeChannel = null;
 
 export async function initPlanos() {
     const tenantId = getTenantId();
@@ -47,8 +48,32 @@ export async function initPlanos() {
             showToast('Assinatura ativada com sucesso!', 'success');
         }
     }
-
     renderPlanos();
+    
+    // Configurar atualização em tempo real (Supabase Realtime)
+    if (getLoggedClient() && !realtimeChannel) {
+        try {
+            const supabase = getSupabaseAuthClient();
+            realtimeChannel = supabase.channel('custom-client-subscription-channel')
+                .on(
+                    'postgres_changes',
+                    { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'client_subscriptions',
+                        filter: `client_id=eq.${getLoggedClient().id}` 
+                    },
+                    async (payload) => {
+                        console.log('Realtime update recebido para assinatura:', payload);
+                        await loadActiveSubscription();
+                        renderPlanos();
+                    }
+                )
+                .subscribe();
+        } catch (err) {
+            console.error('Erro ao configurar realtime:', err);
+        }
+    }
 }
 
 export async function loadActiveSubscription() {
