@@ -124,20 +124,7 @@ export class tenantsController {
         const tbody = document.getElementById('table-body-tenants');
         if (!tbody) return;
 
-        const pendingCount = this.tenants.filter(t => t.approval_status === 'pending').length;
-        const badgePending = document.getElementById('badge-pending');
-        if (badgePending) {
-            if (pendingCount > 0) {
-                badgePending.textContent = pendingCount;
-                badgePending.classList.remove('d-none');
-            } else {
-                badgePending.classList.add('d-none');
-            }
-        }
-
-        const filteredTenants = this.currentTab === 'pending' 
-            ? this.tenants.filter(t => t.approval_status === 'pending')
-            : this.tenants;
+        const filteredTenants = this.tenants;
 
         if (filteredTenants.length === 0) {
             tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-secondary">Nenhum tenant encontrado.</td></tr>`;
@@ -146,90 +133,84 @@ export class tenantsController {
 
         let html = '';
         filteredTenants.forEach(t => {
-            // eslint-disable-next-line no-useless-assignment
-            let statusBadge = '';
-            if (t.approval_status === 'approved') {
-                const venc = t.settings?.vencimento;
-                const hoje = new Date().toISOString().split('T')[0];
-                if (venc && venc.split('T')[0] < hoje) {
-                    statusBadge = '<span class="badge bg-danger-light text-danger text-xs px-2 py-1 rounded">Vencido</span>';
+            try {
+                // eslint-disable-next-line no-useless-assignment
+                let statusBadge = '';
+                if (t.approval_status === 'approved') {
+                    const venc = t.settings?.vencimento;
+                    const hoje = new Date().toISOString().split('T')[0];
+                    if (venc && venc.split('T')[0] < hoje) {
+                        statusBadge = '<span class="badge bg-danger-light text-danger text-xs px-2 py-1 rounded">Vencido</span>';
+                    } else {
+                        statusBadge = '<span class="badge bg-success-light text-success text-xs px-2 py-1 rounded">Ativo</span>';
+                    }
+                } else if (t.approval_status === 'pending') {
+                    statusBadge = '<span class="badge bg-warning-light text-warning text-xs px-2 py-1 rounded">Pendente</span>';
                 } else {
-                    statusBadge = '<span class="badge bg-success-light text-success text-xs px-2 py-1 rounded">Ativo</span>';
+                    statusBadge = '<span class="badge bg-danger-light text-danger text-xs px-2 py-1 rounded">Suspenso/Banido</span>';
                 }
-            } else if (t.approval_status === 'pending') {
-                statusBadge = '<span class="badge bg-warning-light text-warning text-xs px-2 py-1 rounded">Pendente</span>';
-            } else {
-                statusBadge = '<span class="badge bg-danger-light text-danger text-xs px-2 py-1 rounded">Suspenso/Banido</span>';
+
+                // Real Plano Info based on settings.plano_id
+                const planoId = t.settings?.plano_id;
+                const planoObj = this.availablePlans.find(p => p.id === planoId);
+                const planoName = planoObj ? planoObj.name : 'Sem Plano';
+                let vencimento = 'Sem Venc.';
+                if (t.settings?.vencimento) {
+                    const pDate = t.settings.vencimento.split('T')[0].split('-');
+                    if (pDate.length >= 3) {
+                        vencimento = `${pDate[2]}/${pDate[1]}/${pDate[0]}`;
+                    }
+                }
+                
+                const planoColor = planoObj ? 'bg-primary-light text-primary' : 'bg-placeholder text-secondary';
+
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const storeUrl = isLocalhost ? `/cliente/index.html?tenant=${t.slug}` : `/${t.slug}`;
+
+                html += `
+                    <tr class="border-bottom-dashed border-placeholder hover:bg-hover transition-colors">
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-primary">${this.escapeHTML(t.name)}</div>
+                            <div class="text-xs text-secondary mt-1">
+                                <a href="${storeUrl}" target="_blank" class="text-primary opacity-80 hover:opacity-100 text-decoration-none">
+                                    /${this.escapeHTML(t.slug)} <i data-lucide="external-link" class="icon-sm inline-block ml-1"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-secondary">
+                            <div class="flex align-center gap-2">
+                                <i data-lucide="user" class="icon-sm"></i> ID: ${t.owner_id ? String(t.owner_id).split('-')[0] + '...' : 'Desconhecido'}
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <button class="btn border-none bg-transparent cursor-pointer p-0 m-0 btn-toggle-status" data-id="${t.id}" data-status="${t.approval_status}" title="Clique para alterar">
+                                ${statusBadge}
+                            </button>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <button class="btn border-none bg-transparent cursor-pointer p-0 m-0 btn-edit-plano flex flex-column align-center w-100" data-id="${t.id}" data-plano="${planoName}" data-vencimento="${t.settings?.vencimento || ''}">
+                                <span class="badge ${planoColor} text-xs px-2 py-1 rounded mb-1 capitalize">${planoName}</span>
+                                <span class="text-xs text-secondary opacity-70">${vencimento}</span>
+                            </button>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <div class="flex justify-center gap-2">
+                                    <button class="btn bg-danger-light text-danger border-none rounded px-2 py-1 cursor-pointer hover:bg-danger hover:text-white transition-colors btn-impersonate flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Logar como este Lojista (GOD MODE)">
+                                        <i data-lucide="zap" class="icon-sm m-0"></i> Logar
+                                    </button>
+                                    <button class="btn bg-primary-light text-primary border-none rounded px-2 py-1 cursor-pointer hover:bg-primary transition-colors hover:text-white btn-master-settings flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Configurações Master">
+                                        <i data-lucide="settings" class="icon-sm m-0"></i> Master
+                                    </button>
+                                    <button class="btn bg-warning-light text-warning border-none rounded px-2 py-1 cursor-pointer hover:bg-warning hover:text-white transition-colors btn-delete-tenant flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Excluir Loja Permanentemente">
+                                        <i data-lucide="trash-2" class="icon-sm m-0"></i>
+                                    </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            } catch (err) {
+                console.error('Erro ao renderizar tenant', t, err);
             }
-
-            // Real Plano Info based on settings.plano_id
-            const planoId = t.settings?.plano_id;
-            const planoObj = this.availablePlans.find(p => p.id === planoId);
-            const planoName = planoObj ? planoObj.name : 'Sem Plano';
-            let vencimento = 'Sem Venc.';
-            if (t.settings?.vencimento) {
-                const pDate = t.settings.vencimento.split('T')[0].split('-');
-                vencimento = `${pDate[2]}/${pDate[1]}/${pDate[0]}`;
-            }
-            
-            const planoColor = planoObj ? 'bg-primary-light text-primary' : 'bg-placeholder text-secondary';
-
-            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const storeUrl = isLocalhost ? `/cliente/index.html?tenant=${t.slug}` : `/${t.slug}`;
-
-            html += `
-                <tr class="border-bottom-dashed border-placeholder hover:bg-hover transition-colors">
-                    <td class="py-3 px-4">
-                        <div class="font-bold text-primary">${this.escapeHTML(t.name)}</div>
-                        <div class="text-xs text-secondary mt-1">
-                            <a href="${storeUrl}" target="_blank" class="text-primary opacity-80 hover:opacity-100 text-decoration-none">
-                                /${this.escapeHTML(t.slug)} <i data-lucide="external-link" class="icon-sm inline-block ml-1"></i>
-                            </a>
-                        </div>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-secondary">
-                        <div class="flex align-center gap-2">
-                            <i data-lucide="user" class="icon-sm"></i> ID: ${t.owner_id ? t.owner_id.split('-')[0] + '...' : 'Desconhecido'}
-                        </div>
-                    </td>
-                    <td class="py-3 px-4 text-center">
-                        <button class="btn border-none bg-transparent cursor-pointer p-0 m-0 btn-toggle-status" data-id="${t.id}" data-status="${t.approval_status}" title="Clique para alterar">
-                            ${statusBadge}
-                        </button>
-                    </td>
-                    <td class="py-3 px-4 text-center">
-                        <button class="btn border-none bg-transparent cursor-pointer p-0 m-0 btn-edit-plano flex flex-column align-center w-100" data-id="${t.id}" data-plano="${planoName}" data-vencimento="${t.settings?.vencimento || ''}">
-                            <span class="badge ${planoColor} text-xs px-2 py-1 rounded mb-1 capitalize">${planoName}</span>
-                            <span class="text-xs text-secondary opacity-70">${vencimento}</span>
-                        </button>
-                    </td>
-                    <td class="py-3 px-4 text-center">
-                        <div class="flex justify-center gap-2">
-                            ${t.approval_status === 'pending' ? `
-                                <button class="btn bg-success-light text-success border-none rounded px-2 py-1 cursor-pointer hover:bg-success hover:text-white transition-colors btn-approve-tenant flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Aprovar Lojista">
-                                    <i data-lucide="check" class="icon-sm m-0"></i> Aprovar
-                                </button>
-                                <button class="btn bg-danger-light text-danger border-none rounded px-2 py-1 cursor-pointer hover:bg-danger hover:text-white transition-colors btn-reject-tenant flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Recusar Lojista">
-                                    <i data-lucide="x" class="icon-sm m-0"></i> Recusar
-                                </button>
-                                <button class="btn bg-primary-light text-primary border-none rounded px-2 py-1 cursor-pointer hover:bg-primary transition-colors hover:text-white btn-master-settings flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Configuração Inicial">
-                                    <i data-lucide="settings" class="icon-sm m-0"></i> Config Inicial
-                                </button>
-                            ` : `
-                                <button class="btn bg-danger-light text-danger border-none rounded px-2 py-1 cursor-pointer hover:bg-danger hover:text-white transition-colors btn-impersonate flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Logar como este Lojista (GOD MODE)">
-                                    <i data-lucide="zap" class="icon-sm m-0"></i> Logar
-                                </button>
-                                <button class="btn bg-primary-light text-primary border-none rounded px-2 py-1 cursor-pointer hover:bg-primary transition-colors hover:text-white btn-master-settings flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Configurações Master">
-                                    <i data-lucide="settings" class="icon-sm m-0"></i> Master
-                                </button>
-                                <button class="btn bg-warning-light text-warning border-none rounded px-2 py-1 cursor-pointer hover:bg-warning hover:text-white transition-colors btn-delete-tenant flex align-center gap-1 text-xs font-bold" data-id="${t.id}" title="Excluir Loja Permanentemente">
-                                    <i data-lucide="trash-2" class="icon-sm m-0"></i>
-                                </button>
-                            `}
-                        </div>
-                    </td>
-                </tr>
-            `;
         });
 
         tbody.innerHTML = html;
@@ -393,29 +374,7 @@ export class tenantsController {
                     return;
                 }
 
-                // Aprovar Lojista
-                const btnApprove = e.target.closest('.btn-approve-tenant');
-                if (btnApprove) {
-                    const id = btnApprove.getAttribute('data-id');
-                    if (window.showConfirm) {
-                        window.showConfirm(`Aprovar este lojista e liberar acesso à plataforma?`, async () => {
-                            await this.updateTenantStatus(id, 'approved');
-                        });
-                    }
-                    return;
-                }
-
-                // Recusar Lojista
-                const btnReject = e.target.closest('.btn-reject-tenant');
-                if (btnReject) {
-                    const id = btnReject.getAttribute('data-id');
-                    if (window.showConfirm) {
-                        window.showConfirm(`Tem certeza que deseja RECUSAR este lojista? A conta dele será suspensa.`, async () => {
-                            await this.updateTenantStatus(id, 'banned');
-                        });
-                    }
-                    return;
-                }
+                // Remover logic de Approve e Reject que não é mais usada
 
                 // Logar (Impersonate)
                 const btnImpersonate = e.target.closest('.btn-impersonate');
