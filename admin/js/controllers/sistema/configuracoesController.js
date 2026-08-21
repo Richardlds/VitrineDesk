@@ -149,6 +149,7 @@ export class configuracoesController {
 
             // Aba Stripe
             if (integrations) {
+                this.integrationsId = integrations.id;
                 setVal('input-stripe-public', integrations.stripe_public_key);
                 setVal('input-stripe-secret', integrations.stripe_secret_key);
                 setVal('input-stripe-webhook', integrations.stripe_webhook_secret);
@@ -371,15 +372,21 @@ export class configuracoesController {
 
             // Se houver algum valor, fazemos o upsert
             if (stripePublic || stripeSecret || stripeWebhook) {
+                const payload = {
+                    tenant_id: this.tenantId,
+                    stripe_public_key: stripePublic,
+                    stripe_secret_key: stripeSecret,
+                    stripe_webhook_secret: stripeWebhook,
+                    updated_at: new Date().toISOString()
+                };
+                
+                if (this.integrationsId) {
+                    payload.id = this.integrationsId;
+                }
+
                 const { error: errorIntegrations } = await supabase
                     .from('tenant_integrations')
-                    .upsert({
-                        tenant_id: this.tenantId,
-                        stripe_public_key: stripePublic,
-                        stripe_secret_key: stripeSecret,
-                        stripe_webhook_secret: stripeWebhook,
-                        updated_at: new Date().toISOString()
-                    });
+                    .upsert(payload);
 
                 if (errorIntegrations) {
                     console.error('Erro ao salvar integrações:', errorIntegrations);
