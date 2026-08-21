@@ -209,7 +209,9 @@ export async function loginMerchant(email, password, silent = false) {
   } catch (err) {
     if (!silent) {
       console.error('Detalhe técnico:', err);
-      if (err.message && err.message.includes('Invalid login credentials')) {
+      if (err.message && err.message.includes('Email not confirmed')) {
+        showToast('Por favor, confirme seu e-mail antes de entrar. Verifique sua caixa de entrada!', 'warning');
+      } else if (err.message && err.message.includes('Invalid login credentials')) {
         showToast('E-mail ou senha incorretos.', 'error');
       } else {
         showToast('Erro inesperado. Tente novamente.', 'error');
