@@ -358,6 +358,7 @@ export class planos_clientesController {
                     current_period_end,
                     client_id,
                     plan_id,
+                    stripe_subscription_id,
                     clientes!client_id(nome, email, telefone),
                     tenant_client_plans!plan_id(name)
                 `)
@@ -453,7 +454,10 @@ export class planos_clientesController {
                         <span class="status-badge ${statusClass} border-none">${statusText}</span>
                     </td>
                     <td class="p-3 text-right">
-                        <button class="btn bg-transparent border-none text-primary cursor-pointer hover:underline text-sm" onclick="window.changeSubStatus('${sub.id}')">Alterar Status</button>
+                        ${sub.status === 'active' 
+                            ? `<button class="btn bg-transparent border-none text-danger cursor-pointer hover:underline text-sm" onclick="window.changeSubStatus('${sub.id}')">Cancelar</button>`
+                            : `<span class="text-xs text-muted">Cancelado</span>`
+                        }
                     </td>
                 </tr>
             `;
@@ -466,26 +470,43 @@ export class planos_clientesController {
             const sub = this.subscribers.find(s => s.id === id);
             if (!sub) return;
 
-            const nextStatus = sub.status === 'active' ? 'canceled' : 'active';
-            const displayStatus = nextStatus === 'active' ? 'ATIVO' : 'CANCELADO';
+            if (sub.status !== 'active') {
+                if (window.showToast) window.showToast('Esta assinatura já está cancelada e não pode ser reativada.', 'warning');
+                return;
+            }
             
             if (window.showConfirm) {
-                window.showConfirm(`Deseja alterar o status desta assinatura para ${displayStatus}? (Nota: Esta ação não cancela a cobrança na Stripe. É apenas para revogar ou liberar o acesso no sistema)`, async () => {
+                const confirmed = await window.showConfirm(`Deseja CANCELAR definitivamente esta assinatura? (Isto interromperá a cobrança na Stripe de forma irreversível e revogará o acesso)`, 'Sim, Cancelar', 'Voltar');
+                if (confirmed) {
                     try {
-                        const { error } = await supabase
-                            .from('client_subscriptions')
-                            .update({ status: nextStatus })
-                            .eq('id', id);
-                            
-                        if (error) throw error;
+                        if (window.showToast) window.showToast('Cancelando na Stripe, aguarde...', 'info');
+
+                        const token = (await supabase.auth.getSession()).data?.session?.access_token;
                         
-                        if (window.showToast) window.showToast('Status atualizado com sucesso', 'success');
+                        const response = await fetch('/api/stripe/cancel-subscription', {
+                            method: 'POST',
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                tenantId: this.tenantId,
+                                stripeSubscriptionId: sub.stripe_subscription_id
+                            })
+                        });
+                        
+                        if (!response.ok) {
+                            const err = await response.json();
+                            throw new Error(err.error || 'Erro ao cancelar');
+                        }
+                        
+                        if (window.showToast) window.showToast('Assinatura cancelada com sucesso!', 'success');
                         this.loadSubscribers();
                     } catch (e) {
                         console.error(e);
-                        if (window.showToast) window.showToast('Erro ao atualizar status', 'error');
+                        if (window.showToast) window.showToast(`Erro ao cancelar: ${e.message}`, 'error');
                     }
-                });
+                }
             }
         };
     }
