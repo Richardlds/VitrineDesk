@@ -22,6 +22,32 @@ export async function initPlanos() {
     // Load user active subscription if logged in
     await loadActiveSubscription();
 
+    // Check for checkout success and poll if necessary
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('checkout') === 'success') {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        if (!activeSubscription) {
+            showToast('Processando sua assinatura, aguarde...', 'info');
+            let attempts = 0;
+            const maxAttempts = 5;
+            
+            while (attempts < maxAttempts && !activeSubscription) {
+                attempts++;
+                await new Promise(r => setTimeout(r, 2000));
+                await loadActiveSubscription();
+            }
+            
+            if (activeSubscription) {
+                showToast('Assinatura ativada com sucesso!', 'success');
+            } else {
+                showToast('Ainda processando... Por favor, recarregue a página em alguns instantes.', 'warning');
+            }
+        } else {
+            showToast('Assinatura ativada com sucesso!', 'success');
+        }
+    }
+
     renderPlanos();
 }
 

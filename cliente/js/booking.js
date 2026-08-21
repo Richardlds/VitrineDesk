@@ -758,6 +758,8 @@ async function submitBooking() {
 
     // Calculate final total (including discount) to save it in notes
     let finalTotal = calcTotalPrice();
+    let discountStr = '';
+
     if (bookingState.discountData) {
       let desc = 0;
       if (bookingState.discountData.desconto_percentual) {
@@ -767,8 +769,14 @@ async function submitBooking() {
       }
       if (desc > finalTotal) desc = finalTotal;
       finalTotal -= desc;
+      
+      if (bookingState.planDiscountApplied === 'free_appointment') {
+          discountStr = `(Agendamento Grátis - Plano)`;
+      } else if (bookingState.planDiscountApplied === 'percentage') {
+          discountStr = `(Desconto de Plano: -${formatCurrency(desc)})`;
+      }
     }
-    const totalTexto = `Total: ${formatCurrency(finalTotal)}`;
+    const totalTexto = `Total: ${formatCurrency(finalTotal)} ${discountStr}`.trim();
 
 
 
@@ -793,6 +801,21 @@ async function submitBooking() {
 
     if (result && result.length > 0) {
       showToast('Agendamento realizado com sucesso!', 'success');
+      
+      // Se usou um agendamento grátis, descontar da assinatura no banco
+      if (bookingState.planDiscountApplied === 'free_appointment' && window.activeClientSubscription) {
+         try {
+             const currentUsed = window.activeClientSubscription.used_free_appointments_this_cycle || 0;
+             const subId = window.activeClientSubscription.id;
+             await supaFetch(`/rest/v1/client_subscriptions?id=eq.${subId}`, {
+                 method: 'PATCH',
+                 body: { used_free_appointments_this_cycle: currentUsed + 1 }
+             });
+             window.activeClientSubscription.used_free_appointments_this_cycle = currentUsed + 1;
+         } catch (subErr) {
+             console.error('Erro ao descontar agendamento do plano:', subErr);
+         }
+      }
       
       // Enviar notificação para o lojista
       try {
