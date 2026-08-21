@@ -45,13 +45,14 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
     if (data.user) {
       // Se não tem sessão, significa que o "Confirm Email" está ativo no Supabase
       if (!data.session) {
-          showToast('✅ Conta criada! Verifique seu e-mail para ativar.', 'success');
-          // Redirecionar para o login em vez do admin, ou apenas limpar o form
+          alert('CONTA CRIADA COM SUCESSO! 🎉\n\nEnviamos um e-mail de verificação para você. Para a sua segurança, você PRECISARÁ abrir o seu e-mail e clicar no link de confirmação antes de conseguir fazer login no sistema.');
+          showToast('Verifique seu e-mail para ativar a conta.', 'success');
+          // Mudar para a aba de login e limpar formulário
           setTimeout(() => {
               const loginTab = document.querySelector('.auth-tab[data-tab="login"]');
               if(loginTab) loginTab.click();
               document.getElementById('form-register').reset();
-          }, 2000);
+          }, 500);
           return data;
       }
 

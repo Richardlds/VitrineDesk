@@ -730,7 +730,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         recordFailedAttempt();
 
-        showToast('Erro inesperado ao fazer login.', 'error');
+        if (err && err.message && err.message.toLowerCase().includes('email not confirmed')) {
+          showToast('Você precisa confirmar seu e-mail antes de fazer login!', 'warning');
+        } else if (err && err.message && err.message.toLowerCase().includes('invalid login credentials')) {
+          showToast('E-mail/senha incorretos, ou e-mail ainda não confirmado!', 'error');
+        } else {
+          showToast('Erro inesperado ao fazer login.', 'error');
+        }
 
         if (btnLoginSubmit) btnLoginSubmit.classList.remove('btn-loading');
 
