@@ -828,8 +828,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-      if (!nameVal || nameVal.split(' ').filter(w => w.length > 0).length < 2) {
-        nameErr.textContent = 'Por favor, informe pelo menos duas palavras para o nome (ex: Loja do João).';
+      if (!nameVal || nameVal.length < 2) {
+        nameErr.textContent = 'Por favor, informe um nome válido para a loja.';
         nameInput.parentElement.classList.add('invalid');
         isValid = false;
       }

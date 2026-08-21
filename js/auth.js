@@ -3,7 +3,7 @@ import { supabase } from './config.js';
 import { showToast } from './utils.js';
 
 // Registrar novo Lojista com validações
-export async function registerMerchant(email, password, shopName, type, razaoSocial, document) {
+export async function registerMerchant(email, password, shopName, type, razaoSocial, doc) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email)) {
     showToast('Email inválido', 'error');
@@ -27,7 +27,7 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
           shopName: shopName.trim(),
           type: type || 'outros',
           razaoSocial: razaoSocial || '',
-          document: document || ''
+          document: doc || ''
         }
       }
     });
@@ -45,13 +45,19 @@ export async function registerMerchant(email, password, shopName, type, razaoSoc
     if (data.user) {
       // Se não tem sessão, significa que o "Confirm Email" está ativo no Supabase
       if (!data.session) {
-          alert('CONTA CRIADA COM SUCESSO! 🎉\n\nEnviamos um e-mail de verificação para você. Para a sua segurança, você PRECISARÁ abrir o seu e-mail e clicar no link de confirmação antes de conseguir fazer login no sistema.');
+          // Usa o modal em vez do alert
+          const confirmModal = window.document.getElementById('modal-email-confirm');
+          if (confirmModal) {
+              confirmModal.style.display = 'flex';
+              setTimeout(() => confirmModal.classList.add('active'), 10);
+          }
+          
           showToast('Verifique seu e-mail para ativar a conta.', 'success');
           // Mudar para a aba de login e limpar formulário
           setTimeout(() => {
-              const loginTab = document.querySelector('.auth-tab[data-tab="login"]');
+              const loginTab = window.document.querySelector('.auth-tab[data-tab="login"]');
               if(loginTab) loginTab.click();
-              document.getElementById('form-register').reset();
+              window.document.getElementById('form-register').reset();
           }, 500);
           return data;
       }
