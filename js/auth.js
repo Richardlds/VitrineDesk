@@ -336,12 +336,17 @@ export async function completeGoogleRegistration(userId, email, shopName, type, 
       }]);
     }
 
-    // Criar a filial Matriz padr�o automaticamente
-    await supabase.from('branches').insert([{
+    // Criar a filial Matriz padrão automaticamente
+    const { error: branchError } = await supabase.from('branches').insert([{
       tenant_id: insertedTenant.id,
       name: 'Matriz - ' + shopName.trim(),
       is_main: true
-    }]);
+    }]).select();
+
+    if (branchError) {
+      console.error('Erro ao criar filial matriz (401/403?):', branchError);
+      // Não bloqueia o login, pois o tenant já foi criado. A matriz pode ser criada depois ou tentar novamente.
+    }
 
     showToast('✅ Cadastro concluído! Entrando no sistema...', 'success');
     setTimeout(() => window.location.href = '/admin/', 1500);
