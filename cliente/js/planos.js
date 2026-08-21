@@ -101,7 +101,7 @@ function renderPlanos() {
         if (activeContainer) activeContainer.innerHTML = 'Faça login para ver sua assinatura.';
         if (profileBadge) profileBadge.classList.add('hidden');
     } else if (activeSubscription) {
-        const plan = activeSubscription.tenant_client_plans;
+        const plan = activeSubscription.plan;
         if (!plan) {
             if (activeContainer) activeContainer.innerHTML = 'Plano indisponível (pode ter sido excluído).';
         } else {

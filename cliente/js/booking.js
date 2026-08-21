@@ -115,8 +115,8 @@ export async function openBookingModal(service) {
     };
 
     // Verificar se o cliente tem um plano de assinatura ativo
-    if (window.activeClientSubscription && window.activeClientSubscription.tenant_client_plans) {
-      const plan = window.activeClientSubscription.tenant_client_plans;
+    if (window.activeClientSubscription && window.activeClientSubscription.plan) {
+      const plan = window.activeClientSubscription.plan;
       const periodEnd = new Date(window.activeClientSubscription.current_period_end);
       
       if (periodEnd > new Date()) {
