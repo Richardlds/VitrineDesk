@@ -178,15 +178,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-  // 1b. GOOGLE AUTH REDIRECT CHECK
-  try {
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    if (!authError && authData?.user) {
-      const user = authData.user;
-
+  // 1b. GOOGLE AUTH REDIRECT CHECK & EMAIL VERIFICATION
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session?.user) {
+      const user = session.user;
       
-
-            const { data: adminData } = await supabase.from('admin_users').select('role').eq('id', user.id).limit(1).maybeSingle();
+      const { data: adminData } = await supabase.from('admin_users').select('role').eq('id', user.id).limit(1).maybeSingle();
       if (adminData?.role === 'superadmin' || adminData?.role === 'admin') {
         window.location.href = '/admingod/';
         return;
@@ -238,6 +235,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
           return;
       }
+    }
+  });
+
+  try {
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (!authError && authData?.user) {
+      const user = authData.user;
 
       const modalComplete = document.getElementById('modal-complete-registration');
       if (modalComplete) {
