@@ -181,6 +181,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1b. GOOGLE AUTH REDIRECT CHECK & EMAIL VERIFICATION
   supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session?.user) {
+      
+      // INTERCEPT CLIENT GOOGLE LOGIN
+      if (localStorage.getItem('is_google_login') === 'true') {
+          const oauthRedirect = localStorage.getItem('oauth_redirect');
+          if (oauthRedirect) {
+              window.location.href = oauthRedirect;
+              return;
+          }
+      }
+
       const user = session.user;
       
       const { data: adminData } = await supabase.from('admin_users').select('role').eq('id', user.id).limit(1).maybeSingle();

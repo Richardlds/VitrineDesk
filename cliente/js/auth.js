@@ -135,7 +135,7 @@ export async function loginComGoogle(e) {
     }
     
     // Inicia fluxo OAuth. O redirect volta para a mesma página.
-    localStorage.setItem('oauth_redirect', window.location.pathname);
+    localStorage.setItem('oauth_redirect', window.location.pathname + window.location.search + window.location.hash);
     localStorage.setItem('is_google_login', 'true');
     await supabase.auth.signInWithOAuth({
       provider: 'google',

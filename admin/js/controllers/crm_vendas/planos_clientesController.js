@@ -523,7 +523,7 @@ export class planos_clientesController {
             if (fileInput.files.length > 0) {
                 btnSalvar.innerHTML = `<i data-lucide="loader" class="animate-spin icon-sm mr-2"></i> Fazendo upload...`;
                 try {
-                    imageUrl = await uploadImageToSupabase(fileInput.files[0], 'avatars', this.tenantId);
+                    imageUrl = await uploadImageToSupabase(fileInput.files[0], 'tenant-images', this.tenantId);
                 } catch (e) {
                     console.error('Falha no upload', e);
                 }

@@ -53,10 +53,10 @@ export async function loadActiveSubscription() {
 function renderPlanos() {
     const listContainer = document.getElementById('available-plans-list');
     const activeContainer = document.getElementById('active-subscription-card');
-    
-    // Novas UI do plano
     const homeSection = document.getElementById('section-planos');
     const homeGrid = document.getElementById('home-plans-grid');
+    
+    // Novas UI do plano
     const profileBadge = document.getElementById('profile-active-plan-badge');
     const profilePlanName = document.getElementById('profile-active-plan-name');
     
@@ -126,6 +126,8 @@ function renderPlanos() {
             planosLink.className = 'nav-link';
             planosLink.id = 'nav-link-planos';
             planosLink.textContent = 'Planos';
+            planosLink.setAttribute('data-action', 'scrollTo');
+            planosLink.setAttribute('data-target', 'section-planos');
             navLinks.insertBefore(planosLink, navLinks.lastElementChild);
         }
     }
@@ -134,7 +136,7 @@ function renderPlanos() {
     let html = '';
     let hasAvailablePlans = tenantPlans.length > 0;
     
-    tenantPlans.forEach(plan => {
+    tenantPlans.forEach((plan, index) => {
         const isCurrentPlan = activeSubscription && activeSubscription.plan_id === plan.id;
 
         let benefits = [];
@@ -150,43 +152,54 @@ function renderPlanos() {
             });
         }
         
-        let cardStyle = isCurrentPlan ? 'border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);' : '';
-        let badgeHtml = isCurrentPlan ? `<div style="position: absolute; top: -14px; right: 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark, #0056b3)); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 10;">Plano Atual</div>` : '';
+        let cardStyle = isCurrentPlan ? 'border: 2px solid var(--primary); box-shadow: var(--neon-glow-hover);' : 'border: 1px solid var(--border);';
+        let badgeHtml = isCurrentPlan ? `<div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px color-mix(in srgb, var(--primary) 40%, transparent); z-index: 10;">Meu Plano</div>` : '';
         
         let buttonHtml = isCurrentPlan 
-            ? `<button class="btn btn-secondary btn-block btn-assinar" disabled>Plano Ativo</button>`
-            : `<button class="btn btn-primary btn-block btn-assinar btn-assinar-plano" data-plan-id="${plan.id}" data-price-id="${plan.stripe_price_id}">Assinar Agora</button>`;
+            ? `<button class="btn btn-secondary w-100" style="margin-top: 20px; opacity: 0.7; cursor: default;" disabled><i data-lucide="check" class="icon-sm"></i> Plano Ativo</button>`
+            : `<button class="btn btn-primary w-100 btn-assinar-plano" style="margin-top: 20px;" data-plan-id="${plan.id}" data-price-id="${plan.stripe_price_id}">Assinar Agora</button>`;
         
-        let imageHtml = plan.image_url ? `<div class="plan-image-wrapper"><img src="${escapeHtml(plan.image_url)}" alt="${escapeHtml(plan.name)}"></div>` : '';
+        let imageHtml = plan.image_url 
+            ? `<img src="${escapeHtml(plan.image_url)}" alt="${escapeHtml(plan.name)}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin: 0 auto; display: block; box-shadow: 0 4px 20px color-mix(in srgb, var(--primary) 30%, transparent);">` 
+            : `<div style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); margin: 0 auto; box-shadow: 0 4px 20px color-mix(in srgb, var(--primary) 30%, transparent);"><i data-lucide="star" style="width: 32px; height: 32px;"></i></div>`;
 
-        // Lucide check icon string
-        const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        const checkIcon = `<i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--primary); flex-shrink: 0; margin-top: 1px;"></i>`;
+        
+        // Premium animation
+        const animDelay = index * 0.1;
 
         html += `
-            <div class="plan-card" style="${cardStyle}">
+            <article class="glass-card" style="position: relative; padding: 32px 24px; height: 100%; display: flex; flex-direction: column; ${cardStyle} opacity: 0; animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; animation-delay: ${animDelay}s; transform-origin: center; transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;" onmouseenter="this.style.transform='translateY(-5px)'" onmouseleave="this.style.transform='translateY(0)'">
                 ${badgeHtml}
-                ${imageHtml}
-                <div class="plan-content">
-                    <div class="plan-header">
-                        <h5 class="plan-title">${escapeHtml(plan.name)}</h5>
-                        <div class="plan-price">R$ ${Number(plan.price).toFixed(2)}<span>/mês</span></div>
-                        ${plan.description ? `<p class="plan-desc">${escapeHtml(plan.description)}</p>` : ''}
+                
+                <div style="text-align: center; margin-bottom: 24px;">
+                    ${imageHtml}
+                    <h3 style="margin: 16px 0 8px; font-size: 1.25rem; font-weight: 700; font-family: var(--font-title); letter-spacing: -0.02em;">${escapeHtml(plan.name)}</h3>
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); font-family: var(--font-title); line-height: 1;">
+                        R$ ${Number(plan.price).toFixed(2)}<span style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted); margin-left: 4px;">/mês</span>
                     </div>
-                    
-                    <ul class="plan-benefits">
-                        ${benefits.map(b => `<li>${checkIcon}<span>${escapeHtml(b)}</span></li>`).join('')}
-                    </ul>
-                    
-                    ${buttonHtml}
                 </div>
-            </div>
+                
+                <div style="flex-grow: 1; padding: 16px; background: color-mix(in srgb, var(--text-main) 2%, transparent); border-radius: 12px; margin-bottom: 8px;">
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px;">
+                        ${benefits.map(b => `<li style="display: flex; gap: 10px; font-size: 0.9rem; color: var(--text-main); line-height: 1.4; text-align: left; align-items: flex-start;">${checkIcon}<span style="opacity: 0.9;">${escapeHtml(b)}</span></li>`).join('')}
+                    </ul>
+                </div>
+                
+                ${buttonHtml}
+            </article>
         `;
     });
 
-    const fallbackHtml = '<div class="text-center text-secondary p-3 w-100">Nenhum plano disponível.</div>';
+    const fallbackHtml = '<div class="text-center text-muted p-3 w-full" style="grid-column: 1 / -1;">Nenhum plano disponível.</div>';
     
     if (listContainer) listContainer.innerHTML = html || fallbackHtml;
     if (homeGrid) homeGrid.innerHTML = html || fallbackHtml;
+    
+    // IMPORTANT: Create Lucide icons after injecting dynamic HTML
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
     
     // Bind click events (Home e Drawer)
     const btns = document.querySelectorAll('.btn-assinar-plano');

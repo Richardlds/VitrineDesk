@@ -11,7 +11,11 @@ let _authClient = null;
 export function getSupabaseAuthClient() {
   if (_authClient) return _authClient;
   if (window.supabase) {
-    _authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    _authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        storageKey: 'vitrinedesk_client_auth_token'
+      }
+    });
   }
   return _authClient;
 }
