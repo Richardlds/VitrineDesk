@@ -77,7 +77,7 @@ export class relatoriosController {
             // this.renderSkeletons();
             const { start, end } = this.getDateRange();
 
-            // Buscar appointments do período, trazendo os services
+            // Buscar appointments do período
             let queryAppts = supabase
                 .from('appointments')
                 .select('*, services(name, price)')
@@ -86,23 +86,40 @@ export class relatoriosController {
                 .gte('appointment_date', start.split('T')[0])
                 .lte('appointment_date', end.split('T')[0]);
 
-            const { data: appts, error: errAppts } = await queryAppts;
-            if (errAppts) throw errAppts;
+            // Buscar assinaturas ativas para calcular MRR
+            let querySubs = supabase
+                .from('client_subscriptions')
+                .select('*, tenant_client_plans(name, price, id)')
+                .eq('tenant_id', tenantId)
+                .eq('status', 'active');
 
-            // Calcular Faturamento
-            let faturamento = 0;
+            const [resAppts, resSubs] = await Promise.all([queryAppts, querySubs]);
+            
+            if (resAppts.error) throw resAppts.error;
+            if (resSubs.error) throw resSubs.error;
+
+            const appts = resAppts.data;
+            const subs = resSubs.data;
+
+            // Calcular Faturamento Agendamentos
+            let faturamentoAgendamentos = 0;
             let agendamentos = appts ? appts.length : 0;
             const uniqueClients = new Set();
             const servicosStats = {};
+            const faturamentoPorDia = {};
 
             if (appts) {
                 appts.forEach(appt => {
                     if (appt.client_email) uniqueClients.add(appt.client_email);
                     else if (appt.client_phone) uniqueClients.add(appt.client_phone);
 
+                    const dataAppt = appt.appointment_date;
+                    if (!faturamentoPorDia[dataAppt]) faturamentoPorDia[dataAppt] = 0;
+
                     if (appt.services) {
                         const price = parseFloat(appt.services.price || 0);
-                        faturamento += price;
+                        faturamentoAgendamentos += price;
+                        faturamentoPorDia[dataAppt] += price;
                         
                         const sName = appt.services.name;
                         if (!servicosStats[sName]) {
@@ -113,29 +130,162 @@ export class relatoriosController {
                     }
                 });
             }
-            
-            // Subtrair comissões pagas nesse período (opcional, para exibir lucro, 
-            // mas manteremos faturamento bruto como destaque, descontando depois se necessário)
-            // Aqui focaremos no faturamento bruto padrão.
 
-            const ticketMedio = agendamentos > 0 ? faturamento / agendamentos : 0;
+            // Calcular Faturamento Assinaturas (MRR)
+            let faturamentoAssinaturas = 0;
+            let assinaturasAtivas = subs ? subs.length : 0;
+            
+            if (subs) {
+                subs.forEach(sub => {
+                    if (sub.tenant_client_plans && sub.tenant_client_plans.price) {
+                        faturamentoAssinaturas += parseFloat(sub.tenant_client_plans.price);
+                    }
+                });
+            }
+            
+            const faturamentoTotal = faturamentoAgendamentos + faturamentoAssinaturas;
+            const ticketMedio = agendamentos > 0 ? faturamentoAgendamentos / agendamentos : 0;
 
             const metrics = {
-                faturamento: faturamento,
+                faturamento: faturamentoTotal,
+                faturamentoAgendamentos: faturamentoAgendamentos,
+                faturamentoAssinaturas: faturamentoAssinaturas,
                 agendamentos: agendamentos,
+                assinaturas: assinaturasAtivas,
                 ticketMedio: ticketMedio,
-                novosClientes: uniqueClients.size // simplificação: clientes únicos do periodo
+                novosClientes: uniqueClients.size
             };
 
             const topServices = Object.values(servicosStats).sort((a, b) => b.receita - a.receita).slice(0, 5);
 
             this.renderCards(metrics);
             this.renderTable(topServices);
+            this.renderCharts(faturamentoPorDia, faturamentoAgendamentos, faturamentoAssinaturas);
 
             if (window.lucide) window.lucide.createIcons();
         } catch (error) {
             console.error('Erro ao carregar relatórios:', error);
             if (window.showToast) window.showToast('Erro ao carregar relatórios. Tente novamente.', 'error');
+        }
+    }
+
+    renderCharts(faturamentoPorDia, fatAgendamentos, fatAssinaturas) {
+        if (typeof ApexCharts === 'undefined') {
+            console.warn('ApexCharts não carregado.');
+            return;
+        }
+
+        // Gráfico de Evolução (Linha/Área)
+        const elEvolucao = document.querySelector("#chart-receita-evolucao");
+        if (elEvolucao) {
+            elEvolucao.innerHTML = '';
+            // Ordenar dias
+            const sortedDays = Object.keys(faturamentoPorDia).sort();
+            const seriesData = sortedDays.map(dia => faturamentoPorDia[dia]);
+            const labels = sortedDays.map(dia => {
+                const [y, m, d] = dia.split('-');
+                return `${d}/${m}`;
+            });
+
+            const optEvolucao = {
+                series: [{
+                    name: 'Agendamentos',
+                    data: seriesData.length ? seriesData : [0]
+                }],
+                chart: {
+                    type: 'area',
+                    height: 300,
+                    toolbar: { show: false },
+                    fontFamily: 'inherit',
+                    background: 'transparent'
+                },
+                colors: ['#3B82F6'],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.4,
+                        opacityTo: 0.05,
+                        stops: [0, 90, 100]
+                    }
+                },
+                dataLabels: { enabled: false },
+                stroke: { curve: 'smooth', width: 3 },
+                xaxis: {
+                    categories: labels.length ? labels : ['Nenhum dado'],
+                    labels: { style: { colors: 'var(--text-secondary)' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        style: { colors: 'var(--text-secondary)' },
+                        formatter: (val) => 'R$ ' + val.toFixed(0)
+                    }
+                },
+                grid: {
+                    borderColor: 'rgba(255, 255, 255, 0.05)',
+                    strokeDashArray: 4
+                },
+                theme: { mode: 'dark' }
+            };
+
+            const chartEvolucao = new ApexCharts(elEvolucao, optEvolucao);
+            chartEvolucao.render();
+        }
+
+        // Gráfico de Composição (Donut)
+        const elComposicao = document.querySelector("#chart-receita-composicao");
+        if (elComposicao) {
+            elComposicao.innerHTML = '';
+            
+            const hasData = fatAgendamentos > 0 || fatAssinaturas > 0;
+            
+            const optComposicao = {
+                series: hasData ? [fatAgendamentos, fatAssinaturas] : [1, 0],
+                labels: ['Agendamentos', 'Assinaturas (MRR)'],
+                chart: {
+                    type: 'donut',
+                    height: 300,
+                    fontFamily: 'inherit',
+                    background: 'transparent'
+                },
+                colors: ['#3B82F6', '#10B981'], // Primary (Azul), Success (Verde)
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%',
+                            labels: {
+                                show: true,
+                                name: { color: 'var(--text-secondary)' },
+                                value: {
+                                    color: 'var(--text-main)',
+                                    formatter: (val) => 'R$ ' + parseFloat(val).toFixed(2)
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total',
+                                    color: 'var(--text-main)',
+                                    formatter: function (w) {
+                                        const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                        return hasData ? 'R$ ' + total.toFixed(2) : 'R$ 0.00';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                dataLabels: { enabled: false },
+                stroke: { show: false },
+                legend: {
+                    position: 'bottom',
+                    labels: { colors: 'var(--text-main)' }
+                },
+                theme: { mode: 'dark' }
+            };
+
+            const chartComposicao = new ApexCharts(elComposicao, optComposicao);
+            chartComposicao.render();
         }
     }
 
@@ -145,46 +295,46 @@ export class relatoriosController {
         this.cardsContainer.innerHTML = `
             <div class="metric-card fade-in">
                 <div class="flex justify-between align-center mb-1">
-                    <span class="kpi-label">Faturamento Bruto</span>
+                    <span class="kpi-label">Faturamento Total</span>
                     <div class="kpi-icon-wrapper bg-success-light">
                         <i data-lucide="dollar-sign" class="icon-sm text-success"></i>
                     </div>
                 </div>
                 <div class="kpi-value text-success">R$ ${metrics.faturamento.toFixed(2)}</div>
-                <p class="text-xs text-secondary mt-1">Total acumulado no período</p>
+                <p class="text-xs text-secondary mt-1">Soma de Serviços + Assinaturas</p>
             </div>
 
             <div class="metric-card fade-in" style="animation-delay: 0.1s;">
                 <div class="flex justify-between align-center mb-1">
-                    <span class="kpi-label">Agendamentos</span>
+                    <span class="kpi-label">Receita Recorrente (MRR)</span>
                     <div class="kpi-icon-wrapper bg-primary-light">
-                        <i data-lucide="calendar-check" class="icon-sm text-primary"></i>
+                        <i data-lucide="crown" class="icon-sm text-primary"></i>
                     </div>
                 </div>
-                <div class="kpi-value text-primary">${metrics.agendamentos}</div>
-                <p class="text-xs text-secondary mt-1">Serviços concluídos</p>
+                <div class="kpi-value text-primary">R$ ${metrics.faturamentoAssinaturas.toFixed(2)}</div>
+                <p class="text-xs text-secondary mt-1">${metrics.assinaturas} Assinatura(s) Ativa(s)</p>
             </div>
 
             <div class="metric-card fade-in" style="animation-delay: 0.2s;">
                 <div class="flex justify-between align-center mb-1">
-                    <span class="kpi-label">Ticket Médio</span>
+                    <span class="kpi-label">Agendamentos</span>
                     <div class="kpi-icon-wrapper" style="background-color: rgba(255,255,255,0.05);">
-                        <i data-lucide="trending-up" class="icon-sm text-secondary"></i>
+                        <i data-lucide="calendar-check" class="icon-sm text-secondary"></i>
                     </div>
                 </div>
-                <div class="kpi-value text-primary">R$ ${metrics.ticketMedio.toFixed(2)}</div>
-                <p class="text-xs text-secondary mt-1">Gasto médio por serviço</p>
+                <div class="kpi-value text-main">${metrics.agendamentos}</div>
+                <p class="text-xs text-secondary mt-1">R$ ${metrics.faturamentoAgendamentos.toFixed(2)} faturados</p>
             </div>
 
             <div class="metric-card fade-in" style="animation-delay: 0.3s;">
                 <div class="flex justify-between align-center mb-1">
-                    <span class="kpi-label">Clientes Únicos</span>
-                    <div class="kpi-icon-wrapper" style="background-color: #DBEAFE;">
-                        <i data-lucide="users" class="icon-sm" style="color: #3B82F6;"></i>
+                    <span class="kpi-label">Ticket Médio (Serviços)</span>
+                    <div class="kpi-icon-wrapper" style="background-color: rgba(255,255,255,0.05);">
+                        <i data-lucide="trending-up" class="icon-sm text-secondary"></i>
                     </div>
                 </div>
-                <div class="kpi-value" style="color: #3B82F6;">${metrics.novosClientes}</div>
-                <p class="text-xs text-secondary mt-1">Visitantes no período</p>
+                <div class="kpi-value text-main">R$ ${metrics.ticketMedio.toFixed(2)}</div>
+                <p class="text-xs text-secondary mt-1">Gasto médio por serviço</p>
             </div>
         `;
     }

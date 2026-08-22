@@ -49,18 +49,28 @@
         
         <div class="info-card flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; cursor: default;">
             <div class="flex justify-between align-center mb-2">
-                <span class="text-secondary font-medium" style="font-size: 0.95rem;">Ticket Médio</span>
-                <div class="flex align-center justify-center rounded" style="background: rgba(236, 72, 153, 0.15); width: 32px; height: 32px;">
-                    <i data-lucide="receipt" style="color: var(--color-secondary); width: 18px; height: 18px;"></i>
+                <span class="text-secondary font-medium" style="font-size: 0.95rem;">Assinaturas Ativas</span>
+                <div class="flex align-center justify-center rounded bg-primary-light" style="width: 32px; height: 32px;">
+                    <i data-lucide="crown" class="text-primary" style="width: 18px; height: 18px;"></i>
                 </div>
             </div>
-            <h3 class="text-primary font-bold" id="dash-ticket-medio" style="font-size: 1.8rem; margin: 0.5rem 0;">R$ 0,00</h3>
-            <span style="font-size: 0.75rem; color: var(--color-text-secondary);">Média mensal</span>
+            <h3 class="text-primary font-bold" id="dash-assinaturas-ativas" style="font-size: 1.8rem; margin: 0.5rem 0;">0</h3>
+            <span class="flex align-center gap-1" id="dash-assinaturas-mrr" style="font-size: 0.75rem; color: var(--color-success);"><i data-lucide="dollar-sign" style="width:12px;height:12px;"></i> MRR: R$ 0,00</span>
         </div>
     </div>
 
-    <!-- Próximos Agendamentos (Ocupando largura total caso a grid principal mude ou grid flex) -->
-    <div style="margin-bottom: 2rem;">
+    <!-- Main content grid -->
+    <div class="dashboard-content-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+        
+        <!-- Faturamento 7 Dias Chart -->
+        <div class="dashboard-section flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem;">
+            <div class="flex justify-between align-center mb-4">
+                <h3 class="font-bold flex align-center gap-2" style="font-size: 1.1rem;"><i data-lucide="trending-up" class="text-primary" style="width: 20px; height: 20px;"></i> Faturamento (7 dias)</h3>
+            </div>
+            <div id="dash-chart-7d" style="min-height: 250px;"></div>
+        </div>
+
+        <!-- Próximos Agendamentos -->
         <div class="dashboard-section flex-column" style="background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.5rem;">
             <div class="flex justify-between align-center mb-4">
                 <h3 class="font-bold flex align-center gap-2" style="font-size: 1.1rem;"><i data-lucide="clock" class="text-primary" style="width: 20px; height: 20px;"></i> Próximos Agendamentos</h3>

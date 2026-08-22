@@ -89,24 +89,47 @@ export class dashboardController {
             .eq('tenant_id', this.tenantId)
             .gte('created_at', firstDayOfWeekStr);
 
-        this.renderCards(appointmentsToday || [], appointmentsMonth || [], countNovosClientesMes || 0, countNovosClientesSemana || 0);
+        // 4. Assinaturas Ativas
+        const { data: activeSubscriptions } = await this.supabase
+            .from('client_subscriptions')
+            .select('*, tenant_client_plans(price)')
+            .eq('tenant_id', this.tenantId)
+            .eq('status', 'active');
+
+        // 5. Agendamentos dos últimos 7 dias (Para o Gráfico)
+        const last7Days = new Date(today);
+        last7Days.setDate(today.getDate() - 6);
+        const last7DaysStr = last7Days.getFullYear() + '-' + String(last7Days.getMonth() + 1).padStart(2, '0') + '-' + String(last7Days.getDate()).padStart(2, '0');
+        
+        const { data: appointments7Days } = await this.supabase
+            .from('appointments')
+            .select('appointment_date, services(price), status')
+            .eq('tenant_id', this.tenantId)
+            .gte('appointment_date', last7DaysStr)
+            .lte('appointment_date', todayStr);
+
+        this.renderCards(appointmentsToday || [], appointmentsMonth || [], countNovosClientesMes || 0, countNovosClientesSemana || 0, activeSubscriptions || []);
+        this.renderChart7Days(appointments7Days || [], last7Days);
         this.renderAgendamentos(appointmentsToday || []);
         this.renderRankings(appointmentsMonth || []);
     }
 
-    renderCards(apptsToday, apptsMonth, novosClientesMes, novosClientesSemana) {
+    renderCards(apptsToday, apptsMonth, novosClientesMes, novosClientesSemana, activeSubscriptions) {
         // Faturamento Hoje
         const faturamentoHoje = apptsToday
             .filter(a => ['completed', 'confirmed'].includes(a.status))
-            .reduce((sum, a) => sum + (a.services?.price || 0), 0);
+            .reduce((sum, a) => sum + parseFloat(a.services?.price || 0), 0);
 
         // Agendamentos Hoje
         const qtdAgendamentosHoje = apptsToday.length;
 
-        // Ticket Médio Mensal
-        const apptsFaturadosMes = apptsMonth.filter(a => ['completed', 'confirmed'].includes(a.status));
-        const faturamentoMes = apptsFaturadosMes.reduce((sum, a) => sum + (a.services?.price || 0), 0);
-        const ticketMedio = apptsFaturadosMes.length > 0 ? (faturamentoMes / apptsFaturadosMes.length) : 0;
+        // Assinaturas e MRR
+        let mrr = 0;
+        activeSubscriptions.forEach(sub => {
+            if (sub.tenant_client_plans && sub.tenant_client_plans.price) {
+                mrr += parseFloat(sub.tenant_client_plans.price);
+            }
+        });
 
         const fmtMoney = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -122,8 +145,83 @@ export class dashboardController {
         const elNovosSemana = document.getElementById('dash-novos-clientes-semana');
         if (elNovosSemana) elNovosSemana.textContent = `+${novosClientesSemana} na semana`;
 
-        const elTicket = document.getElementById('dash-ticket-medio');
-        if (elTicket) elTicket.textContent = fmtMoney.format(ticketMedio);
+        const elAssinaturas = document.getElementById('dash-assinaturas-ativas');
+        if (elAssinaturas) elAssinaturas.textContent = activeSubscriptions.length;
+
+        const elMRR = document.getElementById('dash-assinaturas-mrr');
+        if (elMRR) elMRR.innerHTML = `<i data-lucide="dollar-sign" style="width:12px;height:12px;"></i> MRR: ${fmtMoney.format(mrr)}`;
+    }
+
+    renderChart7Days(appts7Days, startDate) {
+        const elChart = document.getElementById('dash-chart-7d');
+        if (!elChart || typeof ApexCharts === 'undefined') return;
+        elChart.innerHTML = '';
+
+        // Preparar dados (últimos 7 dias)
+        const dailyRevenue = {};
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(startDate);
+            d.setDate(d.getDate() + i);
+            const dateStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            dailyRevenue[dateStr] = 0;
+        }
+
+        appts7Days.forEach(appt => {
+            if (['completed', 'confirmed'].includes(appt.status)) {
+                if (dailyRevenue[appt.appointment_date] !== undefined) {
+                    dailyRevenue[appt.appointment_date] += parseFloat(appt.services?.price || 0);
+                }
+            }
+        });
+
+        const sortedDays = Object.keys(dailyRevenue).sort();
+        const seriesData = sortedDays.map(dia => dailyRevenue[dia]);
+        const labels = sortedDays.map(dia => {
+            const [y, m, d] = dia.split('-');
+            return `${d}/${m}`;
+        });
+
+        const optChart = {
+            series: [{
+                name: 'Faturamento Diário',
+                data: seriesData
+            }],
+            chart: {
+                type: 'bar',
+                height: 250,
+                toolbar: { show: false },
+                fontFamily: 'inherit',
+                background: 'transparent'
+            },
+            colors: ['#3B82F6'],
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    columnWidth: '50%'
+                }
+            },
+            dataLabels: { enabled: false },
+            xaxis: {
+                categories: labels,
+                labels: { style: { colors: 'var(--text-secondary)' } },
+                axisBorder: { show: false },
+                axisTicks: { show: false }
+            },
+            yaxis: {
+                labels: {
+                    style: { colors: 'var(--text-secondary)' },
+                    formatter: (val) => 'R$ ' + val.toFixed(0)
+                }
+            },
+            grid: {
+                borderColor: 'rgba(255, 255, 255, 0.05)',
+                strokeDashArray: 4
+            },
+            theme: { mode: 'dark' }
+        };
+
+        const chart = new ApexCharts(elChart, optChart);
+        chart.render();
     }
 
     renderAgendamentos(apptsToday) {

@@ -19,8 +19,24 @@
     </div>
 
     <!-- Cards de Métricas -->
-    <div class="grid grid-md-2 gap-4 mb-5" id="relatorios-cards">
+    <div class="grid grid-md-2 grid-lg-4 gap-4 mb-5" id="relatorios-cards">
         <!-- Injetados via JS -->
+    </div>
+
+    <!-- Gráficos -->
+    <div class="flex flex-wrap gap-4 mb-5">
+        <div class="config-card fade-in" style="flex: 2; min-width: 60%; animation-delay: 0.1s;">
+            <div class="flex justify-between align-center mb-3">
+                <h3 class="text-primary text-md m-0">Evolução do Faturamento</h3>
+            </div>
+            <div id="chart-receita-evolucao" style="min-height: 300px;"></div>
+        </div>
+        <div class="config-card fade-in" style="flex: 1; min-width: 300px; animation-delay: 0.2s;">
+            <div class="flex justify-between align-center mb-3">
+                <h3 class="text-primary text-md m-0">Composição de Receita</h3>
+            </div>
+            <div id="chart-receita-composicao" style="min-height: 300px; display: flex; align-items: center; justify-content: center;"></div>
+        </div>
     </div>
 
     <!-- Lista de Top Serviços -->
