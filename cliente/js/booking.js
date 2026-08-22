@@ -124,9 +124,9 @@ export async function openBookingModal(service) {
         const usedAppointments = window.activeClientSubscription.used_free_appointments_this_cycle || 0;
         const includedServices = plan.included_services || [];
         
-        // Verifica se o serviço atual está na lista de serviços incluídos (ou se a lista for vazia e antes aplicava a todos)
-        // Para manter compatibilidade caso não tenham selecionado nada, podemos assumir que se não tem array, não tem serviços incluídos.
-        const isServiceIncluded = includedServices.includes(bookingState.serviceId);
+        // Se a lista estiver vazia ou nula, assumimos que aplica-se a todos os serviços
+        const isServiceIncluded = (!includedServices || includedServices.length === 0) 
+            || includedServices.some(id => String(id) === String(bookingState.serviceId));
 
         if (isServiceIncluded && freeAppointmentsTotal > usedAppointments) {
           // Tem agendamento grátis e o serviço está incluso

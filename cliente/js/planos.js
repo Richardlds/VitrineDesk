@@ -158,13 +158,37 @@ function renderPlanos() {
 
             if (activeContainer) {
                 activeContainer.innerHTML = `
-                    <h5 class="text-primary font-bold text-lg mb-1">${escapeHtml(plan.name)}</h5>
-                    <p class="text-secondary text-sm mb-2">${benefitsText.join(' &bull; ')}</p>
-                    <div class="flex justify-between align-center mt-3 pt-3 border-top-dashed">
-                        <span class="text-xs text-muted">Válido até: ${periodEnd}</span>
-                        <span class="status-badge bg-success-light text-success border-none shadow-sm">Ativo</span>
+                    <div class="flex justify-between align-center mb-4">
+                        <div class="flex align-center gap-3">
+                            <div class="bg-primary-light text-primary rounded-full flex justify-center align-center shadow-sm" style="width: 48px; height: 48px; border: 2px solid var(--primary);">
+                                <i data-lucide="award" class="icon-sm"></i>
+                            </div>
+                            <div class="text-left">
+                                <h5 class="font-bold text-lg" style="color: var(--text-main); line-height: 1.2;">${escapeHtml(plan.name)}</h5>
+                                <span class="text-xs text-success bg-success-light px-2 py-1 rounded-full font-bold shadow-sm" style="display: inline-block; margin-top: 4px;">Assinatura Ativa</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-placeholder rounded-lg p-4 text-left border border-glass shadow-sm mb-4">
+                        <h6 class="text-xs font-bold text-secondary uppercase tracking-wider mb-2">Seus Benefícios</h6>
+                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem;">
+                            ${benefitsText.map(b => `<li class="flex align-center gap-2 mb-2 text-main"><i data-lucide="check" class="text-primary icon-xs"></i> ${b}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="flex justify-between align-center pt-3 border-top-dashed text-sm">
+                        <div class="text-left">
+                            <span class="text-xs text-muted block mb-1">Próxima Renovação</span>
+                            <span class="font-medium text-main">${periodEnd}</span>
+                        </div>
                     </div>
                 `;
+                
+                // Recriar os ícones do Lucide dentro desse container recém-injetado
+                if (window.lucide) {
+                    setTimeout(() => window.lucide.createIcons(), 50);
+                }
             }
             
             // Exibição visual estrita no perfil
