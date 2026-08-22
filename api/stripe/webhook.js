@@ -105,21 +105,37 @@ export default async function handler(req, res) {
             const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
             const currentPeriodEnd = new Date(subscriptionDetails.current_period_end * 1000).toISOString();
 
-            const { error } = await supabase
+            const { data: existing } = await supabase
               .from('client_subscriptions')
-              .upsert({
-                tenant_id,
-                client_id,
-                plan_id,
-                stripe_subscription_id: subscriptionId,
-                stripe_customer_id: customerId,
-                status: subscriptionDetails.status, // geralmente 'active'
-                current_period_end: currentPeriodEnd,
-                used_free_appointments_this_cycle: 0,
-                updated_at: new Date().toISOString()
-              }, { onConflict: 'stripe_subscription_id' });
+              .select('id')
+              .eq('stripe_subscription_id', subscriptionId)
+              .maybeSingle();
 
-            if (error) console.error('Erro ao inserir assinatura:', error);
+            if (existing) {
+              const { error } = await supabase
+                .from('client_subscriptions')
+                .update({
+                  status: subscriptionDetails.status,
+                  current_period_end: currentPeriodEnd,
+                  updated_at: new Date().toISOString()
+                })
+                .eq('id', existing.id);
+              if (error) console.error('Erro ao atualizar assinatura:', error);
+            } else {
+              const { error } = await supabase
+                .from('client_subscriptions')
+                .insert([{
+                  tenant_id,
+                  client_id,
+                  plan_id,
+                  stripe_subscription_id: subscriptionId,
+                  stripe_customer_id: customerId,
+                  status: subscriptionDetails.status,
+                  current_period_end: currentPeriodEnd,
+                  used_free_appointments_this_cycle: 0
+                }]);
+              if (error) console.error('Erro ao inserir assinatura:', error);
+            }
           }
         }
         break;

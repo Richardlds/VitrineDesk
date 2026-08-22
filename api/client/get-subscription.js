@@ -29,9 +29,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Faltam parâmetros de busca.' });
     }
 
-    // Certificar-se de que o usuário só está buscando a própria assinatura
-    if (user.id !== clientId) {
-      return res.status(403).json({ error: 'Acesso negado. Você só pode ler suas próprias assinaturas.' });
+    // Buscar o cliente para verificar a propriedade da conta (compatibilidade com contas antigas)
+    const { data: clientCheck } = await supabase
+      .from('clientes')
+      .select('id, email')
+      .eq('id', clientId)
+      .maybeSingle();
+
+    if (!clientCheck || clientCheck.email !== user.email) {
+      return res.status(403).json({ error: 'Acesso negado. Credenciais inválidas.' });
     }
 
     // Busca bypassando RLS usando a Service Role Key
