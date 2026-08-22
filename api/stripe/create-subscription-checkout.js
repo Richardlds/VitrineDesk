@@ -54,6 +54,13 @@ export default async function handler(req, res) {
         client_id: clientId,
         tenant_id: tenantId,
         plan_id: planId
+      },
+      subscription_data: {
+        metadata: {
+          client_id: clientId,
+          tenant_id: tenantId,
+          plan_id: planId
+        }
       }
     }, {
       idempotencyKey: idempotencyKey

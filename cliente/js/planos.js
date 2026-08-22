@@ -83,14 +83,26 @@ export async function loadActiveSubscription() {
         const tenantId = getTenantId();
         const clientId = getLoggedClient().id;
         
-        // Em vez de bater direto na API (que não existe no frontend estático), usamos supaFetch para a tabela client_subscriptions.
-        // O banco (Supabase) tem RLS, então, se a política permitir que o usuário leia sua própria assinatura, isso funcionará perfeitamente.
-        const data = await supaFetch(
-            `/rest/v1/client_subscriptions?tenant_id=eq.${tenantId}&client_id=eq.${clientId}&status=eq.active&select=*,plan:tenant_client_plans(*)`,
-            { noCache: true }
-        );
-        
-        console.log("DEBUG loadActiveSubscription -> data:", data);
+        // Obter JWT do usuário logado
+        const supabaseAuth = getSupabaseAuthClient();
+        const { data: sessionData } = await supabaseAuth.auth.getSession();
+        const token = sessionData?.session?.access_token;
+
+        if (!token) {
+            console.warn("Sem token JWT, impossível buscar assinatura segura.");
+            return;
+        }
+
+        // Nova chamada de API (Ignora RLS usando backend Vercel)
+        const response = await fetch(`/api/client/get-subscription?tenantId=${tenantId}&clientId=${clientId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        const data = await response.json();
         
         if (data && data.length > 0) {
             activeSubscription = data[0];
@@ -100,7 +112,7 @@ export async function loadActiveSubscription() {
             window.activeClientSubscription = null;
         }
     } catch(err) {
-        console.error('Erro ao carregar assinatura:', err);
+        console.error('Erro ao carregar assinatura via API:', err);
         activeSubscription = null;
         window.activeClientSubscription = null;
     }
