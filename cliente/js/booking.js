@@ -661,7 +661,16 @@ function updateBookingSummary() {
     let descontoTexto = '';
     
     if (bookingState.discountData) {
-      if (bookingState.discountData.desconto_percentual) {
+      if (bookingState.planDiscountApplied === 'free_appointment') {
+        // Agendamento grátis abate apenas o valor do serviço principal (extras são cobrados)
+        desconto = bookingState.servicePrice || 0;
+        descontoTexto = '(100%)';
+      } else if (bookingState.planDiscountApplied === 'percentage' && bookingState.discountData.desconto_percentual) {
+        // Desconto do plano aplica-se apenas ao serviço principal
+        desconto = (bookingState.servicePrice || 0) * (bookingState.discountData.desconto_percentual / 100);
+        descontoTexto = `(${bookingState.discountData.desconto_percentual}%)`;
+      } else if (bookingState.discountData.desconto_percentual) {
+        // Cupons convencionais se aplicam ao total (serviço + extras)
         desconto = totalPrice * (bookingState.discountData.desconto_percentual / 100);
         descontoTexto = `(${bookingState.discountData.desconto_percentual}%)`;
       } else if (bookingState.discountData.desconto_fixo) {
