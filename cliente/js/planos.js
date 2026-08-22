@@ -85,7 +85,12 @@ export async function loadActiveSubscription() {
         
         // Em vez de bater direto na API (que não existe no frontend estático), usamos supaFetch para a tabela client_subscriptions.
         // O banco (Supabase) tem RLS, então, se a política permitir que o usuário leia sua própria assinatura, isso funcionará perfeitamente.
-        const data = await supaFetch(`/rest/v1/client_subscriptions?tenant_id=eq.${tenantId}&client_id=eq.${clientId}&status=eq.active&select=*,plan:tenant_client_plans(*)`);
+        const data = await supaFetch(
+            `/rest/v1/client_subscriptions?tenant_id=eq.${tenantId}&client_id=eq.${clientId}&status=eq.active&select=*,plan:tenant_client_plans(*)`,
+            { noCache: true }
+        );
+        
+        console.log("DEBUG loadActiveSubscription -> data:", data);
         
         if (data && data.length > 0) {
             activeSubscription = data[0];
