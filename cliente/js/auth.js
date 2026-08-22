@@ -229,6 +229,7 @@ export async function registrarCliente(dados) {
       email,
       telefone: numTelefone,
       cpf: numCpf,
+      senha: 'SUPABASE_AUTH', // Bypass NOT NULL constraint since we use Supabase Auth
       termo_aceite_id: dados.termo_aceite_id || null,
       data_aceite_termo: dados.termo_aceite_id ? new Date().toISOString() : null
     };
