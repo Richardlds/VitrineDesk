@@ -13,13 +13,16 @@ export class tenantsController {
             { id: 'cadastros/servicos', name: 'Serviços' },
             { id: 'cadastros/equipe', name: 'Equipe' },
             { id: 'cadastros/clientes', name: 'Clientes' },
+            { id: 'crm_vendas/planos_clientes', name: 'Planos de Clientes' },
             { id: 'crm_vendas/cupons', name: 'Cupons' },
             { id: 'crm_vendas/marketing', name: 'Marketing' },
             { id: 'crm_vendas/blacklist', name: 'Blacklist' },
+            { id: 'financeiro/dashboard', name: 'Painel Financeiro' },
+            { id: 'financeiro/transacoes', name: 'Contas a Pagar/Receber' },
             { id: 'estoque/lista', name: 'Estoque & Catálogo' },
             { id: 'gestao/relatorios', name: 'Relatórios' },
-            { id: 'gestao/lista_os', name: 'Histórico de OS' },
-            { id: 'gestao/os', name: 'Nova OS' },
+            { id: 'gestao/lista_os', name: 'Histórico de Vendas' },
+            { id: 'gestao/os', name: 'PDV / Nova Venda' },
             { id: 'gestao/comissoes', name: 'Comissões' },
             { id: 'gestao/metas', name: 'Metas' },
             { id: 'gestao/fidelidade', name: 'Fidelidade' },
@@ -671,6 +674,29 @@ export class tenantsController {
 
                     const btnSalvar = document.getElementById('btn-salvar-master');
                     const originalHtml = btnSalvar.innerHTML;
+                    
+                    if (tenantSlug) {
+                        const slugRegex = /^[a-z0-9-]+$/;
+                        if (!slugRegex.test(tenantSlug)) {
+                            if (window.showToast) window.showToast('Erro: O slug deve conter apenas letras minúsculas, números e traços.', 'error');
+                            return;
+                        }
+                        
+                        if (tenantSlug !== tenant.slug) {
+                            const { data: existingSlug } = await supabase
+                                .from('tenants')
+                                .select('id')
+                                .eq('slug', tenantSlug)
+                                .neq('id', id)
+                                .maybeSingle();
+                                
+                            if (existingSlug) {
+                                if (window.showToast) window.showToast('Erro: Este slug já está sendo usado por outra loja.', 'error');
+                                return;
+                            }
+                        }
+                    }
+
                     btnSalvar.innerHTML = '<i data-lucide="loader" class="animate-spin"></i> Salvando...';
                     if (window.lucide) window.lucide.createIcons();
                     

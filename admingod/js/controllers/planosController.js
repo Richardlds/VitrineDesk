@@ -58,6 +58,13 @@ export class planosController {
                 ]
             },
             {
+                category: 'Financeiro',
+                items: [
+                    { id: 'financeiro/dashboard', name: 'Painel Financeiro' },
+                    { id: 'financeiro/transacoes', name: 'Contas a Pagar/Receber' }
+                ]
+            },
+            {
                 category: 'Gestão',
                 items: [
                     { 
@@ -77,8 +84,8 @@ export class planosController {
                             { id: 'relatorios/comissoes', name: 'Relatórios de Comissões' }
                         ]
                     },
-                    { id: 'gestao/lista_os', name: 'Histórico de OS (Vendas)' },
-                    { id: 'gestao/os', name: 'Nova OS (Frente de Caixa)' },
+                    { id: 'gestao/lista_os', name: 'Histórico de Vendas' },
+                    { id: 'gestao/os', name: 'PDV / Nova Venda' },
                     { id: 'gestao/comissoes', name: 'Gestão de Comissões' },
                     { id: 'gestao/metas', name: 'Metas e Objetivos' },
                     { id: 'gestao/fidelidade', name: 'Programa de Fidelidade' }
@@ -131,7 +138,7 @@ export class planosController {
             const isActive = index === 0;
             
             tabsHtml += `
-                <button type="button" class="tab-btn sub-module-tab-btn ${isActive ? 'active' : ''}" data-target="${contentId}" style="white-space: nowrap; font-size: 0.85rem; padding: 0.4rem 0.8rem;">
+                <button type="button" class="sub-module-tab-btn ${isActive ? 'active' : ''}" data-target="${contentId}" style="white-space: nowrap; font-size: 0.85rem; padding: 0.4rem 0.8rem; background: transparent; border: none; cursor: pointer; color: ${isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; font-weight: ${isActive ? '700' : '500'}; border-bottom: ${isActive ? '2px solid var(--color-primary)' : 'none'};">
                     ${group.category}
                 </button>
             `;
@@ -177,27 +184,34 @@ export class planosController {
 
         container.innerHTML = tabsHtml + contentHtml;
         
-        if (window.lucide) window.lucide.createIcons();
-
-        // Bind events for the sub-tabs
+        // Bind events for sub-module tabs
         const subTabs = container.querySelectorAll('.sub-module-tab-btn');
         subTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
                 const targetId = e.currentTarget.getAttribute('data-target');
-                if(!targetId) return;
-                
-                // Hide all contents
+                if (!targetId) return;
+
+                // Hide all sub-module contents
                 container.querySelectorAll('.sub-module-content').forEach(el => el.style.display = 'none');
-                // Remove active from all tabs
-                container.querySelectorAll('.sub-module-tab-btn').forEach(el => el.classList.remove('active'));
                 
+                // Remove active from all sub-module tabs and reset styles
+                subTabs.forEach(el => {
+                    el.classList.remove('active');
+                    el.style.color = 'var(--color-text-secondary)';
+                    el.style.fontWeight = '500';
+                    el.style.borderBottom = 'none';
+                });
+
                 // Show target and activate tab
                 document.getElementById(targetId).style.display = 'block';
                 e.currentTarget.classList.add('active');
+                e.currentTarget.style.color = 'var(--color-primary)';
+                e.currentTarget.style.fontWeight = '700';
+                e.currentTarget.style.borderBottom = '2px solid var(--color-primary)';
             });
         });
+
+        if (window.lucide) window.lucide.createIcons();
     }
 
     bindEvents() {

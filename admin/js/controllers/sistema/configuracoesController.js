@@ -285,6 +285,20 @@ export class configuracoesController {
             const getChk = (id) => document.getElementById(id)?.checked || false;
 
             const novoSlug = getVal('input-config-slug');
+            
+            if (novoSlug) {
+                const slugRegex = /^[a-z0-9-]+$/;
+                if (!slugRegex.test(novoSlug)) {
+                    const slugInput = document.getElementById('input-config-slug');
+                    if (slugInput) {
+                        slugInput.classList.add('border-danger', 'text-danger');
+                        slugInput.focus();
+                        setTimeout(() => slugInput.classList.remove('border-danger', 'text-danger'), 4000);
+                    }
+                    throw new Error('O link da loja deve conter apenas letras minúsculas, números e traços (sem espaços ou caracteres especiais).');
+                }
+            }
+
             if (novoSlug && novoSlug !== this.tenantData.slug) {
                 const { data: existingSlug, error: checkError } = await supabase
                     .from('tenants')

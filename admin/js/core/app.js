@@ -443,21 +443,19 @@ class AdminApp {
             window.applySidebarLocks(tenant, plan);
             // --- FIM SWR ---
 
-            // Esconder seções vazias
-            document.querySelectorAll('.nav-section').forEach(section => {
-                let next = section.nextElementSibling;
+            // Esconder seções vazias (Adaptado para o Modo Gaveta)
+            document.querySelectorAll('.nav-drawer-wrapper').forEach(wrapper => {
+                const navItems = wrapper.querySelectorAll('.nav-item');
                 let hasVisibleChild = false;
-                while (next && !next.classList.contains('nav-section')) {
-                    if (next.classList.contains('nav-item') && !next.classList.contains('d-none')) {
+                navItems.forEach(item => {
+                    if (!item.classList.contains('d-none')) {
                         hasVisibleChild = true;
-                        break;
                     }
-                    next = next.nextElementSibling;
-                }
+                });
                 if (!hasVisibleChild) {
-                    section.classList.add('d-none');
+                    wrapper.classList.add('d-none');
                 } else {
-                    section.classList.remove('d-none');
+                    wrapper.classList.remove('d-none');
                 }
             });
 
@@ -1365,6 +1363,15 @@ class AdminApp {
                 e.preventDefault();
                 e.stopPropagation();
                 sidebar.classList.toggle('open');
+            });
+        });
+
+        // Gavetas (Accordion Menu)
+        const drawerToggles = document.querySelectorAll('.drawer-toggle');
+        drawerToggles.forEach(drawer => {
+            drawer.addEventListener('click', () => {
+                const wrapper = drawer.closest('.nav-drawer-wrapper');
+                wrapper.classList.toggle('active');
             });
         });
 

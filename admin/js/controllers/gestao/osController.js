@@ -28,12 +28,55 @@ export class osController {
                 if (!e.target.closest('#os-search-item') && !e.target.closest('#os-search-results')) {
                     document.getElementById('os-search-results')?.classList.add('d-none');
                 }
+                if (!e.target.closest('#os-customer-name') && !e.target.closest('#os-customer-results')) {
+                    document.getElementById('os-customer-results')?.classList.add('d-none');
+                }
             });
+        }
+        
+        const customerSearchInput = document.getElementById('os-customer-name');
+        if (customerSearchInput) {
+            customerSearchInput.addEventListener('input', (e) => {
+                this.handleCustomerSearch(e.target.value);
+                this.checkFormValidity();
+            });
+            customerSearchInput.addEventListener('focus', (e) => this.handleCustomerSearch(e.target.value));
         }
 
         const btnSavePrint = document.getElementById('btn-save-print-os');
         if (btnSavePrint) {
             btnSavePrint.addEventListener('click', () => this.saveAndPrint());
+        }
+
+        const discountInput = document.getElementById('os-discount');
+        if (discountInput) {
+            discountInput.addEventListener('input', () => this.renderCart());
+        }
+
+        const discountType = document.getElementById('os-discount-type');
+        if (discountType) {
+            discountType.addEventListener('change', () => this.renderCart());
+        }
+
+        const phoneInput = document.getElementById('os-customer-phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', (e) => {
+                let val = e.target.value.replace(/\D/g, '');
+                if (val.length > 11) val = val.substring(0, 11);
+                
+                if (val.length > 0) {
+                    if (val.length <= 2) {
+                        val = `(${val}`;
+                    } else if (val.length <= 6) {
+                        val = `(${val.substring(0,2)}) ${val.substring(2)}`;
+                    } else if (val.length <= 10) {
+                        val = `(${val.substring(0,2)}) ${val.substring(2,6)}-${val.substring(6)}`;
+                    } else {
+                        val = `(${val.substring(0,2)}) ${val.substring(2,7)}-${val.substring(7)}`;
+                    }
+                }
+                e.target.value = val;
+            });
         }
 
         // Cart events delegation
@@ -85,6 +128,55 @@ export class osController {
             this.inventoryItems = data || [];
         } catch (e) {
             console.error('Erro geral ao carregar estoque:', e);
+        }
+    }
+
+    async handleCustomerSearch(query) {
+        const resultsContainer = document.getElementById('os-customer-results');
+        if (!resultsContainer) return;
+
+        const term = query.trim();
+        
+        if (term.length < 2) {
+            resultsContainer.classList.add('d-none');
+            return;
+        }
+
+        try {
+            const tenantId = await getCurrentTenantId();
+            const { data, error } = await supabase
+                .from('clientes')
+                .select('id, nome, telefone')
+                .eq('tenant_id', tenantId)
+                .ilike('nome', `%${term}%`)
+                .limit(5);
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                resultsContainer.innerHTML = '<div class="p-3 text-sm text-secondary text-center" style="background: var(--color-bg-surface); border-radius: var(--radius-md);">Nenhum cliente cadastrado com esse nome. <br><small>Continue digitando para emitir sem cadastro.</small></div>';
+            } else {
+                resultsContainer.innerHTML = data.map(c => `
+                    <div class="p-2 border-bottom-dashed border-border hover:bg-placeholder cursor-pointer flex flex-column search-customer-item" data-name="${c.nome}" data-phone="${c.telefone || ''}" style="transition: background 0.2s;">
+                        <span class="text-sm font-bold text-primary">${c.nome}</span>
+                        <span class="text-xs text-secondary">${c.telefone || 'Sem telefone'}</span>
+                    </div>
+                `).join('');
+
+                resultsContainer.querySelectorAll('.search-customer-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const name = el.dataset.name;
+                        const phone = el.dataset.phone;
+                        document.getElementById('os-customer-name').value = name;
+                        document.getElementById('os-customer-phone').value = phone;
+                        resultsContainer.classList.add('d-none');
+                        this.checkFormValidity();
+                    });
+                });
+            }
+            resultsContainer.classList.remove('d-none');
+        } catch (error) {
+            console.error('Erro ao buscar clientes:', error);
         }
     }
 
@@ -194,12 +286,15 @@ export class osController {
         const emptyState = document.getElementById('os-empty-cart');
         const totalEl = document.getElementById('os-total-amount');
 
+        const subtotalInfo = document.getElementById('os-subtotal-info');
+
         if (!tbody || !emptyState || !totalEl) return;
 
         if (this.cart.length === 0) {
             tbody.innerHTML = '';
             emptyState.classList.remove('d-none');
             totalEl.textContent = 'R$ 0,00';
+            if (subtotalInfo) subtotalInfo.textContent = 'Subtotal: R$ 0,00';
             return;
         }
 
@@ -225,7 +320,27 @@ export class osController {
             `;
         }).join('');
 
-        totalEl.textContent = `R$ ${total.toFixed(2)}`;
+        let discountVal = parseFloat(document.getElementById('os-discount')?.value) || 0;
+        let discountType = document.getElementById('os-discount-type')?.value || 'fixed';
+        let discount = 0;
+        
+        if (discountVal < 0) discountVal = 0;
+        
+        if (discountType === 'percent') {
+            if (discountVal > 100) discountVal = 100;
+            discount = total * (discountVal / 100);
+        } else {
+            discount = discountVal;
+        }
+
+        if (discount > total) discount = total; // Desconto não pode ser maior que o subtotal
+        
+        const finalTotal = total - discount;
+
+        if (subtotalInfo) {
+            subtotalInfo.textContent = `Subtotal: R$ ${total.toFixed(2)}`;
+        }
+        totalEl.textContent = `R$ ${finalTotal.toFixed(2)}`;
 
         if (window.lucide) window.lucide.createIcons();
     }
@@ -248,6 +363,9 @@ export class osController {
         const customerPhone = document.getElementById('os-customer-phone')?.value.trim();
         const notes = document.getElementById('os-notes')?.value.trim();
         
+        let discount = parseFloat(document.getElementById('os-discount')?.value) || 0;
+        const paymentMethod = document.getElementById('os-payment-method')?.value || 'Outro';
+        
         if (!customerName || this.cart.length === 0) return;
         
         btnSavePrint.disabled = true;
@@ -258,7 +376,22 @@ export class osController {
             const tenantId = await getCurrentTenantId();
             
             // Calculate total
-            const totalAmount = this.cart.reduce((acc, item) => acc + item.subtotal, 0);
+            const subtotal = this.cart.reduce((acc, item) => acc + item.subtotal, 0);
+            let discountVal = parseFloat(document.getElementById('os-discount')?.value) || 0;
+            let discountType = document.getElementById('os-discount-type')?.value || 'fixed';
+            let discount = 0;
+
+            if (discountVal < 0) discountVal = 0;
+
+            if (discountType === 'percent') {
+                if (discountVal > 100) discountVal = 100;
+                discount = subtotal * (discountVal / 100);
+            } else {
+                discount = discountVal;
+            }
+
+            if (discount > subtotal) discount = subtotal;
+            const totalAmount = subtotal - discount;
 
             // 1. Insert into service_orders
             const { data: orderData, error: orderError } = await supabase
@@ -269,7 +402,9 @@ export class osController {
                     customer_phone: customerPhone,
                     total_amount: totalAmount,
                     notes: notes,
-                    status: 'completed'
+                    status: 'completed',
+                    payment_method: paymentMethod,
+                    discount: discount
                 }])
                 .select('id')
                 .single();
@@ -309,10 +444,31 @@ export class osController {
                 }
             }
 
-            if (window.showToast) window.showToast('OS salva e estoque baixado com sucesso!', 'success');
+            if (window.showToast) window.showToast('Venda salva e estoque baixado com sucesso!', 'success');
 
-            // 4. Populate Print Layout
-            await this.populatePrintLayout(tenantId, orderId, customerName, customerPhone, notes, totalAmount);
+            // 4. Inserir Transação Financeira Automática
+            const { error: financeError } = await supabase
+                .from('financial_transactions')
+                .insert([{
+                    tenant_id: tenantId,
+                    description: `Venda #${orderId.substring(0, 8).toUpperCase()} - ${customerName}`,
+                    amount: totalAmount,
+                    type: 'income',
+                    category: 'Produtos/Serviços',
+                    status: 'paid',
+                    due_date: new Date().toISOString().split('T')[0],
+                    payment_date: new Date().toISOString().split('T')[0],
+                    payment_method: paymentMethod,
+                    reference_id: orderId,
+                    reference_type: 'sale'
+                }]);
+            
+            if (financeError) {
+                console.warn('Erro ao inserir transação financeira automática', financeError);
+            }
+
+            // 5. Populate Print Layout
+            await this.populatePrintLayout(tenantId, orderId, customerName, customerPhone, notes, totalAmount, discount, paymentMethod);
 
             // 5. Trigger Print
             setTimeout(() => {
@@ -332,7 +488,7 @@ export class osController {
         }
     }
 
-    async populatePrintLayout(tenantId, orderId, customerName, customerPhone, notes, totalAmount) {
+    async populatePrintLayout(tenantId, orderId, customerName, customerPhone, notes, totalAmount, discount = 0, paymentMethod = 'Dinheiro') {
         // Obter nome da loja ativo do topbar
         const tenantNameEl = document.getElementById('topbar-active-branch-name');
         const shopName = tenantNameEl ? tenantNameEl.textContent : 'VitrineDesk';
@@ -377,6 +533,21 @@ export class osController {
         document.getElementById('print-customer-phone').textContent = customerPhone || '-';
         
         document.getElementById('print-total').textContent = `R$ ${totalAmount.toFixed(2)}`;
+        
+        const discEl = document.getElementById('print-discount');
+        const discCont = document.getElementById('print-discount-container');
+        if (discEl && discCont) {
+            if (discount > 0) {
+                discEl.textContent = `R$ ${discount.toFixed(2)}`;
+                discCont.classList.remove('d-none');
+            } else {
+                discCont.classList.add('d-none');
+            }
+        }
+        
+        const payEl = document.getElementById('print-payment-method');
+        if (payEl) payEl.textContent = paymentMethod;
+
         document.getElementById('print-notes').textContent = notes || 'Sem observações.';
 
         const printBody = document.getElementById('print-cart-body');
@@ -395,6 +566,16 @@ export class osController {
         document.getElementById('os-customer-phone').value = '';
         document.getElementById('os-notes').value = '';
         document.getElementById('os-search-item').value = '';
+        
+        const discEl = document.getElementById('os-discount');
+        if (discEl) discEl.value = '';
+        
+        const discTypeEl = document.getElementById('os-discount-type');
+        if (discTypeEl) discTypeEl.value = 'fixed';
+        
+        const payEl = document.getElementById('os-payment-method');
+        if (payEl) payEl.value = 'Dinheiro';
+
         this.cart = [];
         this.renderCart();
         this.checkFormValidity();

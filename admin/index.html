@@ -58,89 +58,139 @@
 
             <nav class="sidebar-nav">
                 <!-- PRINCIPAL -->
-                <div class="nav-section">Principal</div>
-                <button class="nav-item active" data-tab="principal/dashboard">
-                    <i data-lucide="layout-dashboard"></i> Dashboard
-                </button>
-                <button class="nav-item" data-tab="principal/agenda_diaria">
-                    <i data-lucide="calendar-clock"></i> Agenda Diária
-                </button>
-                <button class="nav-item" data-tab="principal/agendamentos">
-                    <i data-lucide="calendar-days"></i> Histórico
-                </button>
+                <div class="nav-drawer-wrapper active">
+                    <div class="nav-section drawer-toggle">
+                        <span>Principal</span>
+                        <i data-lucide="chevron-down" class="drawer-icon"></i>
+                    </div>
+                    <div class="nav-drawer">
+                        <button class="nav-item active" data-tab="principal/dashboard">
+                            <i data-lucide="layout-dashboard"></i> Dashboard
+                        </button>
+                        <button class="nav-item" data-tab="principal/agenda_diaria">
+                            <i data-lucide="calendar-clock"></i> Agenda Diária
+                        </button>
+                        <button class="nav-item" data-tab="principal/agendamentos">
+                            <i data-lucide="calendar-days"></i> Histórico
+                        </button>
+                    </div>
+                </div>
 
                 <!-- CADASTROS -->
-                <div class="nav-section">Cadastros</div>
-                <button class="nav-item" data-tab="cadastros/servicos">
-                    <i data-lucide="scissors"></i> Serviços
-                </button>
-                <button class="nav-item" data-tab="cadastros/equipe">
-                    <i data-lucide="users"></i> Equipe
-                </button>
-                <button class="nav-item" data-tab="cadastros/clientes">
-                    <i data-lucide="contact"></i> Clientes
-                </button>
+                <div class="nav-drawer-wrapper">
+                    <div class="nav-section drawer-toggle">
+                        <span>Cadastros</span>
+                        <i data-lucide="chevron-down" class="drawer-icon"></i>
+                    </div>
+                    <div class="nav-drawer">
+                        <button class="nav-item" data-tab="cadastros/servicos">
+                            <i data-lucide="scissors"></i> Serviços
+                        </button>
+                        <button class="nav-item" data-tab="cadastros/equipe">
+                            <i data-lucide="users"></i> Equipe
+                        </button>
+                        <button class="nav-item" data-tab="cadastros/clientes">
+                            <i data-lucide="contact"></i> Clientes
+                        </button>
+                    </div>
+                </div>
 
                 <!-- CRM & VENDAS -->
-                <div class="nav-section">CRM & Vendas</div>
-                <button class="nav-item" data-tab="crm_vendas/planos_clientes">
-                    <i data-lucide="crown"></i> Planos de Clientes
-                </button>
-                <button class="nav-item" data-tab="crm_vendas/cupons">
-                    <i data-lucide="ticket"></i> Cupons
-                </button>
-                <button class="nav-item" data-tab="crm_vendas/marketing">
-                    <i data-lucide="megaphone"></i> Marketing
-                </button>
-                <button class="nav-item" data-tab="crm_vendas/blacklist">
-                    <i data-lucide="shield-ban"></i> Blacklist
-                </button>
+                <div class="nav-drawer-wrapper">
+                    <div class="nav-section drawer-toggle">
+                        <span>CRM & Vendas</span>
+                        <i data-lucide="chevron-down" class="drawer-icon"></i>
+                    </div>
+                    <div class="nav-drawer">
+                        <button class="nav-item" data-tab="crm_vendas/planos_clientes">
+                            <i data-lucide="crown"></i> Planos de Clientes
+                        </button>
+                        <button class="nav-item" data-tab="crm_vendas/cupons">
+                            <i data-lucide="ticket"></i> Cupons
+                        </button>
+                        <button class="nav-item" data-tab="crm_vendas/marketing">
+                            <i data-lucide="megaphone"></i> Marketing
+                        </button>
+                        <button class="nav-item" data-tab="crm_vendas/blacklist">
+                            <i data-lucide="shield-ban"></i> Blacklist
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FINANCEIRO -->
+                <div class="nav-drawer-wrapper">
+                    <div class="nav-section drawer-toggle">
+                        <span>Financeiro</span>
+                        <i data-lucide="chevron-down" class="drawer-icon"></i>
+                    </div>
+                    <div class="nav-drawer">
+                        <button class="nav-item" data-tab="financeiro/dashboard">
+                            <i data-lucide="pie-chart"></i> Painel Financeiro
+                        </button>
+                        <button class="nav-item" data-tab="financeiro/transacoes">
+                            <i data-lucide="arrow-right-left"></i> Contas a Pagar/Receber
+                        </button>
+                    </div>
+                </div>
 
                 <!-- GESTÃO -->
-                <div class="nav-section">Gestão</div>
-                <button class="nav-item" data-tab="estoque/lista">
-                    <i data-lucide="package"></i> Estoque & Catálogo
-                </button>
-                <button class="nav-item" data-tab="gestao/relatorios">
-                    <i data-lucide="bar-chart-2"></i> Relatórios
-                </button>
-                <button class="nav-item" data-tab="gestao/lista_os">
-                    <i data-lucide="clipboard-list"></i> Histórico de OS
-                </button>
-                <button class="nav-item" data-tab="gestao/os">
-                    <i data-lucide="file-check-2"></i> Nova OS
-                </button>
-                <button class="nav-item" data-tab="gestao/comissoes">
-                    <i data-lucide="coins"></i> Comissões
-                </button>
-                <button class="nav-item" data-tab="gestao/metas">
-                    <i data-lucide="target"></i> Metas
-                </button>
-                <button class="nav-item" data-tab="gestao/fidelidade">
-                    <i data-lucide="gift"></i> Fidelidade
-                </button>
+                <div class="nav-drawer-wrapper">
+                    <div class="nav-section drawer-toggle">
+                        <span>Gestão</span>
+                        <i data-lucide="chevron-down" class="drawer-icon"></i>
+                    </div>
+                    <div class="nav-drawer">
+                        <button class="nav-item" data-tab="estoque/lista">
+                            <i data-lucide="package"></i> Estoque & Catálogo
+                        </button>
+                        <button class="nav-item" data-tab="gestao/relatorios">
+                            <i data-lucide="bar-chart-2"></i> Relatórios
+                        </button>
+                        <button class="nav-item" data-tab="gestao/lista_os">
+                            <i data-lucide="clipboard-list"></i> Histórico de Vendas
+                        </button>
+                        <button class="nav-item" data-tab="gestao/os">
+                            <i data-lucide="monitor-speaker"></i> PDV / Nova Venda
+                        </button>
+                        <button class="nav-item" data-tab="gestao/comissoes">
+                            <i data-lucide="coins"></i> Comissões
+                        </button>
+                        <button class="nav-item" data-tab="gestao/metas">
+                            <i data-lucide="target"></i> Metas
+                        </button>
+                        <button class="nav-item" data-tab="gestao/fidelidade">
+                            <i data-lucide="gift"></i> Fidelidade
+                        </button>
+                    </div>
+                </div>
 
                 <!-- SISTEMA -->
-                <div class="nav-section">Sistema</div>
-                <button class="nav-item" data-tab="cadastros/filiais">
-                    <i data-lucide="store"></i> Minhas Filiais
-                </button>
-                <button class="nav-item" data-tab="sistema/assinatura">
-                    <i data-lucide="credit-card"></i> Minha Assinatura
-                </button>
-                <button class="nav-item" data-tab="sistema/configuracoes">
-                    <i data-lucide="settings"></i> Configurações
-                </button>
-                <button class="nav-item" data-tab="sistema/personalizacao">
-                    <i data-lucide="palette"></i> Personalização
-                </button>
-
-                <button class="nav-item" data-tab="sistema/usuarios">
-                    <i data-lucide="user-cog"></i> Usuários
-                </button>
-                <button class="nav-item" data-tab="sistema/suporte">
-                    <i data-lucide="life-buoy"></i> Suporte
-                </button>
+                <div class="nav-drawer-wrapper">
+                    <div class="nav-section drawer-toggle">
+                        <span>Sistema</span>
+                        <i data-lucide="chevron-down" class="drawer-icon"></i>
+                    </div>
+                    <div class="nav-drawer">
+                        <button class="nav-item" data-tab="cadastros/filiais">
+                            <i data-lucide="store"></i> Minhas Filiais
+                        </button>
+                        <button class="nav-item" data-tab="sistema/assinatura">
+                            <i data-lucide="credit-card"></i> Minha Assinatura
+                        </button>
+                        <button class="nav-item" data-tab="sistema/configuracoes">
+                            <i data-lucide="settings"></i> Configurações
+                        </button>
+                        <button class="nav-item" data-tab="sistema/personalizacao">
+                            <i data-lucide="palette"></i> Personalização
+                        </button>
+                        <button class="nav-item" data-tab="sistema/usuarios">
+                            <i data-lucide="user-cog"></i> Usuários
+                        </button>
+                        <button class="nav-item" data-tab="sistema/suporte">
+                            <i data-lucide="life-buoy"></i> Suporte
+                        </button>
+                    </div>
+                </div>
             </nav>
 
             <div class="sidebar-footer">

@@ -1,0 +1,145 @@
+<div class="admin-section" id="financeiro-transacoes">
+    <header class="section-header flex justify-between align-center flex-wrap gap-3">
+        <div>
+            <h2 class="text-primary font-bold"><i data-lucide="arrow-right-left" class="icon-md"></i> Contas a Pagar e Receber</h2>
+            <p class="text-secondary text-sm">Gerencie todas as transações financeiras da sua loja.</p>
+        </div>
+        <button class="btn btn-primary" id="btn-nova-transacao">
+            <i data-lucide="plus"></i> Nova Transação
+        </button>
+    </header>
+
+    <!-- Filtros -->
+    <div class="bg-placeholder border-dashed p-3 rounded-xl mb-4 flex gap-3 align-center flex-wrap">
+        <div class="flex-1 min-w-200px">
+            <label class="text-xs font-bold text-primary mb-1 d-block">Mês Referência</label>
+            <input type="month" id="filtro-mes-transacao" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary">
+        </div>
+        <div class="flex-1 min-w-200px">
+            <label class="text-xs font-bold text-primary mb-1 d-block">Tipo</label>
+            <select id="filtro-tipo-transacao" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary">
+                <option value="all">Todas as transações</option>
+                <option value="income">Apenas Receitas</option>
+                <option value="expense">Apenas Despesas</option>
+            </select>
+        </div>
+        <div class="flex-1 min-w-200px">
+            <label class="text-xs font-bold text-primary mb-1 d-block">Status</label>
+            <select id="filtro-status-transacao" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary">
+                <option value="all">Todos os Status</option>
+                <option value="pending">Apenas Pendentes</option>
+                <option value="paid">Apenas Pagas</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="bg-placeholder border-dashed rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-100 data-table">
+                <thead>
+                    <tr class="text-left text-xs text-muted border-bottom-dashed">
+                        <th class="p-3 font-medium">Vencimento</th>
+                        <th class="p-3 font-medium">Descrição</th>
+                        <th class="p-3 font-medium">Categoria</th>
+                        <th class="p-3 font-medium text-right">Valor (R$)</th>
+                        <th class="p-3 font-medium text-center">Status</th>
+                        <th class="p-3 font-medium text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body-transacoes">
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <i data-lucide="loader" class="animate-spin text-secondary icon-md mx-auto mb-2"></i>
+                            <p class="text-muted text-sm">Carregando transações...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Nova Transação -->
+<div id="modal-transacao" class="fixed inset-0 bg-black bg-opacity-50 z-50 d-none flex align-center justify-center p-4" style="backdrop-filter: blur(4px);">
+    <div class="bg-bg-surface w-100 max-w-2xl rounded-2xl shadow-xl overflow-hidden border-solid border-1 border-primary" style="animation: slideUpFade 0.3s ease;">
+        <div class="p-4 border-bottom-dashed flex justify-between align-center">
+            <h3 class="text-lg font-bold text-primary flex align-center gap-2" id="modal-transacao-title">
+                <i data-lucide="file-plus" class="icon-sm"></i> Nova Transação
+            </h3>
+            <button class="btn bg-transparent hover:bg-placeholder text-muted hover:text-danger rounded-full w-32px h-32px p-0 flex align-center justify-center" onclick="document.getElementById('modal-transacao').classList.add('d-none')">
+                <i data-lucide="x" class="icon-sm m-0"></i>
+            </button>
+        </div>
+        <div class="p-4 max-h-[70vh] overflow-y-auto">
+            <form id="form-transacao" novalidate>
+                <input type="hidden" id="transacao-id">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- Tipo -->
+                    <div>
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Tipo da Transação *</label>
+                        <select id="transacao-tipo" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary" required>
+                            <option value="income">Receita (Entrada)</option>
+                            <option value="expense">Despesa (Saída)</option>
+                        </select>
+                    </div>
+
+                    <!-- Valor -->
+                    <div>
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Valor (R$) *</label>
+                        <input type="number" step="0.01" min="0" id="transacao-valor" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary" required placeholder="0.00">
+                    </div>
+
+                    <!-- Descrição -->
+                    <div class="md:col-span-2">
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Descrição *</label>
+                        <input type="text" id="transacao-descricao" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary" required placeholder="Ex: Conta de Luz, Venda Avulsa...">
+                    </div>
+
+                    <!-- Categoria -->
+                    <div>
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Categoria *</label>
+                        <select id="transacao-categoria" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary" required>
+                            <option value="Serviços">Serviços</option>
+                            <option value="Produtos">Produtos</option>
+                            <option value="Aluguel">Aluguel</option>
+                            <option value="Salários">Salários e Pró-labore</option>
+                            <option value="Impostos">Impostos</option>
+                            <option value="Insumos/Estoque">Insumos/Estoque</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <!-- Vencimento -->
+                    <div>
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Data de Vencimento *</label>
+                        <input type="date" id="transacao-vencimento" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary" required>
+                    </div>
+
+                    <!-- Status -->
+                    <div>
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Status *</label>
+                        <select id="transacao-status" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary" required>
+                            <option value="pending">Pendente (A Pagar/Receber)</option>
+                            <option value="paid">Pago/Recebido</option>
+                        </select>
+                    </div>
+
+                    <!-- Data Pagamento -->
+                    <div id="div-data-pagamento" class="d-none">
+                        <label class="font-bold text-sm text-primary mb-1 inline-block">Data do Pagamento</label>
+                        <input type="date" id="transacao-pagamento" class="w-100 bg-white border-solid border-1 rounded-lg px-3 py-2 text-primary outline-none focus:border-primary">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-4 pt-4 border-top-dashed">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('modal-transacao').classList.add('d-none')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-salvar-transacao">
+                        <i data-lucide="save"></i> Salvar Transação
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

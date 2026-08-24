@@ -58,8 +58,20 @@ export class Router {
     }
 
     async navigate(tabPath, title = null) {
+        // Sincronizar UI do menu lateral
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        const activeNav = document.querySelector(`.nav-item[data-tab="${tabPath}"]`);
+        if (activeNav) {
+            activeNav.classList.add('active');
+            if (!title) title = activeNav.textContent.trim();
+            
+            // Expandir a gaveta pai (se existir e não estiver aberta)
+            const parentDrawer = activeNav.closest('.nav-drawer-wrapper');
+            if (parentDrawer && !parentDrawer.classList.contains('active')) {
+                parentDrawer.classList.add('active');
+            }
+        }
 
-        
         // Router Guard (Proteção de Plano)
         if (window.allowedMenus && window.allowedMenus[tabPath] === false) {
             this.contentArea.innerHTML = `

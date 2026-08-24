@@ -1,0 +1,61 @@
+<div class="admin-section" id="financeiro-dashboard">
+    <header class="section-header">
+        <h2 class="text-primary font-bold"><i data-lucide="pie-chart" class="icon-md"></i> Painel Financeiro</h2>
+        <p class="text-secondary text-sm">Resumo do fluxo de caixa e próximos vencimentos.</p>
+    </header>
+
+    <div class="grid grid-md-3 gap-4 mb-4">
+        <!-- Card: Receitas -->
+        <div class="metric-card bg-placeholder p-4 rounded-xl border-dashed">
+            <div class="flex justify-between align-center mb-2">
+                <span class="text-sm font-bold text-success">Receitas (Mês)</span>
+                <i data-lucide="trending-up" class="text-success icon-sm"></i>
+            </div>
+            <h3 class="text-xl font-bold text-success" id="fin-receitas-mes">R$ 0,00</h3>
+            <p class="text-xs text-muted mt-1">Total recebido e previsto.</p>
+        </div>
+
+        <!-- Card: Despesas -->
+        <div class="metric-card bg-placeholder p-4 rounded-xl border-dashed">
+            <div class="flex justify-between align-center mb-2">
+                <span class="text-sm font-bold text-danger">Despesas (Mês)</span>
+                <i data-lucide="trending-down" class="text-danger icon-sm"></i>
+            </div>
+            <h3 class="text-xl font-bold text-danger" id="fin-despesas-mes">R$ 0,00</h3>
+            <p class="text-xs text-muted mt-1">Total pago e a pagar.</p>
+        </div>
+
+        <!-- Card: Saldo -->
+        <div class="metric-card bg-placeholder p-4 rounded-xl border-dashed" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);">
+            <div class="flex justify-between align-center mb-2">
+                <span class="text-sm font-bold text-primary">Saldo Líquido</span>
+                <i data-lucide="wallet" class="text-primary icon-sm"></i>
+            </div>
+            <h3 class="text-xl font-bold text-primary" id="fin-saldo-mes">R$ 0,00</h3>
+            <p class="text-xs text-muted mt-1">Receitas menos Despesas.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-lg-3 gap-4">
+        <!-- Gráfico -->
+        <div class="bg-placeholder border-dashed p-4 rounded-xl grid-column-lg-2">
+            <h3 class="text-sm font-bold text-primary mb-3">Fluxo de Caixa (Mensal)</h3>
+            <div style="height: 300px; width: 100%; position: relative;">
+                <canvas id="financeiro-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Próximos Vencimentos -->
+        <div class="bg-placeholder border-dashed p-4 rounded-xl">
+            <h3 class="text-sm font-bold text-primary mb-3">Contas a Pagar (Próximos 7 dias)</h3>
+            <div id="lista-proximos-vencimentos" class="flex flex-column gap-2" style="max-height: 300px; overflow-y: auto;">
+                <div class="flex align-center justify-center h-100 text-muted text-sm">
+                    Carregando...
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <button class="btn btn-outline text-xs w-100 justify-center" onclick="document.querySelector('.nav-item[data-tab=\'financeiro/transacoes\']')?.click()">Ver todas as contas</button>
+            </div>
+        </div>
+    </div>
+</div>

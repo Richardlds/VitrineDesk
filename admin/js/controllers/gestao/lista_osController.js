@@ -114,12 +114,17 @@ export class lista_osController {
         const container = document.getElementById('lista-os-card-container');
         if (container) {
             container.innerHTML = Array.from({ length: 5 }, () => `
-                <div class="los-skeleton-card">
-                    <div class="los-sk" style="width:70px;"></div>
-                    <div class="los-sk" style="width:60%;"></div>
-                    <div class="los-sk" style="width:80px;"></div>
-                    <div class="los-sk" style="width:70px;"></div>
-                    <div class="los-sk" style="width:70px;"></div>
+                <div class="config-card p-3 flex justify-between align-center border-dashed">
+                    <div class="flex flex-column gap-2" style="flex: 1;">
+                        <div class="skeleton w-32px h-16px rounded-sm"></div>
+                        <div class="skeleton" style="width: 150px; height: 16px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton w-48px h-24px rounded-full"></div>
+                    <div class="skeleton" style="width: 80px; height: 16px; border-radius: 4px; margin-left: 20px;"></div>
+                    <div class="flex gap-2" style="margin-left: 20px;">
+                        <div class="skeleton w-24px h-24px rounded-full"></div>
+                        <div class="skeleton w-24px h-24px rounded-full"></div>
+                    </div>
                 </div>
             `).join('');
         }
@@ -215,33 +220,35 @@ export class lista_osController {
             const dateStr = new Date(o.created_at).toLocaleDateString('pt-BR');
             const totalStr = o.total_amount ? o.total_amount.toFixed(2) : '0.00';
 
-            let badgeClass = 'status-andamento';
-            if (o.status === 'Concluída')    badgeClass = 'status-concluida';
-            else if (o.status === 'Cancelada')  badgeClass = 'status-cancelada';
-            else if (o.status === 'Pendente')   badgeClass = 'status-pendente';
+            let badgeBg = 'bg-primary-light';
+            let badgeText = 'text-primary';
+            if (o.status === 'Concluída') { badgeBg = 'bg-success-light'; badgeText = 'text-success'; }
+            else if (o.status === 'Cancelada') { badgeBg = 'bg-danger-light'; badgeText = 'text-danger'; }
+            else if (o.status === 'Pendente') { badgeBg = 'bg-warning-light'; badgeText = 'text-warning'; }
 
             return `
-            <div class="los-card os-row-click" data-id="${o.id}" data-status="${o.status}">
-                <span class="los-card-id">#${shortId}</span>
-                <div class="los-card-main">
-                    <span class="los-card-customer">${escapeHTML(o.customer_name)}</span>
-                    <span class="los-card-date">
+            <div class="config-card p-3 flex flex-wrap justify-between align-center gap-3 hover:bg-placeholder transition cursor-pointer os-row-click" data-id="${o.id}" data-status="${o.status}">
+                <div class="flex flex-column gap-1" style="min-width: 200px; flex: 1;">
+                    <div class="flex align-center gap-2">
+                        <span class="text-xs font-bold text-secondary">#${shortId}</span>
+                        <span class="status-badge ${badgeBg} ${badgeText} text-xs font-bold px-2 py-1 rounded-full">${o.status}</span>
+                    </div>
+                    <span class="font-bold text-primary text-sm">${escapeHTML(o.customer_name)}</span>
+                    <span class="text-xs text-secondary flex align-center gap-1">
                         <i data-lucide="calendar" class="icon-xs"></i>${dateStr}
                     </span>
                 </div>
-                <span class="los-badge ${badgeClass}">
-                    <span class="los-badge-dot"></span>
-                    ${o.status}
-                </span>
-                <span class="los-card-value">R$ ${totalStr}</span>
-                <div class="los-card-actions">
-                    <button class="los-action-btn btn-view-os" data-id="${o.id}" title="Ver Detalhes" aria-label="Ver detalhes da OS">
+                
+                <span class="font-bold text-success" style="font-size: 1.1rem; min-width: 100px; text-align: right;">R$ ${totalStr}</span>
+                
+                <div class="flex gap-2 align-center">
+                    <button class="btn bg-white border border-border text-primary cursor-pointer w-32px h-32px rounded-full flex align-center justify-center shadow-sm hover:bg-primary-light btn-view-os" data-id="${o.id}" title="Ver Detalhes">
                         <i data-lucide="eye" class="icon-xs"></i>
                     </button>
-                    <button class="los-action-btn btn-print-os" data-id="${o.id}" title="Reimprimir" aria-label="Reimprimir OS">
+                    <button class="btn bg-white border border-border text-primary cursor-pointer w-32px h-32px rounded-full flex align-center justify-center shadow-sm hover:bg-primary-light btn-print-os" data-id="${o.id}" title="Reimprimir">
                         <i data-lucide="printer" class="icon-xs"></i>
                     </button>
-                    <button class="los-action-btn danger btn-delete-os" data-id="${o.id}" title="Excluir OS" aria-label="Excluir OS">
+                    <button class="btn bg-white border border-border text-danger cursor-pointer w-32px h-32px rounded-full flex align-center justify-center shadow-sm hover:bg-danger-light btn-delete-os" data-id="${o.id}" title="Excluir OS">
                         <i data-lucide="trash-2" class="icon-xs"></i>
                     </button>
                 </div>
@@ -322,12 +329,13 @@ export class lista_osController {
             `${new Date(order.created_at).toLocaleDateString('pt-BR')} às ${new Date(order.created_at).toLocaleTimeString('pt-BR')}`;
 
         const statusEl = document.getElementById('modal-os-status');
-        let badgeClass = 'status-andamento';
-        if (order.status === 'Concluída')  badgeClass = 'status-concluida';
-        else if (order.status === 'Cancelada') badgeClass = 'status-cancelada';
-        else if (order.status === 'Pendente')  badgeClass = 'status-pendente';
-        statusEl.className = `los-badge ${badgeClass}`;
-        statusEl.innerHTML = `<span class="los-badge-dot"></span>${order.status}`;
+        let badgeBg = 'bg-primary-light';
+        let badgeText = 'text-primary';
+        if (order.status === 'Concluída') { badgeBg = 'bg-success-light'; badgeText = 'text-success'; }
+        else if (order.status === 'Cancelada') { badgeBg = 'bg-danger-light'; badgeText = 'text-danger'; }
+        else if (order.status === 'Pendente') { badgeBg = 'bg-warning-light'; badgeText = 'text-warning'; }
+        statusEl.className = `status-badge ${badgeBg} ${badgeText} text-xs font-bold px-2 py-1 rounded-full`;
+        statusEl.textContent = order.status;
 
         document.getElementById('modal-os-customer').textContent = order.customer_name || '—';
         document.getElementById('modal-os-phone').textContent = order.customer_phone || '—';
@@ -343,10 +351,10 @@ export class lista_osController {
 
         const tbody = document.getElementById('modal-os-items-body');
         tbody.innerHTML = (items || []).map(item => `
-            <tr>
-                <td>${escapeHTML(item.item_name)}</td>
-                <td>${item.quantity}</td>
-                <td>R$ ${item.subtotal.toFixed(2)}</td>
+            <tr class="border-bottom-dashed border-border">
+                <td class="py-2 px-3 text-sm text-primary font-medium">${escapeHTML(item.item_name)}</td>
+                <td class="py-2 px-3 text-center text-secondary text-sm">${item.quantity}</td>
+                <td class="py-2 px-3 text-right text-primary text-sm font-bold">R$ ${item.subtotal.toFixed(2)}</td>
             </tr>
         `).join('');
 

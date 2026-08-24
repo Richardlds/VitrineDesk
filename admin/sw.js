@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vitrinedesk-admin-v3';
+const CACHE_NAME = 'vitrinedesk-admin-v11';
 
 self.addEventListener('install', event => {
   self.skipWaiting();

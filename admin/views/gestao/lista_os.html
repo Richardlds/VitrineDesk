@@ -1,31 +1,30 @@
-
 <div class="admin-section fade-in" id="section-lista-os">
 
     <!-- Header -->
     <div class="flex flex-wrap justify-between align-center gap-3 mb-4">
         <div>
             <div class="flex align-center gap-2 mb-1">
-                <div class="kpi-icon-wrapper bg-primary-light">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-sm text-primary"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                <div class="w-32px h-32px rounded-md bg-primary-light flex justify-center align-center">
+                    <i data-lucide="clipboard-list" class="icon-sm text-primary"></i>
                 </div>
-                <h2 class="m-0" style="color: var(--color-text-primary); font-size: 1.1rem; font-weight: 700;">Histórico de Ordens de Serviço</h2>
+                <h2 class="m-0 text-primary font-bold" style="font-size: 1.1rem;">Histórico de Vendas</h2>
             </div>
-            <p class="text-secondary text-sm m-0">Visualize, filtre e gerencie todas as OS criadas</p>
+            <p class="text-secondary text-sm m-0">Visualize, filtre e gerencie todas as vendas realizadas</p>
         </div>
     </div>
 
     <!-- Filtros -->
-    <div class="los-filter-bar">
+    <div class="config-card p-3 mb-3">
         <div class="flex flex-wrap gap-2 align-center justify-between">
-            <div class="los-input-icon-wrap">
-                <i data-lucide="search" class="icon-sm los-icon-inside"></i>
-                <input type="text" id="filter-search" class="los-input"
+            <div class="relative flex-1" style="min-width: 200px;">
+                <i data-lucide="search" class="icon-sm absolute text-secondary" style="top: 50%; left: 0.75rem; transform: translateY(-50%); pointer-events: none;"></i>
+                <input type="text" id="filter-search" class="search-bar w-100 pl-5" style="padding-left: 2.5rem;"
                     placeholder="Buscar cliente ou OS #..."
                     aria-label="Buscar OS">
             </div>
 
             <div style="min-width:150px;">
-                <select id="filter-status" class="los-input" aria-label="Filtrar por status">
+                <select id="filter-status" class="search-bar w-100" aria-label="Filtrar por status">
                     <option value="todos">Todos os Status</option>
                     <option value="Pendente">Pendente</option>
                     <option value="Em Andamento">Em Andamento</option>
@@ -35,39 +34,39 @@
             </div>
 
             <div class="flex align-center gap-2">
-                <input type="date" id="filter-date-start" class="los-input" style="min-width:140px;" title="Data Inicial" aria-label="Data inicial">
+                <input type="date" id="filter-date-start" class="search-bar" style="min-width:140px;" title="Data Inicial" aria-label="Data inicial">
                 <span class="text-secondary text-xs">—</span>
-                <input type="date" id="filter-date-end" class="los-input" style="min-width:140px;" title="Data Final" aria-label="Data final">
+                <input type="date" id="filter-date-end" class="search-bar" style="min-width:140px;" title="Data Final" aria-label="Data final">
             </div>
 
             <button id="btn-nova-os-redirect" class="btn btn-primary flex align-center gap-2">
-                <i data-lucide="plus" class="icon-sm"></i> Nova OS
+                <i data-lucide="plus" class="icon-sm"></i> Nova Venda
             </button>
         </div>
     </div>
 
     <!-- Lista de cards -->
-    <div id="lista-os-card-container" class="los-card-list">
+    <div id="lista-os-card-container" class="flex flex-column gap-2">
         <!-- Preenchido via JS -->
     </div>
 
     <!-- Empty State -->
-    <div id="lista-os-empty" class="los-empty d-none" role="status" aria-live="polite">
-        <div class="los-empty-icon">
-            <i data-lucide="file-x-2" class="icon-sm"></i>
+    <div id="lista-os-empty" class="d-none flex flex-column align-center justify-center p-5 bg-placeholder border-dashed border-border rounded-lg mt-3" role="status" aria-live="polite">
+        <div class="w-48px h-48px rounded-full bg-surface flex align-center justify-center mb-3 shadow-sm border border-border">
+            <i data-lucide="file-x-2" class="icon-sm text-secondary"></i>
         </div>
-        <p class="font-bold text-sm" style="color: var(--color-text-primary);">Nenhuma OS encontrada</p>
-        <p class="text-xs text-secondary">Tente ajustar os filtros ou crie uma nova ordem de serviço.</p>
+        <p class="font-bold text-sm text-primary m-0 mb-1">Nenhuma venda encontrada</p>
+        <p class="text-xs text-secondary m-0">Tente ajustar os filtros ou crie uma nova ordem de serviço.</p>
     </div>
 
     <!-- Paginação -->
-    <div id="lista-os-pagination" class="los-pagination d-none">
-        <span class="text-xs text-secondary" id="lista-os-page-info">Mostrando 0 a 0 de 0</span>
+    <div id="lista-os-pagination" class="d-none flex justify-between align-center mt-3 bg-placeholder p-2 rounded-md border border-border">
+        <span class="text-xs font-bold text-secondary px-2" id="lista-os-page-info">Mostrando 0 a 0 de 0</span>
         <div class="flex gap-2">
-            <button id="btn-prev-page" class="los-page-btn" disabled aria-label="Página anterior">
+            <button id="btn-prev-page" class="btn bg-surface border border-border text-primary cursor-pointer px-3 py-1 rounded-sm shadow-sm transition hover:bg-placeholder disabled:opacity-50" disabled aria-label="Página anterior">
                 <i data-lucide="chevron-left" class="icon-sm"></i>
             </button>
-            <button id="btn-next-page" class="los-page-btn" disabled aria-label="Próxima página">
+            <button id="btn-next-page" class="btn bg-surface border border-border text-primary cursor-pointer px-3 py-1 rounded-sm shadow-sm transition hover:bg-placeholder disabled:opacity-50" disabled aria-label="Próxima página">
                 <i data-lucide="chevron-right" class="icon-sm"></i>
             </button>
         </div>
@@ -75,75 +74,76 @@
 </div>
 
 <!-- Modal de Detalhes da OS -->
-<div id="modal-os-details" class="los-modal-overlay d-none" role="dialog" aria-modal="true" aria-labelledby="modal-os-title">
-    <div class="los-modal">
-
+<div id="modal-os-details" class="modal-overlay d-none flex align-center justify-center" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: color-mix(in srgb, var(--color-bg-base) 80%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 99999;" role="dialog" aria-modal="true" aria-labelledby="modal-os-title">
+    <div class="flex-col relative bg-surface border border-border rounded-lg overflow-hidden shadow-lg w-100" style="max-width: 500px; max-height: 90vh; display: flex; flex-direction: column; background: var(--color-bg-surface);">
+        
         <!-- Header -->
-        <div class="los-modal-header">
-            <div class="los-modal-title-group">
-                <div class="los-modal-id-row">
-                    <h3 id="modal-os-title" class="los-modal-id">OS #</h3>
-                    <span id="modal-os-status" class="los-badge"></span>
+        <div class="flex justify-between align-center p-4 border-bottom-dashed border-border bg-placeholder">
+            <div class="flex flex-column gap-1">
+                <div class="flex align-center gap-2">
+                    <h3 id="modal-os-title" class="m-0 font-bold text-lg text-primary">OS #</h3>
+                    <span id="modal-os-status" class="status-badge bg-primary-light text-primary text-xs font-bold px-2 py-1 rounded-full"></span>
                 </div>
-                <div class="los-modal-date-row">
+                <div class="flex align-center gap-1 text-xs text-secondary font-bold">
                     <i data-lucide="calendar" class="icon-xs"></i>
                     <span id="modal-os-date"></span>
                 </div>
             </div>
-            <button id="btn-close-os-details" class="los-modal-close" aria-label="Fechar modal">
+            <button id="btn-close-os-details" class="btn bg-transparent border-none text-secondary cursor-pointer hover:text-primary transition p-1" aria-label="Fechar modal">
                 <i data-lucide="x" class="icon-sm"></i>
             </button>
         </div>
 
         <!-- Body -->
-        <div class="los-modal-body">
-
+        <div class="p-4 flex-1 overflow-y-auto bg-surface flex flex-column gap-4" style="background: var(--color-bg-base);">
             <div>
-                <p class="los-section-label">
+                <p class="text-xs font-bold text-secondary text-uppercase tracking-wider mb-2 flex align-center gap-1">
                     <i data-lucide="user" class="icon-xs"></i> Cliente
                 </p>
-                <div class="los-modal-client-card">
-                    <div class="los-modal-field">
-                        <label for="modal-os-customer">Nome</label>
-                        <span id="modal-os-customer">—</span>
+                <div class="grid grid-cols-2 gap-3 bg-placeholder p-3 rounded-md border-dashed border-border">
+                    <div class="flex flex-column gap-1">
+                        <label class="text-xs text-secondary">Nome</label>
+                        <span id="modal-os-customer" class="font-bold text-primary text-sm">—</span>
                     </div>
-                    <div class="los-modal-field">
-                        <label for="modal-os-phone">Telefone</label>
-                        <span id="modal-os-phone">—</span>
+                    <div class="flex flex-column gap-1">
+                        <label class="text-xs text-secondary">Telefone</label>
+                        <span id="modal-os-phone" class="font-bold text-primary text-sm">—</span>
                     </div>
                 </div>
             </div>
 
             <div id="modal-os-notes-container" class="d-none">
-                <p class="los-section-label">
+                <p class="text-xs font-bold text-secondary text-uppercase tracking-wider mb-2 flex align-center gap-1">
                     <i data-lucide="file-text" class="icon-xs"></i> Observações
                 </p>
-                <p id="modal-os-notes" class="los-modal-notes"></p>
+                <p id="modal-os-notes" class="text-sm text-primary bg-placeholder p-3 rounded-md border border-border m-0" style="white-space: pre-wrap;"></p>
             </div>
 
             <div>
-                <p class="los-section-label">
-                    <i data-lucide="package" class="icon-xs"></i> Serviços e Produtos
+                <p class="text-xs font-bold text-secondary text-uppercase tracking-wider mb-2 flex align-center gap-1">
+                    <i data-lucide="package" class="icon-xs"></i> Produtos & Serviços
                 </p>
-                <table class="los-items-table" aria-label="Itens da OS">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Qtd</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="modal-os-items-body">
-                        <!-- Preenchido via JS -->
-                    </tbody>
-                </table>
+                <div class="border border-border rounded-md overflow-hidden">
+                    <table class="w-100 text-sm text-left" style="border-collapse: collapse;">
+                        <thead class="bg-placeholder border-bottom-dashed border-border">
+                            <tr>
+                                <th class="py-2 px-3 text-xs font-bold text-secondary">Item</th>
+                                <th class="py-2 px-3 text-xs font-bold text-secondary text-center w-48px">Qtd</th>
+                                <th class="py-2 px-3 text-xs font-bold text-secondary text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-os-items-body" style="background: transparent;">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- Footer -->
-        <div class="los-modal-footer">
-            <span class="los-total-label">Valor Total</span>
-            <span id="modal-os-total" class="los-total-value">R$ 0,00</span>
+        <div class="p-4 bg-placeholder border-top-dashed border-border flex justify-between align-center">
+            <span class="text-xs font-bold text-secondary text-uppercase tracking-wider">Valor Total</span>
+            <span id="modal-os-total" class="font-bold text-success text-lg">R$ 0,00</span>
         </div>
     </div>
 </div>
