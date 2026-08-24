@@ -271,3 +271,6 @@ async function fetchPlans() {
     }
   }
 }
+
+if (window.lucide) { window.lucide.createIcons(); }
+

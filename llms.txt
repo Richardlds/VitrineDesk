@@ -1,0 +1,13 @@
+# VitrineDesk - Plataforma para Agendamentos e Gestão
+
+O VitrineDesk é um sistema SaaS focado na gestão de negócios para prestadores de serviços, barbearias, salões de beleza e profissionais autônomos.
+
+## Funcionalidades
+- Ponto de Venda (PDV)
+- Gestão Financeira
+- Agendamento Online
+- CRM e Marketing
+
+## Links Úteis
+- [Login do Lojista](https://vitrinedesk.com.br/login.html)
+- [Área Administrativa](https://vitrinedesk.com.br/admin/)

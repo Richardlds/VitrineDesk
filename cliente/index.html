@@ -34,7 +34,7 @@
     
     <!-- ============ CAPA (BANNER) ============ -->
     <div id="store-cover" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: var(--cover-height, 280px); z-index: -1;">
-      <img id="cover-img" src="" alt="Capa da Loja" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.35;" />
+      <img id="cover-img" src="" alt="Capa da Loja" width="800" height="300" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.35;" />
       <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, var(--bg-dark) 100%);"></div>
     </div>
     
@@ -43,7 +43,7 @@
       <div class="topnav__inner">
 
         <div class="topnav__brand-container flex align-center gap-3">
-          <img id="logo-img" class="topnav__logo" src="" alt="Logo da Loja" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: none;" />
+          <img id="logo-img" class="topnav__logo" src="" alt="Logo da Loja" width="32" height="32" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: none;" />
           <div class="flex flex-column">
             <span class="topnav__brand" id="shop-name-nav" style="line-height: 1.1;">Carregando...</span>
             <span id="status-badge" class="badge badge--open" style="font-size: 0.65rem; padding: 2px 6px; margin-top: 2px; width: fit-content;">
@@ -560,7 +560,7 @@
           <div class="client-profile-header mb-6 flex flex-column align-center text-center">
             <div class="client-avatar relative w-20 h-20 rounded-full bg-glass flex-center border-2 border-primary overflow-hidden cursor-pointer group" id="client-avatar-wrapper" aria-label="Alterar foto de perfil">
               <i data-lucide="user" class="text-primary w-10 h-10" id="client-avatar-icon"></i>
-              <img id="client-avatar-img" class="hidden w-full h-full object-cover" alt="Sua Foto">
+              <img id="client-avatar-img" class="hidden w-full h-full object-cover" alt="Sua Foto" width="48" height="48">
               <div class="client-avatar-edit-overlay absolute inset-0 bg-black-alpha flex-center opacity-0 group-hover-opacity-100 transition-opacity">
                 <i data-lucide="camera" class="text-white"></i>
               </div>
@@ -718,7 +718,8 @@
   </style>
 
   <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script type="module" src="/cliente/js/utils.js"></script>
   <script type="module" src="/cliente/js/auth.js"></script>
   <script type="module" src="/cliente/js/booking.js"></script>
@@ -727,14 +728,18 @@
   <script type="module" src="/cliente/js/app.js"></script>
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    if (window.lucide) {
-      lucide.createIcons();
-    }
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script defer>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    });
   </script>
-  <script>
-    try { document.getElementById('footer-year').textContent = new Date().getFullYear(); } catch (e) { }
+  <script defer>
+    window.addEventListener('DOMContentLoaded', () => {
+      try { document.getElementById('footer-year').textContent = new Date().getFullYear(); } catch (e) { }
+    });
   </script>
 
 </body>
