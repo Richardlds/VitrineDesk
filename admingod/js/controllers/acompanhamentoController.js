@@ -119,7 +119,7 @@ export class acompanhamentoController {
                 <tr class="border-bottom-dashed border-placeholder hover:bg-hover transition-colors">
                     <td class="py-3 px-4">
                         <div class="font-bold text-primary">${t.name}</div>
-                        <div class="text-xs text-secondary">vitrinedesk.com/${t.slug}</div>
+                        <div class="text-xs text-secondary">vitrinedesk.com/${(t.slug || '').replace(/^\/+/, '')}</div>
                     </td>
                     <td class="py-3 px-4 text-center">${statusBadge}</td>
                     <td class="py-3 px-4 text-center">

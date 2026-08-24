@@ -512,7 +512,8 @@ class AdminApp {
                 btnVitrine.addEventListener('click', () => {
                     if (window.currentTenantSlug) {
                         const baseUrl = window.location.origin;
-                        const vitrineUrl = `${baseUrl}/${window.currentTenantSlug}`;
+                        const safeSlug = window.currentTenantSlug.replace(/^\/+/, '');
+                        const vitrineUrl = `${baseUrl}/${safeSlug}`;
                         window.open(vitrineUrl, '_blank');
                         navigator.clipboard.writeText(vitrineUrl).catch(() => { });
                     }

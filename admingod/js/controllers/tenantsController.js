@@ -165,7 +165,8 @@ export class tenantsController {
                 const planoColor = planoObj ? 'bg-primary-light text-primary' : 'bg-placeholder text-secondary';
 
                 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                const storeUrl = isLocalhost ? `/cliente/index.html?tenant=${t.slug}` : `/${t.slug}`;
+                const safeSlug = (t.slug || '').replace(/^\/+/, '');
+                const storeUrl = isLocalhost ? `/cliente/index.html?tenant=${safeSlug}` : `${window.location.origin}/${safeSlug}`;
 
                 html += `
                     <tr class="border-bottom-dashed border-placeholder hover:bg-hover transition-colors">
