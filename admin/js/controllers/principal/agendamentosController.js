@@ -551,6 +551,22 @@ export class agendamentosController {
                 this.openModal(aptId);
             };
 
+            const btnWhatsapp = document.getElementById('btn-whatsapp-view');
+            if (btnWhatsapp) {
+                if (phone) {
+                    btnWhatsapp.classList.remove('d-none');
+                    btnWhatsapp.onclick = () => {
+                        const cleanPhone = phone.replace(/\D/g, '');
+                        const nomeCortesia = clientName.split(' ')[0];
+                        const servicoNome = (rawApt.services && rawApt.services.name) ? rawApt.services.name : 'seu serviço';
+                        const text = `Olá, ${nomeCortesia}! Confirmando seu agendamento de ${servicoNome} para o dia ${dateStr} às ${timeStr}. Te esperamos!`;
+                        window.open(`https://wa.me/55${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
+                    };
+                } else {
+                    btnWhatsapp.classList.add('d-none');
+                }
+            }
+
             modal.classList.remove('d-none');
             if(window.lucide) window.lucide.createIcons();
         }

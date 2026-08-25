@@ -561,6 +561,7 @@ export class agenda_diariaController {
                 <dt>Protocolo</dt><dd style="font-size:12px;color:var(--color-text-muted)">${esc(r.id)}</dd>
               </dl>
               <div class="agenda-modal-actions">
+                ${r.client_phone ? `<button class="agenda-btn tiny" style="color: var(--color-success); border-color: var(--color-success)" data-m="whatsapp">Avisar Whats</button>` : ''}
                 <button class="agenda-btn tiny" data-m="confirmed">Confirmar</button>
                 <button class="agenda-btn tiny gold" data-m="completed">Concluir</button>
                 <button class="agenda-btn tiny" data-m="cancelled">Cancelar</button>
@@ -569,6 +570,14 @@ export class agenda_diariaController {
               
             mBody.querySelectorAll("button[data-m]").forEach((b) =>
                 b.addEventListener("click", () => {
+                    if (b.dataset.m === "whatsapp") {
+                        const cleanPhone = r.client_phone.replace(/\D/g, '');
+                        const nomeCortesia = (r.client_name || 'Cliente').split(' ')[0];
+                        const servicoNome = r.services?.name || 'seu serviço';
+                        const text = `Olá, ${nomeCortesia}! Confirmando seu agendamento de ${servicoNome} para o dia ${fmtDate.format(s)} às ${fmtHour.format(s)}. Te esperamos!`;
+                        window.open(`https://wa.me/55${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
+                        return;
+                    }
                     const modal = this.$("#modal");
                     if(modal) modal.hidden = true;
                     this.updateAppointmentStatus(r.id, b.dataset.m);

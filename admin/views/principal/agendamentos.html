@@ -231,13 +231,18 @@
             </div>
 
             <!-- Ações -->
-            <div class="flex justify-end gap-2 border-top-dashed pt-3 mt-2">
-                <button type="button" id="btn-edit-from-view" class="btn btn-outline border-none bg-placeholder text-primary cursor-pointer px-4 flex align-center gap-2 hover:bg-placeholder-dark transition">
-                    <i data-lucide="edit" class="icon-sm"></i> Editar Sessão
+            <div class="flex justify-between align-center gap-2 border-top-dashed pt-3 mt-2">
+                <button type="button" id="btn-whatsapp-view" class="btn btn-outline border-none bg-success-light text-success cursor-pointer px-4 flex align-center gap-2 transition d-none" title="Enviar mensagem via WhatsApp">
+                    <i data-lucide="message-circle" class="icon-sm"></i> Avisar
                 </button>
-                <button type="button" id="btn-ok-view" class="btn btn-primary cursor-pointer px-4 flex align-center justify-center transition">
-                    Concluir
-                </button>
+                <div class="flex justify-end gap-2">
+                    <button type="button" id="btn-edit-from-view" class="btn btn-outline border-none bg-placeholder text-primary cursor-pointer px-4 flex align-center gap-2 hover:bg-placeholder-dark transition">
+                        <i data-lucide="edit" class="icon-sm"></i> Editar Sessão
+                    </button>
+                    <button type="button" id="btn-ok-view" class="btn btn-primary cursor-pointer px-4 flex align-center justify-center transition">
+                        Concluir
+                    </button>
+                </div>
             </div>
         </div>
     </div>
