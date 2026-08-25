@@ -8,59 +8,52 @@
    1. TOKENS DE DESIGN & VARIÁVEIS
    ───────────────────────────────────────────────────────────── */
 :root {
-  /* Cores - Base (Escura) */
-  --bg-base: #05050A;
-  /* Fundo principal profundo */
-  --bg-surface: rgba(255, 255, 255, 0.03);
-  /* Superfícies translúcidas (Cards) */
-  --bg-surface-hover: rgba(255, 255, 255, 0.06);
+  /* Cores - Base (Escura Premium) */
+  --bg-base: #020617; /* Slate 950 */
+  --bg-surface: rgba(255, 255, 255, 0.02);
+  --bg-surface-hover: rgba(255, 255, 255, 0.04);
 
   /* Cores - Bordas e Linhas */
-  --border-light: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(59, 130, 246, 0.3);
-  /* Azul para destaque */
+  --border-light: rgba(255, 255, 255, 0.06);
+  --border-glow: rgba(59, 130, 246, 0.2);
 
   /* Cores - Texto */
-  --text-primary: #F8F9FA;
-  --text-secondary: #A1A1AA;
-  --text-muted: #71717A;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #475569;
 
-  /* Cores - Brand & Acentos */
+  /* Cores - Brand & Acentos (Apenas Azul) */
   --accent-primary: #3B82F6;
-  /* Azul */
   --accent-secondary: #60A5FA;
-  /* Azul */
-  --accent-tertiary: #EC4899;
-  /* Rosa para degradês */
+  --accent-tertiary: #1D4ED8; 
   --success: #10B981;
   --warning: #F59E0B;
   --danger: #EF4444;
 
-  /* Cores Sólidas (Substituindo antigos gradientes) */
-  --grad-primary: var(--accent-primary);
-  --grad-subtle: rgba(59, 130, 246, 0.15);
+  /* Gradientes */
+  --grad-primary: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+  --grad-subtle: rgba(59, 130, 246, 0.05);
 
   /* Tipografia */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
   /* Sombras e Efeitos */
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.15);
-  /* Sombra com glow sutil */
-  --glass-blur: blur(12px);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 30px 60px -10px rgba(0, 0, 0, 0.8), 0 0 40px rgba(59, 130, 246, 0.1);
+  --glass-blur: blur(24px);
 
   /* Espaçamentos e Raios */
   --radius-sm: 0.375rem;
   --radius-md: 0.75rem;
   --radius-lg: 1.25rem;
-  --radius-xl: 2rem;
+  --radius-xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* Transições */
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Transições Premium (Física de mola/Spring) */
+  --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-bounce: 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -126,6 +119,9 @@ ol {
 }
 
 .text-gradient {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: var(--accent-primary);
 }
 
@@ -199,7 +195,7 @@ ol {
   left: -5%;
   width: 50vw;
   height: 50vw;
-  background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
 }
 
 .bg-orb-2 {
@@ -207,7 +203,7 @@ ol {
   right: -10%;
   width: 40vw;
   height: 40vw;
-  background: radial-gradient(circle, var(--accent-tertiary) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%);
   animation-delay: -5s;
 }
 
@@ -254,7 +250,7 @@ ol {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25);
   background: #ffffff;
 }
 
@@ -528,20 +524,19 @@ ol {
 }
 
 .mockup-window {
-  background: rgba(15, 15, 20, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(2, 6, 23, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  transform: perspective(1000px) rotateX(2deg);
-  /* Toque 3D sutil */
-  transition: transform var(--transition-normal);
+  transition: transform var(--transition-bounce), border-color var(--transition-normal);
 }
 
 .mockup-window:hover {
-  transform: perspective(1000px) rotateX(0deg) translateY(-5px);
+  transform: translateY(-8px);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .mockup-header {
@@ -823,6 +818,7 @@ ol {
   transition: all var(--transition-normal);
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 .feature-card:hover {

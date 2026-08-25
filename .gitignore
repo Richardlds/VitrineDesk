@@ -1,11 +1,15 @@
-# Node.js
+# ==============================================================================
+# Node.js & Dependências
+# ==============================================================================
 node_modules/
 .pnpm-store/
 jspm_packages/
 web_modules/
 .npm/
 
-# Logs e diagnóstico
+# ==============================================================================
+# Logs e Diagnóstico
+# ==============================================================================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -13,7 +17,9 @@ pnpm-debug.log*
 lerna-debug.log*
 *.log
 
-# Vercel e builds
+# ==============================================================================
+# Build, Caches e Deploy
+# ==============================================================================
 .vercel/
 .output/
 dist/
@@ -21,8 +27,18 @@ out/
 build/
 .next/
 .nuxt/
+coverage/
+.nyc_output/
+.parcel-cache/
+.cache/
+.vite/
+.turbocache/
+.eslintcache
+.stylelintcache
 
+# ==============================================================================
 # Python
+# ==============================================================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -31,9 +47,7 @@ __pycache__/
 env/
 venv/
 .venv/
-build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -48,46 +62,15 @@ share/python-wheels/
 .installed.cfg
 *.egg
 
-# Configurações locais / Credenciais
+# ==============================================================================
+# Segurança, Credenciais e Variáveis de Ambiente
+# ==============================================================================
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .env.*
-
-# Editores e IDEs
-.idea/
-.vscode/
-*.swp
-*.swo
-.sublime-workspace
-.sublime-project
-
-# Sistema Operacional
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-ehthumbs_vista.db
-[Tt]humbs.db
-Thumbs.db
-
-# Arquivos de documentação/todo pessoal
-implementacoes_futuras.md
-.agents/
-AGENTS.md
-
-# Supabase (se usado localmente via CLI)
-supabase/.temp/
-supabase/.temp
-supabase/.branches/
-
-# --- FORTIFICAÇÃO EXTRA ---
-
-# Segurança e chaves
 *.pem
 *.crt
 *.key
@@ -99,19 +82,32 @@ credentials.json
 oauth.json
 .npmrc
 
-# Testes e cobertura de código
-coverage/
-.nyc_output/
+# ==============================================================================
+# Editores e IDEs
+# ==============================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+.sublime-workspace
+.sublime-project
 
-# Build tools, bundlers e caches adicionais
-.parcel-cache/
-.cache/
-.vite/
-.turbocache/
-.eslintcache
-.stylelintcache
-
-# Arquivos temporários e backups genéricos
+# ==============================================================================
+# Sistema Operacional e Arquivos Temporários
+# ==============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+[Tt]humbs.db
+Thumbs.db
+Thumbs.db:encryptable
+Icon\r
+$RECYCLE.BIN/
+Desktop.ini
 *.bak
 *.tmp
 *.temp
@@ -119,8 +115,12 @@ coverage/
 .#*
 \#*\#
 
-# Mais arquivos de Sistema Operacional
-Icon\r
-$RECYCLE.BIN/
-Desktop.ini
-Thumbs.db:encryptable
+# ==============================================================================
+# Supabase e Específicos do Projeto
+# ==============================================================================
+implementacoes_futuras.md
+.agents/
+AGENTS.md
+supabase/.temp/
+supabase/.temp
+supabase/.branches/
