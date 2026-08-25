@@ -86,17 +86,22 @@ export async function loginCliente(email, senha) {
 
     if (authError || !authData?.user) {
       console.error('Erro Auth:', authError);
-      showToast('E-mail ou senha incorretos', 'error');
+      if (authError?.message?.toLowerCase().includes('confirm')) {
+         showToast('Confirme seu e-mail antes de fazer login.', 'warning');
+      } else {
+         showToast('E-mail ou senha incorretos', 'error');
+      }
       return null;
     }
 
     // Busca o perfil do cliente na tabela (usando o id do auth)
     // Opcional: buscar por email caso a trigger de insert tenha falhado no passado
     const result = await supaFetch(
-      `/rest/v1/clientes?email=eq.${encodeURIComponent(email)}&select=*`
+      `/rest/v1/clientes?email=eq.${encodeURIComponent(email)}&tenant_id=eq.${tenantId}&select=*`,
+      { noCache: true }
     );
 
-    if (!result || result.length === 0) {
+    if (!result || result.length === 0 || result.error) {
       showToast('Cadastro de cliente não encontrado nesta loja.', 'error');
       await supabase.auth.signOut();
       return null;
@@ -222,7 +227,10 @@ export async function registrarCliente(dados) {
     const supabase = getSupabaseAuthClient();
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: email,
-      password: senha
+      password: senha,
+      options: {
+        data: { role: 'cliente' }
+      }
     });
 
     if (authError || !authData?.user) {
@@ -250,7 +258,7 @@ export async function registrarCliente(dados) {
       body: novoCliente
     });
 
-    if (result && result.length > 0) {
+    if (result && !result.error && result.length > 0) {
       saveClientSession(result[0]);
       showToast('Conta criada com sucesso!', 'success');
       updateAuthUI(true);
@@ -258,7 +266,8 @@ export async function registrarCliente(dados) {
       return result[0];
     }
 
-    showToast('Erro ao criar conta', 'error');
+    console.error('Erro no result do supaFetch:', result);
+    showToast('Erro ao gravar dados da conta. O RLS bloqueou?', 'error');
     return null;
 
   } catch (e) {
