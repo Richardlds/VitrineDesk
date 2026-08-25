@@ -1625,6 +1625,9 @@ window.showTutorial = function (tutorialData, tabPath, tenantId) {
         const existing = document.getElementById('global-tutorial-modal');
         if (existing) existing.remove();
 
+        const steps = tutorialData.steps || [{ subtitle: tutorialData.title, text: tutorialData.description, icon: tutorialData.icon }];
+        let currentStep = 0;
+
         const overlay = document.createElement('div');
         overlay.id = 'global-tutorial-modal';
         overlay.className = 'modal-overlay fade-in';
@@ -1636,6 +1639,7 @@ window.showTutorial = function (tutorialData, tabPath, tenantId) {
                     background: #ffffff;
                     border-radius: 32px;
                     max-width: 400px;
+                    width: 90%;
                     text-align: center;
                     box-shadow: 0 20px 50px rgba(0,0,0,0.15);
                     overflow: hidden;
@@ -1661,10 +1665,13 @@ window.showTutorial = function (tutorialData, tabPath, tenantId) {
                     border-radius: 50% 50% 0 0;
                 }
                 .tutorial-ios-content {
-                    padding: 20px 40px 40px;
+                    padding: 10px 30px 30px;
                     background: #ffffff;
                     position: relative;
                     z-index: 10;
+                    min-height: 200px;
+                    display: flex;
+                    flex-direction: column;
                 }
                 .tutorial-ios-btn {
                     background: var(--color-primary); 
@@ -1683,25 +1690,104 @@ window.showTutorial = function (tutorialData, tabPath, tenantId) {
                     transform: translateY(-2px);
                     box-shadow: 0 12px 25px -6px rgba(var(--color-primary-rgb), 0.6);
                 }
+                .tutorial-ios-btn.secondary {
+                    background: transparent;
+                    color: var(--color-text-secondary);
+                    box-shadow: none;
+                }
+                .tutorial-ios-btn.secondary:hover {
+                    color: var(--color-text-primary);
+                    background: var(--color-bg-surface);
+                    box-shadow: none;
+                }
+                .tutorial-dots {
+                    display: flex;
+                    gap: 8px;
+                    justify-content: center;
+                    margin-bottom: 20px;
+                }
+                .tutorial-dot {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #E5E7EB;
+                    transition: all 0.3s ease;
+                }
+                .tutorial-dot.active {
+                    background: var(--color-primary);
+                    width: 24px;
+                    border-radius: 4px;
+                }
+                .step-content {
+                    flex: 1;
+                    animation: slideUpFade 0.4s ease forwards;
+                }
+                @keyframes slideUpFade {
+                    0% { opacity: 0; transform: translateY(10px); }
+                    100% { opacity: 1; transform: translateY(0); }
+                }
             </style>
             <div class="modal-content tutorial-modal-ios slide-up p-0">
-                <div class="tutorial-ios-header">
-                    <i data-lucide="${tutorialData.icon || 'info'}" style="width: 60px; height: 60px; margin-bottom: 10px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));"></i>
+                <div class="tutorial-ios-header" id="tutorial-header-icon">
+                    <!-- Icon injetado dinamicamente -->
                 </div>
                 <div class="tutorial-ios-content">
-                    <h2 class="mb-3 font-bold text-2xl" style="color: #111827; letter-spacing: -0.5px;">${tutorialData.title}</h2>
-                    <p class="text-md mb-8 line-height-1-6" style="color: #6B7280;">${tutorialData.description}</p>
-                    <button class="tutorial-ios-btn btn-entendi flex align-center justify-center gap-2">
-                        Entendi, vamos lá! <i data-lucide="arrow-right" class="icon-sm m-0"></i>
-                    </button>
+                    <h2 class="mb-2 font-bold text-xl" style="color: #111827; letter-spacing: -0.5px;">${tutorialData.title}</h2>
+                    
+                    <div id="tutorial-step-container" class="step-content">
+                        <!-- Conteúdo do passo injetado dinamicamente -->
+                    </div>
+
+                    <div class="tutorial-dots" id="tutorial-dots">
+                        <!-- Dots injetados dinamicamente -->
+                    </div>
+
+                    <div class="flex gap-2 w-100">
+                        <button id="tutorial-btn-prev" class="tutorial-ios-btn secondary d-none" style="width: auto; padding: 14px 20px;">
+                            <i data-lucide="arrow-left" class="m-0"></i>
+                        </button>
+                        <button id="tutorial-btn-next" class="tutorial-ios-btn flex align-center justify-center gap-2">
+                            Continuar <i data-lucide="arrow-right" class="icon-sm m-0"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
 
         document.body.appendChild(overlay);
-        if (window.lucide) window.lucide.createIcons();
 
-        const btnEntendi = overlay.querySelector('.btn-entendi');
+        const headerIcon = overlay.querySelector('#tutorial-header-icon');
+        const stepContainer = overlay.querySelector('#tutorial-step-container');
+        const dotsContainer = overlay.querySelector('#tutorial-dots');
+        const btnNext = overlay.querySelector('#tutorial-btn-next');
+        const btnPrev = overlay.querySelector('#tutorial-btn-prev');
+
+        const renderStep = () => {
+            const step = steps[currentStep];
+            
+            // Header Icon
+            headerIcon.innerHTML = `<i data-lucide="${step.icon || tutorialData.icon || 'info'}" style="width: 60px; height: 60px; margin-bottom: 10px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));"></i>`;
+            
+            // Step Content
+            stepContainer.innerHTML = `
+                <h3 class="text-md font-bold mb-2 text-primary">${step.subtitle}</h3>
+                <p class="text-sm mb-4 line-height-1-6" style="color: #6B7280;">${step.text}</p>
+            `;
+
+            // Dots
+            dotsContainer.innerHTML = steps.map((_, i) => `<div class="tutorial-dot ${i === currentStep ? 'active' : ''}"></div>`).join('');
+
+            // Buttons
+            btnPrev.classList.toggle('d-none', currentStep === 0);
+            
+            if (currentStep === steps.length - 1) {
+                btnNext.innerHTML = `Entendi, vamos lá! <i data-lucide="check" class="icon-sm m-0"></i>`;
+            } else {
+                btnNext.innerHTML = `Continuar <i data-lucide="arrow-right" class="icon-sm m-0"></i>`;
+            }
+
+            if (window.lucide) window.lucide.createIcons();
+        };
 
         const fechar = () => {
             overlay.classList.add('d-none');
@@ -1714,7 +1800,23 @@ window.showTutorial = function (tutorialData, tabPath, tenantId) {
             }, 200);
         };
 
-        btnEntendi.addEventListener('click', fechar);
+        btnNext.addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                renderStep();
+            } else {
+                fechar();
+            }
+        });
+
+        btnPrev.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+            }
+        });
+
+        renderStep();
     });
 };
 

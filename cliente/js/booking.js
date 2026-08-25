@@ -1,4 +1,4 @@
-import { supaFetch, showToast, formatCurrency, formatDate, getMonthName, escapeHtml, showSkeleton, hideSkeleton } from './utils.js';
+import { supaFetch, showToast, formatCurrency, formatDate, getMonthName, escapeHtml, showSkeleton, hideSkeleton, getSupabaseAuthClient } from './utils.js';
 import { isLogged, openAuthModal, getLoggedClient } from './auth.js';
 import { loadMyAppointments } from './agendamentos.js';
 import { getTenantId, selectedBranchId } from './app.js';
@@ -111,7 +111,8 @@ export async function openBookingModal(service) {
       discount: 0,
       couponCode: '',
       discountData: null,
-      planDiscountApplied: false
+      planDiscountApplied: false,
+      requiresPrepayment: service.requires_prepayment === true
     };
 
     // Verificar se o cliente tem um plano de assinatura ativo
@@ -543,7 +544,8 @@ async function loadExtras() {
                  data-extra-id="${extra.id}"
                  data-extra-name="${escapeHtml(extra.nome || extra.name)}"
                  data-extra-price="${extra.preco || extra.price || 0}"
-                 data-extra-duration="${extra.duracao || extra.duration || 15}">
+                 data-extra-duration="${extra.duracao || extra.duration || 15}"
+                 data-extra-requires-prepayment="${extra.requires_prepayment === true}">
           <span class="extra-name">${escapeHtml(extra.nome || extra.name)}</span>
         </div>
         <span class="extra-price">${formatCurrency(extra.preco || extra.price || 0)}</span>
@@ -563,9 +565,10 @@ export function toggleExtraService(checkbox) {
     const name = checkbox.dataset.extraName;
     const price = parseFloat(checkbox.dataset.extraPrice);
     const duration = parseInt(checkbox.dataset.extraDuration);
+    const requiresPrepayment = checkbox.dataset.extraRequiresPrepayment === 'true';
 
     if (checkbox.checked) {
-      bookingState.extras.push({ id, name, price, duration });
+      bookingState.extras.push({ id, name, price, duration, requiresPrepayment });
     } else {
       bookingState.extras = bookingState.extras.filter(e => String(e.id) !== String(id));
     }
@@ -801,6 +804,63 @@ async function submitBooking() {
       notes: [observacoes, extrasTexto, totalTexto].filter(Boolean).join(' | ') || null,
       branch_id: selectedBranchId || null
     };
+
+    // ─────────────────────────────────────────────────────────────────
+    // Interceptar se exigir pagamento antecipado (Serviço principal ou Extras)
+    // ─────────────────────────────────────────────────────────────────
+    const needsPrepayment = bookingState.requiresPrepayment || bookingState.extras.some(e => e.requiresPrepayment);
+    
+    if (needsPrepayment && finalTotal > 0 && bookingState.planDiscountApplied !== 'free_appointment') {
+      const btnSubmit = document.getElementById('btn-submit-booking');
+      if (btnSubmit) {
+        btnSubmit.innerHTML = '<i class="icon-sm animate-spin" data-lucide="loader-2"></i> Gerando Pagamento...';
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      try {
+        const sessionData = await getSupabaseAuthClient().auth.getSession();
+        const token = sessionData.data?.session?.access_token;
+
+        const payRes = await fetch('/api/stripe/create-payment-checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+          },
+          body: JSON.stringify({
+            tenantId: tenantId,
+            serviceName: bookingState.serviceName,
+            amount: finalTotal,
+            appointmentData: appointment,
+            successUrl: window.location.origin + window.location.pathname + '?payment=success',
+            cancelUrl: window.location.origin + window.location.pathname + '?payment=cancel'
+          })
+        });
+        
+        const payData = await payRes.json();
+        
+        if (payRes.ok && payData.url) {
+          window.location.href = payData.url;
+          return; // Para a execução aqui, o webhook cuidará de criar o agendamento
+        } else {
+          showToast(payData.error || 'Erro ao gerar pagamento.', 'error');
+          if (btnSubmit) {
+            btnSubmit.innerHTML = 'Confirmar Agendamento';
+            btnSubmit.disabled = false;
+          }
+          return;
+        }
+      } catch (err) {
+         console.error('Erro no checkout de agendamento', err);
+         showToast('Erro ao redirecionar para pagamento.', 'error');
+         if (btnSubmit) {
+           btnSubmit.innerHTML = 'Confirmar Agendamento';
+           btnSubmit.disabled = false;
+         }
+         return;
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────
 
     const result = await supaFetch('/rest/v1/appointments', {
       method: 'POST',

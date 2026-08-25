@@ -357,6 +357,7 @@ export class servicosController {
         const inputStatus = document.getElementById('input-status');
         const inputCategoria = document.getElementById('input-categoria');
         const inputShowPhotos = document.getElementById('input-show-photos');
+        const inputRequiresPrepayment = document.getElementById('input-requires-prepayment');
         
         const btnExcluir = document.getElementById('btn-excluir');
         const btnDesativar = document.getElementById('btn-desativar');
@@ -388,6 +389,7 @@ export class servicosController {
                     }
                     if (inputCategoria) inputCategoria.value = categoryName;
                     if (inputShowPhotos) inputShowPhotos.checked = shouldShowPhotos;
+                    if (inputRequiresPrepayment) inputRequiresPrepayment.checked = data.requires_prepayment === true;
                     
                     this.setPreviewImage(data.image_url || data.imagem_url || null);
                     
@@ -405,6 +407,7 @@ export class servicosController {
                 form.reset();
                 inputStatus.value = 'ativo';
                 if (inputShowPhotos) inputShowPhotos.checked = true;
+                if (inputRequiresPrepayment) inputRequiresPrepayment.checked = false;
                 btnExcluir.classList.add('d-none');
                 btnDesativar.classList.add('d-none');
                 this.setPreviewImage(null);
@@ -448,7 +451,8 @@ export class servicosController {
                     is_active: document.getElementById('input-status').value === 'ativo',
                     category: finalCategory,
                     tenant_id: tenantId,
-                    image_url: imageUrl
+                    image_url: imageUrl,
+                    requires_prepayment: document.getElementById('input-requires-prepayment') ? document.getElementById('input-requires-prepayment').checked : false
                 };
 
                 if (this.currentId) {

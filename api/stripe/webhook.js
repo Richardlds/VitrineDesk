@@ -137,6 +137,30 @@ export default async function handler(req, res) {
               if (error) console.error('Erro ao inserir assinatura:', error);
             }
           }
+        } else if (session.mode === 'payment' && session.metadata?.is_appointment_checkout === 'true') {
+          // Processamento do Pagamento Antecipado (Avulso)
+          const payloadStr = session.metadata.appointment_payload;
+          if (payloadStr) {
+            try {
+              const appointmentData = JSON.parse(payloadStr);
+              // Adiciona flag visual de que foi pago
+              const currentNotes = appointmentData.notes ? appointmentData.notes + ' | ' : '';
+              appointmentData.notes = currentNotes + '(Sinal Pago Antecipadamente via Checkout)';
+              appointmentData.status = 'confirmed'; // Garante que entra confirmado
+              
+              const { error: insertError } = await supabase
+                .from('appointments')
+                .insert([appointmentData]);
+                
+              if (insertError) {
+                console.error('Erro ao inserir agendamento após pagamento:', insertError);
+              } else {
+                console.log('Agendamento pago e inserido com sucesso para tenant:', session.metadata.tenant_id);
+              }
+            } catch (parseError) {
+              console.error('Erro ao fazer parse do payload do agendamento:', parseError);
+            }
+          }
         }
         break;
       }

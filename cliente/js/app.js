@@ -37,6 +37,19 @@ export function getTenantId() {
 // ────────────────────────── INIT ──────────────────────────
 
 export async function init() {
+  
+  // Tratamento de retorno do Stripe Checkout (Agendamento Avulso)
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentStatus = urlParams.get('payment');
+  if (paymentStatus === 'success') {
+    if (window.showToast) window.showToast('Pagamento confirmado! Seu agendamento foi realizado com sucesso.', 'success');
+    // Limpa o parâmetro da URL para não mostrar o toast de novo ao recarregar
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } else if (paymentStatus === 'cancel') {
+    if (window.showToast) window.showToast('Pagamento cancelado. O agendamento não foi concluído.', 'warning');
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
   try {
     const slug = getSlugFromURL();
     if (!slug) {

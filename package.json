@@ -8,7 +8,7 @@
         "@supabase/supabase-js": "^2.39.3"
     },
     "scripts": {
-        "dev": "vercel dev",
+        "start-dev": "vercel dev",
         "serve": "npx serve -c serve.json",
         "deploy": "vercel --prod"
     },

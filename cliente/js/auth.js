@@ -182,6 +182,16 @@ export async function registrarCliente(dados) {
     const numTelefone = telefone ? telefone.replace(/\D/g, '') : null;
     const numCpf = cpf ? cpf.replace(/\D/g, '') : null;
 
+    // Validação de formato
+    if (numCpf && !validarCPF(numCpf)) {
+      showToast('O CPF informado é inválido.', 'warning');
+      return null;
+    }
+    if (numTelefone && numTelefone.length < 10) {
+      showToast('O telefone informado é inválido.', 'warning');
+      return null;
+    }
+
     // PRÉ-CHECK DE DUPLICIDADE (mantido)
     let orConditions = [`email.eq.${encodeURIComponent(email)}`];
     if (numCpf) orConditions.push(`cpf.eq.${encodeURIComponent(numCpf)}`);

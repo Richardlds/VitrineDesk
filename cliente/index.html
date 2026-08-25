@@ -23,11 +23,24 @@
 </head>
 <body>
 
-  <!-- LOADING SCREEN -->
-  <div id="loading-screen" class="loading-screen" aria-live="polite" aria-busy="true" style="position:fixed; inset:0; background:var(--bg-dark); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px;">
-    <div style="width: 40px; height: 40px; border: 4px solid rgba(255, 255, 255, 0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-    <span class="muted">Carregando vitrine...</span>
+  <!-- PREMIUM LOADING SCREEN -->
+  <div id="loading-screen" class="loading-screen flex-center flex-column" aria-live="polite" aria-busy="true" style="position:fixed; inset:0; background: radial-gradient(circle at center, #11131a 0%, #0a0b12 100%); z-index:9999; gap:24px;">
+    <div class="premium-loader">
+      <div class="loader-ring"></div>
+      <div class="loader-ring"></div>
+      <div class="loader-ring"></div>
+    </div>
+    <span style="color: #8b92a5; font-size: 0.9rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; animation: pulse 2s infinite;">Preparando Vitrine...</span>
+    <style>
+      .premium-loader { position: relative; width: 64px; height: 64px; }
+      .loader-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid transparent; border-top-color: var(--primary); animation: premiumSpin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; }
+      .loader-ring:nth-child(2) { border-top-color: rgba(255,255,255,0.2); animation-delay: 0.2s; animation-direction: reverse; }
+      .loader-ring:nth-child(3) { width: 70%; height: 70%; top: 15%; left: 15%; border-top-color: var(--primary); opacity: 0.5; animation: premiumSpin 1s linear infinite; }
+      @keyframes premiumSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+      .flex-center { display: flex; align-items: center; justify-content: center; }
+      .flex-column { flex-direction: column; }
+    </style>
   </div>
 
   <div id="app" class="hidden">
