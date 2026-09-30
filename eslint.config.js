@@ -21,7 +21,8 @@ export default [
             "no-unused-vars": "warn",
             "no-undef": "warn",
             "no-empty": "warn",
-            "no-control-regex": "warn"
+            "no-control-regex": "warn",
+            "no-useless-assignment": "warn"
         }
     }
 ];

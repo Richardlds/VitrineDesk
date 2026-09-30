@@ -7,9 +7,11 @@
         "stripe": "^14.0.0",
         "@supabase/supabase-js": "^2.39.3"
     },
+    "type": "module",
     "scripts": {
         "start-dev": "vercel dev",
         "serve": "npx serve -c serve.json",
+        "lint": "eslint .",
         "deploy": "vercel --prod"
     },
     "keywords": [
