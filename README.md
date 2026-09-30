@@ -1,130 +1,128 @@
 <div align="center">
-  <img src="assets/favicon.svg" alt="VitrineDesk Logo" width="110" height="110">
+  <img src="assets/favicon.svg" alt="VitrineDesk Logo" width="100" height="100">
   <h1>VitrineDesk</h1>
   <p><strong>Plataforma SaaS Multi-Tenant All-in-One de Gestão Operacional, Autoagendamento PWA, PDV e CRM para Negócios de Serviços e Beleza.</strong></p>
 
   <p>
-    <a href="https://github.com/Richardlds/VitrineDesk"><img src="https://img.shields.io/badge/Status-Produ%C3%A7%C3%A3o%20Ativa-00d26a?style=for-the-badge" alt="Status"></a>
-    <img src="https://img.shields.io/badge/Arquitetura-Vanilla%20JS%20SPA%20(ES6%2B)-f7df1e?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
-    <img src="https://img.shields.io/badge/Backend-Supabase%20%7C%20PostgreSQL-3ecf8e?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase">
-    <img src="https://img.shields.io/badge/Pagamentos-Stripe%20API-635bff?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe">
-    <img src="https://img.shields.io/badge/Mobile-PWA%20Ready-ff6b00?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA">
-    <a href="LICENSE"><img src="https://img.shields.io/badge/Licen%C3%A7a-MIT-blue?style=for-the-badge" alt="Licença"></a>
+    <a href="https://github.com/Richardlds/VitrineDesk"><img src="https://img.shields.io/badge/Status-Produ%C3%A7%C3%A3o%20Ativa-00d26a?style=flat-square" alt="Status"></a>
+    <img src="https://img.shields.io/badge/Frontend-Vanilla%20JS%20SPA%20(ES6%2B)-f7df1e?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
+    <img src="https://img.shields.io/badge/Backend-Supabase%20%7C%20PostgreSQL-3ecf8e?style=flat-square&logo=supabase&logoColor=white" alt="Supabase">
+    <img src="https://img.shields.io/badge/Pagamentos-Stripe%20API-635bff?style=flat-square&logo=stripe&logoColor=white" alt="Stripe">
+    <img src="https://img.shields.io/badge/App-PWA%20Ready-ff6b00?style=flat-square&logo=pwa&logoColor=white" alt="PWA">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/Licen%C3%A7a-MIT-blue?style=flat-square" alt="Licença"></a>
   </p>
 
   <p>
-    <a href="#-como-executar-o-projeto-localmente"><strong>Explorar Demonstração Local »</strong></a> ·
-    <a href="#-decisões-de-arquitetura-e-engenharia">Decisões de Engenharia</a> ·
-    <a href="#-visão-de-negócio-e-problema-resolvido">Visão de Negócio</a> ·
-    <a href="#-autor--contato-profissional">Contato</a>
+    <a href="#como-executar-o-projeto-localmente">Executar Localmente</a> ·
+    <a href="#decisões-de-arquitetura-e-engenharia">Arquitetura</a> ·
+    <a href="#visão-de-negócio-e-problema-resolvido">Visão de Negócio</a> ·
+    <a href="#autor-e-contato">Contato</a>
   </p>
 </div>
 
 ---
 
-## 💼 Visão de Negócio e Problema Resolvido
+## Sumário
 
-No setor de estética e prestação de serviços (salões, barbearias, clínicas e estúdios), a gestão costuma ser fragmentada entre mensagens manuais no WhatsApp, cadernos de papel e planilhas desatualizadas. Isso gera **perda de clientes por demora no atendimento**, **altas taxas de ausência (*no-shows*)**, **erros constantes no cálculo manual de comissões de parceiros** e **falta de controle sobre o fluxo de caixa e estoque**.
-
-O **VitrineDesk** foi concebido como uma solução de software robusta (*All-in-One*) que transforma operações manuais em um fluxo digital automatizado de ponta a ponta:
-
-### 🚀 Principais Módulos em Produção
-
-- 📱 **Portal do Cliente PWA (Mobile-First):** O cliente final acessa um link personalizado (`/:slug`), não precisa baixar apps pesados de lojas (tecnologia PWA com instalação na tela inicial) e agenda serviços 24/7 com escolha de profissional, data, horário e checkout online.
-- 📅 **Agenda Inteligente com Prevenção de Conflitos:** Grade diária e mensal que calcula dinamicamente durações de procedimentos, intervalos de descanso e disponibilidade da equipe em tempo real.
-- 💰 **Frente de Caixa (PDV) & Gestão de OS:** Emissão de Ordens de Serviço (OS), múltiplos métodos de pagamento (dinheiro, cartão, PIX), controle de abertura/fechamento de caixa e conciliação financeira diária.
-- 🤝 **Cálculo Automático de Comissões:** Rateio e apuração automatizada de comissões por serviço e produto para cada profissional parceiro, eliminando atritos e erros de fechamento.
-- 📦 **Controle de Estoque Integrado:** Cadastro de produtos físicos de consumo interno e venda no balcão, alertas visuais de estoque mínimo e movimentação atrelada às vendas do PDV.
-- 🎯 **CRM, Retenção & Planos de Assinatura:**
-  - Histórico completo de frequência e ticket médio por cliente.
-  - Planos de assinatura recorrentes para fidelização (ex: Clube da Barba/Cabelo).
-  - Gestão de cupons de desconto, campanhas promocionais e programa de pontos.
-  - *Blacklist* para mitigação de clientes com histórico de faltas não justificadas.
-- 🏢 **Multi-Filiais & Controle de Acesso Baseado em Papéis (RBAC):** Gestão centralizada de múltiplas lojas com permissões granulares (*Admin, Gerente, Profissional, Atendente*).
-- 👑 **Painel God Mode (SaaS Master Admin):** Painel executivo para controle de tenants (lojistas), gestão de planos de assinatura da plataforma, métricas globais de MRR/ARR e central de tickets de suporte.
+- [Visão de Negócio e Problema Resolvido](#visão-de-negócio-e-problema-resolvido)
+- [Decisões de Arquitetura e Engenharia](#decisões-de-arquitetura-e-engenharia)
+- [Stack Tecnológica](#stack-tecnológica)
+- [Como Executar o Projeto Localmente](#como-executar-o-projeto-localmente)
+- [Estrutura de Pastas](#estrutura-de-pastas)
+- [Autor e Contato](#autor-e-contato)
+- [Licença](#licença)
 
 ---
 
-## 🏛️ Decisões de Arquitetura e Engenharia
+## Visão de Negócio e Problema Resolvido
 
-A arquitetura do VitrineDesk foi projetada com foco em **alta performance**, **manutenibilidade** e **segurança rigorosa em ambiente multi-tenant**:
+No mercado de beleza e serviços (salões, barbearias, clínicas e estúdios), a gestão tradicional depende de mensagens manuais no WhatsApp, anotações em papel e planilhas desconexas. Esse cenário gera **perda de agendamentos por demora no atendimento**, **altas taxas de no-show (faltas sem aviso)**, **divergências no cálculo de comissões de parceiros** e **descontrole financeiro e de estoque**.
+
+O **VitrineDesk** centraliza e digitaliza toda a jornada operacional em uma única plataforma:
+
+### Funcionalidades Centrais
+
+- **Portal do Cliente (PWA Instalável):** Agendamento autônomo 24/7 via link dedicado (`/:slug`), com seleção de profissional, horários em tempo real, catálogo de serviços e checkout online, sem necessidade de download em app stores.
+- **Agenda Inteligente:** Gestão diária e mensal com prevenção nativa de choque de horários e cálculo dinâmico de intervalos.
+- **Frente de Caixa (PDV) e Ordens de Serviço (OS):** Registro de atendimentos, múltiplos métodos de pagamento (cartão, dinheiro, PIX), controle de caixa e conciliação financeira.
+- **Comissionamento Automático:** Cálculo automático de repasse por profissional e serviço, eliminando fechamentos manuais.
+- **Controle de Estoque:** Gestão de produtos de uso interno e venda direta no balcão integrada ao PDV, com alerta de estoque mínimo.
+- **CRM, Fidelidade e Planos:** Histórico de consumo, planos de assinatura recorrente para clientes, cupons de desconto e blacklist preventiva de no-shows.
+- **Multi-Filiais e RBAC:** Controle centralizado de múltiplas unidades com perfis de acesso (Administrador, Gerente, Profissional, Atendente).
+- **Painel Master (God Mode):** Gestão global de tenants (lojistas), planos da plataforma, métricas SaaS (MRR/ARR) e suporte.
+
+---
+
+## Decisões de Arquitetura e Engenharia
 
 ```mermaid
 flowchart TD
-    subgraph Client_Layer["🖥️ Camada de Apresentação (Client-Side)"]
-        PWA["Portal PWA (/:slug)<br/>Agendamento & Catálogo"]
-        ADMIN["Painel Lojista (/admin/)<br/>SPA Vanilla JS + Controllers"]
-        GOD["Painel God Mode (/admingod/)<br/>Gestão Global de Tenants"]
-    end
+    PWA["Portal PWA (/:slug)<br/>Agendamento & Checkout"]
+    ADMIN["Painel Lojista (/admin/)<br/>SPA Vanilla JS"]
+    GOD["Painel God Mode (/admingod/)<br/>Gestão Global SaaS"]
 
-    subgraph Core_Engine["⚙️ SPA Core & Routing"]
-        ROUTER["Router.js (Hash Navigation)"]
-        STATE["StateManager.js (Reactive Store)"]
-        DS["Design System Nativo (Dark Mode Glassmorphic)"]
-    end
+    ROUTER["Router.js<br/>Roteamento por Hash"]
+    STATE["StateManager.js<br/>Estado Reativo"]
 
-    subgraph Serverless_Layer["⚡ Backend & Serverless (/api)"]
-        API_PAY["Stripe Webhooks & Checkouts"]
-        API_AUTH["Admin User Provisioning (Service Role)"]
-        API_MAIL["Resend Transactional Emails"]
-    end
+    API_PAY["Stripe Serverless API<br/>Checkouts & Webhooks"]
+    API_ADMIN["Admin Serverless API<br/>Provisionamento & E-mails"]
 
-    subgraph Data_Layer["🗄️ Supabase PostgreSQL Engine"]
-        RLS["Row Level Security (RLS)<br/>Isolamento estrito por tenant_id"]
-        AUTH_JWT["Supabase Auth (JWT Claims)"]
-    end
+    DB_RLS["Supabase PostgreSQL<br/>Row Level Security por tenant_id"]
+    DB_AUTH["Supabase Auth (JWT)"]
 
-    Client_Layer --> CORE["Core Engine"]
-    CORE --> ROUTER
-    ROUTER -->|Dynamic Import| STATE
-    ADMIN -->|Token JWT / Anon Key| RLS
-    PWA -->|Token JWT / Anon Key| RLS
-    ADMIN -->|Ações Administrativas| Serverless_Layer
-    PWA -->|Iniciar Checkout| API_PAY
-    Serverless_Layer -->|Service Role Key (Bypass RLS Seguro)| Data_Layer
+    PWA --> ROUTER
+    ADMIN --> ROUTER
+    GOD --> ROUTER
+    ROUTER --> STATE
+
+    ADMIN -->|Token JWT / Anon Key| DB_RLS
+    PWA -->|Token JWT / Anon Key| DB_RLS
+    PWA -->|Checkout Online| API_PAY
+    ADMIN -->|Ações Administrativas| API_ADMIN
+    API_PAY -->|Service Role Key| DB_RLS
+    API_ADMIN -->|Service Role Key| DB_AUTH
 ```
 
-### 1. Padrão SPA Vanilla JS com ES6 Modules (Zero Build Step)
-- **Por que esta escolha?** Em vez de sobrecarregar o projeto com frameworks pesados e longos tempos de compilação (*bundling overhead*), a aplicação adota uma arquitetura SPA pura em **JavaScript ES6 nativo**.
-- **Carregamento Sob Demanda:** O `Router.js` intercepta a navegação por hash (`#/categoria/tela`), realiza o `fetch` do fragmento HTML da view e executa o `import()` dinâmico assíncrono do Controller responsável, garantindo carregamento instantâneo.
-- **Gerenciamento de Ciclo de Vida:** Todos os Controllers implementam o método `destroy()` para desregistrar *event listeners* e limpar referências em memória, prevenindo vazamentos de memória (*memory leaks*).
+### 1. SPA Vanilla JS com ES6 Modules (Zero Build Step)
+- **Motivação:** Máxima performance de execução, sem complexidade de bundlers ou tempos de build.
+- **Carregamento Dinâmico:** O `Router.js` intercepta rotas por hash (`#/categoria/tela`), busca o fragmento HTML da view e importa assincronamente o Controller correspondente sob demanda.
+- **Gerenciamento de Recursos:** Cada Controller possui método `destroy()` para remoção de event listeners e prevenção de vazamentos de memória.
 
-### 2. Isolamento de Dados Multi-Tenant via Row Level Security (RLS)
-- **Segurança em Nível de Banco:** O isolamento entre diferentes lojistas não depende unicamente de filtros na aplicação; ele é garantido nativamente no PostgreSQL via **Supabase Row Level Security (RLS)**.
-- **Defesa em Profundidade:** Toda requisição autenticada carrega o token JWT do usuário. O banco de dados valida se o `tenant_id` da linha pertence à organização do usuário autenticado.
+### 2. Isolamento Multi-Tenant via Row Level Security (RLS)
+- **Segurança em Nível de Banco:** O isolamento entre organizações é garantido pelo PostgreSQL no Supabase. Cada query é validada com base no `tenant_id` atrelado ao token JWT do usuário autenticado.
 
-### 3. Separação Estrita de Credenciais & Backend Serverless
-- **Frontend Seguro:** O código exposto ao navegador consome estritamente a chave pública anônima (`anon key`).
-- **Funções com Privilégio Elevado:** Operações sensíveis (provisionamento de novos colaboradores, cobranças Stripe e conciliação de webhooks) rodam em Serverless Functions na pasta [`/api`](file:///c:/Users/richard.santo/Documents/GitHub/VitrineDesk/api), utilizando a `SUPABASE_SERVICE_ROLE_KEY` de forma isolada e segura.
+### 3. Separação de Privilégios (Frontend vs Backend)
+- **Chaves Públicas:** O cliente acessa apenas com a chave anônima pública (`anon key`), limitada pelas políticas RLS.
+- **Ações Críticas Isoladas:** Operações sensíveis (provisionamento de acessos, cobranças e webhooks Stripe) executam em Serverless Functions ([`/api`](file:///c:/Users/richard.santo/Documents/GitHub/VitrineDesk/api)) utilizando a chave privada (`service_role key`).
 
-### 4. Design System Nativo & Padrão Visual Premium
-- **Consistência Visual:** Construído sobre um Design System proprietário em CSS moderno (`design-system.css`), utilizando variáveis CSS (*tokens*), paleta *Dark Mode Glassmorphic*, microinterações e biblioteca unificada de ícones **Lucide**.
+### 4. Design System Nativo
+- **Consistência Visual:** Interface Dark Mode com Glassmorphism estruturada em classes utilitárias proprietárias (`design-system.css`) e ícones Lucide sob demanda.
 
 ---
 
-## 🛠️ Stack Tecnológica
+## Stack Tecnológica
 
-| Camada | Tecnologias & Ferramentas |
+| Camada | Tecnologias |
 | :--- | :--- |
-| **Frontend Core** | Vanilla JavaScript (ES6 Modules), HTML5 Semântico, CSS3 Moderno (Custom Properties & Glassmorphism) |
-| **Arquitetura & SPA** | SPA Router nativo, StateManager reativo, Dynamic Module Loader (`import()`) |
-| **Mobile & Offline** | Progressive Web App (PWA), Service Workers (`sw.js`), Web App Manifest |
-| **Backend & Banco** | [Supabase](https://supabase.com/) (PostgreSQL 15+, Row Level Security, Auth JWT, Edge Functions) |
-| **Pagamentos & Assinaturas** | [Stripe API](https://stripe.com/) (Checkout Sessions, Customer Portal, Webhooks) |
-| **Mensageria & E-mails** | [Resend API](https://resend.com/) (Disparo transacional de boas-vindas e lembretes) |
-| **UI Libraries** | [Lucide Icons](https://lucide.dev/), [FullCalendar](https://fullcalendar.io/), [Swiper.js](https://swiperjs.com/) |
-| **DevOps, Lint & Deploy** | [Vercel](https://vercel.com/) (Static & Serverless Functions), ESLint 10+, GitHub Actions CI |
+| **Frontend** | Vanilla JavaScript (ES6+), HTML5 Semântico, CSS3 Moderno (Custom Properties e Glassmorphism) |
+| **Arquitetura** | SPA com Router nativo, StateManager reativo e carregamento dinâmico de Controllers |
+| **PWA & Offline** | Service Workers (`sw.js`), Web App Manifest |
+| **Backend & Banco** | Supabase (PostgreSQL 15+, Row Level Security, Auth JWT, Edge Functions) |
+| **Pagamentos** | Stripe API (Checkout Sessions, Assinaturas e Webhooks) |
+| **E-mails** | Resend API (Notificações e boas-vindas transacionais) |
+| **Bibliotecas UI** | Lucide Icons, FullCalendar, Swiper.js |
+| **DevOps & Deploy** | Vercel (Static & Serverless Functions), ESLint, GitHub Actions CI |
 
 ---
 
-## 💻 Como Executar o Projeto Localmente
+## Como Executar o Projeto Localmente
 
 ### Pré-requisitos
-- **Node.js** `>= 18.x` (LTS recomendado: `20.x` ou `22.x`)
+- **Node.js** `>= 18.x`
 - **npm** (incluso com o Node.js)
-- Conta no [Supabase](https://supabase.com/) (com o schema do banco e RLS configurados)
+- Conta no [Supabase](https://supabase.com/) com schema e RLS configurados
 
-### Passo a Passo de Execução
+### Passo a Passo
 
 1. **Clonar o Repositório:**
    ```bash
@@ -137,94 +135,72 @@ flowchart TD
    npm install
    ```
 
-3. **Configurar as Variáveis de Ambiente:**
-   Crie seu arquivo `.env` a partir do modelo de exemplo:
+3. **Configurar Variáveis de Ambiente:**
    ```bash
    cp .env.example .env
    ```
-
-   Preencha as variáveis de ambiente necessárias:
+   Preencha o `.env` com suas credenciais do Supabase e Stripe:
    ```env
-   # Supabase
    SUPABASE_URL=https://seu-projeto.supabase.co
    SUPABASE_ANON_KEY=sua-chave-anon-publica
    SUPABASE_SERVICE_ROLE_KEY=sua-chave-service-role-privada
-
-   # Stripe (Opcional para testes locais)
    STRIPE_SECRET_KEY=sk_test_...
    STRIPE_WEBHOOK_SECRET=whsec_...
    ```
 
-4. **Executar a Verificação de Qualidade de Código:**
+4. **Validar Código com ESLint:**
    ```bash
    npm run lint
    ```
 
-5. **Iniciar a Aplicação Localmente:**
+5. **Iniciar o Servidor:**
    ```bash
-   # Opção A: Servidor estático leve (SPA & Views)
+   # Opção A: Servidor estático leve
    npm run serve
 
    # Opção B: Ambiente completo com Serverless Functions (/api)
    npm run start-dev
    ```
 
-6. **Acessar as Telas:**
+6. **Rotas de Acesso:**
    - **Landing Page:** `http://localhost:3000/`
-   - **Painel do Lojista (Admin):** `http://localhost:3000/admin/`
+   - **Painel do Lojista:** `http://localhost:3000/admin/`
    - **Portal do Cliente (PWA):** `http://localhost:3000/cliente/?tenant=demo`
-   - **Super Admin (God Mode):** `http://localhost:3000/admingod/`
+   - **God Mode (Master Admin):** `http://localhost:3000/admingod/`
 
 ---
 
-## 📁 Estrutura de Pastas
+## Estrutura de Pastas
 
 ```text
 VitrineDesk/
-├── .github/                 # Workflows de CI/CD, Issue Forms e PR Template
+├── .github/                 # Workflows de CI, Issue Forms e PR Template
 ├── admin/                   # Painel Administrativo do Lojista (SPA)
-│   ├── js/
-│   │   ├── controllers/     # Controladores por módulo (Agenda, PDV, Estoque, CRM, etc.)
-│   │   └── core/            # Router.js, StateManager.js, supabaseClient.js, app.js
-│   ├── views/               # Fragmentos HTML das telas carregadas dinamicamente
-│   └── sw.js                # Service Worker do Admin PWA
-├── admingod/                # Painel Master / Super Admin do SaaS (God Mode)
-│   ├── js/ & views/         # Gestão global de tenants, planos, métricas e tickets
-├── api/                     # Serverless Functions (Node.js na Vercel)
-│   ├── admin/               # Criação de colaboradores e disparo de e-mails
-│   ├── client/              # Notificações e planos de clientes
-│   └── stripe/              # Checkouts, assinaturas e webhooks Stripe
-├── cliente/                 # Portal PWA de Autoagendamento do Cliente Final
-│   ├── js/ & css/           # Fluxo de agendamento, catálogo, carrinho e autenticação
-│   └── index.html           # Ponto de entrada PWA do cliente
+│   ├── js/controllers/      # Controladores por módulo (Agenda, PDV, Estoque, etc.)
+│   ├── js/core/             # Router.js, StateManager.js, supabaseClient.js
+│   └── views/               # Fragmentos HTML carregados dinamicamente
+├── admingod/                # Painel Master / Super Admin do SaaS
+├── api/                     # Serverless Functions (Stripe, Admin, E-mails)
+├── cliente/                 # Portal PWA de Agendamento do Cliente Final
 ├── css/                     # Design System Nativo (design-system.css)
-├── js/                      # Módulos compartilhados (auth.js, config.js, utils.js)
-├── supabase/                # Migrações SQL, triggers e funções de banco
+├── js/                      # Módulos compartilhados (auth, config, utils)
+├── supabase/                # Migrações SQL e Edge Functions
 ├── .env.example             # Modelo documentado de variáveis de ambiente
-├── CONTRIBUTING.md          # Diretrizes de contribuição e padrões de código
-├── eslint.config.js         # Configuração de linting com ESLint
-└── package.json             # Dependências, metadados e scripts de execução
+├── CONTRIBUTING.md          # Diretrizes de contribuição
+└── package.json             # Dependências e scripts
 ```
 
 ---
 
-## 👨‍💻 Autor & Contato Profissional
+## Autor e Contato
 
-Desenvolvido por **Richard Santo** — Desenvolvedor Full Stack focado em arquitetura escalável, código limpo e soluções SaaS de alto impacto para o mercado.
+Desenvolvido por **Richard Santo** — Engenheiro de Software focado em arquiteturas escaláveis, sistemas SaaS e interfaces modernas.
 
-<div align="left">
-  <p>
-    <a href="https://github.com/Richardlds">
-      <img src="https://img.shields.io/badge/GitHub-Richardlds-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-    </a>
-    <a href="mailto:richardlds@hotmail.com">
-      <img src="https://img.shields.io/badge/E--mail-Contato%20Direto-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="E-mail">
-    </a>
-  </p>
-</div>
+- **GitHub:** [@Richardlds](https://github.com/Richardlds)
+- **E-mail:** [richardlds@hotmail.com](mailto:richardlds@hotmail.com)
 
 ---
 
-## 📄 Licença
+## Licença
 
-Este projeto é distribuído sob os termos da **Licença MIT**. Para mais detalhes, consulte o arquivo [`LICENSE`](LICENSE).
+Distribuído sob a licença **MIT**. Consulte [`LICENSE`](LICENSE) para mais detalhes.
